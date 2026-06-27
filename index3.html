@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>幸運號碼搖獎機</title>
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --bg-color: #f1f5f9;
+            --machine-bg: #0f172a;
+            --ball-gold: radial-gradient(circle at 30% 30%, #fde047, #f59e0b, #b45309);
+            --ball-red: radial-gradient(circle at 30% 30%, #fca5a5, #ef4444, #991b1b);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Microsoft JhengHei", sans-serif; }
+        body { background-color: var(--bg-color); color: #334155; padding: 20px; text-align: center; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 16px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+        
+        h1 { color: var(--primary); margin-bottom: 10px; font-size: 28px; }
+        p.subtitle { color: #64748b; margin-bottom: 24px; }
+
+        /* 輸入區 */
+        .input-section { margin-bottom: 30px; }
+        textarea { width: 100%; height: 80px; padding: 12px; border: 2px solid #cbd5e1; border-radius: 8px; font-size: 16px; outline: none; transition: 0.3s; resize: none; }
+        textarea:focus { border-color: var(--primary); }
+        
+        /* 搖獎機體設計 */
+        .machine-container {
+            width: 280px; height: 280px; margin: 0 auto 30px auto;
+            border-radius: 50%;
+            background: var(--machine-bg);
+            border: 10px solid #94a3b8;
+            box-shadow: inset -10px -10px 30px rgba(0,0,0,0.8), inset 10px 10px 20px rgba(255,255,255,0.2), 0 10px 20px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+            display: flex; justify-content: center; align-items: center;
+        }
+
+        /* 裝飾玻璃反光 */
+        .glass-glare {
+            position: absolute; top: 10%; left: 15%; width: 50%; height: 30%;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 50%; transform: rotate(-30deg);
+            pointer-events: none; z-index: 10;
+        }
+
+        /* 在機器裡面的球 */
+        .machine-ball {
+            width: 35px; height: 35px; border-radius: 50%;
+            position: absolute;
+            background: var(--ball-gold);
+            color: #78350f; font-weight: 900; font-size: 14px;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+            transition: all 0.1s linear; /* 讓移動看起來像動畫 */
+            top: 50%; left: 50%; transform: translate(-50%, -50%);
+            opacity: 0;
+        }
+
+        /* 按鈕設計 */
+        .btn {
+            background: linear-gradient(to bottom, #3b82f6, #1d4ed8);
+            color: white; border: none; padding: 12px 30px; font-size: 18px; font-weight: bold;
+            border-radius: 50px; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            transition: all 0.2s;
+        }
+        .btn:hover { transform: scale(1.05); background: linear-gradient(to bottom, #2563eb, #1e40af); }
+        .btn:active { transform: scale(0.95); }
+        .btn:disabled { background: #94a3b8; cursor: not-allowed; transform: none; box-shadow: none; }
+
+        /* 結果顯示區 */
+        .result-section { margin-top: 30px; min-height: 120px; }
+        .result-title { font-size: 20px; font-weight: bold; margin-bottom: 20px; color: #334155; opacity: 0; transition: opacity 0.3s; }
+        .drawn-balls-container { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
+        
+        /* 開出的號碼球 */
+        .drawn-ball {
+            width: 60px; height: 60px; border-radius: 50%;
+            background: var(--ball-red); color: white;
+            font-size: 24px; font-weight: 900;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 10px 15px rgba(0,0,0,0.2), inset -5px -5px 15px rgba(0,0,0,0.3);
+            transform: scale(0); transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* 正在攪拌時的動畫 */
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            10% { transform: translate(-1px, -2px) rotate(-1deg); }
+            20% { transform: translate(-3px, 0px) rotate(1deg); }
+            30% { transform: translate(3px, 2px) rotate(0deg); }
+            40% { transform: translate(1px, -1px) rotate(1deg); }
+            50% { transform: translate(-1px, 2px) rotate(-1deg); }
+            60% { transform: translate(-3px, 1px) rotate(0deg); }
+            70% { transform: translate(3px, 1px) rotate(-1deg); }
+            80% { transform: translate(-1px, -1px) rotate(1deg); }
+            90% { transform: translate(1px, 2px) rotate(0deg); }
+            100% { transform: translate(1px, -2px) rotate(-1deg); }
+        }
+        .shaking { animation: shake 0.3s infinite; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🎰 專屬幸運搖獎機</h1>
+    <p class="subtitle">輸入你今天收到的所有號碼，系統將為你抽出 4 顆幸運球！</p>
+
+    <div class="input-section">
+        <textarea id="number-input" placeholder="請在此輸入號碼（例如：05, 12, 18, 22, 31, 38...，用空白或逗號隔開皆可）"></textarea>
+    </div>
+
+    <div class="machine-container" id="machine">
+        <div class="glass-glare"></div>
+        </div>
+
+    <button class="btn" id="draw-btn" onclick="startDraw()">🎲 開始搖獎 (抽出 4 顆)</button>
+
+    <div class="result-section">
+        <div class="result-title" id="result-title">✨ 為您開出的幸運 4 碼 ✨</div>
+        <div class="drawn-balls-container" id="result-container">
+            </div>
+    </div>
+</div>
+
+<script>
+    let drawInterval;
+    let isDrawing = false;
+
+    function startDraw() {
+        if (isDrawing) return;
+
+        // 1. 取得並解析使用者輸入的號碼
+        const inputVal = document.getElementById('number-input').value;
+        const numStrings = inputVal.match(/\d+/g);
+
+        if (!numStrings || numStrings.length < 4) {
+            alert('請至少輸入 4 個以上的數字！');
+            return;
+        }
+
+        // 過濾成不重複的數字，並確保是 01-39 之間 (若有需要可拿掉這行限制)
+        let pool = numStrings.map(n => parseInt(n, 10));
+        pool = [...new Set(pool)]; 
+
+        if (pool.length < 4) {
+            alert('過濾重複數字後，數量不足 4 個，請再多輸入幾個號碼！');
+            return;
+        }
+
+        // 2. 準備搖獎機畫面
+        isDrawing = true;
+        const btn = document.getElementById('draw-btn');
+        const machine = document.getElementById('machine');
+        const resultContainer = document.getElementById('result-container');
+        const resultTitle = document.getElementById('result-title');
+        
+        btn.disabled = true;
+        btn.innerText = "🌪️ 正在攪拌中...";
+        resultTitle.style.opacity = "0";
+        resultContainer.innerHTML = '';
+        
+        // 移除舊的球
+        document.querySelectorAll('.machine-ball').forEach(el => el.remove());
+
+        // 把數字變成球放進機器裡 (最多顯示 20 顆以免太擠)
+        let displayPool = pool.slice(0, 30); 
+        displayPool.forEach((num, index) => {
+            let ball = document.createElement('div');
+            ball.className = 'machine-ball';
+            ball.innerText = num.toString().padStart(2, '0');
+            ball.id = 'm-ball-' + index;
+            // 隨機初始位置
+            ball.style.top = (Math.random() * 60 + 20) + '%';
+            ball.style.left = (Math.random() * 60 + 20) + '%';
+            machine.appendChild(ball);
+            
+            // 讓球浮現
+            setTimeout(() => { ball.style.opacity = "1"; }, index * 50);
+        });
+
+        // 3. 開始攪拌動畫
+        machine.classList.add('shaking');
+        let balls = document.querySelectorAll('.machine-ball');
+        
+        drawInterval = setInterval(() => {
+            balls.forEach(ball => {
+                // 讓球在 15% 到 85% 的空間內隨機亂彈
+                let top = Math.random() * 70 + 15;
+                let left = Math.random() * 70 + 15;
+                let rot = Math.random() * 360;
+                ball.style.top = top + '%';
+                ball.style.left = left + '%';
+                ball.style.transform = `translate(-50%, -50%) rotate(${rot}deg)`;
+            });
+        }, 120);
+
+        // 4. 2.5 秒後停止攪拌並開獎
+        setTimeout(() => {
+            clearInterval(drawInterval);
+            machine.classList.remove('shaking');
+            
+            // 讓機器裡的球掉落到底部
+            balls.forEach(ball => {
+                ball.style.top = '90%';
+                ball.style.opacity = '0.3';
+            });
+
+            showResults(pool);
+        }, 2500);
+    }
+
+    function showResults(pool) {
+        // 洗牌演算法 (Fisher-Yates) 來確保完全隨機
+        let shuffled = pool.slice();
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        
+        // 抽出前 4 顆
+        let drawnNumbers = shuffled.slice(0, 4).sort((a, b) => a - b);
+        
+        const resultContainer = document.getElementById('result-container');
+        document.getElementById('result-title').style.opacity = "1";
+
+        // 一顆一顆彈出顯示
+        drawnNumbers.forEach((num, index) => {
+            setTimeout(() => {
+                let ball = document.createElement('div');
+                ball.className = 'drawn-ball';
+                ball.innerText = num.toString().padStart(2, '0');
+                resultContainer.appendChild(ball);
+                
+                // 觸發彈出動畫
+                setTimeout(() => { ball.style.transform = "scale(1)"; }, 10);
+                
+            }, index * 400); // 每 0.4 秒開出一顆
+        });
+
+        // 恢復按鈕狀態
+        setTimeout(() => {
+            isDrawing = false;
+            const btn = document.getElementById('draw-btn');
+            btn.disabled = false;
+            btn.innerText = "🎲 再搖一次";
+        }, 2000);
+    }
+</script>
+</body>
+</html>
