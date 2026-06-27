@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>539 三柱 1800碰 實戰勝率與損益統計儀表板</title>
+    <style>
+        :root {
+            --bg-main: #f8fafc;
+            --panel-bg: #ffffff;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --primary: #1e3a8a;
+            --primary-light: #eff6ff;
+            --accent-col1: #ff7e42;
+            --accent-col2: #10b981;
+            --accent-col3: #3b82f6;
+            --success: #15803d;
+            --success-bg: #dcfce7;
+            --danger: #b91c1c;
+            --danger-bg: #fee2e2;
+            --border-color: #e2e8f0;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Microsoft JhengHei", sans-serif; }
+        body { background-color: var(--bg-main); color: var(--text-dark); padding: 24px; line-height: 1.5; }
+        .container { max-width: 1400px; margin: 0 auto; }
+        header { background: linear-gradient(135deg, #1e293b, #0f172a); color: #ffffff; padding: 24px; border-radius: 12px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+        header h1 { font-size: 24px; font-weight: 700; }
+        header p { color: #94a3b8; font-size: 14px; margin-top: 4px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px; }
+        .stat-card { background: var(--panel-bg); padding: 20px; border-radius: 12px; border: 1px solid var(--border-color); display: flex; flex-direction: column; }
+        .stat-card .label { font-size: 14px; color: var(--text-muted); font-weight: 500; margin-bottom: 8px; }
+        .stat-card .value { font-size: 28px; font-weight: 700; }
+        .stat-card.profit-positive { background-color: var(--success-bg); border-color: #bbf7d0; }
+        .stat-card.profit-positive .value { color: var(--success); }
+        .stat-card.profit-negative { background-color: var(--danger-bg); border-color: #fecaca; }
+        .stat-card.profit-negative .value { color: var(--danger); }
+        .main-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; margin-bottom: 24px; }
+        @media (max-width: 1024px) { .main-layout { grid-template-columns: 1fr; } }
+        .panel { background: var(--panel-bg); border-radius: 12px; border: 1px solid var(--border-color); padding: 24px; }
+        .panel-title { font-size: 18px; font-weight: 600; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid var(--bg-main); display: flex; justify-content: space-between; align-items: center; }
+        .settings-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 20px; background: #f8fafc; padding: 16px; border-radius: 8px; border: 1px dashed var(--border-color); }
+        .form-group { display: flex; flex-direction: column; gap: 6px; }
+        .form-group label { font-size: 13px; font-weight: 600; }
+        .form-group input { padding: 8px 12px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 14px; outline: none; }
+        .column-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 16px; }
+        @media (max-width: 640px) { .column-container { grid-template-columns: 1fr; } }
+        .col-box { border-radius: 10px; padding: 16px; border: 1px solid var(--border-color); }
+        .col-box.c1 { background-color: #fffaf7; border-top: 4px solid var(--accent-col1); }
+        .col-box.c2 { background-color: #f6fdf9; border-top: 4px solid var(--accent-col2); }
+        .col-box.c3 { background-color: #f8fafc; border-top: 4px solid var(--accent-col3); }
+        .col-box h3 { font-size: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; }
+        .ball-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(42px, 1fr)); gap: 8px; }
+        .ball { width: 42px; height: 42px; border-radius: 50%; background: #ffffff; border: 2px solid #cbd5e1; display: flex; align-items: center; justify-content: center; font-weight: 700; cursor: pointer; user-select: none; font-size: 15px; }
+        .col-box.c1 .ball.selected { background-color: var(--accent-col1); color: white; border-color: var(--accent-col1); }
+        .col-box.c2 .ball.selected { background-color: var(--accent-col2); color: white; border-color: var(--accent-col2); }
+        .col-box.c3 .ball.selected { background-color: var(--accent-col3); color: white; border-color: var(--accent-col3); }
+        .live-status { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 16px; margin-top: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+        .live-selection-info { display: flex; gap: 16px; font-size: 14px; }
+        .live-pill { padding: 4px 10px; border-radius: 20px; font-weight: 600; color: white; }
+        .live-pill.p1 { background-color: var(--accent-col1); }
+        .live-pill.p2 { background-color: var(--accent-col2); }
+        .live-pill.p3 { background-color: var(--accent-col3); }
+        .btn { padding: 10px 20px; border-radius: 6px; font-weight: 600; font-size: 14px; cursor: pointer; border: none; }
+        .btn-primary { background-color: #1d4ed8; color: white; }
+        .btn-primary:disabled { background-color: #cbd5e1; cursor: not-allowed; }
+        .btn-danger { background-color: #ef4444; color: white; }
+        .btn-secondary { background-color: #f1f5f9; color: var(--text-dark); border: 1px solid var(--border-color); }
+        .rule-card { background: #f8fafc; border-left: 4px solid var(--primary); padding: 16px; border-radius: 0 8px 8px 0; font-size: 13px; margin-bottom: 12px; }
+        .rule-card h4 { margin-bottom: 6px; font-weight: 600; color: var(--primary); }
+        .table-section { margin-top: 24px; }
+        .table-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .table-container { width: 100%; overflow-x: auto; background: white; border-radius: 8px; border: 1px solid var(--border-color); }
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
+        th { background-color: #f1f5f9; padding: 12px 16px; border-bottom: 2px solid var(--border-color); }
+        td { padding: 14px 16px; border-bottom: 1px solid var(--border-color); }
+        .badge { padding: 4px 8px; border-radius: 4px; font-weight: 600; font-size: 12px; display: inline-block; }
+        .badge-4 { background-color: #fef3c7; color: #d97706; border: 1px solid #fde68a; }
+        .badge-3 { background-color: #e0f2fe; color: #0284c7; border: 1px solid #bae6fd; }
+        .badge-0 { background-color: #f1f5f9; color: #64748b; border: 1px solid #e2e8f0; }
+        .mini-ball-container { display: flex; gap: 4px; }
+        .mini-ball { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: white; }
+        .mini-ball.b1 { background-color: var(--accent-col1); }
+        .mini-ball.b2 { background-color: var(--accent-col2); }
+        .mini-ball.b3 { background-color: var(--accent-col3); }
+        .text-success { color: var(--success); font-weight: 600; }
+        .text-danger { color: var(--danger); font-weight: 600; }
+        .text-muted { color: var(--text-muted); }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <div>
+            <h1>539 三柱包牌實戰記帳與智慧統計系統</h1>
+            <p>第一柱 (10-18) × 第二柱 (20-29) × 第三柱 (其餘) = 完美1800碰三星策略</p>
+        </div>
+        <div>
+            <button class="btn btn-secondary" onclick="exportData()">導出備份</button>
+            <button class="btn btn-secondary" onclick="importData()">導入數據</button>
+        </div>
+    </header>
+    <div class="stats-grid">
+        <div class="stat-card"><span class="label">總記錄期數</span><span class="value" id="stat-total-draws">0 期</span></div>
+        <div class="stat-card"><span class="label">過關勝率 (中3或4碰)</span><span class="value" id="stat-win-rate">0.00%</span></div>
+        <div class="stat-card"><span class="label">累計總投入成本</span><span class="value" id="stat-total-cost">$0</span></div>
+        <div class="stat-card"><span class="label">累計總中獎金額</span><span class="value" id="stat-total-prize">$0</span></div>
+        <div class="stat-card" id="stat-profit-card"><span class="label">累計淨損益</span><span class="value">$0</span></div>
+    </div>
+    <div class="main-layout">
+        <div class="panel">
+            <div class="panel-title">🎯 當期開獎號碼輸入</div>
+            <div class="settings-form">
+                <div class="form-group"><label>開獎日期</label><input type="date" id="input-date"></div>
+                <div class="form-group"><label>開獎期數</label><input type="text" id="input-period" placeholder="例如：115001"></div>
+                <div class="form-group"><label>每碰本金 (元)</label><input type="number" id="cost-per-bet" value="1" min="0.1" step="0.1"></div>
+                <div class="form-group"><label>單碰三星獎金 (元)</label><input type="number" id="prize-per-hit" value="5700"></div>
+            </div>
+            <div class="column-container">
+                <div class="col-box c1"><h3>第一柱 (10-18)<span id="count-c1">0 顆</span></h3><div class="ball-grid" id="grid-col1"></div></div>
+                <div class="col-box c2"><h3>第二柱 (20-29)<span id="count-c2">0 顆</span></h3><div class="ball-grid" id="grid-col2"></div></div>
+                <div class="col-box c3"><h3>第三柱 (其他)<span id="count-c3">0 顆</span></h3><div class="ball-grid" id="grid-col3"></div></div>
+            </div>
+            <div class="live-status">
+                <div class="live-selection-info">
+                    <span>已選擇：<strong id="selected-count">0</strong> / 5 顆球</span>
+                    <span>落點：<span class="live-pill p1">一柱 <span id="live-n1">0</span></span> <span class="live-pill p2">二柱 <span id="live-n2">0</span></span> <span class="live-pill p3">三柱 <span id="live-n3">0</span></span></span>
+                </div>
+                <button class="btn btn-primary" id="btn-add-record" disabled onclick="addRecord()">計算並計入歷史</button>
+            </div>
+        </div>
+        <div class="panel">
+            <div class="panel-title">💡 說明</div>
+            <div class="rule-card"><h4>中四碰：</h4><p>2+2+1 分佈，中 4 碰三星。</p></div>
+            <div class="rule-card" style="border-left-color: var(--accent-col3);"><h4>中三碰：</h4><p>3+1+1 分佈，中 3 碰三星。</p></div>
+            <div class="rule-card" style="border-left-color: #64748b;"><h4>未過關：</h4><p>任一柱開出 0 顆（斷柱）。</p></div>
+        </div>
+    </div>
+    <div class="panel table-section">
+        <div class="table-actions"><h2>📊 歷史實戰成績清單</h2><button class="btn btn-danger" onclick="clearAllData()">清空資料</button></div>
+        <div class="table-container">
+            <table>
+                <thead><tr><th>期數/日期</th><th>開獎號碼球</th><th>落點分佈</th><th>結果</th><th>成本</th><th>獎金</th><th>淨損益</th><th>操作</th></tr></thead>
+                <tbody id="history-tbody"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+    const COL1_NUMS = [10, 11, 12, 13, 14, 15, 16, 17, 18];
+    const COL2_NUMS = [20, 21, 22, 23, 24, 25, 26, 27, 28, 29];
+    let selectedNumbers = [], historyData = [];
+    window.onload = function() {
+        document.getElementById('input-date').value = new Date().toISOString().split('T')[0];
+        generateBallGrid();
+        if (localStorage.getItem('539_dashboard_history')) {
+            historyData = JSON.parse(localStorage.getItem('539_dashboard_history'));
+        } else {
+            historyData = [
+                { id: 1, date: "2026-06-25", period: "115123", numbers: [11, 15, 22, 28, 35], distribution: [2, 2, 1], hits: 4, resultText: "中四碰 (2+2+1)", cost: 1800, prize: 22800, profit: 21000 },
+                { id: 2, date: "2026-06-24", period: "115122", numbers: [5, 12, 14, 30, 39], distribution: [2, 0, 3], hits: 0, resultText: "未過關 (斷柱)", cost: 1800, prize: 0, profit: -1800 }
+            ];
+            localStorage.setItem('539_dashboard_history', JSON.stringify(historyData));
+        }
+        updateNextPeriodInput(); renderAll();
+    };
+    function generateBallGrid() {
+        const g1 = document.getElementById('grid-col1'), g2 = document.getElementById('grid-col2'), g3 = document.getElementById('grid-col3');
+        for (let i = 1; i <= 39; i++) {
+            const b = document.createElement('div'); b.className = 'ball'; b.innerText = i.toString().padStart(2, '0'); b.setAttribute('data-num', i); b.onclick = () => toggleNumber(i);
+            if (COL1_NUMS.includes(i)) g1.appendChild(b); else if (COL2_NUMS.includes(i)) g2.appendChild(b); else g3.appendChild(b);
+        }
+    }
+    function getColumnIndex(n) { if (COL1_NUMS.includes(n)) return 1; if (COL2_NUMS.includes(n)) return 2; return 3; }
+    function toggleNumber(n) {
+        const idx = selectedNumbers.indexOf(n);
+        if (idx > -1) selectedNumbers.splice(idx, 1);
+        else { if (selectedNumbers.length >= 5) { alert('已選滿5顆'); return; } selectedNumbers.push(n); }
+        updateSelectionUI();
+    }
+    function updateSelectionUI() {
+        document.querySelectorAll('.ball').forEach(b => b.classList.remove('selected'));
+        let n1 = 0, n2 = 0, n3 = 0;
+        selectedNumbers.forEach(n => {
+            document.querySelector(`.ball[data-num="${n}"]`).classList.add('selected');
+            let col = getColumnIndex(n); if (col === 1) n1++; if (col === 2) n2++; if (col === 3) n3++;
+        });
+        document.getElementById('selected-count').innerText = selectedNumbers.length;
+        document.getElementById('count-c1').innerText = `${n1} 顆`; document.getElementById('count-c2').innerText = `${n2} 顆`; document.getElementById('count-c3').innerText = `${n3} 顆`;
+        document.getElementById('live-n1').innerText = n1; document.getElementById('live-n2').innerText = n2; document.getElementById('live-n3').innerText = n3;
+        document.getElementById('btn-add-record').disabled = (selectedNumbers.length !== 5);
+    }
+    function addRecord() {
+        let n1 = 0, n2 = 0, n3 = 0;
+        selectedNumbers.forEach(n => { let col = getColumnIndex(n); if (col === 1) n1++; if (col === 2) n2++; if (col === 3) n3++; });
+        let hits = 0, resultText = "未過關", distArr = [n1, n2, n3].sort((a,b)=>a-b);
+        if (distArr[0] === 1 && distArr[1] === 2 && distArr[2] === 2) { hits = 4; resultText = `中四碰 (${n1}+${n2}+${n3})`; }
+        else if (distArr[0] === 1 && distArr[1] === 1 && distArr[2] === 3) { hits = 3; resultText = `中三碰 (${n1}+${n2}+${n3})`; }
+        else { resultText = `未過關 (${n1}+${n2}+${n3})`; }
+        const costPerBet = parseFloat(document.getElementById('cost-per-bet').value) || 1;
+        const prizePerHit = parseFloat(document.getElementById('prize-per-hit').value) || 5700;
+        const cost = 1800 * costPerBet, prize = hits * prizePerHit, profit = prize - cost;
+        historyData.unshift({ id: Date.now(), date: document.getElementById('input-date').value, period: document.getElementById('input-period').value || "未填", numbers: [...selectedNumbers].sort((a,b)=>a-b), distribution: [n1, n2, n3], hits, resultText, cost, prize, profit });
+        localStorage.setItem('539_dashboard_history', JSON.stringify(historyData));
+        selectedNumbers = []; updateSelectionUI(); updateNextPeriodInput(); renderAll();
+    }
+    function updateNextPeriodInput() { if (historyData.length > 0) { let p = parseInt(historyData[0].period); if (!isNaN(p)) { document.getElementById('input-period').value = p + 1; return; } } document.getElementById('input-period').value = ""; }
+    function deleteRecord(id) { if (confirm('刪除此筆？')) { historyData = historyData.filter(i => i.id !== id); localStorage.setItem('539_dashboard_history', JSON.stringify(historyData)); renderAll(); } }
+    function clearAllData() { if (confirm('確定清空？')) { historyData = []; localStorage.removeItem('539_dashboard_history'); renderAll(); } }
+    function renderAll() {
+        let draws = historyData.length, wins = 0, cost = 0, prize = 0, profit = 0;
+        const tbody = document.getElementById('history-tbody'); tbody.innerHTML = '';
+        historyData.forEach(item => {
+            cost += item.cost; prize += item.prize; profit += item.profit; if (item.hits > 0) wins++;
+            let ballsHtml = '<div class="mini-ball-container">';
+            item.numbers.forEach(n => { ballsHtml += `<span class="mini-ball b${getColumnIndex(n)}">${n.toString().padStart(2,'0')}</span>`; });
+            ballsHtml += '</div>';
+            let bc = item.hits === 4 ? 'badge-4' : (item.hits === 3 ? 'badge-3' : 'badge-0');
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td><strong>${item.period} 期</strong><br><span class="text-muted" style="font-size:12px;">${item.date}</span></td><td>${ballsHtml}</td><td>${item.distribution.join(' - ')}</td><td><span class="badge ${bc}">${item.resultText}</span></td><td>$${item.cost}</td><td>$${item.prize}</td><td class="${item.profit>=0?'text-success':'text-danger'}">${item.profit>=0?'+':''}$${item.profit}</td><td><button class="btn btn-secondary" style="padding:4px 8px;font-size:12px;" onclick="deleteRecord(${item.id})">刪除</button></td>`;
+            tbody.appendChild(tr);
+        });
+        if (draws === 0) tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:30px;">尚無紀錄</td></tr>`;
+        document.getElementById('stat-total-draws').innerText = `${draws} 期`;
+        document.getElementById('stat-win-rate').innerText = `${draws>0?(wins/draws*100).toFixed(2):0.00}%`;
+        document.getElementById('stat-total-cost').innerText = `$${cost.toLocaleString()}`;
+        document.getElementById('stat-total-prize').innerText = `$${prize.toLocaleString()}`;
+        const card = document.getElementById('stat-profit-card'); card.querySelector('.value').innerText = `${profit>=0?'+':''}$${profit.toLocaleString()}`;
+        card.className = 'stat-card ' + (draws>0 ? (profit>=0?'profit-positive':'profit-negative') : '');
+    }
+    function exportData() { const s = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(historyData)); const a = document.createElement('a'); a.setAttribute("href", s); a.setAttribute("download", "539資料備份.json"); a.click(); }
+    function importData() { const i = document.createElement('input'); i.type = 'file'; i.accept = '.json'; i.onchange = e => { const f = e.target.files[0], r = new FileReader(); r.readAsText(f, 'UTF-8'); r.onload = ev => { historyData = JSON.parse(ev.target.result); localStorage.setItem('539_dashboard_history', JSON.stringify(historyData)); renderAll(); } }; i.click(); }
+</script>
+</body>
+</html>
