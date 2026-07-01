@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>天天樂 AI vs 直覺 預測對決統計表</title>
+    <style>
+        :root {
+            --bg-color: #f0fdf4; /* 淺綠底色代表天天樂 */
+            --panel-bg: #ffffff;
+            --text-main: #1e293b;
+            --ai-color: #3b82f6; /* AI 代表色：藍色 */
+            --my-color: #10b981; /* 自己 代表色：綠色 */
+            --draw-color: #f59e0b; /* 開獎 代表色：橘色 */
+            --hit-color: #ef4444; /* 命中 代表色：紅色 */
+            --border: #cbd5e1;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Microsoft JhengHei", sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-main); padding: 20px; line-height: 1.6; }
+        .container { max-width: 1200px; margin: 0 auto; }
+
+        header { background: #1e293b; color: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        header h1 { font-size: 26px; }
+
+        /* 統計戰力板 */
+        .stats-board { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .stat-card { background: white; padding: 20px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 2px 5px rgba(0,0,0,0.05); text-align: center; position: relative; overflow: hidden; }
+        .stat-card.ai-card { border-bottom: 5px solid var(--ai-color); }
+        .stat-card.my-card { border-bottom: 5px solid var(--my-color); }
+        .stat-card.pk-card { border-bottom: 5px solid var(--hit-color); background: #fef2f2; }
+        .stat-title { font-size: 14px; color: #64748b; font-weight: bold; }
+        .stat-value { font-size: 32px; font-weight: 900; margin: 10px 0; }
+        .stat-sub { font-size: 13px; color: #94a3b8; }
+
+        /* 輸入區 */
+        .input-panel { background: white; padding: 25px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .input-panel h2 { margin-bottom: 15px; font-size: 18px; color: #334155; border-left: 4px solid var(--draw-color); padding-left: 10px; }
+        
+        .form-row { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 15px; }
+        .form-group { flex: 1; min-width: 200px; display: flex; flex-direction: column; gap: 5px; }
+        .form-group label { font-size: 14px; font-weight: bold; }
+        .form-group input { padding: 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 16px; outline: none; }
+        .form-group input:focus { border-color: var(--ai-color); }
+        
+        .btn-submit { width: 100%; background: #0f172a; color: white; border: none; padding: 15px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; transition: 0.2s; margin-top: 10px; }
+        .btn-submit:hover { background: #334155; }
+
+        /* 歷史紀錄表 */
+        .history-panel { background: white; padding: 20px; border-radius: 12px; border: 1px solid var(--border); overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; text-align: center; }
+        th { background: #f1f5f9; padding: 12px; border-bottom: 2px solid var(--border); font-weight: bold; }
+        td { padding: 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+        tr:hover { background: #f8fafc; }
+
+        /* 號碼球 UI */
+        .num-container { display: flex; gap: 5px; justify-content: center; flex-wrap: wrap; }
+        .num-ball { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; background: #e2e8f0; color: #475569; }
+        
+        /* 命中時的高亮效果 */
+        .num-ball.hit { background: var(--hit-color); color: white; box-shadow: 0 0 8px rgba(239, 68, 68, 0.5); transform: scale(1.1); }
+        .num-ball.draw { background: var(--draw-color); color: white; }
+
+        .winner-badge { padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; color: white; }
+        .badge-ai { background: var(--ai-color); }
+        .badge-my { background: var(--my-color); }
+        .badge-tie { background: #94a3b8; }
+        
+        .delete-btn { padding: 5px 10px; background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 4px; cursor: pointer; color: #ef4444; font-size: 12px; }
+        .delete-btn:hover { background: #fee2e2; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>⚔️ 天天樂 (39選5) 預測對決擂台</h1>
+        <p>AI 大數據 vs 人類直覺！究竟誰的勝率高？</p>
+    </header>
+
+    <div class="stats-board">
+        <div class="stat-card">
+            <div class="stat-title">總對決期數</div>
+            <div class="stat-value" id="total-rounds">0</div>
+            <div class="stat-sub">累積紀錄天數</div>
+        </div>
+        <div class="stat-card ai-card">
+            <div class="stat-title" style="color:var(--ai-color)">🤖 AI 總命中球數</div>
+            <div class="stat-value" id="ai-hits" style="color:var(--ai-color)">0</div>
+            <div class="stat-sub">平均每期命中：<span id="ai-avg">0.00</span> 顆</div>
+        </div>
+        <div class="stat-card my-card">
+            <div class="stat-title" style="color:var(--my-color)">🧑 我 總命中球數</div>
+            <div class="stat-value" id="my-hits" style="color:var(--my-color)">0</div>
+            <div class="stat-sub">平均每期命中：<span id="my-avg">0.00</span> 顆</div>
+        </div>
+        <div class="stat-card pk-card">
+            <div class="stat-title" style="color:var(--hit-color)">🏆 目前勝率霸主</div>
+            <div class="stat-value" id="pk-winner" style="color:var(--hit-color); font-size:24px;">平手</div>
+            <div class="stat-sub">根據總命中數判定</div>
+        </div>
+    </div>
+
+    <div class="input-panel">
+        <h2>📝 新增今日對決紀錄</h2>
+        <div class="form-row">
+            <div class="form-group" style="flex: 0.5;">
+                <label>日期</label>
+                <input type="date" id="input-date">
+            </div>
+            <div class="form-group">
+                <label style="color:var(--ai-color)">🤖 AI 的 4 個號碼 (逗號或空白分隔)</label>
+                <input type="text" id="ai-nums" placeholder="例: 05, 12, 28, 33">
+            </div>
+            <div class="form-group">
+                <label style="color:var(--my-color)">🧑 我挑的 4 個號碼 (逗號或空白分隔)</label>
+                <input type="text" id="my-nums" placeholder="例: 01, 15, 29, 39">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label style="color:var(--draw-color)">📺 實際開獎 5 個號碼 (逗號或空白分隔)</label>
+                <input type="text" id="draw-nums" placeholder="例: 05, 10, 15, 28, 39">
+            </div>
+        </div>
+        <button class="btn-submit" onclick="addRecord()">✅ 儲存紀錄並自動對獎</button>
+    </div>
+
+    <div class="history-panel">
+        <h2 style="font-size: 18px; margin-bottom: 15px;">📊 歷史戰績對照表</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>日期</th>
+                    <th>🤖 AI預測 (紅底為命中)</th>
+                    <th>🧑 我的預測 (紅底為命中)</th>
+                    <th>📺 實際開出 5 碼</th>
+                    <th>單期勝負</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody id="history-tbody">
+                </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    let battleHistory = [];
+
+    window.onload = function() {
+        document.getElementById('input-date').value = new Date().toISOString().split('T')[0];
+        if (localStorage.getItem('tt5_battle_history')) {
+            battleHistory = JSON.parse(localStorage.getItem('tt5_battle_history'));
+        }
+        renderAll();
+    };
+
+    // 解析文字框的數字 (確保在 1~39 之間，過濾重複)
+    function parseNumbers(inputStr, requiredCount) {
+        let nums = inputStr.match(/\d+/g);
+        if (!nums) return [];
+        nums = nums.map(n => parseInt(n, 10)).filter(n => n >= 1 && n <= 39);
+        nums = [...new Set(nums)].sort((a, b) => a - b);
+        return nums;
+    }
+
+    function addRecord() {
+        let date = document.getElementById('input-date').value;
+        let aiInput = document.getElementById('ai-nums').value;
+        let myInput = document.getElementById('my-nums').value;
+        let drawInput = document.getElementById('draw-nums').value;
+
+        let aiNums = parseNumbers(aiInput);
+        let myNums = parseNumbers(myInput);
+        let drawNums = parseNumbers(drawInput);
+
+        // 防呆檢查
+        if (aiNums.length !== 4) return alert("🤖 AI 的號碼必須剛好是 4 個不重複的數字 (1-39)！");
+        if (myNums.length !== 4) return alert("🧑 你挑的號碼必須剛好是 4 個不重複的數字 (1-39)！");
+        if (drawNums.length !== 5) return alert("📺 實際開獎號碼必須剛好是 5 個不重複的數字 (1-39)！");
+
+        // 計算命中數
+        let aiHitCount = aiNums.filter(n => drawNums.includes(n)).length;
+        let myHitCount = myNums.filter(n => drawNums.includes(n)).length;
+
+        // 判斷單期勝負
+        let winner = "平手";
+        if (aiHitCount > myHitCount) winner = "AI 勝";
+        else if (myHitCount > aiHitCount) winner = "我 勝";
+
+        let record = {
+            id: Date.now(),
+            date: date,
+            ai: aiNums,
+            my: myNums,
+            draw: drawNums,
+            aiHits: aiHitCount,
+            myHits: myHitCount,
+            winner: winner
+        };
+
+        battleHistory.unshift(record);
+        localStorage.setItem('tt5_battle_history', JSON.stringify(battleHistory));
+
+        // 清空輸入框
+        document.getElementById('ai-nums').value = "";
+        document.getElementById('my-nums').value = "";
+        document.getElementById('draw-nums').value = "";
+
+        renderAll();
+    }
+
+    function deleteRecord(id) {
+        if (confirm("確定刪除這筆紀錄？")) {
+            battleHistory = battleHistory.filter(item => item.id !== id);
+            localStorage.setItem('tt5_battle_history', JSON.stringify(battleHistory));
+            renderAll();
+        }
+    }
+
+    function renderAll() {
+        const tbody = document.getElementById('history-tbody');
+        tbody.innerHTML = '';
+
+        let totalRounds = battleHistory.length;
+        let totalAiHits = 0;
+        let totalMyHits = 0;
+
+        battleHistory.forEach(item => {
+            totalAiHits += item.aiHits;
+            totalMyHits += item.myHits;
+
+            const tr = document.createElement('tr');
+
+            // 產生號碼球 HTML，若在開獎名單內則加 'hit' class
+            const genBalls = (nums) => {
+                return `<div class="num-container">` + nums.map(n => {
+                    let isHit = item.draw.includes(n) ? 'hit' : '';
+                    return `<div class="num-ball ${isHit}">${n.toString().padStart(2,'0')}</div>`;
+                }).join('') + `</div>`;
+            };
+
+            const genDrawBalls = (nums) => {
+                return `<div class="num-container">` + nums.map(n => 
+                    `<div class="num-ball draw">${n.toString().padStart(2,'0')}</div>`
+                ).join('') + `</div>`;
+            };
+
+            let winnerBadge = `<span class="winner-badge badge-tie">平手</span>`;
+            if (item.winner === "AI 勝") winnerBadge = `<span class="winner-badge badge-ai">🤖 AI 勝</span>`;
+            if (item.winner === "我 勝") winnerBadge = `<span class="winner-badge badge-my">🧑 我 勝</span>`;
+
+            tr.innerHTML = `
+                <td><strong>${item.date}</strong></td>
+                <td>
+                    ${genBalls(item.ai)}
+                    <div style="font-size:12px; margin-top:5px; color:#ef4444;">中 ${item.aiHits} 顆</div>
+                </td>
+                <td>
+                    ${genBalls(item.my)}
+                    <div style="font-size:12px; margin-top:5px; color:#ef4444;">中 ${item.myHits} 顆</div>
+                </td>
+                <td>${genDrawBalls(item.draw)}</td>
+                <td>${winnerBadge}</td>
+                <td><button class="delete-btn" onclick="deleteRecord(${item.id})">刪除</button></td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        if (totalRounds === 0) {
+            tbody.innerHTML = `<tr><td colspan="6" style="padding: 30px; color: #94a3b8;">目前尚無紀錄，趕快輸入今天的第一筆對決吧！</td></tr>`;
+        }
+
+        // 更新頂部統計數據
+        document.getElementById('total-rounds').innerText = totalRounds;
+        document.getElementById('ai-hits').innerText = totalAiHits;
+        document.getElementById('my-hits').innerText = totalMyHits;
+        
+        document.getElementById('ai-avg').innerText = totalRounds > 0 ? (totalAiHits / totalRounds).toFixed(2) : "0.00";
+        document.getElementById('my-avg').innerText = totalRounds > 0 ? (totalMyHits / totalRounds).toFixed(2) : "0.00";
+
+        // 判斷總勝出者
+        let pkEl = document.getElementById('pk-winner');
+        if (totalAiHits > totalMyHits) {
+            pkEl.innerText = "🤖 AI 領先";
+            pkEl.style.color = "var(--ai-color)";
+        } else if (totalMyHits > totalAiHits) {
+            pkEl.innerText = "🧑 人類(你)領先";
+            pkEl.style.color = "var(--my-color)";
+        } else {
+            pkEl.innerText = "平分秋色";
+            pkEl.style.color = "var(--hit-color)";
+        }
+    }
+</script>
+
+</body>
+</html>
