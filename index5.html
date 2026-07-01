@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>539 預測對決與 AI 算牌系統</title>
+    <title>539 AI vs 直覺 預測對決與算牌系統</title>
     <style>
         :root {
             --bg-color: #f0fdf4; 
@@ -21,7 +21,8 @@
         .container { max-width: 1200px; margin: 0 auto; }
 
         header { background: #1e293b; color: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        header h1 { font-size: 26px; }
+        header h1 { font-size: 26px; margin-bottom: 5px; }
+        header p { color: #94a3b8; font-size: 14px; }
 
         /* 人流統計區 */
         .people-board { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
@@ -56,7 +57,7 @@
 
         /* AI 算牌專區 */
         .ai-predict-box { background: #eff6ff; border: 1px solid #bfdbfe; padding: 20px; border-radius: 10px; text-align: center; }
-        .btn-ai-gen { background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: white; border: none; padding: 12px 25px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 6px rgba(59, 130, 246, 0.3); }
+        .btn-ai-gen { background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: white; border: none; padding: 12px 25px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 6px rgba(59, 130, 246, 0.3); white-space: nowrap; }
         .btn-ai-gen:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(59, 130, 246, 0.4); }
 
         /* 歷史紀錄表 */
@@ -87,7 +88,7 @@
 <div class="container">
     <header>
         <h1>⚔️ 539 預測對決擂台 & 大數據算牌系統</h1>
-        <p>AI 智能算牌 vs 人類直覺！記錄並產生下一期幸運號碼</p>
+        <p>AI 一組 vs 我挑一組！記錄每天開獎並產生下一期幸運號碼</p>
     </header>
 
     <div class="people-board">
@@ -117,7 +118,7 @@
         <div class="stat-card ai-card">
             <div class="stat-title" style="color:var(--ai-color)">🤖 AI 總命中球數</div>
             <div class="stat-value" id="ai-hits" style="color:var(--ai-color)">0</div>
-            <div class="stat-sub">平均每期命中：<span id="ai-avg">0.00</span> 顆<br><span style="font-size:11px;">(僅計有輸入AI之期數)</span></div>
+            <div class="stat-sub">平均每期命中：<span id="ai-avg">0.00</span> 顆<br><span style="font-size:11px;">(僅計 AI 參戰期數)</span></div>
         </div>
         <div class="stat-card my-card">
             <div class="stat-title" style="color:var(--my-color)">🧑 我 總命中球數</div>
@@ -153,7 +154,7 @@
                 <input type="text" id="draw-nums" placeholder="請貼上官方開出的 5 個數字">
             </div>
         </div>
-        <button class="btn-submit" onclick="addRecord()">✅ 存檔 PK 並更新大數據庫</button>
+        <button class="btn-submit" onclick="addRecord()">✅ 存檔 PK並更新大數據庫</button>
     </div>
 
     <div class="panel" style="border-left: 5px solid var(--ai-color);">
@@ -171,7 +172,7 @@
     </div>
 
     <div class="panel">
-        <h2 style="border-left: 4px solid #64748b;">📊 歷史戰績與開獎紀錄庫</h2>
+        <h2 style="border-left: 4px solid #64748b; padding-left: 10px;">📊 歷史戰績與開獎紀錄庫</h2>
         <div style="overflow-x: auto;">
             <table>
                 <thead>
@@ -261,6 +262,7 @@
         } else if (aiHitCount !== null && myHitCount === null) winner = "AI 獨測";
         else if (myHitCount !== null && aiHitCount === null) winner = "我 獨測";
 
+        // 兼容舊資料格式
         battleHistory.unshift({ id: Date.now(), date: date, ai: aiNums, my: myNums, draw: drawNums, aiHits: aiHitCount, myHits: myHitCount, winner: winner });
         localStorage.setItem('sys_battle_history', JSON.stringify(battleHistory));
 
@@ -331,7 +333,10 @@
         let totalRounds = battleHistory.length, aiValid = 0, myValid = 0, totalAiHits = 0, totalMyHits = 0;
 
         battleHistory.forEach(item => {
-            if (item.myHits !== null) { totalMyHits += item.myHits; myValid++; }
+            let myNumsArr = item.my || (item.mySets && item.mySets[0] ? item.mySets[0] : []);
+            let myHitsVal = item.myHits !== null ? item.myHits : (item.mySetHits && item.mySetHits[0] !== undefined ? item.mySetHits[0] : null);
+
+            if (myHitsVal !== null) { totalMyHits += myHitsVal; myValid++; }
             if (item.aiHits !== null) { totalAiHits += item.aiHits; aiValid++; }
 
             const tr = document.createElement('tr');
@@ -344,7 +349,7 @@
             };
 
             let aiHitText = item.aiHits !== null ? `<div style="font-size:12px; margin-top:5px; color:#ef4444; font-weight:bold;">中 ${item.aiHits} 顆</div>` : '';
-            let myHitText = item.myHits !== null ? `<div style="font-size:12px; margin-top:5px; color:#ef4444; font-weight:bold;">中 ${item.myHits} 顆</div>` : '';
+            let myHitText = myHitsVal !== null ? `<div style="font-size:12px; margin-top:5px; color:#ef4444; font-weight:bold;">中 ${myHitsVal} 顆</div>` : '';
 
             let badge = `<span class="badge badge-tie">平手</span>`;
             if (item.winner === "AI 勝") badge = `<span class="badge badge-ai">🤖 AI 勝</span>`;
@@ -356,7 +361,7 @@
             tr.innerHTML = `
                 <td><strong>${item.date}</strong></td>
                 <td>${genBalls(item.ai)}${aiHitText}</td>
-                <td>${genBalls(item.my)}${myHitText}</td>
+                <td>${genBalls(myNumsArr)}${myHitText}</td>
                 <td>${genBalls(item.draw, true)}</td>
                 <td>${badge}</td>
                 <td><button class="delete-btn" onclick="deleteRecord(${item.id})">刪除</button></td>
