@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>539 大數據統計與 AI 智能預測系統</title>
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --primary: #2563eb;
+            --secondary: #475569;
+            --accent-hot: #ef4444;
+            --accent-cold: #3b82f6;
+            --ai-color: #8b5cf6;
+            --border: #e2e8f0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Microsoft JhengHei", sans-serif; }
+        body { background-color: var(--bg-color); color: #0f172a; padding: 20px; line-height: 1.6; }
+        .container { max-width: 1200px; margin: 0 auto; display: grid; gap: 20px; }
+        
+        @media (min-width: 1024px) {
+            .container { grid-template-columns: 1fr 1fr; }
+            .header, .full-width { grid-column: span 2; }
+        }
+
+        header { background: linear-gradient(135deg, #1e293b, #0f172a); color: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; }
+        header h1 { font-size: 24px; margin-bottom: 5px; }
+        header p { color: #94a3b8; font-size: 14px; }
+
+        .card { background: white; padding: 25px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 2px 5px rgba(0,0,0,0.03); }
+        .card-title { font-size: 18px; font-weight: bold; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; border-bottom: 2px solid var(--bg-color); padding-bottom: 10px; }
+
+        /* 智慧輸入區 */
+        .smart-input { display: flex; flex-direction: column; gap: 10px; }
+        textarea { width: 100%; height: 80px; padding: 12px; border: 2px solid var(--border); border-radius: 8px; font-size: 16px; resize: none; transition: 0.3s; }
+        textarea:focus { border-color: var(--primary); outline: none; }
+        .btn { padding: 12px 20px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; color: white; font-size: 15px; }
+        .btn-primary { background: var(--primary); }
+        .btn-primary:hover { background: #1d4ed8; }
+        .btn-ai { background: linear-gradient(135deg, #8b5cf6, #6d28d9); width: 100%; margin-top: 10px; font-size: 16px; box-shadow: 0 4px 10px rgba(139, 92, 246, 0.3); }
+        .btn-ai:hover { transform: translateY(-2px); }
+        .btn-danger { background: #ef4444; padding: 6px 12px; font-size: 12px; }
+
+        /* 號碼球外觀 */
+        .ball-container { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+        .ball { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; }
+        .ball.ai-ball { background: var(--ai-color); color: white; border: none; box-shadow: 0 0 10px rgba(139, 92, 246, 0.5); }
+        .ball.hot-ball { background: var(--accent-hot); color: white; border: none; }
+        .ball.cold-ball { background: var(--accent-cold); color: white; border: none; }
+
+        /* 統計排行榜 */
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .stat-box { background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px dashed #cbd5e1; }
+        .stat-box h4 { margin-bottom: 10px; color: var(--secondary); font-size: 14px; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 14px; }
+        th { background: #f1f5f9; padding: 10px; text-align: left; border-bottom: 2px solid var(--border); }
+        td { padding: 12px 10px; border-bottom: 1px solid var(--border); }
+        tr:hover { background: #f8fafc; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header class="header">
+        <h1>📈 539 大數據統計與 AI 智能預測系統</h1>
+        <p>利用歷史開獎數據分析冷熱門號碼，並結合演算法產生每日預測</p>
+    </header>
+
+    <!-- 左半部：輸入與 AI 預測 -->
+    <div class="left-column" style="display: flex; flex-direction: column; gap: 20px;">
+        
+        <div class="card">
+            <div class="card-title">⚡ 極速開獎紀錄輸入區</div>
+            <div class="smart-input">
+                <input type="date" id="input-date" style="padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 15px;">
+                <textarea id="quick-input" placeholder="請在此直接貼上今天開獎的 5 個號碼...&#10;(系統會自動過濾中文字與標點符號)"></textarea>
+                <button class="btn btn-primary" onclick="processInput()">💾 儲存並更新大數據庫</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title" style="color: var(--ai-color);">🤖 AI 智能大數據分析預測</div>
+            <p style="font-size: 13px; color: #64748b; margin-bottom: 15px;">
+                演算法根據您的歷史資料庫，自動挑選 3 顆極熱門號碼、1 顆極冷門號碼，並加入 1 顆亂數變異號碼，產出最具潛力的 539 組合。
+            </p>
+            <button class="btn btn-ai" onclick="generateAI()">✨ 點擊生成明日 AI 預測號碼</button>
+            
+            <div style="margin-top: 20px; text-align: center; min-height: 50px;">
+                <div id="ai-result" class="ball-container" style="justify-content: center; transform: scale(1.2);">
+                    <!-- AI 球會出現在這裡 -->
+                </div>
+                <div id="ai-desc" style="font-size: 12px; color: #94a3b8; margin-top: 15px;"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 右半部：統計與歷史 -->
+    <div class="right-column" style="display: flex; flex-direction: column; gap: 20px;">
+        
+        <div class="card">
+            <div class="card-title">📊 號碼冷熱門排行榜 (歷史累計)</div>
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <h4>🔥 最常開出 (熱門牌)</h4>
+                    <div id="hot-numbers" class="ball-container">尚無足夠數據</div>
+                </div>
+                <div class="stat-box">
+                    <h4>❄️ 最少開出 (冷門牌)</h4>
+                    <div id="cold-numbers" class="ball-container">尚無足夠數據</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card full-width">
+            <div class="card-title" style="justify-content: space-between;">
+                <span>📖 歷史開獎紀錄庫</span>
+                <span id="total-records" style="font-size: 14px; font-weight: normal; color: var(--secondary);">總紀錄：0 期</span>
+            </div>
+            <div style="overflow-x: auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>開獎日期</th>
+                            <th>開獎 5 顆號碼</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="history-tbody">
+                        <!-- 歷史紀錄 -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    let drawHistory = [];
+    let numberStats = {};
+
+    window.onload = function() {
+        document.getElementById('input-date').value = new Date().toISOString().split('T')[0];
+        if (localStorage.getItem('539_ai_stats')) {
+            drawHistory = JSON.parse(localStorage.getItem('539_ai_stats'));
+        }
+        updateDashboard();
+    };
+
+    // 處理極速輸入
+    function processInput() {
+        const date = document.getElementById('input-date').value;
+        const inputVal = document.getElementById('quick-input').value;
+        
+        // 智慧過濾：只抓出數字，過濾掉所有文字符號
+        const numStrings = inputVal.match(/\d+/g);
+        if (!numStrings) return alert("系統找不到數字，請確認貼上的內容是否正確！");
+
+        // 轉換為數字，過濾 1-39 之間，去除重複
+        let nums = numStrings.map(n => parseInt(n, 10)).filter(n => n >= 1 && n <= 39);
+        nums = [...new Set(nums)].sort((a, b) => a - b);
+
+        if (nums.length !== 5) {
+            return alert(`系統解析到 ${nums.length} 個有效號碼，但 539 必須剛好是 5 個不同的號碼 (01-39)！\n請檢查貼上的內容。`);
+        }
+
+        // 存入紀錄庫
+        drawHistory.unshift({ id: Date.now(), date: date, numbers: nums });
+        localStorage.setItem('539_ai_stats', JSON.stringify(drawHistory));
+        
+        document.getElementById('quick-input').value = ""; // 清空輸入框
+        alert("✅ 成功存入大數據庫！系統已重新計算機率。");
+        updateDashboard();
+    }
+
+    // 更新面板數據
+    function updateDashboard() {
+        renderHistory();
+        calculateStats();
+    }
+
+    // 計算號碼冷熱門
+    function calculateStats() {
+        // 初始化 1-39 次數為 0
+        numberStats = {};
+        for(let i = 1; i <= 39; i++) numberStats[i] = 0;
+
+        // 計算次數
+        drawHistory.forEach(record => {
+            record.numbers.forEach(num => {
+                numberStats[num]++;
+            });
+        });
+
+        // 排序
+        let sortedNumbers = Object.keys(numberStats).map(Number).sort((a, b) => numberStats[b] - numberStats[a]);
+
+        const hotContainer = document.getElementById('hot-numbers');
+        const coldContainer = document.getElementById('cold-numbers');
+        
+        if (drawHistory.length === 0) {
+            hotContainer.innerHTML = "尚無足夠數據";
+            coldContainer.innerHTML = "尚無足夠數據";
+            return;
+        }
+
+        // 取前 5 熱門
+        hotContainer.innerHTML = sortedNumbers.slice(0, 5).map(n => 
+            `<div class="ball hot-ball" title="開出 ${numberStats[n]} 次">${n.toString().padStart(2, '0')}</div>`
+        ).join('');
+
+        // 取最後 5 冷門
+        let coldNums = sortedNumbers.slice(-5).reverse();
+        coldContainer.innerHTML = coldNums.map(n => 
+            `<div class="ball cold-ball" title="開出 ${numberStats[n]} 次">${n.toString().padStart(2, '0')}</div>`
+        ).join('');
+    }
+
+    // AI 生成邏輯
+    function generateAI() {
+        if (drawHistory.length < 3) {
+            return alert("請至少輸入 3 期的歷史紀錄，AI 才有足夠的數據幫您運算喔！");
+        }
+
+        // 依照次數排序
+        let sortedNumbers = Object.keys(numberStats).map(Number).sort((a, b) => numberStats[b] - numberStats[a]);
+        
+        let hotPool = sortedNumbers.slice(0, 10); // 前 10 名熱門
+        let coldPool = sortedNumbers.slice(-10);  // 後 10 名冷門
+        let allPool = sortedNumbers.slice();
+
+        // AI 選號策略：3 個熱門 + 1 個冷門 + 1 個亂數
+        let aiPicks = [];
+        
+        // 隨機從陣列挑選並移除，避免重複
+        function pickRandom(array) {
+            let index = Math.floor(Math.random() * array.length);
+            return array.splice(index, 1)[0];
+        }
+
+        aiPicks.push(pickRandom(hotPool));
+        aiPicks.push(pickRandom(hotPool));
+        aiPicks.push(pickRandom(hotPool));
+        
+        // 避免冷門池剛好挑到熱門池的數字(以防數據太少重疊)
+        coldPool = coldPool.filter(n => !aiPicks.includes(n));
+        if(coldPool.length > 0) aiPicks.push(pickRandom(coldPool));
+        
+        allPool = allPool.filter(n => !aiPicks.includes(n));
+        aiPicks.push(pickRandom(allPool)); // 補上亂數變異號碼
+
+        aiPicks.sort((a, b) => a - b);
+
+        // 顯示結果
+        const aiResult = document.getElementById('ai-result');
+        aiResult.innerHTML = '';
+        aiPicks.forEach((num, i) => {
+            setTimeout(() => {
+                let b = document.createElement('div');
+                b.className = 'ball ai-ball';
+                b.innerText = num.toString().padStart(2, '0');
+                aiResult.appendChild(b);
+            }, i * 150);
+        });
+
+        document.getElementById('ai-desc').innerText = "✅ 運算完成！已為您融合近期大數據熱門趨勢與冷門防守號碼。";
+    }
+
+    // 渲染歷史紀錄表格
+    function renderHistory() {
+        const tbody = document.getElementById('history-tbody');
+        tbody.innerHTML = '';
+        
+        drawHistory.forEach(item => {
+            const tr = document.createElement('tr');
+            let ballsHtml = `<div class="ball-container">` + item.numbers.map(n => `<div class="ball">${n.toString().padStart(2,'0')}</div>`).join('') + `</div>`;
+            
+            tr.innerHTML = `
+                <td><strong>${item.date}</strong></td>
+                <td>${ballsHtml}</td>
+                <td><button class="btn btn-danger" onclick="deleteRecord(${item.id})">刪除</button></td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        if (drawHistory.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; padding: 30px; color: #94a3b8;">目前尚無紀錄，請在左側輸入您的第一筆開獎資料！</td></tr>`;
+        }
+        
+        document.getElementById('total-records').innerText = `總紀錄：${drawHistory.length} 期`;
+    }
+
+    function deleteRecord(id) {
+        if (confirm("確定刪除這筆開獎紀錄？這會影響 AI 的統計數據喔！")) {
+            drawHistory = drawHistory.filter(item => item.id !== id);
+            localStorage.setItem('539_ai_stats', JSON.stringify(drawHistory));
+            updateDashboard();
+        }
+    }
+</script>
+
+</body>
+</html>
