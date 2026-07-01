@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>預測對決與人流統計系統</title>
+    <title>539 AI 智能選號與 PK 統計系統</title>
     <style>
         :root {
             --bg-color: #f0fdf4; 
@@ -45,12 +45,15 @@
         .input-panel { background: white; padding: 25px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .input-panel h2 { margin-bottom: 15px; font-size: 18px; color: #334155; border-left: 4px solid var(--draw-color); padding-left: 10px; }
         
-        .form-row { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 15px; }
+        .form-row { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 15px; align-items: flex-end; }
         .form-group { flex: 1; min-width: 200px; display: flex; flex-direction: column; gap: 5px; }
         .form-group label { font-size: 14px; font-weight: bold; }
         .form-group input { padding: 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 16px; outline: none; }
         .form-group input:focus { border-color: var(--draw-color); }
         
+        .btn-ai-gen { background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: white; border: none; padding: 10px 15px; border-radius: 6px; font-size: 14px; font-weight: bold; cursor: pointer; height: 42px; transition: 0.2s; white-space: nowrap; }
+        .btn-ai-gen:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3); }
+
         .btn-submit { width: 100%; background: #0f172a; color: white; border: none; padding: 15px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; transition: 0.2s; margin-top: 10px; }
         .btn-submit:hover { background: #334155; }
 
@@ -81,8 +84,8 @@
 
 <div class="container">
     <header>
-        <h1>⚔️ 預測對決擂台 & 人流統計系統</h1>
-        <p>AI 大數據 vs 人類直覺！究竟誰的勝率高？</p>
+        <h1>⚔️ 539 預測對決擂台 & 歷史大數據庫</h1>
+        <p>AI 智能算牌 vs 人類直覺！記錄每天的 539 開獎號碼</p>
     </header>
 
     <div class="people-board">
@@ -105,20 +108,293 @@
 
     <div class="stats-board">
         <div class="stat-card">
-            <div class="stat-title">總對決期數</div>
+            <div class="stat-title">資料庫總期數</div>
             <div class="stat-value" id="total-rounds">0</div>
-            <div class="stat-sub">累積紀錄天數</div>
+            <div class="stat-sub">累積大數據天數</div>
         </div>
         <div class="stat-card ai-card">
             <div class="stat-title" style="color:var(--ai-color)">🤖 AI 總命中球數</div>
             <div class="stat-value" id="ai-hits" style="color:var(--ai-color)">0</div>
-            <div class="stat-sub">平均每期命中：<span id="ai-avg">0.00</span> 顆<br><span style="font-size:11px;">(僅計算有填寫AI的期數)</span></div>
+            <div class="stat-sub">平均每期命中：<span id="ai-avg">0.00</span> 顆<br><span style="font-size:11px;">(僅計算 AI 參戰期數)</span></div>
         </div>
         <div class="stat-card my-card">
             <div class="stat-title" style="color:var(--my-color)">🧑 我 總命中球數</div>
             <div class="stat-value" id="my-hits" style="color:var(--my-color)">0</div>
-            <div class="stat-sub">平均每期命中：<span id="my-avg">0.00</span> 顆</div>
+            <div class="stat-sub">平均每期命中：<span id="my-avg">0.00</span> 顆<br><span style="font-size:11px;">(僅計算我有猜的期數)</span></div>
         </div>
         <div class="stat-card pk-card">
             <div class="stat-title" style="color:var(--hit-color)">🏆 目前勝率霸主</div>
-            <div
+            <div class="stat-value" id="pk-winner" style="color:var(--hit-color); font-size:24px;">資料不足</div>
+            <div class="stat-sub">根據平均命中率判定</div>
+        </div>
+    </div>
+
+    <div class="input-panel">
+        <h2>📝 新增今日紀錄與對決</h2>
+        <div class="form-row">
+            <div class="form-group" style="flex: 0.5;">
+                <label>開獎日期</label>
+                <input type="date" id="input-date">
+            </div>
+            
+            <div class="form-group" style="flex: 1.5;">
+                <label style="color:var(--ai-color)">🤖 AI 的 4 個號碼 (選填)</label>
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="ai-nums" placeholder="可自己輸入，或點擊右方按鈕讓 AI 算牌">
+                    <button class="btn-ai-gen" onclick="generateAINums()">✨ 讓 AI 幫我挑 4 碼</button>
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label style="color:var(--my-color)">🧑 我挑的 4 個號碼 (選填)</label>
+                <input type="text" id="my-nums" placeholder="今天沒感覺可留空，不影響統計">
+            </div>
+            <div class="form-group">
+                <label style="color:var(--draw-color)">📺 實際開獎 5 個號碼 (🎯 必填)</label>
+                <input type="text" id="draw-nums" placeholder="將官方開出的 5 個號碼貼在這裡">
+            </div>
+        </div>
+        <button class="btn-submit" onclick="addRecord()">✅ 儲存紀錄至大數據庫</button>
+    </div>
+
+    <div class="history-panel">
+        <h2 style="font-size: 18px; margin-bottom: 15px;">📊 歷史戰績與開獎紀錄庫</h2>
+        <div style="overflow-x: auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>日期</th>
+                        <th>🤖 AI預測 (紅底為命中)</th>
+                        <th>🧑 我的預測 (紅底為命中)</th>
+                        <th>📺 實際開出 5 碼</th>
+                        <th>單期勝負</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="history-tbody">
+                    </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    // === 人流統計系統 ===
+    function getWeekKey(dateObj) {
+        let d = new Date(dateObj);
+        let day = d.getDay();
+        let diff = d.getDate() - day + (day === 0 ? -6 : 1);
+        let monday = new Date(d.setDate(diff));
+        return monday.toISOString().split('T')[0];
+    }
+
+    function addPeople() {
+        let todayStr = new Date().toISOString().split('T')[0];
+        let weekStr = getWeekKey(new Date());
+        let stats = JSON.parse(localStorage.getItem('sys_people_stats') || '{"total":0, "todayDate":"", "todayCount":0, "weekDate":"", "weekCount":0}');
+        
+        if (stats.todayDate !== todayStr) { stats.todayDate = todayStr; stats.todayCount = 0; }
+        if (stats.weekDate !== weekStr) { stats.weekDate = weekStr; stats.weekCount = 0; }
+
+        stats.todayCount++;
+        stats.weekCount++;
+        stats.total++;
+        
+        localStorage.setItem('sys_people_stats', JSON.stringify(stats));
+        updatePeopleUI();
+    }
+
+    function updatePeopleUI() {
+        let todayStr = new Date().toISOString().split('T')[0];
+        let weekStr = getWeekKey(new Date());
+        let stats = JSON.parse(localStorage.getItem('sys_people_stats') || '{"total":0, "todayDate":"", "todayCount":0, "weekDate":"", "weekCount":0}');
+        
+        document.getElementById('today-count').innerText = (stats.todayDate === todayStr) ? stats.todayCount : 0;
+        document.getElementById('week-count').innerText = (stats.weekDate === weekStr) ? stats.weekCount : 0;
+        document.getElementById('total-count').innerText = stats.total;
+    }
+
+    // === 對決與大數據庫系統 ===
+    let battleHistory = JSON.parse(localStorage.getItem('sys_battle_history') || '[]');
+
+    window.onload = function() {
+        document.getElementById('input-date').value = new Date().toISOString().split('T')[0];
+        updatePeopleUI();
+        renderBattle();
+    };
+
+    function parseNumbers(inputStr) {
+        let nums = inputStr.match(/\d+/g);
+        if (!nums) return [];
+        nums = nums.map(n => parseInt(n, 10)).filter(n => n >= 1 && n <= 39);
+        return [...new Set(nums)].sort((a, b) => a - b);
+    }
+
+    // 讓 AI 自動計算大數據並選出 4 個號碼
+    function generateAINums() {
+        let stats = {};
+        for(let i=1; i<=39; i++) stats[i] = 0;
+        
+        // 分析歷史開獎次數
+        battleHistory.forEach(record => {
+            if(record.draw && record.draw.length > 0) {
+                record.draw.forEach(n => stats[n]++);
+            }
+        });
+
+        let sorted = Object.keys(stats).map(Number).sort((a, b) => stats[b] - stats[a]);
+        let picks = [];
+
+        if (battleHistory.length < 3) {
+            // 資料不足時完全亂數
+            let pool = Array.from({length: 39}, (_, i) => i + 1);
+            for(let i=0; i<4; i++) {
+                let idx = Math.floor(Math.random() * pool.length);
+                picks.push(pool.splice(idx, 1)[0]);
+            }
+        } else {
+            // 2顆熱門 + 1顆冷門 + 1顆變異亂數 = 4顆
+            let hot = sorted.slice(0, 10);
+            let cold = sorted.slice(-10);
+            let all = sorted.slice();
+
+            const pickRandom = (arr) => {
+                let idx = Math.floor(Math.random() * arr.length);
+                return arr.splice(idx, 1)[0];
+            };
+
+            picks.push(pickRandom(hot));
+            picks.push(pickRandom(hot));
+            
+            cold = cold.filter(n => !picks.includes(n));
+            if(cold.length > 0) picks.push(pickRandom(cold));
+            
+            all = all.filter(n => !picks.includes(n));
+            picks.push(pickRandom(all));
+        }
+        
+        picks.sort((a,b) => a-b);
+        document.getElementById('ai-nums').value = picks.map(n => n.toString().padStart(2, '0')).join(', ');
+    }
+
+    // 儲存紀錄
+    function addRecord() {
+        let date = document.getElementById('input-date').value;
+        let aiNums = parseNumbers(document.getElementById('ai-nums').value);
+        let myNums = parseNumbers(document.getElementById('my-nums').value);
+        let drawNums = parseNumbers(document.getElementById('draw-nums').value);
+
+        if (drawNums.length !== 5) return alert("📺 「實際開獎號碼」必須填寫，且必須剛好是 5 個不同的數字！");
+        if (myNums.length > 0 && myNums.length !== 4) return alert("🧑 你的預測若要填寫，必須剛好是 4 個！若沒挑請將欄位清空。");
+        if (aiNums.length > 0 && aiNums.length !== 4) return alert("🤖 AI 預測若要填寫，必須剛好是 4 個！若沒挑請將欄位清空。");
+
+        let aiHitCount = aiNums.length > 0 ? aiNums.filter(n => drawNums.includes(n)).length : null;
+        let myHitCount = myNums.length > 0 ? myNums.filter(n => drawNums.includes(n)).length : null;
+
+        let winner = "僅記錄開獎"; // 預設(雙方都沒猜)
+        if (aiHitCount !== null && myHitCount !== null) {
+            if (aiHitCount > myHitCount) winner = "AI 勝";
+            else if (myHitCount > aiHitCount) winner = "我 勝";
+            else winner = "平手";
+        } else if (aiHitCount !== null && myHitCount === null) {
+            winner = "AI 獨測";
+        } else if (myHitCount !== null && aiHitCount === null) {
+            winner = "我 獨測";
+        }
+
+        battleHistory.unshift({ id: Date.now(), date: date, ai: aiNums, my: myNums, draw: drawNums, aiHits: aiHitCount, myHits: myHitCount, winner: winner });
+        localStorage.setItem('sys_battle_history', JSON.stringify(battleHistory));
+
+        document.getElementById('ai-nums').value = "";
+        document.getElementById('my-nums').value = "";
+        document.getElementById('draw-nums').value = "";
+
+        renderBattle();
+    }
+
+    function deleteRecord(id) {
+        if (confirm("確定刪除這筆紀錄？這會影響 AI 大數據喔！")) {
+            battleHistory = battleHistory.filter(item => item.id !== id);
+            localStorage.setItem('sys_battle_history', JSON.stringify(battleHistory));
+            renderBattle();
+        }
+    }
+
+    function renderBattle() {
+        const tbody = document.getElementById('history-tbody');
+        tbody.innerHTML = '';
+
+        let totalRounds = battleHistory.length;
+        let aiValidRounds = 0; 
+        let myValidRounds = 0; 
+        let totalAiHits = 0;
+        let totalMyHits = 0;
+
+        battleHistory.forEach(item => {
+            if (item.myHits !== null) {
+                totalMyHits += item.myHits;
+                myValidRounds++;
+            }
+            if (item.aiHits !== null) {
+                totalAiHits += item.aiHits;
+                aiValidRounds++;
+            }
+
+            const tr = document.createElement('tr');
+
+            const genBalls = (nums, isDraw = false) => {
+                if(!nums || nums.length === 0) return '<span style="color:#94a3b8; font-size:12px;">(無紀錄)</span>';
+                return `<div class="num-container">` + nums.map(n => {
+                    let cssClass = isDraw ? 'draw' : (item.draw.includes(n) ? 'hit' : '');
+                    return `<div class="num-ball ${cssClass}">${n.toString().padStart(2,'0')}</div>`;
+                }).join('') + `</div>`;
+            };
+
+            let aiHitText = item.aiHits !== null ? `<div style="font-size:12px; margin-top:5px; color:#ef4444; font-weight:bold;">中 ${item.aiHits} 顆</div>` : '';
+            let myHitText = item.myHits !== null ? `<div style="font-size:12px; margin-top:5px; color:#ef4444; font-weight:bold;">中 ${item.myHits} 顆</div>` : '';
+
+            let badge = `<span class="badge badge-tie">平手</span>`;
+            if (item.winner === "AI 勝") badge = `<span class="badge badge-ai">🤖 AI 勝</span>`;
+            if (item.winner === "我 勝") badge = `<span class="badge badge-my">🧑 我 勝</span>`;
+            if (item.winner === "AI 獨測") badge = `<span class="badge badge-ai">🤖 AI獨測</span>`;
+            if (item.winner === "我 獨測") badge = `<span class="badge badge-my">🧑 我獨測</span>`;
+            if (item.winner === "僅記錄開獎") badge = `<span class="badge badge-skip">純記錄</span>`;
+
+            tr.innerHTML = `
+                <td><strong>${item.date}</strong></td>
+                <td>${genBalls(item.ai)}${aiHitText}</td>
+                <td>${genBalls(item.my)}${myHitText}</td>
+                <td>${genBalls(item.draw, true)}</td>
+                <td>${badge}</td>
+                <td><button class="delete-btn" onclick="deleteRecord(${item.id})">刪除</button></td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        if (totalRounds === 0) tbody.innerHTML = `<tr><td colspan="6" style="padding: 30px; color: #94a3b8;">目前尚無紀錄，請在上方輸入您的第一筆開獎資料！</td></tr>`;
+
+        // 結算數據
+        let aiAvg = aiValidRounds > 0 ? (totalAiHits / aiValidRounds) : 0;
+        let myAvg = myValidRounds > 0 ? (totalMyHits / myValidRounds) : 0;
+
+        document.getElementById('total-rounds').innerText = totalRounds;
+        document.getElementById('ai-hits').innerText = totalAiHits;
+        document.getElementById('my-hits').innerText = totalMyHits;
+        document.getElementById('ai-avg').innerText = aiAvg.toFixed(2);
+        document.getElementById('my-avg').innerText = myAvg.toFixed(2);
+
+        let pkEl = document.getElementById('pk-winner');
+        if (aiValidRounds === 0 && myValidRounds === 0) {
+            pkEl.innerText = "資料不足"; pkEl.style.color = "var(--hit-color)";
+        } else if (aiAvg > myAvg) {
+            pkEl.innerText = "🤖 AI 領先"; pkEl.style.color = "var(--ai-color)";
+        } else if (myAvg > aiAvg) {
+            pkEl.innerText = "🧑 人類領先"; pkEl.style.color = "var(--my-color)";
+        } else {
+            pkEl.innerText = "平分秋色"; pkEl.style.color = "var(--hit-color)";
+        }
+    }
+</script>
+</body>
+</html>
