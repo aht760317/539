@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>539 預測對決與 AI 獨立算牌系統</title>
+    <title>539 實戰 PK 與 AI 獨立算牌系統</title>
     <style>
         :root {
             --bg-color: #f0fdf4; 
@@ -20,9 +20,22 @@
         body { background-color: var(--bg-color); color: var(--text-main); padding: 20px; line-height: 1.6; }
         .container { max-width: 1200px; margin: 0 auto; }
 
+        /* 標題與導覽列 */
         header { background: #1e293b; color: white; padding: 25px; border-radius: 12px; margin-bottom: 20px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         header h1 { font-size: 28px; margin-bottom: 8px; }
-        header p { color: #94a3b8; font-size: 15px; }
+        header p { color: #94a3b8; font-size: 15px; margin-bottom: 15px; }
+        
+        .nav-links { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
+        .nav-link { background: linear-gradient(135deg, #f59e0b, #d97706); color: white; padding: 12px 25px; text-decoration: none; border-radius: 50px; font-weight: bold; font-size: 16px; transition: 0.3s; box-shadow: 0 4px 10px rgba(245, 158, 11, 0.4); }
+        .nav-link:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(245, 158, 11, 0.5); }
+
+        /* 人流統計區 */
+        .people-board { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .people-card { background: white; padding: 15px; border-radius: 12px; border: 1px dashed var(--my-color); text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .people-card .title { font-size: 14px; color: #64748b; font-weight: bold; }
+        .people-card .value { font-size: 32px; font-weight: 900; color: var(--my-color); margin: 5px 0; }
+        .btn-plus { background: var(--my-color); color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 16px; transition: 0.2s; }
+        .btn-plus:hover { background: #059669; transform: scale(1.05); }
 
         /* 戰力統計板 */
         .stats-board { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 25px; }
@@ -36,17 +49,9 @@
 
         /* 面板共用樣式 */
         .panel { background: white; padding: 25px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        .panel h2 { margin-bottom: 20px; font-size: 20px; color: #0f172a; padding-left: 12px; }
+        .panel h2 { margin-bottom: 20px; font-size: 20px; color: #0f172a; padding-left: 12px; border-left: 6px solid var(--draw-color); }
 
-        /* 人流統計區 */
-        .people-board { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
-        .people-card { background: white; padding: 15px; border-radius: 12px; border: 1px dashed var(--my-color); text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .people-card .title { font-size: 14px; color: #64748b; font-weight: bold; }
-        .people-card .value { font-size: 32px; font-weight: 900; color: var(--my-color); margin: 5px 0; }
-        .btn-plus { background: var(--my-color); color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 16px; transition: 0.2s; }
-        .btn-plus:hover { background: #059669; transform: scale(1.05); }
-
-        /* 輸入區 */
+        /* 步驟一：輸入區 */
         .form-row { display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 15px; }
         .form-group { flex: 1; min-width: 220px; display: flex; flex-direction: column; gap: 8px; }
         .form-group label { font-size: 15px; font-weight: bold; }
@@ -62,12 +67,29 @@
         td { padding: 15px 10px; border-bottom: 1px solid var(--border); vertical-align: middle; }
         tr:hover { background: #f8fafc; }
 
+        /* 獨立 AI 算牌區 (深色強烈區分) */
+        .ai-predict-panel { background: #0f172a; color: white; padding: 30px; border-radius: 12px; margin-top: 40px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); border: 3px solid #3b82f6; text-align: center; }
+        .ai-predict-panel h2 { color: #60a5fa; font-size: 26px; margin-bottom: 10px; border: none; padding: 0; }
+        
+        .btn-ai-gen { background: linear-gradient(135deg, #8b5cf6, #3b82f6); color: white; border: none; padding: 18px 40px; border-radius: 50px; font-size: 20px; font-weight: bold; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.5); margin: 20px 0; }
+        .btn-ai-gen:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 8px 20px rgba(59, 130, 246, 0.6); }
+        
+        .predict-section { background: #1e293b; padding: 25px; border-radius: 12px; margin-top: 15px; border: 1px dashed #475569; display: none; text-align: left; }
+        .predict-group { margin-bottom: 25px; background: rgba(255,255,255,0.05); padding: 20px; border-radius: 10px; border-left: 5px solid; }
+        .predict-group.car { border-color: #ef4444; }
+        .predict-group.combo { border-color: #10b981; }
+        .predict-group h3 { font-size: 18px; margin-bottom: 15px; color: #f8fafc; }
+
         /* 號碼球 UI */
         .num-container { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
         .num-ball { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: bold; background: #e2e8f0; color: #475569; }
         .num-ball.hit { background: var(--hit-color); color: white; box-shadow: 0 0 8px rgba(239, 68, 68, 0.6); transform: scale(1.15); border: 2px solid #fff; }
         .num-ball.draw { background: var(--draw-color); color: white; }
         
+        /* 預測球特化 (深色背景用) */
+        .pred-ball-car { background: #ef4444; color: white; width: 50px; height: 50px; font-size: 22px; box-shadow: 0 4px 10px rgba(239,68,68,0.5); margin: 5px; }
+        .pred-ball-combo { background: #10b981; color: white; width: 45px; height: 45px; font-size: 20px; box-shadow: 0 4px 10px rgba(16,185,129,0.5); margin: 5px; }
+
         .badge { padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: bold; color: white; white-space: nowrap; }
         .badge-ai { background: var(--ai-color); }
         .badge-my { background: var(--my-color); }
@@ -76,31 +98,17 @@
 
         .delete-btn { padding: 8px 12px; background: #fef2f2; border: 1px solid #fca5a5; border-radius: 6px; cursor: pointer; color: #ef4444; font-size: 13px; font-weight: bold; transition: 0.2s; }
         .delete-btn:hover { background: #fee2e2; }
-
-        /* 獨立在最下方的 AI 預測區 */
-        .ai-predict-panel { background: #1e293b; color: white; padding: 30px; border-radius: 12px; margin-top: 40px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); text-align: center; border: 2px solid #3b82f6; }
-        .ai-predict-panel h2 { color: #60a5fa; font-size: 24px; margin-bottom: 10px; border: none; padding: 0; }
-        .btn-ai-gen { background: linear-gradient(135deg, #3b82f6, #2563eb); color: white; border: none; padding: 18px 40px; border-radius: 50px; font-size: 20px; font-weight: bold; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.5); margin: 20px 0; }
-        .btn-ai-gen:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 8px 20px rgba(59, 130, 246, 0.6); }
-        
-        .predict-section { background: #0f172a; padding: 25px; border-radius: 12px; margin-top: 15px; border: 1px dashed #475569; display: none; text-align: left; }
-        .predict-group { margin-bottom: 25px; background: rgba(255,255,255,0.05); padding: 20px; border-radius: 10px; border-left: 5px solid; }
-        .predict-group.car { border-color: #ef4444; }
-        .predict-group.combo { border-color: #10b981; }
-        .predict-group h3 { font-size: 18px; margin-bottom: 15px; color: #f8fafc; }
-        
-        /* 預測球特化 (深色背景用) */
-        .pred-ball-car { background: #ef4444; color: white; width: 50px; height: 50px; font-size: 22px; box-shadow: 0 4px 10px rgba(239,68,68,0.5); margin: 5px; }
-        .pred-ball-combo { background: #10b981; color: white; width: 45px; height: 45px; font-size: 20px; box-shadow: 0 4px 10px rgba(16,185,129,0.5); margin: 5px; }
-
     </style>
 </head>
 <body>
 
 <div class="container">
     <header>
-        <h1>⚔️ 539 AI vs 玩家 實戰 PK 系統</h1>
-        <p>上半部：記錄每天實際開獎與對決勝負 / 下半部：大數據獨立算牌</p>
+        <h1>⚔️ 539 AI vs 玩家 PK 對決 & 獨立算牌系統</h1>
+        <p>先在上方儲存當日開獎紀錄，再到最下方讓 AI 大數據為您精算下一期明牌</p>
+        <div class="nav-links">
+            <a href="index3.html" class="nav-link">🎰 前往專屬幸運搖獎機</a>
+        </div>
     </header>
 
     <div class="people-board">
@@ -144,8 +152,8 @@
         </div>
     </div>
 
-    <div class="panel" style="border-left: 6px solid var(--draw-color);">
-        <h2>📝 對決與記帳區：輸入今日預測與實際開獎</h2>
+    <div class="panel">
+        <h2>📝 對決與記帳區：請輸入今日預測與實際開獎</h2>
         <div class="form-row">
             <div class="form-group" style="flex: 0.3;">
                 <label>📅 開獎日期</label>
@@ -158,19 +166,19 @@
         </div>
         <div class="form-row">
             <div class="form-group">
-                <label style="color:var(--ai-color)">🤖 AI 昨日預測的 4 碼 (對獎用，選填)</label>
-                <input type="text" id="ai-nums" placeholder="輸入 AI 給的 4 碼 (若無可留空)">
+                <label style="color:var(--ai-color)">🤖 尋問 AI 的 4 個號碼 (對獎用，若無可留空)</label>
+                <input type="text" id="ai-nums" placeholder="將 AI 預測的 4 碼填入">
             </div>
             <div class="form-group">
-                <label style="color:var(--my-color)">🧑 我今天挑的 4 個號碼 (對獎用，選填)</label>
-                <input type="text" id="my-nums" placeholder="輸入我自己猜的 4 碼 (若無可留空)">
+                <label style="color:var(--my-color)">🧑 我自己挑的 4 個號碼 (對獎用，若無可留空)</label>
+                <input type="text" id="my-nums" placeholder="填入你精挑細選的 4 碼">
             </div>
         </div>
-        <button class="btn-submit" onclick="addRecord()">⚔️ 儲存開獎紀錄並計算 PK 勝率</button>
+        <button class="btn-submit" onclick="addRecord()">⚔️ 儲存今日開獎，更新歷史大數據！</button>
     </div>
 
     <div class="panel">
-        <h2 style="border-left: 6px solid #64748b;">📊 歷史戰績與大數據紀錄庫</h2>
+        <h2 style="border-left: 6px solid #64748b;">📊 歷史戰績與大數據庫</h2>
         <div style="overflow-x: auto;">
             <table>
                 <thead>
@@ -189,13 +197,13 @@
         </div>
     </div>
 
-    <div class="ai-predict-panel">
+    <div class="ai-predict-panel" id="ai-section">
         <h2>🔮 獨立 AI 算牌引擎 (預測下一期)</h2>
         <p style="color: #94a3b8; font-size: 15px; margin-bottom: 10px;">
-            系統將抓取上方資料庫「實際開出的號碼」，進行大數據冷熱交叉分析，為您產出下一期的明牌。
+            請確保上方已儲存最新的「實際開出 5 碼」。系統會抓取所有歷史資料，為您精算出下一期的黃金組合！
         </p>
         
-        <button class="btn-ai-gen" onclick="predictNextPeriod()">🧠 啟動大數據運算</button>
+        <button class="btn-ai-gen" onclick="predictNextPeriod()">🧠 讀取歷史大數據，開始 AI 算牌</button>
         
         <div id="predict-results" class="predict-section">
             
@@ -212,7 +220,7 @@
             </div>
 
             <p style="text-align: center; color: #fbbf24; font-weight: bold; margin-top: 10px;">
-                💡 記下這些號碼，明天開獎時把你要跟隨的組別填入上方的「AI 預測框」來 PK 吧！
+                💡 明天開獎時，記得把上面的號碼填入上方的「AI 預測框」來對獎喔！
             </p>
         </div>
     </div>
@@ -274,7 +282,7 @@
         let myNums = parseNumbers(document.getElementById('my-nums').value);
         let drawNums = parseNumbers(document.getElementById('draw-nums').value);
 
-        if (drawNums.length !== 5) return alert("📺 「實際開獎號碼」必須填寫，且必須剛好是 5 個數字！");
+        if (drawNums.length !== 5) return alert("📺 「今日實際開獎 5 個號碼」必須填寫，且必須剛好是 5 個數字！");
         if (myNums.length > 0 && myNums.length !== 4) return alert("🧑 你的預測若要填，必須剛好 4 個！若沒挑請清空。");
         if (aiNums.length > 0 && aiNums.length !== 4) return alert("🤖 AI 預測若要填，必須剛好 4 個！若沒挑請清空。");
 
@@ -289,39 +297,43 @@
         } else if (aiHitCount !== null && myHitCount === null) winner = "AI 獨測";
         else if (myHitCount !== null && aiHitCount === null) winner = "我 獨測";
 
+        // 存檔
         battleHistory.unshift({ id: Date.now(), date: date, ai: aiNums, my: myNums, draw: drawNums, aiHits: aiHitCount, myHits: myHitCount, winner: winner });
         localStorage.setItem('sys_battle_history', JSON.stringify(battleHistory));
 
+        // 清空輸入框
         document.getElementById('ai-nums').value = "";
         document.getElementById('my-nums').value = "";
         document.getElementById('draw-nums').value = "";
         
-        // 隱藏預測結果，提示重新預測
+        // 隱藏舊的預測結果，提示重新預測
         document.getElementById('predict-results').style.display = 'none';
 
         renderBattle();
-        alert("✅ 資料已成功存入！\n👉 現在你可以滑到最下方【啟動 AI 算牌引擎】來算明天的牌了！");
+        
+        // 畫面自動往下滾動到 AI 預測區
+        setTimeout(() => {
+            document.getElementById('ai-section').scrollIntoView({ behavior: 'smooth' });
+        }, 300);
     }
 
     // === 獨立在最下方的 AI 算牌 ===
     function predictNextPeriod() {
         if (battleHistory.length < 2) {
-            return alert("資料庫樣本數太少囉！請至少在上方輸入 2 期以上的「實際開獎號碼」，AI 才能抓出冷熱趨勢。");
+            return alert("資料庫樣本數太少囉！請至少先在上方儲存 2 期以上的「實際開出 5 碼」，AI 才能分析數據。");
         }
 
-        // 統計開出次數
         let stats = {};
         for(let i=1; i<=39; i++) stats[i] = 0;
         battleHistory.forEach(record => {
             if(record.draw) record.draw.forEach(n => stats[n]++);
         });
 
-        // 根據出現次數排序
         let sorted = Object.keys(stats).map(Number).sort((a, b) => stats[b] - stats[a]);
         
-        let hotPool = sorted.slice(0, 15);   // 熱門池
-        let coldPool = sorted.slice(-10);    // 冷門池
-        let allPool = sorted.slice();        // 亂數池
+        let hotPool = sorted.slice(0, 15);
+        let coldPool = sorted.slice(-10);
+        let allPool = sorted.slice();
 
         const pickRandom = (arr) => {
             if(arr.length === 0) return null;
@@ -329,27 +341,25 @@
             return arr.splice(idx, 1)[0];
         };
 
-        // --- 第一組：全車 (4碼，策略：極度熱門 + 追蹤趨勢) ---
+        // --- 第一組：全車推薦 (4碼) ---
         let carPicks = [];
         let tempHot1 = [...hotPool];
-        let tempAll1 = [...allPool];
         
+        // 全車：直接拿 4 個極熱門
         carPicks.push(pickRandom(tempHot1));
         carPicks.push(pickRandom(tempHot1));
         carPicks.push(pickRandom(tempHot1));
-        tempAll1 = tempAll1.filter(n => !carPicks.includes(n));
-        carPicks.push(pickRandom(tempAll1));
+        carPicks.push(pickRandom(tempHot1));
         carPicks.sort((a,b) => a-b);
 
-        // --- 第二組：三星/四星配牌 (4碼，策略：熱門 + 冷門防守 + 變異) ---
+        // --- 第二組：三星/四星配牌 (4碼) ---
         let comboPicks = [];
-        // 避免與全車組完全重複，建立獨立池
         let tempHot2 = hotPool.filter(n => !carPicks.includes(n)); 
-        // 若過濾後熱門池不夠，補回原始熱門
         if(tempHot2.length < 2) tempHot2 = [...hotPool]; 
         let tempCold2 = [...coldPool];
         let tempAll2 = allPool.filter(n => !carPicks.includes(n));
 
+        // 策略: 2熱門 + 1冷門防守 + 1變異
         comboPicks.push(pickRandom(tempHot2));
         comboPicks.push(pickRandom(tempHot2));
         comboPicks.push(pickRandom(tempCold2));
@@ -358,7 +368,7 @@
         comboPicks.push(pickRandom(tempAll2));
         comboPicks.sort((a,b) => a-b);
 
-        // --- 顯示結果 ---
+        // --- 顯示結果畫面 ---
         const resDiv = document.getElementById('predict-results');
         const boxCar = document.getElementById('pred-car-balls');
         const boxCombo = document.getElementById('pred-combo-balls');
@@ -376,13 +386,13 @@
         comboPicks.forEach((n, i) => {
             setTimeout(() => {
                 boxCombo.innerHTML += `<div class="num-ball pred-ball-combo">${n.toString().padStart(2,'0')}</div>`;
-            }, i * 150 + 600); // 延遲顯示，增加算牌感
+            }, i * 150 + 600);
         });
     }
 
     // === 刪除與渲染 ===
     function deleteRecord(id) {
-        if (confirm("確定刪除這筆紀錄？這會重新計算 AI 大數據與您的勝率喔！")) {
+        if (confirm("確定刪除這筆紀錄？這會重新計算 AI 統計數據與您的勝率喔！")) {
             battleHistory = battleHistory.filter(item => item.id !== id);
             localStorage.setItem('sys_battle_history', JSON.stringify(battleHistory));
             renderBattle();
