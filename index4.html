@@ -57,18 +57,23 @@
         .num-container { display: flex; gap: 5px; justify-content: center; flex-wrap: wrap; }
         .num-ball { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; background: #e2e8f0; color: #475569; }
         
-        /* 命中時的高亮效果 */
         .num-ball.hit { background: var(--hit-color); color: white; box-shadow: 0 0 8px rgba(239, 68, 68, 0.5); transform: scale(1.1); }
         .num-ball.draw { background: var(--draw-color); color: white; }
 
-        .winner-badge { padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; color: white; }
+        .winner-badge { padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; color: white; display: inline-block;}
         .badge-ai { background: var(--ai-color); }
         .badge-my { background: var(--my-color); }
         .badge-tie { background: #94a3b8; }
-        .badge-solo { background: #64748b; } /* AI 單獨預測時的顏色 */
+        .badge-solo { background: #64748b; } 
+        .badge-pending { background: #f59e0b; } 
         
-        .delete-btn { padding: 5px 10px; background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 4px; cursor: pointer; color: #ef4444; font-size: 12px; }
+        .action-btn { padding: 5px 10px; border: 1px solid #cbd5e1; border-radius: 4px; cursor: pointer; font-size: 12px; margin: 2px;}
+        .delete-btn { background: #f1f5f9; color: #ef4444; }
         .delete-btn:hover { background: #fee2e2; }
+        .update-btn { background: var(--draw-color); color: white; border: none; font-weight: bold;}
+        .update-btn:hover { background: #d97706; }
+        
+        .pending-input { padding: 6px; border: 1px solid var(--draw-color); border-radius: 4px; width: 140px; margin-bottom: 5px; text-align: center; }
     </style>
 </head>
 <body>
@@ -81,9 +86,9 @@
 
     <div class="stats-board">
         <div class="stat-card">
-            <div class="stat-title">總追蹤期數</div>
+            <div class="stat-title">已開獎期數</div>
             <div class="stat-value" id="total-rounds">0</div>
-            <div class="stat-sub">AI 累積預測天數</div>
+            <div class="stat-sub">有效結算的期數</div>
         </div>
         <div class="stat-card ai-card">
             <div class="stat-title" style="color:var(--ai-color)">🤖 AI 總命中球數</div>
@@ -98,17 +103,13 @@
         <div class="stat-card pk-card">
             <div class="stat-title" style="color:var(--hit-color)">🏆 目前勝率霸主</div>
             <div class="stat-value" id="pk-winner" style="color:var(--hit-color); font-size:24px;">平手</div>
-            <div class="stat-sub">根據平均命中數判定(更公平)</div>
+            <div class="stat-sub">根據平均命中數判定</div>
         </div>
     </div>
 
     <div class="input-panel">
-        <h2>📝 新增今日對決紀錄</h2>
+        <h2>📝 新增今日對決預測</h2>
         <div class="form-row">
-            <div class="form-group" style="flex: 0.5;">
-                <label>日期</label>
-                <input type="date" id="input-date">
-            </div>
             <div class="form-group">
                 <label style="color:var(--ai-color)">🤖 AI 的 4 個號碼 (必填)</label>
                 <input type="text" id="ai-nums" placeholder="例: 05, 12, 28, 33">
@@ -117,14 +118,18 @@
                 <label style="color:var(--my-color)">🧑 我挑的 4 個號碼 (不參與請留空)</label>
                 <input type="text" id="my-nums" placeholder="若無靈感可不填...">
             </div>
+            <div class="form-group" style="flex: 0.5;">
+                <label>📅 日期</label>
+                <input type="date" id="input-date">
+            </div>
         </div>
         <div class="form-row">
             <div class="form-group">
-                <label style="color:var(--draw-color)">📺 實際開獎 5 個號碼 (必填)</label>
-                <input type="text" id="draw-nums" placeholder="例: 05, 10, 15, 28, 39">
+                <label style="color:var(--draw-color)">📺 實際開獎 5 個號碼 (可留空，等晚上 10 點後再回填)</label>
+                <input type="text" id="draw-nums" placeholder="若還沒開獎請留空，按下方按鈕先存檔">
             </div>
         </div>
-        <button class="btn-submit" onclick="addRecord()">✅ 儲存紀錄並自動對獎</button>
+        <button class="btn-submit" onclick="addRecord()">✅ 儲存預測 (若有填開獎號碼則自動對獎)</button>
     </div>
 
     <div class="history-panel">
@@ -132,9 +137,9 @@
         <table>
             <thead>
                 <tr>
-                    <th>日期</th>
-                    <th>🤖 AI預測 (紅底命中)</th>
-                    <th>🧑 我的預測 (紅底命中)</th>
+                    <th>🤖 AI預測</th>
+                    <th>🧑 我的預測</th>
+                    <th>📅 日期</th>
                     <th>📺 實際開出 5 碼</th>
                     <th>單期勝負</th>
                     <th>操作</th>
@@ -157,13 +162,29 @@
         renderAll();
     };
 
-    // 解析文字框的數字
     function parseNumbers(inputStr) {
+        if (!inputStr || inputStr.trim() === "") return [];
         let nums = inputStr.match(/\d+/g);
         if (!nums) return [];
         nums = nums.map(n => parseInt(n, 10)).filter(n => n >= 1 && n <= 39);
         nums = [...new Set(nums)].sort((a, b) => a - b);
         return nums;
+    }
+
+    // 計算 PK 結果的共用函數
+    function calculateResult(aiNums, myNums, drawNums) {
+        let aiHitCount = aiNums.filter(n => drawNums.includes(n)).length;
+        let myHitCount = 0;
+        let winner = "平手";
+
+        if (myNums.length === 0) {
+            winner = "僅 AI";
+        } else {
+            myHitCount = myNums.filter(n => drawNums.includes(n)).length;
+            if (aiHitCount > myHitCount) winner = "AI 勝";
+            else if (myHitCount > aiHitCount) winner = "我 勝";
+        }
+        return { aiHitCount, myHitCount, winner };
     }
 
     function addRecord() {
@@ -176,23 +197,19 @@
         let myNums = parseNumbers(myInput);
         let drawNums = parseNumbers(drawInput);
 
-        // 防呆檢查：AI與開獎必填，我的號碼可為0個或剛好4個
+        // 防呆檢查
         if (aiNums.length !== 4) return alert("🤖 AI 的號碼必須剛好是 4 個不重複的數字 (1-39)！");
         if (myInput.trim() !== "" && myNums.length !== 4) return alert("🧑 你的號碼如果有填，必須剛好是 4 碼！若當天不預測請直接清空欄位。");
-        if (drawNums.length !== 5) return alert("📺 實際開獎號碼必須剛好是 5 個不重複的數字 (1-39)！");
+        if (drawInput.trim() !== "" && drawNums.length !== 5) return alert("📺 實際開獎號碼如果有填，必須剛好是 5 個不重複的數字！(或直接留空等稍後再填)");
 
-        // 計算命中數
-        let aiHitCount = aiNums.filter(n => drawNums.includes(n)).length;
-        let myHitCount = 0;
-        let winner = "平手";
+        let isPending = drawNums.length === 0;
+        let aiHitCount = 0, myHitCount = 0, winner = "等待開獎";
 
-        if (myNums.length === 0) {
-            // 代表使用者今天不參與
-            winner = "僅 AI";
-        } else {
-            myHitCount = myNums.filter(n => drawNums.includes(n)).length;
-            if (aiHitCount > myHitCount) winner = "AI 勝";
-            else if (myHitCount > aiHitCount) winner = "我 勝";
+        if (!isPending) {
+            let res = calculateResult(aiNums, myNums, drawNums);
+            aiHitCount = res.aiHitCount;
+            myHitCount = res.myHitCount;
+            winner = res.winner;
         }
 
         let record = {
@@ -203,7 +220,8 @@
             draw: drawNums,
             aiHits: aiHitCount,
             myHits: myHitCount,
-            winner: winner
+            winner: winner,
+            isPending: isPending
         };
 
         battleHistory.unshift(record);
@@ -215,6 +233,32 @@
         document.getElementById('draw-nums').value = "";
 
         renderAll();
+    }
+
+    // 更新未開獎的期數
+    function updateDraw(id) {
+        let inputEl = document.getElementById(`draw-update-${id}`);
+        let drawNums = parseNumbers(inputEl.value);
+
+        if (drawNums.length !== 5) {
+            return alert("📺 開獎號碼必須輸入 5 個不重複的數字 (1-39)！");
+        }
+
+        // 尋找並更新對應的紀錄
+        let index = battleHistory.findIndex(item => item.id === id);
+        if (index !== -1) {
+            let record = battleHistory[index];
+            record.draw = drawNums;
+            record.isPending = false;
+            
+            let res = calculateResult(record.ai, record.my, record.draw);
+            record.aiHits = res.aiHitCount;
+            record.myHits = res.myHitCount;
+            record.winner = res.winner;
+
+            localStorage.setItem('tt5_battle_history', JSON.stringify(battleHistory));
+            renderAll();
+        }
     }
 
     function deleteRecord(id) {
@@ -229,23 +273,27 @@
         const tbody = document.getElementById('history-tbody');
         tbody.innerHTML = '';
 
-        let totalRounds = battleHistory.length; // AI的總期數
-        let myRounds = 0; // 我實際參與的期數
+        let totalRounds = 0; // 只計算已開獎的期數
+        let myRounds = 0; 
         let totalAiHits = 0;
         let totalMyHits = 0;
 
         battleHistory.forEach(item => {
-            totalAiHits += item.aiHits;
-            if (item.my && item.my.length === 4) {
-                myRounds++;
-                totalMyHits += item.myHits || 0;
+            // 統計部分：只算已結算(非等待中)的資料
+            if (!item.isPending) {
+                totalRounds++;
+                totalAiHits += item.aiHits;
+                if (item.my && item.my.length === 4) {
+                    myRounds++;
+                    totalMyHits += item.myHits || 0;
+                }
             }
 
             const tr = document.createElement('tr');
 
             const genBalls = (nums) => {
                 return `<div class="num-container">` + nums.map(n => {
-                    let isHit = item.draw.includes(n) ? 'hit' : '';
+                    let isHit = (!item.isPending && item.draw.includes(n)) ? 'hit' : '';
                     return `<div class="num-ball ${isHit}">${n.toString().padStart(2,'0')}</div>`;
                 }).join('') + `</div>`;
             };
@@ -256,38 +304,49 @@
                 ).join('') + `</div>`;
             };
 
-            // 處理「我的預測」欄位顯示 (如果有預測才顯示球，沒有則顯示休息)
+            // 我的預測欄位
             let myColumnHtml = '';
             if (item.my && item.my.length === 4) {
-                myColumnHtml = `
-                    ${genBalls(item.my)}
-                    <div style="font-size:12px; margin-top:5px; color:#ef4444;">中 ${item.myHits} 顆</div>
-                `;
+                myColumnHtml = genBalls(item.my);
+                if (!item.isPending) myColumnHtml += `<div style="font-size:12px; margin-top:5px; color:#ef4444;">中 ${item.myHits} 顆</div>`;
             } else {
                 myColumnHtml = `<div style="color: #94a3b8; font-size: 14px; padding: 10px 0;">休息未預測 ☕</div>`;
             }
 
+            // 開獎欄位顯示邏輯 (等待中 vs 已開獎)
+            let drawColumnHtml = '';
+            if (item.isPending) {
+                drawColumnHtml = `
+                    <div>
+                        <input type="text" id="draw-update-${item.id}" class="pending-input" placeholder="輸入 5 個開獎號碼"><br>
+                        <button class="action-btn update-btn" onclick="updateDraw(${item.id})">確認開獎</button>
+                    </div>`;
+            } else {
+                drawColumnHtml = genDrawBalls(item.draw);
+            }
+
             // 勝負標籤
             let winnerBadge = `<span class="winner-badge badge-tie">平手</span>`;
-            if (item.winner === "AI 勝") winnerBadge = `<span class="winner-badge badge-ai">🤖 AI 勝</span>`;
-            if (item.winner === "我 勝") winnerBadge = `<span class="winner-badge badge-my">🧑 我 勝</span>`;
-            if (item.winner === "僅 AI") winnerBadge = `<span class="winner-badge badge-solo">🤖 僅 AI</span>`;
+            if (item.isPending) winnerBadge = `<span class="winner-badge badge-pending">⏳ 等待開獎</span>`;
+            else if (item.winner === "AI 勝") winnerBadge = `<span class="winner-badge badge-ai">🤖 AI 勝</span>`;
+            else if (item.winner === "我 勝") winnerBadge = `<span class="winner-badge badge-my">🧑 我 勝</span>`;
+            else if (item.winner === "僅 AI") winnerBadge = `<span class="winner-badge badge-solo">🤖 僅 AI</span>`;
 
             tr.innerHTML = `
-                <td><strong>${item.date}</strong></td>
                 <td>
                     ${genBalls(item.ai)}
-                    <div style="font-size:12px; margin-top:5px; color:#ef4444;">中 ${item.aiHits} 顆</div>
+                    ${!item.isPending ? `<div style="font-size:12px; margin-top:5px; color:#ef4444;">中 ${item.aiHits} 顆</div>` : ''}
                 </td>
                 <td>${myColumnHtml}</td>
-                <td>${genDrawBalls(item.draw)}</td>
+                <td><strong>${item.date}</strong></td>
+                <td>${drawColumnHtml}</td>
                 <td>${winnerBadge}</td>
-                <td><button class="delete-btn" onclick="deleteRecord(${item.id})">刪除</button></td>
+                <td><button class="action-btn delete-btn" onclick="deleteRecord(${item.id})">刪除</button></td>
             `;
             tbody.appendChild(tr);
         });
 
-        if (totalRounds === 0) {
+        if (battleHistory.length === 0) {
             tbody.innerHTML = `<tr><td colspan="6" style="padding: 30px; color: #94a3b8;">目前尚無紀錄，趕快輸入今天的第一筆對決吧！</td></tr>`;
         }
 
@@ -297,18 +356,17 @@
         document.getElementById('my-hits').innerText = totalMyHits;
         document.getElementById('my-rounds').innerText = myRounds;
         
-        // 分別計算平均 (保護機制避免除以 0)
+        // 分別計算平均
         let aiAvg = totalRounds > 0 ? (totalAiHits / totalRounds) : 0;
         let myAvg = myRounds > 0 ? (totalMyHits / myRounds) : 0;
 
         document.getElementById('ai-avg').innerText = aiAvg.toFixed(2);
         document.getElementById('my-avg').innerText = myAvg.toFixed(2);
 
-        // 判斷總勝出者 (改用「平均命中率」來判定，因為雙方參與期數可能不同)
         let pkEl = document.getElementById('pk-winner');
         if (totalRounds === 0) {
-             pkEl.innerText = "尚無紀錄";
-             pkEl.style.color = "var(--hit-color)";
+             pkEl.innerText = "等待開獎";
+             pkEl.style.color = "var(--draw-color)";
         } else if (aiAvg > myAvg) {
             pkEl.innerText = "🤖 AI 領先";
             pkEl.style.color = "var(--ai-color)";
