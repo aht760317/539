@@ -318,6 +318,12 @@
 
     window.onload = function() {
         document.getElementById('input-date').value = new Date().toISOString().split('T')[0];
+        // 初始化載入時，先依照日期做自動排序(防呆舊資料順序錯誤)
+        battleHistory.sort((a, b) => {
+            if (a.date > b.date) return -1;
+            if (a.date < b.date) return 1;
+            return b.id - a.id;
+        });
         updatePeopleUI();
         renderBattle();
     };
@@ -350,7 +356,16 @@
         } else if (aiHitCount !== null && myHitCount === null) winner = "AI 獨測";
         else if (myHitCount !== null && aiHitCount === null) winner = "我 獨測";
 
-        battleHistory.unshift({ id: Date.now(), date: date, ai: aiNums, my: myNums, draw: drawNums, aiHits: aiHitCount, myHits: myHitCount, winner: winner });
+        // 新增資料 (使用 push 然後自動排序)
+        battleHistory.push({ id: Date.now(), date: date, ai: aiNums, my: myNums, draw: drawNums, aiHits: aiHitCount, myHits: myHitCount, winner: winner });
+        
+        // 🌟 自動依照日期排序 (由新到舊)
+        battleHistory.sort((a, b) => {
+            if (a.date > b.date) return -1;
+            if (a.date < b.date) return 1;
+            return b.id - a.id; // 日期一樣的話，晚輸入的排前面
+        });
+
         localStorage.setItem('sys_battle_history', JSON.stringify(battleHistory));
 
         document.getElementById('ai-nums').value = "";
