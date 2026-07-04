@@ -49,6 +49,7 @@
         /* 輸入區與預測區面板 */
         .panel { background: white; padding: 25px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .panel h2 { margin-bottom: 15px; font-size: 18px; color: #334155; padding-left: 10px; border-left: 6px solid var(--draw-color); }
+        .panel h2.green-line { border-left-color: var(--my-color); }
         
         .form-row { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 15px; }
         .form-group { flex: 1; min-width: 200px; display: flex; flex-direction: column; gap: 5px; }
@@ -56,8 +57,15 @@
         .form-group input { padding: 12px; border: 2px solid var(--border); border-radius: 6px; font-size: 16px; outline: none; transition: 0.2s; font-weight: bold; letter-spacing: 1px;}
         .form-group input:focus { border-color: var(--draw-color); box-shadow: 0 0 8px rgba(245, 158, 11, 0.2); }
         
+        /* 批次匯入文字區 */
+        .batch-textarea { width: 100%; height: 120px; padding: 12px; border: 2px solid var(--border); border-radius: 6px; font-size: 15px; resize: vertical; outline: none; transition: 0.2s; font-family: monospace; letter-spacing: 1px;}
+        .batch-textarea:focus { border-color: var(--my-color); box-shadow: 0 0 8px rgba(16, 185, 129, 0.2); }
+        
         .btn-submit { width: 100%; background: #0f172a; color: white; border: none; padding: 18px; font-size: 18px; font-weight: bold; border-radius: 8px; cursor: pointer; transition: 0.2s; margin-top: 10px; }
         .btn-submit:hover { background: #334155; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        
+        .btn-import { background: var(--my-color); color: white; border: none; padding: 15px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; transition: 0.2s; margin-top: 10px; width: 100%; }
+        .btn-import:hover { background: #059669; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); }
 
         /* 歷史紀錄表 */
         table { width: 100%; border-collapse: collapse; text-align: center; }
@@ -192,30 +200,43 @@
         </div>
     </div>
 
-    <!-- 步驟一：輸入與 PK -->
+    <!-- 步驟一：單期輸入與 PK -->
     <div class="panel">
-        <h2>📝 步驟一：輸入今日開獎與對決紀錄</h2>
+        <h2>📝 步驟一：輸入單期對決紀錄</h2>
         <div class="form-row">
             <div class="form-group" style="flex: 0.3;">
-                <label>📅 開獎日期</label>
+                <label>📅 選擇開獎日期 <span style="color:#ef4444;">(可自由點擊修改補登)</span></label>
                 <input type="date" id="input-date">
             </div>
             <div class="form-group" style="flex: 0.7;">
-                <label style="color:var(--draw-color)">📺 今日實際開獎 5 個號碼 (🎯 必填)</label>
+                <label style="color:var(--draw-color)">📺 實際開獎 5 個號碼 (🎯 必填)</label>
                 <input type="text" id="draw-nums" placeholder="例: 05, 10, 15, 28, 39" style="border-color: var(--draw-color); background: #fffbeb;">
             </div>
         </div>
         <div class="form-row">
             <div class="form-group">
-                <label style="color:var(--ai-color)">🤖 AI 昨天給的 4 個號碼 (對獎用，選填)</label>
-                <input type="text" id="ai-nums" placeholder="將昨日算出的 AI 號碼填入對獎">
+                <label style="color:var(--ai-color)">🤖 AI 給的 4 個號碼 (對獎用，選填)</label>
+                <input type="text" id="ai-nums" placeholder="將預測的 AI 號碼填入對獎">
             </div>
             <div class="form-group">
-                <label style="color:var(--my-color)">🧑 我今天挑的 4 個號碼 (對獎用，選填)</label>
+                <label style="color:var(--my-color)">🧑 我挑的 4 個號碼 (對獎用，選填)</label>
                 <input type="text" id="my-nums" placeholder="填入你精挑細選的 4 碼">
             </div>
         </div>
-        <button class="btn-submit" onclick="addRecord()">⚔️ 儲存對獎紀錄，立即計算 PK 勝率！</button>
+        <button class="btn-submit" onclick="addRecord()">⚔️ 儲存紀錄，系統會依日期自動排序！</button>
+    </div>
+
+    <!-- 新增：批次匯入歷史紀錄區 -->
+    <div class="panel" style="border-left: 6px solid var(--my-color); background-color: #f8fafc;">
+        <h2 class="green-line">🚀 快速補登：一次匯入多期歷史開獎</h2>
+        <p style="font-size: 14px; color: #475569; margin-bottom: 10px;">
+            想快速餵給 AI 幾十期的歷史資料嗎？請在此貼上多行紀錄。<br>
+            <strong>格式範例：</strong>一行一期，日期在前，號碼在後。<br>
+            <code>2026-07-01 05, 12, 18, 30, 39</code><br>
+            <code>2026-07-02 01 02 03 04 05</code>
+        </p>
+        <textarea id="batch-input" class="batch-textarea" placeholder="貼上多期歷史紀錄..."></textarea>
+        <button class="btn-import" onclick="batchImport()">⚡ 一鍵匯入多期資料 (系統會自動按日期排序)</button>
     </div>
 
     <!-- 歷史紀錄表 -->
@@ -316,14 +337,20 @@
     // === 核心資料庫與初始化 ===
     let battleHistory = JSON.parse(localStorage.getItem('sys_battle_history') || '[]');
 
-    window.onload = function() {
-        document.getElementById('input-date').value = new Date().toISOString().split('T')[0];
-        // 初始化載入時，先依照日期做自動排序(防呆舊資料順序錯誤)
+    // 自動排序函式 (新日期在最上面)
+    function sortHistory() {
         battleHistory.sort((a, b) => {
             if (a.date > b.date) return -1;
             if (a.date < b.date) return 1;
             return b.id - a.id;
         });
+    }
+
+    window.onload = function() {
+        document.getElementById('input-date').value = new Date().toISOString().split('T')[0];
+        // 載入時自動把舊資料排好
+        sortHistory();
+        localStorage.setItem('sys_battle_history', JSON.stringify(battleHistory));
         updatePeopleUI();
         renderBattle();
     };
@@ -334,7 +361,7 @@
         return [...new Set(nums.map(n => parseInt(n, 10)).filter(n => n >= 1 && n <= 39))].sort((a, b) => a - b);
     }
 
-    // === 步驟一：儲存紀錄與 PK ===
+    // === 步驟一：單筆儲存紀錄與 PK ===
     function addRecord() {
         let date = document.getElementById('input-date').value;
         let aiNums = parseNumbers(document.getElementById('ai-nums').value);
@@ -356,23 +383,15 @@
         } else if (aiHitCount !== null && myHitCount === null) winner = "AI 獨測";
         else if (myHitCount !== null && aiHitCount === null) winner = "我 獨測";
 
-        // 新增資料 (使用 push 然後自動排序)
+        // 存檔並自動排序
         battleHistory.push({ id: Date.now(), date: date, ai: aiNums, my: myNums, draw: drawNums, aiHits: aiHitCount, myHits: myHitCount, winner: winner });
-        
-        // 🌟 自動依照日期排序 (由新到舊)
-        battleHistory.sort((a, b) => {
-            if (a.date > b.date) return -1;
-            if (a.date < b.date) return 1;
-            return b.id - a.id; // 日期一樣的話，晚輸入的排前面
-        });
-
+        sortHistory();
         localStorage.setItem('sys_battle_history', JSON.stringify(battleHistory));
 
         document.getElementById('ai-nums').value = "";
         document.getElementById('my-nums').value = "";
         document.getElementById('draw-nums').value = "";
         
-        // 隱藏舊的預測結果，要求重新預測
         document.getElementById('predict-results').style.display = 'none';
         document.getElementById('ai-machine').style.display = 'none';
         document.getElementById('btn-ai-gen').innerText = "🧠 讀取歷史大數據，啟動搖獎機";
@@ -382,6 +401,63 @@
         setTimeout(() => {
             document.getElementById('ai-section').scrollIntoView({ behavior: 'smooth' });
         }, 300);
+    }
+
+    // === 新增：批次匯入功能 ===
+    function batchImport() {
+        const text = document.getElementById('batch-input').value.trim();
+        if (!text) return alert('請在框框內輸入要匯入的資料！');
+
+        const lines = text.split('\n');
+        let importCount = 0;
+
+        lines.forEach(line => {
+            // 抓出日期 (例如: 2026-07-01 或 2026/07/01)
+            let dateMatch = line.match(/\b(20\d{2})[-/](0?[1-9]|1[0-2])[-/](0?[1-9]|[12]\d|3[01])\b/);
+            let dateStr = "";
+            if (dateMatch) {
+                // 將 / 轉換為 - 以符合 input date 格式
+                dateStr = dateMatch[0].replace(/\//g, '-');
+                // 確保 0 補齊
+                let dParts = dateStr.split('-');
+                dateStr = `${dParts[0]}-${dParts[1].padStart(2,'0')}-${dParts[2].padStart(2,'0')}`;
+            }
+
+            // 把日期部分刪除後，再去抓 5 個數字，避免把日期的數字算進去
+            let lineWithoutDate = dateMatch ? line.replace(dateMatch[0], '') : line;
+            let nums = parseNumbers(lineWithoutDate);
+
+            // 如果該行成功抓到剛好 5 個 1~39 的數字
+            if (nums.length === 5) {
+                if(!dateStr) {
+                    // 若真的沒寫日期，預設押今日
+                    dateStr = new Date().toISOString().split('T')[0];
+                }
+                
+                battleHistory.push({
+                    id: Date.now() + Math.random(), // 確保 ID 唯一
+                    date: dateStr,
+                    ai: [],
+                    my: [],
+                    draw: nums,
+                    aiHits: null,
+                    myHits: null,
+                    winner: "僅記錄開獎"
+                });
+                importCount++;
+            }
+        });
+
+        if (importCount > 0) {
+            // 存檔並自動排序
+            sortHistory();
+            localStorage.setItem('sys_battle_history', JSON.stringify(battleHistory));
+            document.getElementById('batch-input').value = '';
+            renderBattle();
+            alert(`✅ 成功匯入 ${importCount} 期歷史開獎資料！系統已自動依照日期排列整齊。`);
+        } else {
+            alert('❌ 匯入失敗，找不到符合「日期 + 5個號碼」的資料，請檢查格式。\n格式範例：2026-07-01 05, 10, 15, 20, 25');
+        }
     }
 
     // === 步驟二：獨立 AI 算牌引擎與沉浸式搖獎機 ===
