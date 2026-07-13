@@ -3,196 +3,428 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>539 報牌與勝率分析系統</title>
+    <title>539 報牌長期戰績統計系統</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 min-h-screen p-6">
+<body class="bg-slate-100 min-h-screen text-slate-800 font-sans pb-12">
 
-    <div class="max-w-3xl mx-auto bg-white rounded-xl shadow-md overflow-hidden p-8">
-        <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">539 報牌與戰績分析系統</h1>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6" id="input-section">
-            <!-- 產生 5 個人的輸入框 -->
-            <script>
-                for(let i = 1; i <= 5; i++) {
-                    document.write(`
-                        <div class="bg-gray-50 p-3 rounded-lg border border-gray-200">
-                            <label class="block text-sm font-bold text-gray-700 mb-1">第 ${i} 人的牌：</label>
-                            <input type="text" id="person${i}" placeholder="例如：05, 12, 23, 39" 
-                                class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+    <header class="bg-slate-900 text-white shadow-md p-5 mb-6 text-center">
+        <h1 class="text-2xl md:text-3xl font-bold tracking-wider">📊 539 報牌長期戰績統計與合牌系統</h1>
+        <p class="text-sm text-slate-400 mt-1">支援瀏覽器動態儲存，可自由修改高手姓名、追蹤週/月/總勝率</p>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 space-y-6">
+
+        <section class="bg-white rounded-xl shadow-sm p-6 border border-slate-200">
+            <h2 class="text-lg font-bold text-slate-900 mb-3 flex items-center">
+                <span class="mr-2">👤</span> 自訂高手姓名 (修改後系統會自動同步)
+            </h2>
+            <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
+                <input type="text" id="name1" value="高手A" onchange="saveNames(); updateUI();" class="border border-slate-300 rounded-md p-2 text-center font-semibold bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none">
+                <input type="text" id="name2" value="高手B" onchange="saveNames(); updateUI();" class="border border-slate-300 rounded-md p-2 text-center font-semibold bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none">
+                <input type="text" id="name3" value="高手C" onchange="saveNames(); updateUI();" class="border border-slate-300 rounded-md p-2 text-center font-semibold bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none">
+                <input type="text" id="name4" value="高手D" onchange="saveNames(); updateUI();" class="border border-slate-300 rounded-md p-2 text-center font-semibold bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none">
+                <input type="text" id="name5" value="高手E" onchange="saveNames(); updateUI();" class="border border-slate-300 rounded-md p-2 text-center font-semibold bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none">
+            </div>
+        </section>
+
+        <section class="bg-white rounded-xl shadow-sm p-6 border border-slate-200">
+            <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center">
+                <span class="mr-2">🏆</span> 總戰績勝率排行榜
+            </h2>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-slate-800 text-white text-sm">
+                            <th class="p-3 rounded-l-md text-center">名次</th>
+                            <th class="p-3">高手姓名</th>
+                            <th class="p-3 text-right">總期數</th>
+                            <th class="p-3 text-right">總報牌數</th>
+                            <th class="p-3 text-right">總命中數</th>
+                            <th class="p-3 text-right text-amber-400 font-bold">本週勝率</th>
+                            <th class="p-3 text-right text-emerald-400 font-bold">本月勝率</th>
+                            <th class="p-3 text-right text-blue-400 font-bold rounded-r-md">總勝率</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ranking-tbody" class="divide-y divide-slate-100 font-medium">
+                        </tbody>
+                </table>
+            </div>
+        </section>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="lg:col-span-2 bg-white rounded-xl shadow-sm p-6 border border-slate-200 space-y-4">
+                <h2 class="text-lg font-bold text-slate-900 flex items-center border-b pb-2">
+                    <span class="mr-2">✍️</span> 每日報牌與開獎資料登錄
+                </h2>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-600 mb-1">選擇開獎日期：</label>
+                        <input type="date" id="record-date" class="w-full border border-slate-300 rounded-md p-2 outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-600 mb-1">當日開獎號碼 (5碼)：</label>
+                        <input type="text" id="win-nums" placeholder="例如：05, 12, 19, 23, 31" class="w-full border border-blue-300 bg-blue-50 font-bold rounded-md p-2 outline-none focus:ring-2 focus:ring-blue-500 text-blue-900">
+                    </div>
+                </div>
+
+                <div class="space-y-3 pt-2">
+                    <p class="text-sm font-semibold text-slate-500">請輸入每個人今日抓的號碼（空格或逗號分開皆可）：</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="player-inputs-container">
                         </div>
-                    `);
-                }
-            </script>
-        </div>
+                </div>
 
-        <!-- 開獎號碼輸入區 -->
-        <div class="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-6">
-            <label class="block text-md font-bold text-blue-800 mb-2">📌 當日開獎號碼 (對獎用，可選填)：</label>
-            <input type="text" id="winning-numbers" placeholder="例如：08, 15, 22, 31, 38"
-                   class="w-full border border-blue-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-            <p class="text-sm text-blue-600 mt-2">※ 若輸入開獎號碼，系統將自動為 5 人進行對獎並計算勝率。</p>
-        </div>
-
-        <button onclick="calculate()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-md transition duration-200">
-            執行分析 (合牌彙總 & 計算戰績)
-        </button>
-
-        <!-- 顯示結果的區塊 -->
-        <div id="result-section" class="mt-8 hidden space-y-8">
-            
-            <!-- 勝率戰績排行榜 -->
-            <div id="ranking-container" class="hidden">
-                <h2 class="text-xl font-bold text-gray-800 border-b-2 border-gray-800 pb-2 mb-4">🏆 報牌勝率排行榜</h2>
-                <div id="ranking-content" class="space-y-3"></div>
+                <button onclick="addRecord()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-md transition duration-200 mt-4 shadow-sm">
+                    💾 儲存今日紀錄並更新統計
+                </button>
             </div>
 
-            <!-- 熱門合牌彙總 -->
-            <div>
-                <h2 class="text-xl font-bold text-gray-800 border-b-2 border-gray-800 pb-2 mb-4">🔥 熱門合牌彙總</h2>
-                <div id="aggregate-content" class="space-y-2"></div>
+            <div class="bg-white rounded-xl shadow-sm p-6 border border-slate-200 flex flex-col justify-between">
+                <div>
+                    <h2 class="text-lg font-bold text-slate-900 flex items-center border-b pb-2 mb-3">
+                        <span class="mr-2">🔥</span> 本日合牌熱門觀測
+                    </h2>
+                    <p class="text-xs text-slate-500 mb-3">依據上方輸入的號碼，即時抓出重疊次數最多的熱門牌：</p>
+                    <div id="live-coincide" class="space-y-2 max-h-[260px] overflow-y-auto pr-1">
+                        <p class="text-sm text-slate-400 italic text-center py-8">請在左側輸入報牌...</p>
+                    </div>
+                </div>
+                <button onclick="calculateLiveCoincide()" class="w-full mt-4 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2 px-4 rounded-md text-sm border border-slate-300">
+                    🔄 重新即時合牌
+                </button>
             </div>
-
         </div>
-    </div>
+
+        <section class="bg-white rounded-xl shadow-sm p-6 border border-slate-200">
+            <h2 class="text-lg font-bold text-slate-900 mb-4 flex items-center">
+                <span class="mr-2">📅</span> 歷史報牌紀錄明細庫
+            </h2>
+            <div class="overflow-x-auto">
+                <table class="w-full text-center border-collapse text-sm">
+                    <thead>
+                        <tr class="bg-slate-100 text-slate-600 font-semibold border-b border-slate-200">
+                            <th class="p-3 text-left">日期</th>
+                            <th class="p-3">開獎號碼</th>
+                            <th class="p-3" id="hist-p1">高手A</th>
+                            <th class="p-3" id="hist-p2">高手B</th>
+                            <th class="p-3" id="hist-p3">高手C</th>
+                            <th class="p-3" id="hist-p4">高手D</th>
+                            <th class="p-3" id="hist-p5">高手E</th>
+                            <th class="p-3 rounded-r-md">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="history-tbody" class="divide-y divide-slate-100">
+                        </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
 
     <script>
-        // 輔助函式：提取 1-39 的不重複數字陣列
-        function extractNumbers(str) {
-            let matchedNums = str.match(/\b([1-9]|[1-2][0-9]|3[0-9])\b/g);
-            if (!matchedNums) return [];
-            return [...new Set(matchedNums.map(n => parseInt(n, 10)))].sort((a, b) => a - b);
-        }
+        // 初始化資料庫
+        let players = ["高手A", "高手B", "高手C", "高手D", "高手E"];
+        let records = [];
 
-        // 輔助函式：補零 (例如 5 變 05)
-        function padZero(num) {
-            return String(num).padStart(2, '0');
-        }
-
-        function calculate() {
-            let numberCounts = {}; // 紀錄每支牌被報的次數
-            let playersData = [];  // 紀錄每個人的報牌資料
-
-            // 讀取開獎號碼
-            let winInput = document.getElementById('winning-numbers').value;
-            let winningNumbers = extractNumbers(winInput);
-
-            // 讀取 5 個人的輸入
-            for (let i = 1; i <= 5; i++) {
-                let inputVal = document.getElementById('person' + i).value;
-                let uniqueNums = extractNumbers(inputVal);
-                
-                playersData.push({
-                    id: i,
-                    numbers: uniqueNums,
-                    hits: [],
-                    hitCount: 0,
-                    winRate: 0
-                });
-
-                // 統計合牌次數
-                uniqueNums.forEach(num => {
-                    numberCounts[num] = (numberCounts[num] || 0) + 1;
-                });
-            }
-
-            /* ================= 1. 處理熱門合牌 ================= */
-            let sortedAggregate = Object.keys(numberCounts).map(num => ({
-                number: parseInt(num, 10),
-                count: numberCounts[num]
-            })).sort((a, b) => b.count - a.count);
-
-            let aggHtml = '';
-            if (sortedAggregate.length === 0) {
-                aggHtml = '<p class="text-gray-500">目前沒有輸入任何號碼。</p>';
-            } else {
-                sortedAggregate.forEach(item => {
-                    let isWinningNum = winningNumbers.includes(item.number);
-                    // 標示熱門程度與是否開出
-                    let bgClass = isWinningNum ? 'bg-green-100 border-green-300' : 'bg-gray-50 border-gray-200';
-                    let textClass = isWinningNum ? 'text-green-700 font-bold' : (item.count >= 3 ? 'text-red-600 font-bold' : 'text-gray-700');
-                    let tagHtml = isWinningNum ? `<span class="ml-2 text-xs bg-green-500 text-white px-2 py-0.5 rounded">中獎開出</span>` : '';
-
-                    aggHtml += `
-                        <div class="flex justify-between items-center ${bgClass} border p-3 rounded-md">
-                            <span class="text-lg ${textClass}">號碼：${padZero(item.number)} ${tagHtml}</span>
-                            <span class="text-sm bg-white px-3 py-1 border rounded-full ${textClass}">共 ${item.count} 人報牌</span>
-                        </div>
-                    `;
-                });
-            }
-            document.getElementById('aggregate-content').innerHTML = aggHtml;
-
-            /* ================= 2. 處理對獎與勝率 ================= */
-            let rankContainer = document.getElementById('ranking-container');
+        // 頁面載入時讀取緩存
+        window.onload = function() {
+            // 設定今日日期預設值
+            document.getElementById('record-date').valueAsDate = new Date();
             
-            if (winningNumbers.length > 0) {
-                rankContainer.classList.remove('hidden');
-                
-                // 計算每個人的命中數與勝率
-                playersData.forEach(player => {
-                    player.hits = player.numbers.filter(n => winningNumbers.includes(n));
-                    player.hitCount = player.hits.length;
-                    if (player.numbers.length > 0) {
-                        player.winRate = ((player.hitCount / player.numbers.length) * 100).toFixed(1);
-                    }
-                });
+            if (localStorage.getItem('539_players')) {
+                players = JSON.parse(localStorage.getItem('539_players'));
+                for(let i=1; i<=5; i++) {
+                    document.getElementById('name' + i).value = players[i-1];
+                }
+            }
+            if (localStorage.getItem('539_records')) {
+                records = JSON.parse(localStorage.getItem('539_records'));
+            }
+            
+            // 監聽即時合牌
+            setupLiveListeners();
+            updateUI();
+        };
 
-                // 排序排行榜：先比命中顆數，再比勝率 (少報多中者排前面)
-                playersData.sort((a, b) => {
-                    if (b.hitCount !== a.hitCount) return b.hitCount - a.hitCount;
-                    return b.winRate - a.winRate;
-                });
+        function saveNames() {
+            for(let i=1; i<=5; i++) {
+                players[i-1] = document.getElementById('name' + i).value.trim() || `高手${i}`;
+            }
+            localStorage.setItem('539_players', JSON.stringify(players));
+        }
 
-                let rankHtml = '';
-                playersData.forEach((player, index) => {
-                    if (player.numbers.length === 0) return; // 沒報牌的跳過
+        // 提取字串內 1-39 數字的輔助函式
+        function parseNumbers(str) {
+            let matches = str.match(/\b([1-9]|[1-2][0-9]|3[0-9])\b/g);
+            if (!matches) return [];
+            return [...new Set(matches.map(n => parseInt(n, 10)))].sort((a, b) => a - b);
+        }
 
-                    // 徽章樣式
-                    let rankBadge = '';
-                    if (index === 0) rankBadge = '🥇';
-                    else if (index === 1) rankBadge = '🥈';
-                    else if (index === 2) rankBadge = '🥉';
+        function setupLiveListeners() {
+            // 每當左側輸入內容，右側即時進行合牌計算
+            for (let i = 1; i <= 5; i++) {
+                setTimeout(() => {
+                    let el = document.getElementById('p' + i + '-input');
+                    if(el) el.addEventListener('input', calculateLiveCoincide);
+                }, 500);
+            }
+        }
 
-                    // 處理命中的號碼標示
-                    let displayNumbers = player.numbers.map(n => {
-                        if (player.hits.includes(n)) {
-                            return `<span class="inline-block bg-green-500 text-white px-1.5 py-0.5 rounded mx-0.5">${padZero(n)}</span>`;
-                        }
-                        return `<span class="text-gray-500 mx-0.5">${padZero(n)}</span>`;
-                    }).join(', ');
+        // 儲存一筆新紀錄
+        function addRecord() {
+            let dateVal = document.getElementById('record-date').value;
+            let winVal = document.getElementById('win-nums').value;
+            
+            if(!dateVal) return alert('請選擇開獎日期！');
+            if(!winVal) return alert('請輸入當天開獎號碼！');
+            
+            let winNums = parseNumbers(winVal);
+            if(winNums.length !== 5) {
+                if(!confirm('開獎號碼數量不等於 5 顆，確定要強制儲存嗎？')) return;
+            }
 
-                    rankHtml += `
-                        <div class="bg-white border ${player.hitCount > 0 ? 'border-yellow-400 shadow-sm' : 'border-gray-200'} p-4 rounded-lg flex flex-col md:flex-row justify-between items-center">
-                            <div class="mb-2 md:mb-0">
-                                <span class="text-xl mr-2">${rankBadge}</span>
-                                <span class="font-bold text-gray-800 text-lg">第 ${player.id} 人</span>
-                                <div class="mt-2 text-sm text-gray-600">
-                                    報了 ${player.numbers.length} 支牌：${displayNumbers}
-                                </div>
-                            </div>
-                            <div class="text-right flex space-x-4">
-                                <div class="flex flex-col items-center">
-                                    <span class="text-xs text-gray-500">命中</span>
-                                    <span class="font-bold text-xl ${player.hitCount > 0 ? 'text-red-600' : 'text-gray-400'}">${player.hitCount} 顆</span>
-                                </div>
-                                <div class="flex flex-col items-center">
-                                    <span class="text-xs text-gray-500">精準度</span>
-                                    <span class="font-bold text-xl ${parseFloat(player.winRate) >= 30 ? 'text-blue-600' : 'text-gray-400'}">${player.winRate}%</span>
-                                </div>
-                            </div>
+            let pData = [];
+            for(let i = 1; i <= 5; i++) {
+                let pInput = document.getElementById(`p${i}-input`).value;
+                let pNums = parseNumbers(pInput);
+                pData.push(pNums);
+            }
+
+            // 檢查日期是否重複，若重複則覆蓋
+            let existingIdx = records.findIndex(r => r.date === dateVal);
+            let newRecord = { date: dateVal, winNums: winNums, pData: pData };
+            
+            if (existingIdx > -1) {
+                if(confirm(`日期 ${dateVal} 已有紀錄，是否要覆蓋它？`)) {
+                    records[existingIdx] = newRecord;
+                } else { return; }
+            } else {
+                records.push(newRecord);
+            }
+
+            // 依照日期由新到舊排序
+            records.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            // 存入 LocalStorage
+            localStorage.setItem('539_records', JSON.stringify(records));
+            
+            // 清空輸入框
+            document.getElementById('win-nums').value = '';
+            for(let i = 1; i <= 5; i++) {
+                document.getElementById(`p${i}-input`).value = '';
+            }
+
+            alert('紀錄儲存成功！');
+            updateUI();
+            calculateLiveCoincide();
+        }
+
+        // 刪除紀錄
+        function deleteRecord(index) {
+            if(confirm('確定要刪除這筆歷史紀錄嗎？刪除後無法復原。')) {
+                records.splice(index, 1);
+                localStorage.setItem('539_records', JSON.stringify(records));
+                updateUI();
+            }
+        }
+
+        // 判斷日期時間差的輔助函式（計算週、月）
+        function isThisWeek(dateStr) {
+            let recordDate = new Date(dateStr);
+            let now = new Date();
+            // 本週定義：過去 7 天內
+            let diffTime = Math.abs(now - recordDate);
+            let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            return diffDays <= 7;
+        }
+
+        function isThisMonth(dateStr) {
+            let recordDate = new Date(dateStr);
+            let now = new Date();
+            // 本月定義：同一年且同一個月
+            return recordDate.getFullYear() === now.getFullYear() && recordDate.getMonth() === now.getMonth();
+        }
+
+        // 即時計算右側合牌觀測
+        function calculateLiveCoincide() {
+            let counts = {};
+            for(let i=1; i<=5; i++) {
+                let val = document.getElementById(`p${i}-input`) ? document.getElementById(`p${i}-input`).value : '';
+                let nums = parseNumbers(val);
+                nums.forEach(n => { counts[n] = (counts[n] || 0) + 1; });
+            }
+
+            let sorted = Object.keys(counts).map(k => ({ num: String(k).padStart(2, '0'), count: counts[k] }))
+                               .sort((a,b) => b.count - a.count);
+
+            let html = '';
+            if(sorted.length === 0) {
+                html = '<p class="text-sm text-slate-400 italic text-center py-8">請在左側輸入報牌...</p>';
+            } else {
+                sorted.forEach(item => {
+                    let badgeColor = item.count >= 3 ? 'bg-red-100 text-red-700 font-bold' : 'bg-slate-100 text-slate-600';
+                    html += `
+                        <div class="flex justify-between items-center p-2 rounded border border-slate-100 bg-slate-50">
+                            <span class="text-md font-bold text-slate-700">號碼：${item.num}</span>
+                            <span class="text-xs px-2 py-1 rounded-full ${badgeColor}">共 ${item.count} 人相同</span>
                         </div>
                     `;
                 });
-                
-                if(rankHtml === '') rankHtml = '<p class="text-gray-500">資料不足，無法計算排名。</p>';
-                document.getElementById('ranking-content').innerHTML = rankHtml;
+            }
+            document.getElementById('live-coincide').innerHTML = html;
+        }
 
-            } else {
-                rankContainer.classList.add('hidden'); // 如果沒輸入開獎號碼，隱藏排行榜
+        // 全網頁介面資料重繪更新
+        function updateUI() {
+            // 1. 更新各表頭與輸入框姓名標籤
+            document.getElementById('hist-p1').innerText = players[0];
+            document.getElementById('hist-p2').innerText = players[1];
+            document.getElementById('hist-p3').innerText = players[2];
+            document.getElementById('hist-p4').innerText = players[3];
+            document.getElementById('hist-p5').innerText = players[4];
+
+            let inputContainer = document.getElementById('player-inputs-container');
+            let currentInputsValues = [];
+            for(let i=1; i<=5; i++) {
+                let oldInput = document.getElementById(`p${i}-input`);
+                currentInputsValues.push(oldInput ? oldInput.value : '');
             }
 
-            document.getElementById('result-section').classList.remove('hidden');
+            let inputsHtml = '';
+            players.forEach((name, idx) => {
+                let i = idx + 1;
+                inputsHtml += `
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-0.5">👤 ${name} 的牌：</label>
+                        <input type="text" id="p${i}-input" value="${currentInputsValues[idx]}" placeholder="輸入號碼..." class="w-full border border-slate-300 rounded-md p-2 text-sm outline-none focus:ring-2 focus:ring-blue-400">
+                    </div>
+                `;
+            });
+            inputContainer.innerHTML = inputsHtml;
+            setupLiveListeners();
+
+            // 2. 核心統計：計算 5 位高手的多維度勝率
+            // 初始化統計物件
+            let stats = players.map((name, index) => ({
+                index: index,
+                name: name,
+                totalPeriods: 0,
+                totalBet: 0,   // 總報牌顆數
+                totalHit: 0,   // 總命中顆數
+                weekBet: 0,
+                weekHit: 0,
+                monthBet: 0,
+                monthHit: 0
+            }));
+
+            records.forEach(rec => {
+                let isW = isThisWeek(rec.date);
+                let isM = isThisMonth(rec.date);
+
+                for(let i=0; i<5; i++) {
+                    let pNums = rec.pData[i] || [];
+                    if(pNums.length > 0) {
+                        stats[i].totalPeriods += 1;
+                        // 計算此期命中的顆數
+                        let hits = pNums.filter(n => rec.winNums.includes(n)).length;
+                        
+                        // 累加總計
+                        stats[i].totalBet += pNums.length;
+                        stats[i].totalHit += hits;
+
+                        // 累加本週
+                        if(isW) {
+                            stats[i].weekBet += pNums.length;
+                            stats[i].weekHit += hits;
+                        }
+                        // 累加本月
+                        if(isM) {
+                            stats[i].monthBet += pNums.length;
+                            stats[i].monthHit += hits;
+                        }
+                    }
+                }
+            });
+
+            // 計算勝率 (%) 並依據「總勝率」從高到低進行名次排序
+            let rankedStats = stats.map(s => {
+                return {
+                    ...s,
+                    weekRate: s.weekBet > 0 ? ((s.weekHit / s.weekBet) * 100).toFixed(1) + '%' : '0.0%',
+                    monthRate: s.monthBet > 0 ? ((s.monthHit / s.monthBet) * 100).toFixed(1) + '%' : '0.0%',
+                    totalRate: s.totalBet > 0 ? ((s.totalHit / s.totalBet) * 100).toFixed(1) + '%' : '0.0%',
+                    totalRateNum: s.totalBet > 0 ? (s.totalHit / s.totalBet) : 0
+                };
+            }).sort((a, b) => b.totalRateNum - a.totalRateNum);
+
+            // 渲染「勝率排行榜」
+            let rankingTbody = document.getElementById('ranking-tbody');
+            let rankingHtml = '';
+            rankedStats.forEach((s, idx) => {
+                let rankCrown = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : `第 ${idx+1} 名`;
+                let rowBg = idx % 2 === 1 ? 'bg-slate-50/60' : 'bg-white';
+                rankingHtml += `
+                    <tr class="${rowBg} hover:bg-blue-50/40 transition text-sm text-slate-700">
+                        <td class="p-3 text-center font-bold text-slate-500">${rankCrown}</td>
+                        <td class="p-3 font-bold text-slate-900">${s.name}</td>
+                        <td class="p-3 text-right text-slate-500">${s.totalPeriods} 期</td>
+                        <td class="p-3 text-right text-slate-500">${s.totalBet} 支</td>
+                        <td class="p-3 text-right text-slate-600 font-semibold">${s.totalHit} 支</td>
+                        <td class="p-3 text-right text-amber-600 font-bold">${s.weekRate}</td>
+                        <td class="p-3 text-right text-emerald-600 font-bold">${s.monthRate}</td>
+                        <td class="p-3 text-right text-blue-600 font-bold">${s.totalRate}</td>
+                    </tr>
+                `;
+            });
+            rankingTbody.innerHTML = rankingHtml || '<tr><td colspan="8" class="text-center p-6 text-slate-400 italic">目前尚無歷史登錄數據，請於下方開始新增。</td></tr>';
+
+            // 3. 渲染「歷史明細表」
+            let historyTbody = document.getElementById('history-tbody');
+            let historyHtml = '';
+            
+            records.forEach((rec, rIdx) => {
+                let pColsHtml = '';
+                for(let i=0; i<5; i++) {
+                    let pNums = rec.pData[i] || [];
+                    if(pNums.length === 0) {
+                        pColsHtml += `<td class="p-3 text-slate-300 italic">未報牌</td>`;
+                    } else {
+                        // 將中獎號碼上色突顯
+                        let formatted = pNums.map(n => {
+                            let padded = String(n).padStart(2, '0');
+                            if(rec.winNums.includes(n)) {
+                                return `<span class="bg-emerald-500 text-white font-bold px-1.5 py-0.5 rounded text-xs mx-0.5">${padded}</span>`;
+                            }
+                            return `<span class="text-slate-600 mx-0.5">${padded}</span>`;
+                        }).join(' ');
+                        
+                        let hitCount = pNums.filter(n => rec.winNums.includes(n)).length;
+                        pColsHtml += `
+                            <td class="p-3 text-xs">
+                                <div class="font-mono">${formatted}</div>
+                                <div class="text-[10px] text-slate-400 mt-1">(中 ${hitCount} 顆)</div>
+                            </td>
+                        `;
+                    }
+                }
+
+                let winNumsDisplay = rec.winNums.map(n => `<span class="inline-block bg-blue-100 text-blue-800 font-mono font-bold px-1 rounded mx-0.5">${String(n).padStart(2, '0')}</span>`).join('');
+
+                historyHtml += `
+                    <tr class="hover:bg-slate-50 transition border-b border-slate-100">
+                        <td class="p-3 text-left font-semibold text-slate-600 whitespace-nowrap">${rec.date}</td>
+                        <td class="p-3 whitespace-nowrap">${winNumsDisplay || '<span class="text-slate-300">未開獎</span>'}</td>
+                        ${pColsHtml}
+                        <td class="p-3">
+                            <button onclick="deleteRecord(${rIdx})" class="text-xs font-bold text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 px-2 py-1 rounded transition">
+                                ❌ 刪除
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+            historyTbody.innerHTML = historyHtml || '<tr><td colspan="8" class="text-center p-6 text-slate-400 italic">資料庫空空如也...</td></tr>';
         }
     </script>
 </body>
