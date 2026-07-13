@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>539 報牌與勝率分析系統</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen p-6">
+
+    <div class="max-w-3xl mx-auto bg-white rounded-xl shadow-md overflow-hidden p-8">
+        <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">539 報牌與戰績分析系統</h1>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6" id="input-section">
+            <!-- 產生 5 個人的輸入框 -->
+            <script>
+                for(let i = 1; i <= 5; i++) {
+                    document.write(`
+                        <div class="bg-gray-50 p-3 rounded-lg border border-gray-200">
+                            <label class="block text-sm font-bold text-gray-700 mb-1">第 ${i} 人的牌：</label>
+                            <input type="text" id="person${i}" placeholder="例如：05, 12, 23, 39" 
+                                class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                    `);
+                }
+            </script>
+        </div>
+
+        <!-- 開獎號碼輸入區 -->
+        <div class="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-6">
+            <label class="block text-md font-bold text-blue-800 mb-2">📌 當日開獎號碼 (對獎用，可選填)：</label>
+            <input type="text" id="winning-numbers" placeholder="例如：08, 15, 22, 31, 38"
+                   class="w-full border border-blue-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <p class="text-sm text-blue-600 mt-2">※ 若輸入開獎號碼，系統將自動為 5 人進行對獎並計算勝率。</p>
+        </div>
+
+        <button onclick="calculate()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-md transition duration-200">
+            執行分析 (合牌彙總 & 計算戰績)
+        </button>
+
+        <!-- 顯示結果的區塊 -->
+        <div id="result-section" class="mt-8 hidden space-y-8">
+            
+            <!-- 勝率戰績排行榜 -->
+            <div id="ranking-container" class="hidden">
+                <h2 class="text-xl font-bold text-gray-800 border-b-2 border-gray-800 pb-2 mb-4">🏆 報牌勝率排行榜</h2>
+                <div id="ranking-content" class="space-y-3"></div>
+            </div>
+
+            <!-- 熱門合牌彙總 -->
+            <div>
+                <h2 class="text-xl font-bold text-gray-800 border-b-2 border-gray-800 pb-2 mb-4">🔥 熱門合牌彙總</h2>
+                <div id="aggregate-content" class="space-y-2"></div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // 輔助函式：提取 1-39 的不重複數字陣列
+        function extractNumbers(str) {
+            let matchedNums = str.match(/\b([1-9]|[1-2][0-9]|3[0-9])\b/g);
+            if (!matchedNums) return [];
+            return [...new Set(matchedNums.map(n => parseInt(n, 10)))].sort((a, b) => a - b);
+        }
+
+        // 輔助函式：補零 (例如 5 變 05)
+        function padZero(num) {
+            return String(num).padStart(2, '0');
+        }
+
+        function calculate() {
+            let numberCounts = {}; // 紀錄每支牌被報的次數
+            let playersData = [];  // 紀錄每個人的報牌資料
+
+            // 讀取開獎號碼
+            let winInput = document.getElementById('winning-numbers').value;
+            let winningNumbers = extractNumbers(winInput);
+
+            // 讀取 5 個人的輸入
+            for (let i = 1; i <= 5; i++) {
+                let inputVal = document.getElementById('person' + i).value;
+                let uniqueNums = extractNumbers(inputVal);
+                
+                playersData.push({
+                    id: i,
+                    numbers: uniqueNums,
+                    hits: [],
+                    hitCount: 0,
+                    winRate: 0
+                });
+
+                // 統計合牌次數
+                uniqueNums.forEach(num => {
+                    numberCounts[num] = (numberCounts[num] || 0) + 1;
+                });
+            }
+
+            /* ================= 1. 處理熱門合牌 ================= */
+            let sortedAggregate = Object.keys(numberCounts).map(num => ({
+                number: parseInt(num, 10),
+                count: numberCounts[num]
+            })).sort((a, b) => b.count - a.count);
+
+            let aggHtml = '';
+            if (sortedAggregate.length === 0) {
+                aggHtml = '<p class="text-gray-500">目前沒有輸入任何號碼。</p>';
+            } else {
+                sortedAggregate.forEach(item => {
+                    let isWinningNum = winningNumbers.includes(item.number);
+                    // 標示熱門程度與是否開出
+                    let bgClass = isWinningNum ? 'bg-green-100 border-green-300' : 'bg-gray-50 border-gray-200';
+                    let textClass = isWinningNum ? 'text-green-700 font-bold' : (item.count >= 3 ? 'text-red-600 font-bold' : 'text-gray-700');
+                    let tagHtml = isWinningNum ? `<span class="ml-2 text-xs bg-green-500 text-white px-2 py-0.5 rounded">中獎開出</span>` : '';
+
+                    aggHtml += `
+                        <div class="flex justify-between items-center ${bgClass} border p-3 rounded-md">
+                            <span class="text-lg ${textClass}">號碼：${padZero(item.number)} ${tagHtml}</span>
+                            <span class="text-sm bg-white px-3 py-1 border rounded-full ${textClass}">共 ${item.count} 人報牌</span>
+                        </div>
+                    `;
+                });
+            }
+            document.getElementById('aggregate-content').innerHTML = aggHtml;
+
+            /* ================= 2. 處理對獎與勝率 ================= */
+            let rankContainer = document.getElementById('ranking-container');
+            
+            if (winningNumbers.length > 0) {
+                rankContainer.classList.remove('hidden');
+                
+                // 計算每個人的命中數與勝率
+                playersData.forEach(player => {
+                    player.hits = player.numbers.filter(n => winningNumbers.includes(n));
+                    player.hitCount = player.hits.length;
+                    if (player.numbers.length > 0) {
+                        player.winRate = ((player.hitCount / player.numbers.length) * 100).toFixed(1);
+                    }
+                });
+
+                // 排序排行榜：先比命中顆數，再比勝率 (少報多中者排前面)
+                playersData.sort((a, b) => {
+                    if (b.hitCount !== a.hitCount) return b.hitCount - a.hitCount;
+                    return b.winRate - a.winRate;
+                });
+
+                let rankHtml = '';
+                playersData.forEach((player, index) => {
+                    if (player.numbers.length === 0) return; // 沒報牌的跳過
+
+                    // 徽章樣式
+                    let rankBadge = '';
+                    if (index === 0) rankBadge = '🥇';
+                    else if (index === 1) rankBadge = '🥈';
+                    else if (index === 2) rankBadge = '🥉';
+
+                    // 處理命中的號碼標示
+                    let displayNumbers = player.numbers.map(n => {
+                        if (player.hits.includes(n)) {
+                            return `<span class="inline-block bg-green-500 text-white px-1.5 py-0.5 rounded mx-0.5">${padZero(n)}</span>`;
+                        }
+                        return `<span class="text-gray-500 mx-0.5">${padZero(n)}</span>`;
+                    }).join(', ');
+
+                    rankHtml += `
+                        <div class="bg-white border ${player.hitCount > 0 ? 'border-yellow-400 shadow-sm' : 'border-gray-200'} p-4 rounded-lg flex flex-col md:flex-row justify-between items-center">
+                            <div class="mb-2 md:mb-0">
+                                <span class="text-xl mr-2">${rankBadge}</span>
+                                <span class="font-bold text-gray-800 text-lg">第 ${player.id} 人</span>
+                                <div class="mt-2 text-sm text-gray-600">
+                                    報了 ${player.numbers.length} 支牌：${displayNumbers}
+                                </div>
+                            </div>
+                            <div class="text-right flex space-x-4">
+                                <div class="flex flex-col items-center">
+                                    <span class="text-xs text-gray-500">命中</span>
+                                    <span class="font-bold text-xl ${player.hitCount > 0 ? 'text-red-600' : 'text-gray-400'}">${player.hitCount} 顆</span>
+                                </div>
+                                <div class="flex flex-col items-center">
+                                    <span class="text-xs text-gray-500">精準度</span>
+                                    <span class="font-bold text-xl ${parseFloat(player.winRate) >= 30 ? 'text-blue-600' : 'text-gray-400'}">${player.winRate}%</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                if(rankHtml === '') rankHtml = '<p class="text-gray-500">資料不足，無法計算排名。</p>';
+                document.getElementById('ranking-content').innerHTML = rankHtml;
+
+            } else {
+                rankContainer.classList.add('hidden'); // 如果沒輸入開獎號碼，隱藏排行榜
+            }
+
+            document.getElementById('result-section').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
