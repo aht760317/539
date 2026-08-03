@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+html_content = """<!DOCTYPE html>
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>539 實戰 PK 與 1800碰 專業算牌系統</title>
+    <title>539 實戰 PK 與 專業算牌系統 (含冷門追蹤)</title>
     <style>
         :root {
             --bg-color: #f0fdf4; 
@@ -82,6 +82,15 @@
         .stats-1800-box h3 { color: #10b981; font-size: 18px; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
         .stats-1800-box p { font-size: 15px; margin-bottom: 8px; color: #cbd5e1; }
         .highlight-text { color: #fca5a5; font-weight: bold; font-size: 18px; }
+
+        /* 極冷門號碼儀表板 */
+        .stats-cold-box { background: rgba(59, 130, 246, 0.1); border: 1px solid #3b82f6; padding: 20px; border-radius: 10px; margin: 20px 0; text-align: left; }
+        .stats-cold-box h3 { color: #60a5fa; font-size: 18px; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        .cold-num-container { display: flex; flex-wrap: wrap; gap: 10px; }
+        .cold-num-item { background: rgba(15, 23, 42, 0.6); border: 1px solid #334155; padding: 10px 15px; border-radius: 8px; display: flex; align-items: center; gap: 12px; flex: 1; min-width: 120px; justify-content: center; }
+        .cold-ball { width: 36px; height: 36px; border-radius: 50%; background: #3b82f6; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 16px; box-shadow: 0 2px 5px rgba(59,130,246,0.5); }
+        .cold-text { color: #94a3b8; font-size: 13px; line-height: 1.4; text-align: center; }
+        .cold-text span { color: #fca5a5; font-weight: bold; font-size: 18px; }
         
         .btn-ai-gen { background: linear-gradient(135deg, #8b5cf6, #3b82f6); color: white; border: none; padding: 18px 40px; border-radius: 50px; font-size: 20px; font-weight: bold; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.5); margin: 10px 0 20px; }
         .btn-ai-gen:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 8px 20px rgba(59, 130, 246, 0.6); }
@@ -104,7 +113,7 @@
         .pred-ball-car { background: #ef4444; color: white; width: 50px; height: 50px; font-size: 22px; box-shadow: 0 4px 10px rgba(239,68,68,0.5); margin: 5px; opacity: 0; }
         .pred-ball-combo { background: #10b981; color: white; width: 45px; height: 45px; font-size: 20px; box-shadow: 0 4px 10px rgba(16,185,129,0.5); margin: 5px; opacity: 0; }
 
-        /* 快速補登區 (最底部縮小) */
+        /* 快速補登區 */
         .batch-panel { max-width: 800px; margin: 40px auto 20px; padding: 15px 20px; background: #f8fafc; border: 1px dashed #94a3b8; }
         .batch-panel h2 { font-size: 16px; margin-bottom: 10px; border-left: 4px solid #64748b; padding-left: 10px; color: #475569; }
         .batch-panel textarea { width: 100%; height: 100px; padding: 10px; border-radius: 6px; border: 1px solid #cbd5e1; font-size: 13px; resize: vertical; margin-bottom: 10px; outline: none; }
@@ -117,7 +126,7 @@
 
 <div class="container">
     <header>
-        <h1>⚔️ 539 PK 對決 & 1800碰 專業算牌系統</h1>
+        <h1>⚔️ 539 PK 對決 & 專業算牌系統</h1>
         <p>上半部：記錄每天實際開獎與對決勝負 / 下半部：沉浸式 AI 搖獎算牌</p>
         <div class="nav-links">
             <a href="index3.html" class="nav-link">🎰 前往專屬幸運搖獎機</a>
@@ -221,6 +230,15 @@
                 &nbsp;&nbsp;👉&nbsp;&nbsp; <strong>下期爆發機率：</strong> <span id="next-prob-gauge" class="highlight-text">穩定</span>
             </p>
         </div>
+
+        <!-- 🌟 新增：極冷門號碼追蹤儀表板 -->
+        <div class="stats-cold-box">
+            <h3>🧊 養牌必看：最久未開出前 8 名 (極冷門拖牌)</h3>
+            <p style="font-size: 13px; color: #94a3b8; margin-bottom: 15px; margin-top: -5px;">系統自動偵測大數據中潛水最久的 8 個號碼，適合用來當作養牌或防守的依據。</p>
+            <div id="cold-tracking-container" class="cold-num-container">
+                <span style="color:#94a3b8; font-size:14px;">資料運算中...</span>
+            </div>
+        </div>
         
         <button class="btn-ai-gen" id="btn-ai-gen" onclick="predictNextPeriod()">🧠 啟動台彩算牌演算法，開始搖獎</button>
         
@@ -282,7 +300,6 @@
 
     window.onload = function() {
         document.getElementById('input-date').value = new Date().toISOString().split('T')[0];
-        // 初始化時確保排序正確 (日期新到舊)
         battleHistory.sort((a, b) => {
             if (a.date > b.date) return -1;
             if (a.date < b.date) return 1;
@@ -308,7 +325,6 @@
             let parts = line.trim().split(/\s+/);
             if(parts.length >= 2) {
                 let dateStr = parts[0];
-                // 民國轉西元處理 (例如 115/06/30 -> 2026-06-30)
                 if(dateStr.includes('/')) {
                     let dParts = dateStr.split('/');
                     if(dParts[0].length === 3) dParts[0] = parseInt(dParts[0]) + 1911;
@@ -364,7 +380,6 @@
 
         battleHistory.push({ id: Date.now(), date: date, ai: aiNums, my: myNums, draw: drawNums, aiHits: aiHitCount, myHits: myHitCount, winner: winner });
         
-        // 自動排序
         battleHistory.sort((a, b) => {
             if (a.date > b.date) return -1;
             if (a.date < b.date) return 1;
@@ -395,7 +410,6 @@
         let streakEnded = false;
         lastBrokenPillars = [];
 
-        // battleHistory 是從新到舊排序
         for(let i=0; i < battleHistory.length; i++) {
             let draw = battleHistory[i].draw;
             if(!draw || draw.length < 5) continue;
@@ -408,14 +422,12 @@
                 else if(COL3.includes(n)) c3++;
             });
 
-            // 三柱都有數字，代表未斷柱 (符合1800碰條件)
             let isWin = (c1 > 0 && c2 > 0 && c3 > 0);
             if(isWin) totalWins++;
 
             if(!streakEnded) {
                 if(!isWin) {
                     currentStreak++;
-                    // 記錄最近一期的斷柱是哪幾柱
                     if(i === 0) {
                         if(c1===0) lastBrokenPillars.push('第一柱(10-18)');
                         if(c2===0) lastBrokenPillars.push('第二柱(20-29)');
@@ -453,6 +465,46 @@
         }
     }
 
+    // === 🌟 分析極冷門號碼 (Top 8) ===
+    function updateColdStats() {
+        const container = document.getElementById('cold-tracking-container');
+        if (battleHistory.length === 0) {
+            container.innerHTML = '<span style="color:#94a3b8; font-size:14px;">目前尚無開獎資料</span>';
+            return;
+        }
+
+        let missingCounts = [];
+        // 計算每個號碼幾期沒開
+        for (let i = 1; i <= 39; i++) {
+            let count = 0;
+            for (let j = 0; j < battleHistory.length; j++) {
+                if (battleHistory[j].draw && battleHistory[j].draw.includes(i)) {
+                    break;
+                }
+                count++;
+            }
+            missingCounts.push({ num: i, count: count });
+        }
+
+        // 依未開出期數降冪排序
+        missingCounts.sort((a, b) => {
+            if (b.count !== a.count) return b.count - a.count;
+            return a.num - b.num;
+        });
+        
+        let top8 = missingCounts.slice(0, 8);
+        
+        container.innerHTML = '';
+        top8.forEach(item => {
+            container.innerHTML += `
+                <div class="cold-num-item">
+                    <div class="cold-ball">${item.num.toString().padStart(2, '0')}</div>
+                    <div class="cold-text">未開 <br><span>${item.count}</span> 期</div>
+                </div>
+            `;
+        });
+    }
+
     // === 步驟二：獨立 AI 算牌引擎 ===
     function predictNextPeriod() {
         if (battleHistory.length < 2) {
@@ -486,23 +538,17 @@
         carPicks.sort((a,b) => a-b);
 
         // --- 第二組：三星/四星推薦 4 碼 (版路算牌) ---
-        // 策略：如果上一期有斷柱，強制從斷柱中抽號碼回補！
         let comboPicks = [];
-        
-        // 抓取上一期斷掉的柱子裡面的號碼
         let brokenPool = [];
         if (lastBrokenPillars.includes('第一柱(10-18)')) brokenPool = brokenPool.concat(COL1);
         if (lastBrokenPillars.includes('第二柱(20-29)')) brokenPool = brokenPool.concat(COL2);
         if (lastBrokenPillars.includes('第三柱(01-09,19,30-39)')) brokenPool = brokenPool.concat(COL3);
         
-        // 過濾掉跟全車重複的號碼
         brokenPool = brokenPool.filter(n => !carPicks.includes(n));
         
-        // 強制抽 2 顆斷柱回補 (如果有的話)
         if (brokenPool.length > 0) comboPicks.push(pickRandom(brokenPool));
         if (brokenPool.length > 0) comboPicks.push(pickRandom(brokenPool));
 
-        // 剩下的從熱門池或全池補滿 4 顆
         let tempHot2 = hotPool.filter(n => !carPicks.includes(n) && !comboPicks.includes(n));
         let tempAll2 = allPool.filter(n => !carPicks.includes(n) && !comboPicks.includes(n));
 
@@ -661,9 +707,16 @@
             pkEl.innerText = "平分秋色"; pkEl.style.color = "var(--hit-color)";
         }
 
-        // 每次重新渲染後，更新 1800碰 分析儀表板
+        // 重新渲染後，更新 1800碰 與 冷門號碼 儀表板
         update1800Stats();
+        updateColdStats();
     }
 </script>
 </body>
 </html>
+"""
+
+with open("539_system.html", "w", encoding="utf-8") as f:
+    f.write(html_content)
+
+print("Generated HTML file successfully.")
