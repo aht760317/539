@@ -13,6 +13,7 @@
             --my-color: #10b981; 
             --draw-color: #f59e0b; 
             --hit-color: #ef4444; 
+            --cold-color: #0ea5e9;
             --border: #cbd5e1;
         }
 
@@ -33,10 +34,33 @@
         .stat-value { font-size: 32px; font-weight: 900; margin: 10px 0; }
         .stat-sub { font-size: 13px; color: #94a3b8; }
 
+        /* 新增：冷熱門數據 & 搖號機 區塊 */
+        .tools-panel { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .tool-card { background: white; padding: 20px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .tool-card h3 { font-size: 16px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+        
+        .badge-list { display: flex; flex-wrap: wrap; gap: 8px; }
+        .info-badge { display: flex; flex-direction: column; align-items: center; background: #f1f5f9; padding: 6px 10px; border-radius: 8px; min-width: 45px;}
+        .info-badge .num { font-size: 18px; font-weight: bold; }
+        .info-badge .desc { font-size: 11px; color: #64748b; margin-top: 2px; }
+        .hot-badge .num { color: var(--hit-color); }
+        .cold-badge .num { color: var(--cold-color); }
+
+        /* 搖號機 UI */
+        .machine-container { text-align: center; padding: 10px 0; }
+        .machine-balls { display: flex; justify-content: center; gap: 10px; margin-bottom: 15px; }
+        .machine-ball { width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(135deg, #fde68a 0%, #f59e0b 100%); color: white; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.2), inset 0 -3px 5px rgba(0,0,0,0.1); border: 2px solid #b45309; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); }
+        .rolling { animation: shake 0.1s infinite alternate; }
+        @keyframes shake { from { transform: translateY(-3px); } to { transform: translateY(3px); } }
+        .btn-roll { background: #8b5cf6; color: white; border: none; padding: 10px 20px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; transition: 0.2s; }
+        .btn-roll:hover { background: #7c3aed; }
+        .btn-roll:disabled { background: #cbd5e1; cursor: not-allowed; }
+        .btn-apply { background: var(--my-color); color: white; border: none; padding: 10px 15px; font-size: 14px; font-weight: bold; border-radius: 8px; cursor: pointer; margin-left: 10px; display: none;}
+        .btn-apply:hover { background: #059669; }
+
         /* 輸入區 */
         .input-panel { background: white; padding: 25px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .input-panel h2 { margin-bottom: 15px; font-size: 18px; color: #334155; border-left: 4px solid var(--draw-color); padding-left: 10px; }
-        
         .form-row { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 15px; }
         .form-group { flex: 1; min-width: 200px; display: flex; flex-direction: column; gap: 5px; }
         .form-group label { font-size: 14px; font-weight: bold; }
@@ -56,7 +80,6 @@
         /* 號碼球 UI */
         .num-container { display: flex; gap: 5px; justify-content: center; flex-wrap: wrap; }
         .num-ball { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; background: #e2e8f0; color: #475569; }
-        
         .num-ball.hit { background: var(--hit-color); color: white; box-shadow: 0 0 8px rgba(239, 68, 68, 0.5); transform: scale(1.1); }
         .num-ball.draw { background: var(--draw-color); color: white; }
 
@@ -109,6 +132,38 @@
         </div>
     </div>
 
+    <!-- 新增：冷熱門與搖號機 -->
+    <div class="tools-panel">
+        <div class="tool-card">
+            <h3 style="color:var(--hit-color)">🔥 前八名 常開熱門號</h3>
+            <div class="badge-list" id="hot-numbers">
+                <div style="font-size:13px; color:#94a3b8;">累積開獎資料後顯示...</div>
+            </div>
+            
+            <h3 style="color:var(--cold-color); margin-top:20px;">❄️ 前八名 最久未開冷門號</h3>
+            <div class="badge-list" id="cold-numbers">
+                <div style="font-size:13px; color:#94a3b8;">累積開獎資料後顯示...</div>
+            </div>
+        </div>
+
+        <div class="tool-card">
+            <h3 style="color:#8b5cf6">🎰 靈感搖號機 (自動滾球)</h3>
+            <div class="machine-container">
+                <div class="machine-balls" id="machine-balls">
+                    <div class="machine-ball">?</div>
+                    <div class="machine-ball">?</div>
+                    <div class="machine-ball">?</div>
+                    <div class="machine-ball">?</div>
+                    <div class="machine-ball">?</div>
+                </div>
+                <div>
+                    <button class="btn-roll" id="btn-roll" onclick="startRoll()">🎲 搖出今日幸運 5 碼</button>
+                    <button class="btn-apply" id="btn-apply" onclick="applyMachineNumbers()">📥 帶入前4碼至我的預測</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="input-panel">
         <h2>📝 新增今日對決預測</h2>
         <div class="form-row">
@@ -156,24 +211,21 @@
 <script>
     let battleHistory = [];
 
-    // 自動按日期由新到舊排序的函數
+    // 自動按日期由新到舊排序
     function sortHistoryByDate() {
         battleHistory.sort((a, b) => {
             let dateA = new Date(a.date);
             let dateB = new Date(b.date);
-            if (dateB - dateA === 0) {
-                return b.id - a.id; // 如果日期同一天，新輸入的在前面
-            }
+            if (dateB - dateA === 0) return b.id - a.id; 
             return dateB - dateA;
         });
     }
 
     window.onload = function() {
-        // 預設帶入今天日期
         document.getElementById('input-date').value = new Date().toISOString().split('T')[0];
         if (localStorage.getItem('tt5_battle_history')) {
             battleHistory = JSON.parse(localStorage.getItem('tt5_battle_history'));
-            sortHistoryByDate(); // 讀取時確保排序正確
+            sortHistoryByDate(); 
         }
         renderAll();
     };
@@ -187,7 +239,6 @@
         return nums;
     }
 
-    // 計算 PK 結果的共用函數
     function calculateResult(aiNums, myNums, drawNums) {
         let aiHitCount = aiNums.filter(n => drawNums.includes(n)).length;
         let myHitCount = 0;
@@ -213,10 +264,9 @@
         let myNums = parseNumbers(myInput);
         let drawNums = parseNumbers(drawInput);
 
-        // 防呆檢查
         if (aiNums.length !== 4) return alert("🤖 AI 的號碼必須剛好是 4 個不重複的數字 (1-39)！");
-        if (myInput.trim() !== "" && myNums.length !== 4) return alert("🧑 你的號碼如果有填，必須剛好是 4 碼！若當天不預測請直接清空欄位。");
-        if (drawInput.trim() !== "" && drawNums.length !== 5) return alert("📺 實際開獎號碼如果有填，必須剛好是 5 個不重複的數字！(或直接留空等稍後再填)");
+        if (myInput.trim() !== "" && myNums.length !== 4) return alert("🧑 你的號碼如果有填，必須剛好是 4 碼！");
+        if (drawInput.trim() !== "" && drawNums.length !== 5) return alert("📺 實際開獎號碼如果有填，必須剛好是 5 個不重複的數字！");
 
         let isPending = drawNums.length === 0;
         let aiHitCount = 0, myHitCount = 0, winner = "等待開獎";
@@ -228,25 +278,12 @@
             winner = res.winner;
         }
 
-        let record = {
-            id: Date.now(),
-            date: date,
-            ai: aiNums,
-            my: myNums,
-            draw: drawNums,
-            aiHits: aiHitCount,
-            myHits: myHitCount,
-            winner: winner,
-            isPending: isPending
-        };
+        let record = { id: Date.now(), date: date, ai: aiNums, my: myNums, draw: drawNums, aiHits: aiHitCount, myHits: myHitCount, winner: winner, isPending: isPending };
 
-        // 加入陣列後，立刻執行自動排序！
         battleHistory.push(record);
         sortHistoryByDate(); 
-        
         localStorage.setItem('tt5_battle_history', JSON.stringify(battleHistory));
 
-        // 清空輸入框
         document.getElementById('ai-nums').value = "";
         document.getElementById('my-nums').value = "";
         document.getElementById('draw-nums').value = "";
@@ -254,14 +291,11 @@
         renderAll();
     }
 
-    // 更新未開獎的期數
     function updateDraw(id) {
         let inputEl = document.getElementById(`draw-update-${id}`);
         let drawNums = parseNumbers(inputEl.value);
 
-        if (drawNums.length !== 5) {
-            return alert("📺 開獎號碼必須輸入 5 個不重複的數字 (1-39)！");
-        }
+        if (drawNums.length !== 5) return alert("📺 開獎號碼必須輸入 5 個不重複的數字 (1-39)！");
 
         let index = battleHistory.findIndex(item => item.id === id);
         if (index !== -1) {
@@ -279,16 +313,13 @@
         }
     }
 
-    // ⭐ 新增：手動修改日期功能
     function editDate(id, oldDate) {
         let newDate = prompt("請輸入修正後的日期 (格式：YYYY-MM-DD)", oldDate);
-        
-        // 如果使用者有輸入且不是按取消
         if (newDate && newDate.trim() !== "") {
             let index = battleHistory.findIndex(item => item.id === id);
             if (index !== -1) {
                 battleHistory[index].date = newDate.trim();
-                sortHistoryByDate(); // 修改完立刻自動重新排序！
+                sortHistoryByDate(); 
                 localStorage.setItem('tt5_battle_history', JSON.stringify(battleHistory));
                 renderAll();
             }
@@ -303,14 +334,117 @@
         }
     }
 
+    // ⭐ 新增：計算冷熱門號碼
+    function analyzeHotColdNumbers() {
+        let completedDraws = battleHistory.filter(item => !item.isPending);
+        if(completedDraws.length === 0) return;
+
+        let numStats = {};
+        for(let i = 1; i <= 39; i++) {
+            numStats[i] = { num: i, count: 0, lastSeenAgo: 999 }; // 999代表從未開過
+        }
+
+        // 因為 battleHistory 是最新到最舊(0是最新)，遍歷計算
+        completedDraws.forEach((record, index) => {
+            record.draw.forEach(n => {
+                numStats[n].count++;
+                // 如果是第一次遇到(最近一次)，記錄它距離現在幾期 (index越大代表越久以前)
+                if (numStats[n].lastSeenAgo === 999) {
+                    numStats[n].lastSeenAgo = index; 
+                }
+            });
+        });
+
+        let statsArray = Object.values(numStats);
+
+        // 前八名熱門：按開出次數由高到低，次數相同則看誰最近開出
+        let hotNumbers = [...statsArray].sort((a, b) => {
+            if (b.count !== a.count) return b.count - a.count;
+            return a.lastSeenAgo - b.lastSeenAgo;
+        }).slice(0, 8);
+
+        // 前八名冷門：按遺漏期數由大到小排 (未開過維持999排最前面)
+        let coldNumbers = [...statsArray].sort((a, b) => b.lastSeenAgo - a.lastSeenAgo).slice(0, 8);
+
+        // 渲染熱門
+        document.getElementById('hot-numbers').innerHTML = hotNumbers.map(item => `
+            <div class="info-badge hot-badge">
+                <span class="num">${item.num.toString().padStart(2, '0')}</span>
+                <span class="desc">開${item.count}次</span>
+            </div>
+        `).join('');
+
+        // 渲染冷門
+        document.getElementById('cold-numbers').innerHTML = coldNumbers.map(item => `
+            <div class="info-badge cold-badge">
+                <span class="num">${item.num.toString().padStart(2, '0')}</span>
+                <span class="desc">${item.lastSeenAgo === 999 ? '未開過' : '漏'+item.lastSeenAgo+'期'}</span>
+            </div>
+        `).join('');
+    }
+
+    // ⭐ 新增：搖號機系統
+    let machineInterval;
+    let finalMachineNumbers = [];
+    
+    function startRoll() {
+        const btnRoll = document.getElementById('btn-roll');
+        const btnApply = document.getElementById('btn-apply');
+        const balls = document.querySelectorAll('.machine-ball');
+        
+        btnRoll.disabled = true;
+        btnRoll.innerText = "🔄 搖號中...";
+        btnApply.style.display = "none";
+
+        balls.forEach(ball => ball.classList.add('rolling'));
+
+        // 快速跳動數字
+        machineInterval = setInterval(() => {
+            balls.forEach(ball => {
+                let r = Math.floor(Math.random() * 39) + 1;
+                ball.innerText = r.toString().padStart(2, '0');
+            });
+        }, 80);
+
+        // 2秒後停止並選出最終 5 碼
+        setTimeout(() => {
+            clearInterval(machineInterval);
+            balls.forEach(ball => ball.classList.remove('rolling'));
+            
+            finalMachineNumbers = [];
+            while(finalMachineNumbers.length < 5) {
+                let r = Math.floor(Math.random() * 39) + 1;
+                if(!finalMachineNumbers.includes(r)) finalMachineNumbers.push(r);
+            }
+            finalMachineNumbers.sort((a,b) => a - b);
+            
+            balls.forEach((ball, idx) => {
+                ball.innerText = finalMachineNumbers[idx].toString().padStart(2, '0');
+            });
+
+            btnRoll.disabled = false;
+            btnRoll.innerText = "🎲 再搖一次";
+            btnApply.style.display = "inline-block"; // 顯示帶入按鈕
+        }, 2000);
+    }
+
+    // 將搖出來的前 4 碼帶入「我的預測」
+    function applyMachineNumbers() {
+        if(finalMachineNumbers.length >= 4) {
+            let my4Nums = finalMachineNumbers.slice(0, 4); // 取前 4 個
+            document.getElementById('my-nums').value = my4Nums.map(n => n.toString().padStart(2, '0')).join(', ');
+            alert("✅ 已經將前4個幸運號碼帶入您的預測欄位！");
+        }
+    }
+
     function renderAll() {
         const tbody = document.getElementById('history-tbody');
         tbody.innerHTML = '';
 
-        let totalRounds = 0; 
-        let myRounds = 0; 
-        let totalAiHits = 0;
-        let totalMyHits = 0;
+        let totalRounds = 0, myRounds = 0, totalAiHits = 0, totalMyHits = 0;
+
+        // 執行冷熱門分析
+        analyzeHotColdNumbers();
 
         battleHistory.forEach(item => {
             if (!item.isPending) {
@@ -324,37 +458,20 @@
 
             const tr = document.createElement('tr');
 
-            const genBalls = (nums) => {
-                return `<div class="num-container">` + nums.map(n => {
-                    let isHit = (!item.isPending && item.draw.includes(n)) ? 'hit' : '';
-                    return `<div class="num-ball ${isHit}">${n.toString().padStart(2,'0')}</div>`;
-                }).join('') + `</div>`;
-            };
+            const genBalls = (nums) => `<div class="num-container">` + nums.map(n => {
+                let isHit = (!item.isPending && item.draw.includes(n)) ? 'hit' : '';
+                return `<div class="num-ball ${isHit}">${n.toString().padStart(2,'0')}</div>`;
+            }).join('') + `</div>`;
 
-            const genDrawBalls = (nums) => {
-                return `<div class="num-container">` + nums.map(n => 
-                    `<div class="num-ball draw">${n.toString().padStart(2,'0')}</div>`
-                ).join('') + `</div>`;
-            };
+            const genDrawBalls = (nums) => `<div class="num-container">` + nums.map(n => `<div class="num-ball draw">${n.toString().padStart(2,'0')}</div>`).join('') + `</div>`;
 
-            let myColumnHtml = '';
-            if (item.my && item.my.length === 4) {
-                myColumnHtml = genBalls(item.my);
-                if (!item.isPending) myColumnHtml += `<div style="font-size:12px; margin-top:5px; color:#ef4444;">中 ${item.myHits} 顆</div>`;
-            } else {
-                myColumnHtml = `<div style="color: #94a3b8; font-size: 14px; padding: 10px 0;">休息未預測 ☕</div>`;
-            }
+            let myColumnHtml = item.my && item.my.length === 4 
+                ? genBalls(item.my) + (!item.isPending ? `<div style="font-size:12px; margin-top:5px; color:#ef4444;">中 ${item.myHits} 顆</div>` : '')
+                : `<div style="color: #94a3b8; font-size: 14px; padding: 10px 0;">休息未預測 ☕</div>`;
 
-            let drawColumnHtml = '';
-            if (item.isPending) {
-                drawColumnHtml = `
-                    <div>
-                        <input type="text" id="draw-update-${item.id}" class="pending-input" placeholder="輸入 5 個開獎號碼"><br>
-                        <button class="action-btn update-btn" onclick="updateDraw(${item.id})">確認開獎</button>
-                    </div>`;
-            } else {
-                drawColumnHtml = genDrawBalls(item.draw);
-            }
+            let drawColumnHtml = item.isPending 
+                ? `<div><input type="text" id="draw-update-${item.id}" class="pending-input" placeholder="輸入 5 個開獎號碼"><br><button class="action-btn update-btn" onclick="updateDraw(${item.id})">確認開獎</button></div>`
+                : genDrawBalls(item.draw);
 
             let winnerBadge = `<span class="winner-badge badge-tie">平手</span>`;
             if (item.isPending) winnerBadge = `<span class="winner-badge badge-pending">⏳ 等待開獎</span>`;
@@ -362,13 +479,9 @@
             else if (item.winner === "我 勝") winnerBadge = `<span class="winner-badge badge-my">🧑 我 勝</span>`;
             else if (item.winner === "僅 AI") winnerBadge = `<span class="winner-badge badge-solo">🤖 僅 AI</span>`;
 
-            // 在操作區加入「改期」按鈕
             tr.innerHTML = `
                 <td><strong>${item.date}</strong></td>
-                <td>
-                    ${genBalls(item.ai)}
-                    ${!item.isPending ? `<div style="font-size:12px; margin-top:5px; color:#ef4444;">中 ${item.aiHits} 顆</div>` : ''}
-                </td>
+                <td>${genBalls(item.ai)} ${!item.isPending ? `<div style="font-size:12px; margin-top:5px; color:#ef4444;">中 ${item.aiHits} 顆</div>` : ''}</td>
                 <td>${myColumnHtml}</td>
                 <td>${drawColumnHtml}</td>
                 <td>${winnerBadge}</td>
