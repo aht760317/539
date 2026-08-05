@@ -34,7 +34,7 @@
         .stat-value { font-size: 32px; font-weight: 900; margin: 10px 0; }
         .stat-sub { font-size: 13px; color: #94a3b8; }
 
-        /* 新增：冷熱門數據 & 搖號機 區塊 */
+        /* 冷熱門數據 & 搖號機 區塊 */
         .tools-panel { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; margin-bottom: 20px; }
         .tool-card { background: white; padding: 20px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .tool-card h3 { font-size: 16px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
@@ -46,12 +46,21 @@
         .hot-badge .num { color: var(--hit-color); }
         .cold-badge .num { color: var(--cold-color); }
 
-        /* 搖號機 UI */
-        .machine-container { text-align: center; padding: 10px 0; }
-        .machine-balls { display: flex; justify-content: center; gap: 10px; margin-bottom: 15px; }
-        .machine-ball { width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(135deg, #fde68a 0%, #f59e0b 100%); color: white; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.2), inset 0 -3px 5px rgba(0,0,0,0.1); border: 2px solid #b45309; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); }
-        .rolling { animation: shake 0.1s infinite alternate; }
-        @keyframes shake { from { transform: translateY(-3px); } to { transform: translateY(3px); } }
+        /* 搖號機 UI 沉浸式升級版 */
+        .machine-container { text-align: center; padding: 10px 0; display: flex; flex-direction: column; align-items: center; gap: 15px; }
+        
+        /* 大滾筒 (主抽獎機) */
+        .main-spinner { width: 70px; height: 70px; border-radius: 50%; background: radial-gradient(circle, #e2e8f0 0%, #cbd5e1 100%); color: #475569; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: bold; box-shadow: inset 0 -4px 8px rgba(0,0,0,0.2), 0 4px 10px rgba(0,0,0,0.1); border: 3px solid #94a3b8; transition: 0.3s; }
+        .main-spinner.active { background: radial-gradient(circle, #fcd34d 0%, #f59e0b 100%); color: white; border-color: #b45309; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); }
+        .main-spinner.spinning { animation: blur-spin 0.1s infinite alternate; }
+        @keyframes blur-spin { from { transform: translateY(-2px) scale(0.98); opacity: 0.8; } to { transform: translateY(2px) scale(1.02); opacity: 1; } }
+
+        /* 落球區 */
+        .machine-balls { display: flex; justify-content: center; gap: 10px; }
+        .machine-ball { width: 45px; height: 45px; border-radius: 50%; background: #f1f5f9; color: #cbd5e1; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold; border: 2px dashed #cbd5e1; transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        /* 開出的金球特效 */
+        .machine-ball.revealed { background: linear-gradient(135deg, #fde68a 0%, #f59e0b 100%); color: white; border: 2px solid #b45309; box-shadow: 0 4px 6px rgba(0,0,0,0.2), inset 0 -3px 5px rgba(0,0,0,0.1); text-shadow: 1px 1px 2px rgba(0,0,0,0.3); transform: scale(1.15); }
+
         .btn-roll { background: #8b5cf6; color: white; border: none; padding: 10px 20px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; transition: 0.2s; }
         .btn-roll:hover { background: #7c3aed; }
         .btn-roll:disabled { background: #cbd5e1; cursor: not-allowed; }
@@ -132,7 +141,7 @@
         </div>
     </div>
 
-    <!-- 新增：冷熱門與搖號機 -->
+    <!-- 冷熱門與搖號機 -->
     <div class="tools-panel">
         <div class="tool-card">
             <h3 style="color:var(--hit-color)">🔥 前八名 常開熱門號</h3>
@@ -147,8 +156,12 @@
         </div>
 
         <div class="tool-card">
-            <h3 style="color:#8b5cf6">🎰 靈感搖號機 (自動滾球)</h3>
+            <h3 style="color:#8b5cf6">🎰 電視實況搖號機</h3>
             <div class="machine-container">
+                <!-- 主抽獎機 (大球) -->
+                <div class="main-spinner" id="main-spinner">🎰</div>
+                
+                <!-- 開獎落球槽 -->
                 <div class="machine-balls" id="machine-balls">
                     <div class="machine-ball">?</div>
                     <div class="machine-ball">?</div>
@@ -156,9 +169,10 @@
                     <div class="machine-ball">?</div>
                     <div class="machine-ball">?</div>
                 </div>
-                <div>
-                    <button class="btn-roll" id="btn-roll" onclick="startRoll()">🎲 搖出今日幸運 5 碼</button>
-                    <button class="btn-apply" id="btn-apply" onclick="applyMachineNumbers()">📥 帶入前4碼至我的預測</button>
+                
+                <div style="margin-top: 5px;">
+                    <button class="btn-roll" id="btn-roll" onclick="startRoll()">開起搖號機 (搖出 5 碼)</button>
+                    <button class="btn-apply" id="btn-apply" onclick="applyMachineNumbers()">📥 將前4碼帶入我的預測</button>
                 </div>
             </div>
         </div>
@@ -334,21 +348,19 @@
         }
     }
 
-    // ⭐ 新增：計算冷熱門號碼
+    // 計算冷熱門號碼
     function analyzeHotColdNumbers() {
         let completedDraws = battleHistory.filter(item => !item.isPending);
         if(completedDraws.length === 0) return;
 
         let numStats = {};
         for(let i = 1; i <= 39; i++) {
-            numStats[i] = { num: i, count: 0, lastSeenAgo: 999 }; // 999代表從未開過
+            numStats[i] = { num: i, count: 0, lastSeenAgo: 999 };
         }
 
-        // 因為 battleHistory 是最新到最舊(0是最新)，遍歷計算
         completedDraws.forEach((record, index) => {
             record.draw.forEach(n => {
                 numStats[n].count++;
-                // 如果是第一次遇到(最近一次)，記錄它距離現在幾期 (index越大代表越久以前)
                 if (numStats[n].lastSeenAgo === 999) {
                     numStats[n].lastSeenAgo = index; 
                 }
@@ -357,16 +369,13 @@
 
         let statsArray = Object.values(numStats);
 
-        // 前八名熱門：按開出次數由高到低，次數相同則看誰最近開出
         let hotNumbers = [...statsArray].sort((a, b) => {
             if (b.count !== a.count) return b.count - a.count;
             return a.lastSeenAgo - b.lastSeenAgo;
         }).slice(0, 8);
 
-        // 前八名冷門：按遺漏期數由大到小排 (未開過維持999排最前面)
         let coldNumbers = [...statsArray].sort((a, b) => b.lastSeenAgo - a.lastSeenAgo).slice(0, 8);
 
-        // 渲染熱門
         document.getElementById('hot-numbers').innerHTML = hotNumbers.map(item => `
             <div class="info-badge hot-badge">
                 <span class="num">${item.num.toString().padStart(2, '0')}</span>
@@ -374,7 +383,6 @@
             </div>
         `).join('');
 
-        // 渲染冷門
         document.getElementById('cold-numbers').innerHTML = coldNumbers.map(item => `
             <div class="info-badge cold-badge">
                 <span class="num">${item.num.toString().padStart(2, '0')}</span>
@@ -383,57 +391,81 @@
         `).join('');
     }
 
-    // ⭐ 新增：搖號機系統
-    let machineInterval;
+    // ⭐ 沉浸式電視開獎特效 JS ⭐
     let finalMachineNumbers = [];
+    let fastSpinInterval;
     
     function startRoll() {
         const btnRoll = document.getElementById('btn-roll');
         const btnApply = document.getElementById('btn-apply');
+        const mainSpinner = document.getElementById('main-spinner');
         const balls = document.querySelectorAll('.machine-ball');
         
+        // 進入鎖定狀態
         btnRoll.disabled = true;
-        btnRoll.innerText = "🔄 搖號中...";
+        btnRoll.innerText = "🔄 彩球攪拌中...";
         btnApply.style.display = "none";
+        
+        // 重置主球與落球區外觀
+        mainSpinner.classList.add('active', 'spinning');
+        balls.forEach(ball => {
+            ball.innerText = "?";
+            ball.classList.remove('revealed');
+        });
 
-        balls.forEach(ball => ball.classList.add('rolling'));
+        // 預先決定好的 5 個幸運號碼 (為了讓輸出順眼，決定好後直接排序)
+        finalMachineNumbers = [];
+        while(finalMachineNumbers.length < 5) {
+            let r = Math.floor(Math.random() * 39) + 1;
+            if(!finalMachineNumbers.includes(r)) finalMachineNumbers.push(r);
+        }
+        finalMachineNumbers.sort((a, b) => a - b); 
 
-        // 快速跳動數字
-        machineInterval = setInterval(() => {
-            balls.forEach(ball => {
-                let r = Math.floor(Math.random() * 39) + 1;
-                ball.innerText = r.toString().padStart(2, '0');
-            });
-        }, 80);
+        // 啟動主視窗亂數殘影動畫
+        fastSpinInterval = setInterval(() => {
+            let randomTemp = Math.floor(Math.random() * 39) + 1;
+            mainSpinner.innerText = randomTemp.toString().padStart(2, '0');
+        }, 50);
 
-        // 2秒後停止並選出最終 5 碼
-        setTimeout(() => {
-            clearInterval(machineInterval);
-            balls.forEach(ball => ball.classList.remove('rolling'));
-            
-            finalMachineNumbers = [];
-            while(finalMachineNumbers.length < 5) {
-                let r = Math.floor(Math.random() * 39) + 1;
-                if(!finalMachineNumbers.includes(r)) finalMachineNumbers.push(r);
-            }
-            finalMachineNumbers.sort((a,b) => a - b);
-            
-            balls.forEach((ball, idx) => {
-                ball.innerText = finalMachineNumbers[idx].toString().padStart(2, '0');
-            });
-
-            btnRoll.disabled = false;
-            btnRoll.innerText = "🎲 再搖一次";
-            btnApply.style.display = "inline-block"; // 顯示帶入按鈕
-        }, 2000);
+        // 依序開出 5 顆球 (每 1.5 秒掉一顆)
+        for(let i = 0; i < 5; i++) {
+            setTimeout(() => {
+                let targetNum = finalMachineNumbers[i].toString().padStart(2, '0');
+                
+                // 主球暫停，秀出當前開出號碼
+                mainSpinner.classList.remove('spinning');
+                mainSpinner.innerText = targetNum;
+                
+                // 下方對應的號碼槽「彈出」金球
+                balls[i].innerText = targetNum;
+                balls[i].classList.add('revealed');
+                
+                // 如果不是最後一顆，稍微停頓 0.6 秒後繼續攪拌
+                if(i < 4) {
+                    setTimeout(() => {
+                        mainSpinner.classList.add('spinning');
+                    }, 600);
+                } else {
+                    // 第 5 顆開完，結束動畫，顯示帶入按鈕
+                    clearInterval(fastSpinInterval);
+                    setTimeout(() => {
+                        mainSpinner.classList.remove('active');
+                        mainSpinner.innerText = "🎰";
+                        btnRoll.disabled = false;
+                        btnRoll.innerText = "🎲 重新搖號";
+                        btnApply.style.display = "inline-block";
+                    }, 1000);
+                }
+            }, (i + 1) * 1500); // 1.5秒, 3.0秒, 4.5秒...
+        }
     }
 
     // 將搖出來的前 4 碼帶入「我的預測」
     function applyMachineNumbers() {
         if(finalMachineNumbers.length >= 4) {
-            let my4Nums = finalMachineNumbers.slice(0, 4); // 取前 4 個
+            let my4Nums = finalMachineNumbers.slice(0, 4); 
             document.getElementById('my-nums').value = my4Nums.map(n => n.toString().padStart(2, '0')).join(', ');
-            alert("✅ 已經將前4個幸運號碼帶入您的預測欄位！");
+            alert("✅ 已經將 4 個幸運號碼帶入您的預測欄位！");
         }
     }
 
@@ -443,7 +475,6 @@
 
         let totalRounds = 0, myRounds = 0, totalAiHits = 0, totalMyHits = 0;
 
-        // 執行冷熱門分析
         analyzeHotColdNumbers();
 
         battleHistory.forEach(item => {
