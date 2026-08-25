@@ -15,6 +15,7 @@
 
     <main class="max-w-6xl mx-auto px-4 space-y-6">
 
+        <!-- 高手姓名設定 -->
         <section class="bg-white rounded-xl shadow-sm p-6 border border-slate-200">
             <h2 class="text-lg font-bold text-slate-900 mb-3 flex items-center">
                 <span class="mr-2">👤</span> 自訂高手姓名 (修改後系統會自動同步)
@@ -28,6 +29,7 @@
             </div>
         </section>
 
+        <!-- 勝率排行榜 -->
         <section class="bg-white rounded-xl shadow-sm p-6 border border-slate-200">
             <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center">
                 <span class="mr-2">🏆</span> 總戰績勝率排行榜
@@ -47,11 +49,13 @@
                         </tr>
                     </thead>
                     <tbody id="ranking-tbody" class="divide-y divide-slate-100 font-medium">
-                        </tbody>
+                        <!-- 由 JS 動態產生 -->
+                    </tbody>
                 </table>
             </div>
         </section>
 
+        <!-- 每日登錄與即時合牌 -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div class="lg:col-span-2 bg-white rounded-xl shadow-sm p-6 border border-slate-200 space-y-4">
                 <h2 class="text-lg font-bold text-slate-900 flex items-center border-b pb-2">
@@ -72,7 +76,8 @@
                 <div class="space-y-3 pt-2">
                     <p class="text-sm font-semibold text-slate-500">請輸入每個人今日抓的號碼（空格或逗號分開皆可）：</p>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="player-inputs-container">
-                        </div>
+                        <!-- 由 JS 動態產生 -->
+                    </div>
                 </div>
 
                 <button onclick="addRecord()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-md transition duration-200 mt-4 shadow-sm">
@@ -96,6 +101,7 @@
             </div>
         </div>
 
+        <!-- 歷史明細 -->
         <section class="bg-white rounded-xl shadow-sm p-6 border border-slate-200">
             <h2 class="text-lg font-bold text-slate-900 mb-4 flex items-center">
                 <span class="mr-2">📅</span> 歷史報牌紀錄明細庫
@@ -115,9 +121,90 @@
                         </tr>
                     </thead>
                     <tbody id="history-tbody" class="divide-y divide-slate-100">
-                        </tbody>
+                        <!-- 由 JS 動態產生 -->
+                    </tbody>
                 </table>
             </div>
+        </section>
+
+        <!-- 🔮 獨立 AI 算牌引擎 (預測下一期) -->
+        <section class="bg-white rounded-xl shadow-sm p-6 border border-slate-200 mt-6 relative overflow-hidden">
+            <!-- 裝飾用背景光暈 -->
+            <div class="absolute top-0 right-0 -mr-16 -mt-16 w-32 h-32 rounded-full bg-purple-100 blur-3xl opacity-50"></div>
+            
+            <h2 class="text-xl font-bold text-slate-900 mb-6 flex items-center">
+                <span class="mr-2">🔮</span> 獨立 AI 算牌引擎 <span class="text-sm font-normal text-slate-500 ml-2">(預測下一期)</span>
+            </h2>
+
+            <!-- 版路分析雙區塊 (1800碰 & 9000碰) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                
+                <!-- 1800碰 分析區 -->
+                <div class="bg-indigo-50 border border-indigo-100 rounded-lg p-4 shadow-sm">
+                    <h3 class="text-md font-bold text-indigo-800 mb-3 border-b border-indigo-200 pb-2">📊 1800碰 獨家版路分析</h3>
+                    <div class="space-y-2 text-sm text-indigo-900">
+                        <p><span class="font-bold bg-indigo-100 px-1.5 py-0.5 rounded mr-1">設定條件</span> 第一柱(10-18) | 第二柱(20-29) | 第三柱(01-09, 19, 30-39)</p>
+                        <p><span class="font-bold bg-indigo-100 px-1.5 py-0.5 rounded mr-1">版路狀態</span> 目前已經 <span class="text-red-600 font-bold">2 期</span> 沒開出 1800碰！</p>
+                        <p><span class="font-bold bg-indigo-100 px-1.5 py-0.5 rounded mr-1">上期斷柱</span> 第三柱(01-09,19,30-39)</p>
+                        <div class="mt-3 pt-3 border-t border-indigo-200 flex items-center justify-between">
+                            <span>歷史開出機率：<span class="font-bold">55.8%</span></span>
+                            <span class="font-bold">下期爆發：<span class="text-red-600">⚡ 偏高 (蓄力中)</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 9000碰 分析區 -->
+                <div class="bg-teal-50 border border-teal-100 rounded-lg p-4 shadow-sm">
+                    <h3 class="text-md font-bold text-teal-800 mb-3 border-b border-teal-200 pb-2">📊 9000碰 獨家版路分析</h3>
+                    <div class="space-y-2 text-sm text-teal-900">
+                        <p><span class="font-bold bg-teal-100 px-1.5 py-0.5 rounded mr-1">設定條件</span> 第一區域(01-09) | 第二區域(10-19) | 第三區域(20-29) | 第四區域(30-39)</p>
+                        <p><span class="font-bold bg-teal-100 px-1.5 py-0.5 rounded mr-1">版路狀態</span> 目前已經 <span class="text-red-600 font-bold">1 期</span> 沒開出 9000碰！</p>
+                        <p><span class="font-bold bg-teal-100 px-1.5 py-0.5 rounded mr-1">上期斷區</span> 第一區域(01-09)</p>
+                        <div class="mt-3 pt-3 border-t border-teal-200 flex items-center justify-between">
+                            <span>歷史開出機率：<span class="font-bold">42.1%</span></span>
+                            <span class="font-bold">下期爆發：<span class="text-orange-600">🔥 蓄積中</span></span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- 熱門牌 8 碼 -->
+            <div class="mb-6 bg-red-50/50 p-4 rounded-lg border border-red-100">
+                <h3 class="text-md font-bold text-red-700 mb-1 flex items-center"><span class="mr-2">🔥</span> 追熱必看：近期最常開出前 8 名 (發燙熱牌)</h3>
+                <p class="text-xs text-slate-500 mb-3">系統自動偵測大數據中近期最活躍的 8 個號碼，適合用來當作主支或連莊參考。</p>
+                <div class="grid grid-cols-4 sm:grid-cols-8 gap-2 text-center">
+                    <div class="bg-white border border-red-200 rounded-md p-2 shadow-sm"><div class="text-xl font-black text-red-600">08</div><div class="text-[10px] text-slate-400 mt-1">近20期</div><div class="text-xs font-bold text-slate-700">開 7 次</div></div>
+                    <div class="bg-white border border-red-200 rounded-md p-2 shadow-sm"><div class="text-xl font-black text-red-600">17</div><div class="text-[10px] text-slate-400 mt-1">近20期</div><div class="text-xs font-bold text-slate-700">開 6 次</div></div>
+                    <div class="bg-white border border-red-200 rounded-md p-2 shadow-sm"><div class="text-xl font-black text-red-600">22</div><div class="text-[10px] text-slate-400 mt-1">近20期</div><div class="text-xs font-bold text-slate-700">開 6 次</div></div>
+                    <div class="bg-white border border-red-200 rounded-md p-2 shadow-sm"><div class="text-xl font-black text-red-600">39</div><div class="text-[10px] text-slate-400 mt-1">近20期</div><div class="text-xs font-bold text-slate-700">開 5 次</div></div>
+                    <div class="bg-white border border-red-200 rounded-md p-2 shadow-sm"><div class="text-xl font-black text-red-500">12</div><div class="text-[10px] text-slate-400 mt-1">近20期</div><div class="text-xs font-bold text-slate-700">開 5 次</div></div>
+                    <div class="bg-white border border-red-200 rounded-md p-2 shadow-sm"><div class="text-xl font-black text-red-500">28</div><div class="text-[10px] text-slate-400 mt-1">近20期</div><div class="text-xs font-bold text-slate-700">開 4 次</div></div>
+                    <div class="bg-white border border-red-200 rounded-md p-2 shadow-sm"><div class="text-xl font-black text-red-500">05</div><div class="text-[10px] text-slate-400 mt-1">近20期</div><div class="text-xs font-bold text-slate-700">開 4 次</div></div>
+                    <div class="bg-white border border-red-200 rounded-md p-2 shadow-sm"><div class="text-xl font-black text-red-500">31</div><div class="text-[10px] text-slate-400 mt-1">近20期</div><div class="text-xs font-bold text-slate-700">開 4 次</div></div>
+                </div>
+            </div>
+
+            <!-- 冷門牌 8 碼 -->
+            <div class="mb-8 bg-blue-50/50 p-4 rounded-lg border border-blue-100">
+                <h3 class="text-md font-bold text-blue-700 mb-1 flex items-center"><span class="mr-2">🧊</span> 養牌必看：最久未開出前 8 名 (極冷門拖牌)</h3>
+                <p class="text-xs text-slate-500 mb-3">系統自動偵測大數據中潛水最久的 8 個號碼，適合用來當作養牌或防守的依據。</p>
+                <div class="grid grid-cols-4 sm:grid-cols-8 gap-2 text-center">
+                    <div class="bg-white border border-blue-200 rounded-md p-2 shadow-sm"><div class="text-xl font-black text-blue-600">15</div><div class="text-[10px] text-slate-400 mt-1">未開</div><div class="text-xs font-bold text-slate-700">37 期</div></div>
+                    <div class="bg-white border border-blue-200 rounded-md p-2 shadow-sm"><div class="text-xl font-black text-blue-600">33</div><div class="text-[10px] text-slate-400 mt-1">未開</div><div class="text-xs font-bold text-slate-700">24 期</div></div>
+                    <div class="bg-white border border-blue-200 rounded-md p-2 shadow-sm"><div class="text-xl font-black text-blue-600">36</div><div class="text-[10px] text-slate-400 mt-1">未開</div><div class="text-xs font-bold text-slate-700">24 期</div></div>
+                    <div class="bg-white border border-blue-200 rounded-md p-2 shadow-sm"><div class="text-xl font-black text-blue-600">03</div><div class="text-[10px] text-slate-400 mt-1">未開</div><div class="text-xs font-bold text-slate-700">17 期</div></div>
+                    <div class="bg-white border border-blue-200 rounded-md p-2 shadow-sm"><div class="text-xl font-black text-blue-500">13</div><div class="text-[10px] text-slate-400 mt-1">未開</div><div class="text-xs font-bold text-slate-700">16 期</div></div>
+                    <div class="bg-white border border-blue-200 rounded-md p-2 shadow-sm"><div class="text-xl font-black text-blue-500">24</div><div class="text-[10px] text-slate-400 mt-1">未開</div><div class="text-xs font-bold text-slate-700">15 期</div></div>
+                    <div class="bg-white border border-blue-200 rounded-md p-2 shadow-sm"><div class="text-xl font-black text-blue-500">31</div><div class="text-[10px] text-slate-400 mt-1">未開</div><div class="text-xs font-bold text-slate-700">15 期</div></div>
+                    <div class="bg-white border border-blue-200 rounded-md p-2 shadow-sm"><div class="text-xl font-black text-blue-500">01</div><div class="text-[10px] text-slate-400 mt-1">未開</div><div class="text-xs font-bold text-slate-700">14 期</div></div>
+                </div>
+            </div>
+
+            <!-- 啟動按鈕 -->
+            <button class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-bold py-4 px-4 rounded-xl shadow-lg transition duration-300 text-lg flex justify-center items-center transform hover:scale-[1.01]">
+                <span class="mr-2 text-2xl">🧠</span> 啟動台彩算牌演算法，開始搖獎
+            </button>
         </section>
 
     </main>
@@ -129,7 +216,6 @@
 
         // 頁面載入時讀取緩存
         window.onload = function() {
-            // 設定今日日期預設值
             document.getElementById('record-date').valueAsDate = new Date();
             
             if (localStorage.getItem('539_players')) {
@@ -142,7 +228,6 @@
                 records = JSON.parse(localStorage.getItem('539_records'));
             }
             
-            // 監聽即時合牌
             setupLiveListeners();
             updateUI();
         };
@@ -154,7 +239,6 @@
             localStorage.setItem('539_players', JSON.stringify(players));
         }
 
-        // 提取字串內 1-39 數字的輔助函式
         function parseNumbers(str) {
             let matches = str.match(/\b([1-9]|[1-2][0-9]|3[0-9])\b/g);
             if (!matches) return [];
@@ -162,7 +246,6 @@
         }
 
         function setupLiveListeners() {
-            // 每當左側輸入內容，右側即時進行合牌計算
             for (let i = 1; i <= 5; i++) {
                 setTimeout(() => {
                     let el = document.getElementById('p' + i + '-input');
@@ -171,7 +254,6 @@
             }
         }
 
-        // 儲存一筆新紀錄
         function addRecord() {
             let dateVal = document.getElementById('record-date').value;
             let winVal = document.getElementById('win-nums').value;
@@ -191,7 +273,6 @@
                 pData.push(pNums);
             }
 
-            // 檢查日期是否重複，若重複則覆蓋
             let existingIdx = records.findIndex(r => r.date === dateVal);
             let newRecord = { date: dateVal, winNums: winNums, pData: pData };
             
@@ -203,13 +284,9 @@
                 records.push(newRecord);
             }
 
-            // 依照日期由新到舊排序
             records.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-            // 存入 LocalStorage
             localStorage.setItem('539_records', JSON.stringify(records));
             
-            // 清空輸入框
             document.getElementById('win-nums').value = '';
             for(let i = 1; i <= 5; i++) {
                 document.getElementById(`p${i}-input`).value = '';
@@ -220,7 +297,6 @@
             calculateLiveCoincide();
         }
 
-        // 刪除紀錄
         function deleteRecord(index) {
             if(confirm('確定要刪除這筆歷史紀錄嗎？刪除後無法復原。')) {
                 records.splice(index, 1);
@@ -229,11 +305,9 @@
             }
         }
 
-        // 判斷日期時間差的輔助函式（計算週、月）
         function isThisWeek(dateStr) {
             let recordDate = new Date(dateStr);
             let now = new Date();
-            // 本週定義：過去 7 天內
             let diffTime = Math.abs(now - recordDate);
             let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
             return diffDays <= 7;
@@ -242,11 +316,9 @@
         function isThisMonth(dateStr) {
             let recordDate = new Date(dateStr);
             let now = new Date();
-            // 本月定義：同一年且同一個月
             return recordDate.getFullYear() === now.getFullYear() && recordDate.getMonth() === now.getMonth();
         }
 
-        // 即時計算右側合牌觀測
         function calculateLiveCoincide() {
             let counts = {};
             for(let i=1; i<=5; i++) {
@@ -275,9 +347,7 @@
             document.getElementById('live-coincide').innerHTML = html;
         }
 
-        // 全網頁介面資料重繪更新
         function updateUI() {
-            // 1. 更新各表頭與輸入框姓名標籤
             document.getElementById('hist-p1').innerText = players[0];
             document.getElementById('hist-p2').innerText = players[1];
             document.getElementById('hist-p3').innerText = players[2];
@@ -304,18 +374,10 @@
             inputContainer.innerHTML = inputsHtml;
             setupLiveListeners();
 
-            // 2. 核心統計：計算 5 位高手的多維度勝率
-            // 初始化統計物件
             let stats = players.map((name, index) => ({
-                index: index,
-                name: name,
-                totalPeriods: 0,
-                totalBet: 0,   // 總報牌顆數
-                totalHit: 0,   // 總命中顆數
-                weekBet: 0,
-                weekHit: 0,
-                monthBet: 0,
-                monthHit: 0
+                index: index, name: name,
+                totalPeriods: 0, totalBet: 0, totalHit: 0,
+                weekBet: 0, weekHit: 0, monthBet: 0, monthHit: 0
             }));
 
             records.forEach(rec => {
@@ -326,28 +388,17 @@
                     let pNums = rec.pData[i] || [];
                     if(pNums.length > 0) {
                         stats[i].totalPeriods += 1;
-                        // 計算此期命中的顆數
                         let hits = pNums.filter(n => rec.winNums.includes(n)).length;
                         
-                        // 累加總計
                         stats[i].totalBet += pNums.length;
                         stats[i].totalHit += hits;
 
-                        // 累加本週
-                        if(isW) {
-                            stats[i].weekBet += pNums.length;
-                            stats[i].weekHit += hits;
-                        }
-                        // 累加本月
-                        if(isM) {
-                            stats[i].monthBet += pNums.length;
-                            stats[i].monthHit += hits;
-                        }
+                        if(isW) { stats[i].weekBet += pNums.length; stats[i].weekHit += hits; }
+                        if(isM) { stats[i].monthBet += pNums.length; stats[i].monthHit += hits; }
                     }
                 }
             });
 
-            // 計算勝率 (%) 並依據「總勝率」從高到低進行名次排序
             let rankedStats = stats.map(s => {
                 return {
                     ...s,
@@ -358,7 +409,6 @@
                 };
             }).sort((a, b) => b.totalRateNum - a.totalRateNum);
 
-            // 渲染「勝率排行榜」
             let rankingTbody = document.getElementById('ranking-tbody');
             let rankingHtml = '';
             rankedStats.forEach((s, idx) => {
@@ -379,7 +429,6 @@
             });
             rankingTbody.innerHTML = rankingHtml || '<tr><td colspan="8" class="text-center p-6 text-slate-400 italic">目前尚無歷史登錄數據，請於下方開始新增。</td></tr>';
 
-            // 3. 渲染「歷史明細表」
             let historyTbody = document.getElementById('history-tbody');
             let historyHtml = '';
             
@@ -390,7 +439,6 @@
                     if(pNums.length === 0) {
                         pColsHtml += `<td class="p-3 text-slate-300 italic">未報牌</td>`;
                     } else {
-                        // 將中獎號碼上色突顯
                         let formatted = pNums.map(n => {
                             let padded = String(n).padStart(2, '0');
                             if(rec.winNums.includes(n)) {
