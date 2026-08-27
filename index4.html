@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>天天樂 AI vs 直覺 預測對決統計表</title>
+    <title>天天樂 AI vs 直覺 預測對決統計表 (Firebase 雲端同步版)</title>
     <style>
         :root {
             --bg-color: #f0fdf4; 
@@ -21,8 +21,10 @@
         body { background-color: var(--bg-color); color: var(--text-main); padding: 20px; line-height: 1.6; }
         .container { max-width: 1200px; margin: 0 auto; }
 
-        header { background: #1e293b; color: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        header { background: #1e293b; color: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); position: relative; }
         header h1 { font-size: 26px; }
+        .cloud-badge { display: inline-flex; align-items: center; gap: 6px; background: #334155; padding: 4px 12px; border-radius: 20px; font-size: 13px; margin-top: 8px; }
+        .dot { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 6px #22c55e; }
 
         /* 統計戰力板 */
         .stats-board { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-bottom: 20px; }
@@ -46,43 +48,25 @@
         .hot-badge .num { color: var(--hit-color); }
         .cold-badge .num { color: var(--cold-color); }
 
-        /* ====================================================
-           🌟 全新物理引擎搖號機 CSS 🌟 
-        ==================================================== */
+        /* 物理搖號機 */
         .machine-container { display: flex; flex-direction: column; align-items: center; padding: 10px 0; gap: 20px; }
-        
         .realistic-machine { position: relative; width: 180px; height: 180px; margin-top: 20px; }
-        
-        /* 玻璃圓缸背景 */
         .glass-sphere { width: 180px; height: 180px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #ffffff 0%, #e2e8f0 50%, #94a3b8 100%); border: 4px solid #cbd5e1; position: absolute; top: 0; left: 0; }
-        
-        /* 玻璃圓缸的高光反射層 (蓋在球上方，增加立體感) */
         .glass-overlay { width: 100%; height: 100%; border-radius: 50%; position: absolute; top: 0; left: 0; box-shadow: inset -15px -15px 25px rgba(0,0,0,0.2), inset 10px 10px 20px rgba(255,255,255,0.9); pointer-events: none; z-index: 10; }
-        
-        /* 頂部吸管 */
         .suction-tube { position: absolute; top: -35px; left: 50%; transform: translateX(-50%); width: 34px; height: 50px; background: linear-gradient(to right, rgba(255,255,255,0.8), rgba(200,215,230,0.4), rgba(255,255,255,0.8)); border: 2px solid #94a3b8; border-bottom: none; border-radius: 8px 8px 0 0; z-index: 15; box-shadow: inset 0 5px 10px rgba(0,0,0,0.1); }
-        
-        /* 底座 */
         .machine-base { position: absolute; bottom: -15px; left: 50%; transform: translateX(-50%); width: 100px; height: 25px; background: #334155; border-radius: 5px; z-index: 12; box-shadow: 0 5px 10px rgba(0,0,0,0.3); }
-
-        /* 裡面碰撞的小球 */
-        .mini-ball { position: absolute; width: 22px; height: 22px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #fef08a, #f59e0b); color: #78350f; font-size: 11px; font-weight: bold; display: flex; align-items: center; justify-content: center; top: 0; left: 0; box-shadow: inset -2px -2px 5px rgba(0,0,0,0.4), 1px 1px 3px rgba(0,0,0,0.2); z-index: 5; /* 預設不開起動畫，由 JS 高頻刷新位置 */ transition: transform 0s, opacity 0.5s; }
-
-        /* 開獎槽與落下的結果球 */
+        .mini-ball { position: absolute; width: 22px; height: 22px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #fef08a, #f59e0b); color: #78350f; font-size: 11px; font-weight: bold; display: flex; align-items: center; justify-content: center; top: 0; left: 0; box-shadow: inset -2px -2px 5px rgba(0,0,0,0.4), 1px 1px 3px rgba(0,0,0,0.2); z-index: 5; transition: transform 0s, opacity 0.5s; }
         .machine-balls { display: flex; justify-content: center; gap: 10px; padding: 15px; background: #f1f5f9; border-radius: 30px; box-shadow: inset 0 3px 6px rgba(0,0,0,0.1); }
         .machine-ball { width: 45px; height: 45px; border-radius: 50%; background: #e2e8f0; color: #94a3b8; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold; border: 2px dashed #cbd5e1; transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        
         .machine-ball.revealed { background: linear-gradient(135deg, #fde68a 0%, #f59e0b 100%); color: white; border: 2px solid #b45309; box-shadow: 0 4px 6px rgba(0,0,0,0.2), inset 0 -3px 5px rgba(0,0,0,0.1); text-shadow: 1px 1px 2px rgba(0,0,0,0.3); transform: scale(1.15); }
 
         .btn-roll { background: #8b5cf6; color: white; border: none; padding: 12px 24px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         .btn-roll:hover { background: #7c3aed; transform: translateY(-2px); }
-        .btn-roll:active { transform: translateY(0); }
         .btn-roll:disabled { background: #cbd5e1; cursor: not-allowed; transform: none; }
-        
         .btn-apply { background: var(--my-color); color: white; border: none; padding: 12px 18px; font-size: 14px; font-weight: bold; border-radius: 8px; cursor: pointer; margin-left: 10px; display: none; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         .btn-apply:hover { background: #059669; }
 
-        /* 輸入區與歷史區 (同之前) */
+        /* 輸入區與歷史區 */
         .input-panel { background: white; padding: 25px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .input-panel h2 { margin-bottom: 15px; font-size: 18px; color: #334155; border-left: 4px solid var(--draw-color); padding-left: 10px; }
         .form-row { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 15px; }
@@ -128,11 +112,13 @@
 <div class="container">
     <header>
         <h1>⚔️ 天天樂 (39選5) 預測對決擂台</h1>
-        <p>AI 大數據 vs 人類直覺！究竟誰的勝率高？</p>
+        <div class="cloud-badge">
+            <div class="dot"></div>
+            <span>Firebase 雲端即時連線中</span>
+        </div>
     </header>
 
     <div class="stats-board">
-        <!-- 戰力板維持不變 -->
         <div class="stat-card">
             <div class="stat-title">已開獎期數</div>
             <div class="stat-value" id="total-rounds">0</div>
@@ -150,7 +136,7 @@
         </div>
         <div class="stat-card pk-card">
             <div class="stat-title" style="color:var(--hit-color)">🏆 目前勝率霸主</div>
-            <div class="stat-value" id="pk-winner" style="color:var(--hit-color); font-size:24px;">平手</div>
+            <div class="stat-value" id="pk-winner" style="color:var(--hit-color); font-size:24px;">等待開獎</div>
             <div class="stat-sub">根據平均命中數判定</div>
         </div>
     </div>
@@ -172,18 +158,13 @@
         <div class="tool-card">
             <h3 style="color:#8b5cf6">🎰 3D 物理滾球搖號機</h3>
             <div class="machine-container">
-                
-                <!-- 逼真的 3D 搖號機 -->
                 <div class="realistic-machine">
                     <div class="suction-tube"></div>
-                    <div class="glass-sphere" id="physics-container">
-                        <!-- JS 動態產生 39 顆球 -->
-                    </div>
+                    <div class="glass-sphere" id="physics-container"></div>
                     <div class="glass-overlay"></div>
                     <div class="machine-base"></div>
                 </div>
                 
-                <!-- 開獎落球槽 -->
                 <div class="machine-balls" id="machine-balls">
                     <div class="machine-ball">?</div>
                     <div class="machine-ball">?</div>
@@ -218,15 +199,15 @@
         </div>
         <div class="form-row">
             <div class="form-group">
-                <label style="color:var(--draw-color)">📺 實際開獎 5 個號碼 (可留空，等晚上 10 點後再回填)</label>
+                <label style="color:var(--draw-color)">📺 實際開獎 5 個號碼 (可留空，等開獎後再回填)</label>
                 <input type="text" id="draw-nums" placeholder="若還沒開獎請留空，按下方按鈕先存檔">
             </div>
         </div>
-        <button class="btn-submit" onclick="addRecord()">✅ 儲存預測 (若有填開獎號碼則自動對獎)</button>
+        <button class="btn-submit" onclick="addRecord()">☁️ 儲存至雲端 (若有填開獎號碼則自動對獎)</button>
     </div>
 
     <div class="history-panel">
-        <h2 style="font-size: 18px; margin-bottom: 15px;">📊 歷史戰績對照表</h2>
+        <h2 style="font-size: 18px; margin-bottom: 15px;">📊 歷史戰績對照表 (雲端同步)</h2>
         <table>
             <thead>
                 <tr>
@@ -238,17 +219,53 @@
                     <th>操作</th>
                 </tr>
             </thead>
-            <tbody id="history-tbody">
-                </tbody>
+            <tbody id="history-tbody"></tbody>
         </table>
     </div>
 </div>
 
-<script>
-    /* =========================================================
-       系統核心邏輯 (記錄、結算、冷熱門)
-    ========================================================= */
+<!-- ==========================================
+     🔥 Firebase SDK 與雲端即時同步邏輯 🔥
+=========================================== -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { 
+        getFirestore, 
+        collection, 
+        doc, 
+        setDoc, 
+        updateDoc, 
+        deleteDoc, 
+        onSnapshot 
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    // 🔴 請將以下替換為你的 Firebase 專案設定
+    const firebaseConfig = {
+        apiKey: "AIzaSy...",
+        authDomain: "gogogo539.firebaseapp.com",
+        projectId: "gogogo539",
+        storageBucket: "gogogo539.appspot.com",
+        messagingSenderId: "123456789",
+        appId: "1:123456789:web:abcdef"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const lotteryCol = collection(db, "battle_history");
+
     let battleHistory = [];
+
+    // 監聽雲端即時變化 (任何裝置更新，畫面立刻自動重繪)
+    onSnapshot(lotteryCol, (snapshot) => {
+        battleHistory = [];
+        snapshot.forEach((docSnap) => {
+            battleHistory.push(docSnap.data());
+        });
+        sortHistoryByDate();
+        renderAll();
+    }, (error) => {
+        console.error("雲端連線失敗:", error);
+    });
 
     function sortHistoryByDate() {
         battleHistory.sort((a, b) => {
@@ -258,16 +275,6 @@
             return dateB - dateA;
         });
     }
-
-    window.onload = function() {
-        document.getElementById('input-date').value = new Date().toISOString().split('T')[0];
-        if (localStorage.getItem('tt5_battle_history')) {
-            battleHistory = JSON.parse(localStorage.getItem('tt5_battle_history'));
-            sortHistoryByDate(); 
-        }
-        renderAll();
-        initPhysicsMachine(); // 啟動物理引擎
-    };
 
     function parseNumbers(inputStr) {
         if (!inputStr || inputStr.trim() === "") return [];
@@ -293,7 +300,8 @@
         return { aiHitCount, myHitCount, winner };
     }
 
-    function addRecord() {
+    // ☁️ 新增至雲端
+    async function addRecord() {
         let date = document.getElementById('input-date').value;
         let aiInput = document.getElementById('ai-nums').value;
         let myInput = document.getElementById('my-nums').value;
@@ -317,58 +325,75 @@
             winner = res.winner;
         }
 
-        let record = { id: Date.now(), date: date, ai: aiNums, my: myNums, draw: drawNums, aiHits: aiHitCount, myHits: myHitCount, winner: winner, isPending: isPending };
+        let recordId = Date.now().toString();
+        let record = { 
+            id: recordId, 
+            date: date, 
+            ai: aiNums, 
+            my: myNums, 
+            draw: drawNums, 
+            aiHits: aiHitCount, 
+            myHits: myHitCount, 
+            winner: winner, 
+            isPending: isPending 
+        };
 
-        battleHistory.push(record);
-        sortHistoryByDate(); 
-        localStorage.setItem('tt5_battle_history', JSON.stringify(battleHistory));
-
-        document.getElementById('ai-nums').value = "";
-        document.getElementById('my-nums').value = "";
-        document.getElementById('draw-nums').value = "";
-        renderAll();
+        try {
+            await setDoc(doc(db, "battle_history", recordId), record);
+            document.getElementById('ai-nums').value = "";
+            document.getElementById('my-nums').value = "";
+            document.getElementById('draw-nums').value = "";
+        } catch (e) {
+            alert("雲端儲存失敗：" + e.message);
+        }
     }
 
-    function updateDraw(id) {
+    // ☁️ 更新開獎號碼至雲端
+    async function updateDraw(id) {
         let inputEl = document.getElementById(`draw-update-${id}`);
         let drawNums = parseNumbers(inputEl.value);
 
         if (drawNums.length !== 5) return alert("📺 開獎號碼必須輸入 5 個不重複的數字 (1-39)！");
 
-        let index = battleHistory.findIndex(item => item.id === id);
-        if (index !== -1) {
-            let record = battleHistory[index];
-            record.draw = drawNums;
-            record.isPending = false;
-            
-            let res = calculateResult(record.ai, record.my, record.draw);
-            record.aiHits = res.aiHitCount;
-            record.myHits = res.myHitCount;
-            record.winner = res.winner;
-
-            localStorage.setItem('tt5_battle_history', JSON.stringify(battleHistory));
-            renderAll();
-        }
-    }
-
-    function editDate(id, oldDate) {
-        let newDate = prompt("請輸入修正後的日期 (格式：YYYY-MM-DD)", oldDate);
-        if (newDate && newDate.trim() !== "") {
-            let index = battleHistory.findIndex(item => item.id === id);
-            if (index !== -1) {
-                battleHistory[index].date = newDate.trim();
-                sortHistoryByDate(); 
-                localStorage.setItem('tt5_battle_history', JSON.stringify(battleHistory));
-                renderAll();
+        let record = battleHistory.find(item => item.id == id);
+        if (record) {
+            let res = calculateResult(record.ai, record.my, drawNums);
+            try {
+                await updateDoc(doc(db, "battle_history", id.toString()), {
+                    draw: drawNums,
+                    isPending: false,
+                    aiHits: res.aiHitCount,
+                    myHits: res.myHitCount,
+                    winner: res.winner
+                });
+            } catch (e) {
+                alert("雲端更新失敗：" + e.message);
             }
         }
     }
 
-    function deleteRecord(id) {
-        if (confirm("確定刪除這筆紀錄？")) {
-            battleHistory = battleHistory.filter(item => item.id !== id);
-            localStorage.setItem('tt5_battle_history', JSON.stringify(battleHistory));
-            renderAll();
+    // ☁️ 改期至雲端
+    async function editDate(id, oldDate) {
+        let newDate = prompt("請輸入修正後的日期 (格式：YYYY-MM-DD)", oldDate);
+        if (newDate && newDate.trim() !== "") {
+            try {
+                await updateDoc(doc(db, "battle_history", id.toString()), {
+                    date: newDate.trim()
+                });
+            } catch (e) {
+                alert("雲端改期失敗：" + e.message);
+            }
+        }
+    }
+
+    // ☁️ 從雲端刪除
+    async function deleteRecord(id) {
+        if (confirm("確定刪除這筆雲端紀錄？")) {
+            try {
+                await deleteDoc(doc(db, "battle_history", id.toString()));
+            } catch (e) {
+                alert("雲端刪除失敗：" + e.message);
+            }
         }
     }
 
@@ -407,230 +432,6 @@
         `).join('');
     }
 
-    /* =========================================================
-       🔥🔥 真實物理碰撞搖號機引擎 (JS Physics) 🔥🔥
-    ========================================================= */
-    const SPHERE_SIZE = 180;
-    const CENTER = SPHERE_SIZE / 2;
-    const BALL_RADIUS = 11; // 22px 寬高
-    const MAX_RADIUS = CENTER - BALL_RADIUS - 4; // 邊界碰撞範圍
-
-    let physicsBalls = [];
-    let isMixing = false;
-    let finalMachineNumbers = [];
-    let reqFrame;
-
-    function initPhysicsMachine() {
-        const container = document.getElementById('physics-container');
-        container.innerHTML = ''; // 清空
-        physicsBalls = [];
-
-        // 產生 39 顆球
-        for (let i = 1; i <= 39; i++) {
-            let el = document.createElement('div');
-            el.className = 'mini-ball';
-            el.innerText = i.toString().padStart(2, '0');
-            container.appendChild(el);
-            
-            // 隨機初始位置 (在圓形下半部)
-            let angle = Math.random() * Math.PI; // 0 ~ PI (下方)
-            let r = Math.random() * (MAX_RADIUS - 10);
-            let x = CENTER + Math.cos(angle) * r;
-            let y = CENTER + Math.sin(angle) * r;
-
-            physicsBalls.push({
-                id: i, el: el, active: true,
-                x: x, y: y,
-                vx: (Math.random() - 0.5) * 4,
-                vy: (Math.random() - 0.5) * 4
-            });
-        }
-
-        // 啟動物理循環 (避免重複啟動)
-        if (reqFrame) cancelAnimationFrame(reqFrame);
-        physicsLoop();
-    }
-
-    function physicsLoop() {
-        physicsBalls.forEach(b => {
-            if (!b.active) return; // 被吸走的球不參與物理計算
-
-            // 1. 套用重力 (Gravity)
-            b.vy += 0.4; 
-
-            // 2. 攪拌模式：加入隨機狂暴推力
-            if (isMixing) {
-                b.vx += (Math.random() - 0.5) * 4;
-                b.vy -= (Math.random()) * 2; // 底部向上吹風
-                
-                // 限制最高速度避免飛穿邊界
-                let speed = Math.sqrt(b.vx * b.vx + b.vy * b.vy);
-                if (speed > 18) {
-                    b.vx = (b.vx / speed) * 18;
-                    b.vy = (b.vy / speed) * 18;
-                }
-            } else {
-                // 平靜狀態：加上空氣阻力慢慢停下
-                b.vx *= 0.98;
-                b.vy *= 0.98;
-            }
-
-            // 更新位置
-            b.x += b.vx;
-            b.y += b.vy;
-
-            // 3. 邊界圓形碰撞檢查 (Boundary Collision)
-            let dx = b.x - CENTER;
-            let dy = b.y - CENTER;
-            let dist = Math.sqrt(dx * dx + dy * dy);
-
-            if (dist > MAX_RADIUS) {
-                // 正規化法向量
-                let nx = dx / dist;
-                let ny = dy / dist;
-                
-                // 把球推回邊界內
-                b.x = CENTER + nx * MAX_RADIUS;
-                b.y = CENTER + ny * MAX_RADIUS;
-                
-                // 反射速度向量 (彈性係數 0.8)
-                let dot = b.vx * nx + b.vy * ny;
-                b.vx = (b.vx - 2 * dot * nx) * 0.8;
-                b.vy = (b.vy - 2 * dot * ny) * 0.8;
-            }
-        });
-
-        // 4. 球與球之間的簡易互相碰撞排斥 (O(N^2) 檢查，39顆算很快)
-        for(let i = 0; i < physicsBalls.length; i++) {
-            if(!physicsBalls[i].active) continue;
-            for(let j = i + 1; j < physicsBalls.length; j++) {
-                if(!physicsBalls[j].active) continue;
-                
-                let b1 = physicsBalls[i];
-                let b2 = physicsBalls[j];
-                let dx = b1.x - b2.x;
-                let dy = b1.y - b2.y;
-                let dist = Math.sqrt(dx*dx + dy*dy);
-                let minDist = BALL_RADIUS * 2;
-
-                if(dist < minDist && dist > 0) {
-                    let overlap = minDist - dist;
-                    let nx = dx / dist;
-                    let ny = dy / dist;
-                    
-                    // 把球推開避免重疊
-                    b1.x += nx * overlap * 0.5;
-                    b1.y += ny * overlap * 0.5;
-                    b2.x -= nx * overlap * 0.5;
-                    b2.y -= ny * overlap * 0.5;
-                    
-                    // 簡易動量交換 (互撞反彈)
-                    let dvx = b1.vx - b2.vx;
-                    let dvy = b1.vy - b2.vy;
-                    let dot = dvx * nx + dvy * ny;
-                    if (dot < 0) { 
-                        b1.vx -= nx * dot * 0.8;
-                        b1.vy -= ny * dot * 0.8;
-                        b2.vx += nx * dot * 0.8;
-                        b2.vy += ny * dot * 0.8;
-                    }
-                }
-            }
-        }
-
-        // 5. 畫面渲染 Render
-        physicsBalls.forEach(b => {
-            if (b.active) {
-                b.el.style.transform = `translate(${b.x - BALL_RADIUS}px, ${b.y - BALL_RADIUS}px)`;
-            }
-        });
-
-        reqFrame = requestAnimationFrame(physicsLoop);
-    }
-
-    // 執行「吸出一顆球」的動畫
-    function drawOneBallAction(ballObj, slotIndex, callback) {
-        ballObj.active = false; // 脫離物理引擎控制
-        
-        // 設定 CSS 動畫接管位置 (吸入頂部的管子)
-        ballObj.el.style.transition = "transform 0.6s cubic-bezier(0.5, -0.5, 0.2, 1.2), opacity 0.8s";
-        // 目標：X置中, Y=-25 (管子內)
-        ballObj.el.style.transform = `translate(${CENTER - BALL_RADIUS}px, -25px) scale(1.4)`;
-        
-        setTimeout(() => {
-            ballObj.el.style.opacity = "0"; // 消失
-            
-            // 下方對應的球槽爆出結果
-            let slots = document.querySelectorAll('.machine-ball');
-            slots[slotIndex].innerText = ballObj.id.toString().padStart(2, '0');
-            slots[slotIndex].classList.add('revealed');
-            
-            if (callback) callback();
-        }, 700);
-    }
-
-    // 啟動開獎流程 (Async/Await 控制節奏)
-    async function startRoll() {
-        const btnRoll = document.getElementById('btn-roll');
-        const btnApply = document.getElementById('btn-apply');
-        const resultSlots = document.querySelectorAll('.machine-ball');
-        
-        // 鎖定按鈕與UI
-        btnRoll.disabled = true;
-        btnRoll.innerText = "🌪️ 彩球瘋狂攪拌中...";
-        btnApply.style.display = "none";
-        
-        // 重置機台
-        initPhysicsMachine();
-        resultSlots.forEach(slot => {
-            slot.innerText = "?";
-            slot.classList.remove('revealed');
-        });
-        
-        // 啟動狂暴攪拌模式
-        isMixing = true;
-        
-        // 讓球滾動 1.5 秒營造氣氛
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        
-        // 電腦暗箱操作決定幸運的 5 碼 (先排好序)
-        finalMachineNumbers = [];
-        while(finalMachineNumbers.length < 5) {
-            let r = Math.floor(Math.random() * 39) + 1;
-            if(!finalMachineNumbers.includes(r)) finalMachineNumbers.push(r);
-        }
-        finalMachineNumbers.sort((a, b) => a - b);
-        
-        // 依序吸出 5 顆球
-        for(let i = 0; i < 5; i++) {
-            let targetNum = finalMachineNumbers[i];
-            let ballObj = physicsBalls.find(b => b.id === targetNum);
-            
-            await new Promise(resolve => {
-                drawOneBallAction(ballObj, i, () => {
-                    // 吸完一顆，等 0.5 秒再吸下一顆
-                    setTimeout(resolve, 500); 
-                });
-            });
-        }
-        
-        // 抽獎結束，平息攪拌
-        isMixing = false;
-        btnRoll.disabled = false;
-        btnRoll.innerText = "🎲 重新啟動搖號";
-        btnApply.style.display = "inline-block";
-    }
-
-    // 帶入前4碼
-    function applyMachineNumbers() {
-        if(finalMachineNumbers.length >= 4) {
-            let my4Nums = finalMachineNumbers.slice(0, 4); 
-            document.getElementById('my-nums').value = my4Nums.map(n => n.toString().padStart(2, '0')).join(', ');
-            alert("✅ 已經將前 4 個幸運號碼帶入您的預測欄位！");
-        }
-    }
-
-    // 表格渲染
     function renderAll() {
         const tbody = document.getElementById('history-tbody');
         tbody.innerHTML = '';
@@ -660,7 +461,7 @@
                 : `<div style="color: #94a3b8; font-size: 14px; padding: 10px 0;">休息未預測 ☕</div>`;
 
             let drawColumnHtml = item.isPending 
-                ? `<div><input type="text" id="draw-update-${item.id}" class="pending-input" placeholder="輸入 5 個開獎號碼"><br><button class="action-btn update-btn" onclick="updateDraw(${item.id})">確認開獎</button></div>`
+                ? `<div><input type="text" id="draw-update-${item.id}" class="pending-input" placeholder="輸入 5 個開獎號碼"><br><button class="action-btn update-btn" onclick="updateDraw('${item.id}')">確認開獎</button></div>`
                 : genDrawBalls(item.draw);
 
             let winnerBadge = `<span class="winner-badge badge-tie">平手</span>`;
@@ -676,8 +477,8 @@
                 <td>${drawColumnHtml}</td>
                 <td>${winnerBadge}</td>
                 <td style="min-width: 100px;">
-                    <button class="action-btn edit-btn" onclick="editDate(${item.id}, '${item.date}')">📅 改期</button>
-                    <button class="action-btn delete-btn" onclick="deleteRecord(${item.id})">刪除</button>
+                    <button class="action-btn edit-btn" onclick="editDate('${item.id}', '${item.date}')">📅 改期</button>
+                    <button class="action-btn delete-btn" onclick="deleteRecord('${item.id}')">刪除</button>
                 </td>
             `;
             tbody.appendChild(tr);
@@ -710,6 +511,200 @@
         } else {
             pkEl.innerText = "平分秋色";
             pkEl.style.color = "var(--hit-color)";
+        }
+    }
+
+    // 掛載至 window 供 HTML 按鈕呼叫
+    window.addRecord = addRecord;
+    window.updateDraw = updateDraw;
+    window.editDate = editDate;
+    window.deleteRecord = deleteRecord;
+</script>
+
+<!-- ==========================================
+     🎲 物理搖號機邏輯 🎲
+=========================================== -->
+<script>
+    const SPHERE_SIZE = 180;
+    const CENTER = SPHERE_SIZE / 2;
+    const BALL_RADIUS = 11;
+    const MAX_RADIUS = CENTER - BALL_RADIUS - 4;
+
+    let physicsBalls = [];
+    let isMixing = false;
+    let finalMachineNumbers = [];
+    let reqFrame;
+
+    window.onload = function() {
+        document.getElementById('input-date').value = new Date().toISOString().split('T')[0];
+        initPhysicsMachine();
+    };
+
+    function initPhysicsMachine() {
+        const container = document.getElementById('physics-container');
+        container.innerHTML = '';
+        physicsBalls = [];
+
+        for (let i = 1; i <= 39; i++) {
+            let el = document.createElement('div');
+            el.className = 'mini-ball';
+            el.innerText = i.toString().padStart(2, '0');
+            container.appendChild(el);
+            
+            let angle = Math.random() * Math.PI;
+            let r = Math.random() * (MAX_RADIUS - 10);
+            let x = CENTER + Math.cos(angle) * r;
+            let y = CENTER + Math.sin(angle) * r;
+
+            physicsBalls.push({
+                id: i, el: el, active: true,
+                x: x, y: y,
+                vx: (Math.random() - 0.5) * 4,
+                vy: (Math.random() - 0.5) * 4
+            });
+        }
+
+        if (reqFrame) cancelAnimationFrame(reqFrame);
+        physicsLoop();
+    }
+
+    function physicsLoop() {
+        physicsBalls.forEach(b => {
+            if (!b.active) return;
+            b.vy += 0.4; 
+
+            if (isMixing) {
+                b.vx += (Math.random() - 0.5) * 4;
+                b.vy -= (Math.random()) * 2;
+                let speed = Math.sqrt(b.vx * b.vx + b.vy * b.vy);
+                if (speed > 18) {
+                    b.vx = (b.vx / speed) * 18;
+                    b.vy = (b.vy / speed) * 18;
+                }
+            } else {
+                b.vx *= 0.98;
+                b.vy *= 0.98;
+            }
+
+            b.x += b.vx;
+            b.y += b.vy;
+
+            let dx = b.x - CENTER;
+            let dy = b.y - CENTER;
+            let dist = Math.sqrt(dx * dx + dy * dy);
+
+            if (dist > MAX_RADIUS) {
+                let nx = dx / dist;
+                let ny = dy / dist;
+                b.x = CENTER + nx * MAX_RADIUS;
+                b.y = CENTER + ny * MAX_RADIUS;
+                let dot = b.vx * nx + b.vy * ny;
+                b.vx = (b.vx - 2 * dot * nx) * 0.8;
+                b.vy = (b.vy - 2 * dot * ny) * 0.8;
+            }
+        });
+
+        for(let i = 0; i < physicsBalls.length; i++) {
+            if(!physicsBalls[i].active) continue;
+            for(let j = i + 1; j < physicsBalls.length; j++) {
+                if(!physicsBalls[j].active) continue;
+                let b1 = physicsBalls[i];
+                let b2 = physicsBalls[j];
+                let dx = b1.x - b2.x;
+                let dy = b1.y - b2.y;
+                let dist = Math.sqrt(dx*dx + dy*dy);
+                let minDist = BALL_RADIUS * 2;
+
+                if(dist < minDist && dist > 0) {
+                    let overlap = minDist - dist;
+                    let nx = dx / dist;
+                    let ny = dy / dist;
+                    b1.x += nx * overlap * 0.5;
+                    b1.y += ny * overlap * 0.5;
+                    b2.x -= nx * overlap * 0.5;
+                    b2.y -= ny * overlap * 0.5;
+                    let dvx = b1.vx - b2.vx;
+                    let dvy = b1.vy - b2.vy;
+                    let dot = dvx * nx + dvy * ny;
+                    if (dot < 0) { 
+                        b1.vx -= nx * dot * 0.8;
+                        b1.vy -= ny * dot * 0.8;
+                        b2.vx += nx * dot * 0.8;
+                        b2.vy += ny * dot * 0.8;
+                    }
+                }
+            }
+        }
+
+        physicsBalls.forEach(b => {
+            if (b.active) {
+                b.el.style.transform = `translate(${b.x - BALL_RADIUS}px, ${b.y - BALL_RADIUS}px)`;
+            }
+        });
+
+        reqFrame = requestAnimationFrame(physicsLoop);
+    }
+
+    function drawOneBallAction(ballObj, slotIndex, callback) {
+        ballObj.active = false;
+        ballObj.el.style.transition = "transform 0.6s cubic-bezier(0.5, -0.5, 0.2, 1.2), opacity 0.8s";
+        ballObj.el.style.transform = `translate(${CENTER - BALL_RADIUS}px, -25px) scale(1.4)`;
+        
+        setTimeout(() => {
+            ballObj.el.style.opacity = "0";
+            let slots = document.querySelectorAll('.machine-ball');
+            slots[slotIndex].innerText = ballObj.id.toString().padStart(2, '0');
+            slots[slotIndex].classList.add('revealed');
+            if (callback) callback();
+        }, 700);
+    }
+
+    async function startRoll() {
+        const btnRoll = document.getElementById('btn-roll');
+        const btnApply = document.getElementById('btn-apply');
+        const resultSlots = document.querySelectorAll('.machine-ball');
+        
+        btnRoll.disabled = true;
+        btnRoll.innerText = "🌪️ 彩球瘋狂攪拌中...";
+        btnApply.style.display = "none";
+        
+        initPhysicsMachine();
+        resultSlots.forEach(slot => {
+            slot.innerText = "?";
+            slot.classList.remove('revealed');
+        });
+        
+        isMixing = true;
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        
+        finalMachineNumbers = [];
+        while(finalMachineNumbers.length < 5) {
+            let r = Math.floor(Math.random() * 39) + 1;
+            if(!finalMachineNumbers.includes(r)) finalMachineNumbers.push(r);
+        }
+        finalMachineNumbers.sort((a, b) => a - b);
+        
+        for(let i = 0; i < 5; i++) {
+            let targetNum = finalMachineNumbers[i];
+            let ballObj = physicsBalls.find(b => b.id === targetNum);
+            await new Promise(resolve => {
+                drawOneBallAction(ballObj, i, () => {
+                    setTimeout(resolve, 500); 
+                });
+            });
+        }
+        
+        isMixing = false;
+        btnRoll.disabled = false;
+        btnRoll.innerText = "🎲 重新啟動搖號";
+        btnApply.style.display = "inline-block";
+    }
+
+    function applyMachineNumbers() {
+        if(finalMachineNumbers.length >= 4) {
+            let my4Nums = finalMachineNumbers.slice(0, 4); 
+            document.getElementById('my-nums').value = my4Nums.map(n => n.toString().padStart(2, '0')).join(', ');
+            alert("✅ 已經將前 4 個幸運號碼帶入您的預測欄位！");
         }
     }
 </script>
