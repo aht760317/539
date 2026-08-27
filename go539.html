@@ -306,7 +306,7 @@
 </head>
 <body>
 
-<!-- 🎵 你的發大財背景音樂 (已指定 賺大錢.mp3) -->
+<!-- 🎵 賺大錢.mp3 背景音樂 (直接載入同目錄下的 賺大錢.mp3) -->
 <audio id="bg-music" src="賺大錢.mp3" preload="auto" loop></audio>
 
 <!-- 掉落黃金 + 白銀 + 紅包雨 Canvas -->
@@ -315,9 +315,9 @@
 <!-- 滿天浮動財神群圖層 -->
 <div class="gods-layer" id="gods-layer"></div>
 
-<!-- 發大財音樂開關 -->
+<!-- 音樂開關按鈕 -->
 <button class="sound-btn" id="sound-btn" onclick="toggleMusic()">
-    🎵 發大財音樂：開
+    🎵 賺大錢音樂：開
 </button>
 
 <div class="main-container">
@@ -374,10 +374,10 @@
 </footer>
 
 <!-- ==========================================
-     🌟 下雨特效 + 財神巡遊 + 賺大錢.mp3 控制 🌟
+     🌟 1. 下雨特效 2. 財神巡遊 3. 賺大錢.mp3 控制 🌟
 =========================================== -->
 <script>
-    /* 1. 黃金 + 白銀 + 紅包雨 */
+    /* ================= 1. 黃金 + 白銀 + 紅包雨 ================= */
     const canvas = document.getElementById('money-canvas');
     const ctx = canvas.getContext('2d');
     let width = canvas.width = window.innerWidth;
@@ -451,7 +451,8 @@
     }
     renderMoneyRain();
 
-    /* 2. 滿天浮動財神群 */
+
+    /* ================= 2. 滿天浮動財神群 ================= */
     const godsLayer = document.getElementById('gods-layer');
     const godGreetings = ['恭喜發財 🧧', '日進斗金 💰', '財運亨通 ✨', '黃金萬兩 🪙', '富貴吉祥 👑', '大吉大利 🍊', '財源滾滾 🌊', '招財進寶 🥇'];
     const godAvatars = ['🎅', '🧙‍♂️', '🤴', '👲'];
@@ -498,7 +499,8 @@
         }, 30);
     }
 
-    /* 3. 主財神噴錢特效 */
+
+    /* ================= 3. 主財神噴錢特效 ================= */
     const mainGodWrap = document.getElementById('main-god-wrap');
     const burstWords = ['+88,888 🪙', '+168,888 💰', '黃金萬兩 ✨', '恭喜中獎！🎉', '大發特發 🧧', '發大財啦！🔥', '+888,888 🥇'];
 
@@ -536,7 +538,8 @@
         }
     }
 
-    /* 4. 賺大錢.mp3 背景音樂播放控制 */
+
+    /* ================= 4. 賺大錢.mp3 音樂控制 ================= */
     const bgMusic = document.getElementById('bg-music');
     let isMusicPlaying = false;
 
@@ -545,16 +548,16 @@
         if (bgMusic.paused) {
             bgMusic.play().then(() => {
                 isMusicPlaying = true;
-                btn.innerText = "🎵 發大財音樂：開";
+                btn.innerText = "🎵 賺大錢音樂：開";
                 btn.style.background = "linear-gradient(135deg, #f59e0b, #b45309)";
                 btn.style.borderColor = "#fef08a";
             }).catch(e => {
-                console.log("播放被瀏覽器限制，請點擊畫面以允許播放:", e);
+                console.log("播放受瀏覽器限制，請點擊畫面任意處播放:", e);
             });
         } else {
             bgMusic.pause();
             isMusicPlaying = false;
-            btn.innerText = "🔇 發大財音樂：關";
+            btn.innerText = "🔇 賺大錢音樂：關";
             btn.style.background = "#334155";
             btn.style.borderColor = "#64748b";
         }
@@ -569,7 +572,8 @@
         }
     }, { once: true });
 
-    /* 點擊財神輔助金幣音效 */
+
+    /* 點擊財神輔助金幣清脆聲 */
     let audioCtx = null;
     function playDingSound() {
         try {
