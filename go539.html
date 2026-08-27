@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>GOGO 財神降臨・大發利市發財導航總部</title>
     <style>
         :root {
@@ -20,6 +20,7 @@
             margin: 0;
             padding: 0;
             font-family: "Microsoft JhengHei", "PingFang TC", sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -34,7 +35,7 @@
             justify-content: space-between;
         }
 
-        /* 背景滿天下雨 Canvas (黃金+白銀+紅包) */
+        /* 背景滿天下雨 Canvas */
         #money-canvas {
             position: fixed;
             top: 0;
@@ -101,7 +102,7 @@
             50% { box-shadow: 0 0 15px #fde047, 0 0 25px #ef4444; }
         }
 
-        /* 音樂控制與發財狂歡提示按鈕 */
+        /* 音樂控制按鈕 */
         .sound-btn {
             position: fixed;
             top: 20px;
@@ -296,14 +297,17 @@
         }
 
         @media (max-width: 768px) {
-            .header-title { font-size: 30px; }
-            .header-sub { font-size: 16px; }
+            .header-title { font-size: 28px; }
+            .header-sub { font-size: 15px; }
             .main-god-emoji { font-size: 75px; }
             .sound-btn { top: 12px; right: 12px; padding: 8px 14px; font-size: 13px; }
         }
     </style>
 </head>
 <body>
+
+<!-- 🎵 你的發大財背景音樂 (已指定 賺大錢.mp3) -->
+<audio id="bg-music" src="賺大錢.mp3" preload="auto" loop></audio>
 
 <!-- 掉落黃金 + 白銀 + 紅包雨 Canvas -->
 <canvas id="money-canvas"></canvas>
@@ -312,7 +316,7 @@
 <div class="gods-layer" id="gods-layer"></div>
 
 <!-- 發大財音樂開關 -->
-<button class="sound-btn" id="sound-btn" onclick="toggleAudio()">
+<button class="sound-btn" id="sound-btn" onclick="toggleMusic()">
     🎵 發大財音樂：開
 </button>
 
@@ -370,10 +374,10 @@
 </footer>
 
 <!-- ==========================================
-     🌟 1. 黃金+白銀+紅包雨 2. 滿天浮動財神群 3. 發大財喜慶賀歲音樂 🌟
+     🌟 下雨特效 + 財神巡遊 + 賺大錢.mp3 控制 🌟
 =========================================== -->
 <script>
-    /* ================= 1. 黃金 + 白銀 + 紅包雨 (Canvas) ================= */
+    /* 1. 黃金 + 白銀 + 紅包雨 */
     const canvas = document.getElementById('money-canvas');
     const ctx = canvas.getContext('2d');
     let width = canvas.width = window.innerWidth;
@@ -384,20 +388,19 @@
         height = canvas.height = window.innerHeight;
     });
 
-    // 黃金、白銀、紅包符號
     const moneyTypes = [
-        { char: '🪙', type: 'gold', sizeRange: [22, 34] },   // 金幣
-        { char: '💰', type: 'gold', sizeRange: [26, 38] },   // 錢袋
-        { char: '👑', type: 'gold', sizeRange: [24, 36] },   // 金皇冠
-        { char: '🥇', type: 'gold', sizeRange: [22, 32] },   // 金牌
-        { char: '🥈', type: 'silver', sizeRange: [22, 32] }, // 銀牌
-        { char: '⚪', type: 'silver', sizeRange: [18, 28] }, // 白銀/銀錠
-        { char: '🧧', type: 'redpack', sizeRange: [28, 42] },// 大紅包
-        { char: '✨', type: 'gold', sizeRange: [16, 24] }    // 金光閃爍
+        { char: '🪙', type: 'gold', sizeRange: [22, 34] },
+        { char: '💰', type: 'gold', sizeRange: [26, 38] },
+        { char: '👑', type: 'gold', sizeRange: [24, 36] },
+        { char: '🥇', type: 'gold', sizeRange: [22, 32] },
+        { char: '🥈', type: 'silver', sizeRange: [22, 32] },
+        { char: '⚪', type: 'silver', sizeRange: [18, 28] },
+        { char: '🧧', type: 'redpack', sizeRange: [28, 42] },
+        { char: '✨', type: 'gold', sizeRange: [16, 24] }
     ];
 
     const particles = [];
-    const PARTICLE_COUNT = 65; // 提高掉落密度
+    const PARTICLE_COUNT = 65;
 
     for (let i = 0; i < PARTICLE_COUNT; i++) {
         let m = moneyTypes[Math.floor(Math.random() * moneyTypes.length)];
@@ -430,7 +433,6 @@
             ctx.translate(p.x, p.y);
             ctx.rotate(p.rotation * Math.PI / 180);
             
-            // 白銀與黃金不同光暈
             if (p.type === 'silver') {
                 ctx.shadowColor = '#e2e8f0';
                 ctx.shadowBlur = 10;
@@ -449,22 +451,16 @@
     }
     renderMoneyRain();
 
-
-    /* ================= 2. 滿天浮動財神群 (恭喜發財巡遊) ================= */
+    /* 2. 滿天浮動財神群 */
     const godsLayer = document.getElementById('gods-layer');
-    const godGreetings = [
-        '恭喜發財 🧧', '日進斗金 💰', '財運亨通 ✨', '黃金萬兩 🪙', 
-        '富貴吉祥 👑', '大吉大利 🍊', '財源滾滾 🌊', '招財進寶 🥇'
-    ];
+    const godGreetings = ['恭喜發財 🧧', '日進斗金 💰', '財運亨通 ✨', '黃金萬兩 🪙', '富貴吉祥 👑', '大吉大利 🍊', '財源滾滾 🌊', '招財進寶 🥇'];
     const godAvatars = ['🎅', '🧙‍♂️', '🤴', '👲'];
 
-    const TOTAL_GODS = 6;
-
-    for (let i = 0; i < TOTAL_GODS; i++) {
-        createFloatingGod(i);
+    for (let i = 0; i < 6; i++) {
+        createFloatingGod();
     }
 
-    function createFloatingGod(index) {
+    function createFloatingGod() {
         const godDiv = document.createElement('div');
         godDiv.className = 'floating-god';
         
@@ -476,7 +472,6 @@
             <div class="god-bless-tag">${text}</div>
         `;
 
-        // 隨機初始位置
         let posX = Math.random() * (window.innerWidth - 120);
         let posY = Math.random() * (window.innerHeight - 200) + 50;
         let speedX = (Math.random() - 0.5) * 1.2;
@@ -485,14 +480,12 @@
         godDiv.style.left = posX + 'px';
         godDiv.style.top = posY + 'px';
 
-        // 點擊任意財神噴發金銀
         godDiv.addEventListener('click', (e) => {
             burstGold(e, posX + 40, posY + 40);
         });
 
         godsLayer.appendChild(godDiv);
 
-        // 讓財神在畫面上緩慢飄動
         setInterval(() => {
             posX += speedX;
             posY += speedY;
@@ -505,8 +498,7 @@
         }, 30);
     }
 
-
-    /* ================= 3. 主財神噴錢 & 點擊大爆發 ================= */
+    /* 3. 主財神噴錢特效 */
     const mainGodWrap = document.getElementById('main-god-wrap');
     const burstWords = ['+88,888 🪙', '+168,888 💰', '黃金萬兩 ✨', '恭喜中獎！🎉', '大發特發 🧧', '發大財啦！🔥', '+888,888 🥇'];
 
@@ -527,13 +519,11 @@
         setTimeout(() => coin.remove(), 1200);
     }
 
-    // 主財神每 1 秒自動灑錢
     setInterval(() => {
         const rect = mainGodWrap.getBoundingClientRect();
         spawnBurstItem(rect.left + rect.width / 2, rect.top + rect.height / 2);
     }, 1000);
 
-    // 點擊爆發大量金幣
     function burstGold(e, customX, customY) {
         let x = customX || (e ? e.clientX : window.innerWidth / 2);
         let y = customY || (e ? e.clientY : window.innerHeight / 3);
@@ -541,111 +531,64 @@
         for (let i = 0; i < 8; i++) {
             setTimeout(() => {
                 spawnBurstItem(x + (Math.random() - 0.5) * 40, y + (Math.random() - 0.5) * 40);
-                playCoinDing();
+                playDingSound();
             }, i * 60);
         }
     }
 
+    /* 4. 賺大錢.mp3 背景音樂播放控制 */
+    const bgMusic = document.getElementById('bg-music');
+    let isMusicPlaying = false;
 
-    /* ================= 4. 喜慶發大財賀歲旋律 + 金幣音效 (Web Audio API) ================= */
+    function toggleMusic() {
+        const btn = document.getElementById('sound-btn');
+        if (bgMusic.paused) {
+            bgMusic.play().then(() => {
+                isMusicPlaying = true;
+                btn.innerText = "🎵 發大財音樂：開";
+                btn.style.background = "linear-gradient(135deg, #f59e0b, #b45309)";
+                btn.style.borderColor = "#fef08a";
+            }).catch(e => {
+                console.log("播放被瀏覽器限制，請點擊畫面以允許播放:", e);
+            });
+        } else {
+            bgMusic.pause();
+            isMusicPlaying = false;
+            btn.innerText = "🔇 發大財音樂：關";
+            btn.style.background = "#334155";
+            btn.style.borderColor = "#64748b";
+        }
+    }
+
+    // 點擊畫面任意處自動解鎖播放
+    window.addEventListener('click', () => {
+        if (!isMusicPlaying && bgMusic.paused) {
+            bgMusic.play().then(() => {
+                isMusicPlaying = true;
+            }).catch(() => {});
+        }
+    }, { once: true });
+
+    /* 點擊財神輔助金幣音效 */
     let audioCtx = null;
-    let isPlaying = false;
-    let melodyTimer = null;
-
-    function initAudio() {
-        if (!audioCtx) {
-            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        }
-        if (audioCtx.state === 'suspended') {
-            audioCtx.resume();
-        }
-    }
-
-    // 發大財喜慶賀歲音階 (簡譜熱鬧旋律)
-    const melodyNotes = [
-        523.25, 587.33, 659.25, 783.99, 880.00, 1046.50, // C5, D5, E5, G5, A5, C6
-        783.99, 880.00, 1046.50, 1174.66, 1318.51
-    ];
-    let noteIndex = 0;
-
-    function playNextMelodyNote() {
-        if (!isPlaying || !audioCtx) return;
-
+    function playDingSound() {
         try {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
-
-            const freq = melodyNotes[noteIndex % melodyNotes.length];
-            noteIndex++;
-
-            // 歡樂八音盒 / 揚琴風格音色
-            osc.type = 'triangle';
-            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-
-            gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.35);
-
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-
-            osc.start();
-            osc.stop(audioCtx.currentTime + 0.38);
-
-            // 每隔 280ms 演奏下一音符
-            melodyTimer = setTimeout(playNextMelodyNote, 280);
-        } catch(e) {}
-    }
-
-    // 點擊的金幣清脆叮噹聲
-    function playCoinDing() {
-        if (!isPlaying || !audioCtx) return;
-        try {
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            const freqs = [1567.98, 1760.00, 2093.00, 2349.32];
-            const f = freqs[Math.floor(Math.random() * freqs.length)];
-
             osc.type = 'sine';
-            osc.frequency.setValueAtTime(f, audioCtx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(f * 1.6, audioCtx.currentTime + 0.15);
-
+            osc.frequency.setValueAtTime(2093.00, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(3135.96, audioCtx.currentTime + 0.12);
             gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
             gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.2);
-
             osc.connect(gain);
             gain.connect(audioCtx.destination);
-
             osc.start();
             osc.stop(audioCtx.currentTime + 0.22);
         } catch(e) {}
     }
-
-    function toggleAudio() {
-        initAudio();
-        const btn = document.getElementById('sound-btn');
-        isPlaying = !isPlaying;
-
-        if (isPlaying) {
-            btn.innerText = "🎵 發大財音樂：開";
-            btn.style.background = "linear-gradient(135deg, #f59e0b, #b45309)";
-            btn.style.borderColor = "#fef08a";
-            playNextMelodyNote();
-        } else {
-            btn.innerText = "🔇 發大財音樂：關";
-            btn.style.background = "#334155";
-            btn.style.borderColor = "#64748b";
-            if (melodyTimer) clearTimeout(melodyTimer);
-        }
-    }
-
-    // 點擊頁面任意處解鎖瀏覽器自動播放限制並啟動音樂
-    window.addEventListener('click', () => {
-        if (!audioCtx) {
-            initAudio();
-            isPlaying = true;
-            playNextMelodyNote();
-        }
-    }, { once: true });
 </script>
 
 </body>
