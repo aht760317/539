@@ -225,7 +225,7 @@
 </div>
 
 <!-- ==========================================
-     🔥 Firebase SDK 與雲端即時同步邏輯 🔥
+     🔥 Firebase SDK 正確連線邏輯 🔥
 =========================================== -->
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
@@ -239,14 +239,14 @@
         onSnapshot 
     } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    // 🔴 請將以下替換為你的 Firebase 專案設定
     const firebaseConfig = {
-        apiKey: "AIzaSy...",
+        apiKey: "AIzaSyC9A3HggBSJg2RJJpHEb10Fkf4S6cNqgmE",
         authDomain: "gogogo539.firebaseapp.com",
         projectId: "gogogo539",
-        storageBucket: "gogogo539.appspot.com",
-        messagingSenderId: "123456789",
-        appId: "1:123456789:web:abcdef"
+        storageBucket: "gogogo539.firebasestorage.app",
+        messagingSenderId: "1034723826496",
+        appId: "1:1034723826496:web:16eee8eeeb35d53a4278a5",
+        measurementId: "G-P4HV30SZ3Z"
     };
 
     const app = initializeApp(firebaseConfig);
@@ -255,7 +255,6 @@
 
     let battleHistory = [];
 
-    // 監聽雲端即時變化 (任何裝置更新，畫面立刻自動重繪)
     onSnapshot(lotteryCol, (snapshot) => {
         battleHistory = [];
         snapshot.forEach((docSnap) => {
@@ -300,7 +299,6 @@
         return { aiHitCount, myHitCount, winner };
     }
 
-    // ☁️ 新增至雲端
     async function addRecord() {
         let date = document.getElementById('input-date').value;
         let aiInput = document.getElementById('ai-nums').value;
@@ -348,7 +346,6 @@
         }
     }
 
-    // ☁️ 更新開獎號碼至雲端
     async function updateDraw(id) {
         let inputEl = document.getElementById(`draw-update-${id}`);
         let drawNums = parseNumbers(inputEl.value);
@@ -372,7 +369,6 @@
         }
     }
 
-    // ☁️ 改期至雲端
     async function editDate(id, oldDate) {
         let newDate = prompt("請輸入修正後的日期 (格式：YYYY-MM-DD)", oldDate);
         if (newDate && newDate.trim() !== "") {
@@ -386,7 +382,6 @@
         }
     }
 
-    // ☁️ 從雲端刪除
     async function deleteRecord(id) {
         if (confirm("確定刪除這筆雲端紀錄？")) {
             try {
@@ -514,7 +509,6 @@
         }
     }
 
-    // 掛載至 window 供 HTML 按鈕呼叫
     window.addRecord = addRecord;
     window.updateDraw = updateDraw;
     window.editDate = editDate;
