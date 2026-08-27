@@ -117,7 +117,7 @@
         }
 
         /* 獨立 AI 算牌引擎 */
-        .ai-predict-panel { background: #0f172a; color: white; padding: 20px 15px; border-radius: 16px; margin-top: 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); border: 2px solid #3b82f6; text-align: center; }
+        .ai-predict-panel { background: #0f172a; color: white; padding: 20px 15px; border-radius: 16px; margin-bottom: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); border: 2px solid #3b82f6; text-align: center; }
         .ai-predict-panel h2 { color: #60a5fa; font-size: 20px; margin-bottom: 15px; }
         .dash-grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 15px; }
         @media (min-width: 768px) { .dash-grid { grid-template-columns: 1fr 1fr; } }
@@ -189,7 +189,6 @@
         </div>
     </header>
 
-    <!-- 人流與戰力統計 -->
     <div class="dashboard-row">
         <div class="people-board">
             <div class="people-card">
@@ -225,7 +224,6 @@
         </div>
     </div>
 
-    <!-- 步驟一：輸入與 PK -->
     <div class="panel">
         <h2>📝 步驟一：輸入今日開獎與對決</h2>
         <div class="form-row">
@@ -251,25 +249,6 @@
         <button class="btn-submit" onclick="addRecord()">☁️ 儲存雲端紀錄並計算 PK 勝率</button>
     </div>
 
-    <!-- 歷史紀錄表 (手機卡片化) -->
-    <div class="panel">
-        <h2 style="border-left: 5px solid #64748b;">📊 歷史戰績對照 (雲端即時同步)</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>日期</th>
-                    <th>🤖 AI預測</th>
-                    <th>🧑 我的預測</th>
-                    <th>📺 實際開出 5 碼</th>
-                    <th>單期勝負</th>
-                    <th>操作</th>
-                </tr>
-            </thead>
-            <tbody id="history-tbody"></tbody>
-        </table>
-    </div>
-
-    <!-- 獨立 AI 算牌引擎 -->
     <div class="ai-predict-panel" id="ai-section">
         <h2>🔮 獨立 AI 算牌引擎 (預測下期)</h2>
         
@@ -321,8 +300,23 @@
             </div>
         </div>
     </div>
+    <div class="panel">
+        <h2 style="border-left: 5px solid #64748b;">📊 歷史戰績對照 (雲端即時同步)</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>日期</th>
+                    <th>🤖 AI預測</th>
+                    <th>🧑 我的預測</th>
+                    <th>📺 實際開出 5 碼</th>
+                    <th>單期勝負</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody id="history-tbody"></tbody>
+        </table>
+    </div>
 
-    <!-- 快速補登區 -->
     <div class="panel batch-panel">
         <h2 style="font-size: 16px;">🚀 快速批次匯入多期開獎</h2>
         <textarea id="batch-input" placeholder="範例：&#10;2026-07-01 05 12 18 30 39&#10;115/06/30 01,02,03,04,05"></textarea>
@@ -331,9 +325,6 @@
 
 </div>
 
-<!-- ==========================================
-     🔥 Firebase SDK 與 539 雲端即時同步 🔥
-=========================================== -->
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { 
@@ -524,9 +515,6 @@
     window.getBattleHistory = () => battleHistory;
 </script>
 
-<!-- ==========================================
-     📊 運算邏輯、版路分析與 39球搖獎機 📊
-=========================================== -->
 <script>
     const COL1_1800 = [10,11,12,13,14,15,16,17,18];
     const COL2_1800 = [20,21,22,23,24,25,26,27,28,29];
