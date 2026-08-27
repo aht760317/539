@@ -1,9 +1,9 @@
-html_content = """<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>539 實戰 PK 與 專業算牌系統 (含冷熱門追蹤)</title>
+    <title>539 實戰 PK 與 專業算牌系統 (Firebase 雲端同步版)</title>
     <style>
         :root {
             --bg-color: #f0fdf4; 
@@ -21,10 +21,13 @@ html_content = """<!DOCTYPE html>
         .container { max-width: 1200px; margin: 0 auto; }
 
         /* 標題與導覽列 */
-        header { background: #1e293b; color: white; padding: 25px; border-radius: 12px; margin-bottom: 20px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        header { background: #1e293b; color: white; padding: 25px; border-radius: 12px; margin-bottom: 20px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); position: relative; }
         header h1 { font-size: 28px; margin-bottom: 8px; }
         header p { color: #94a3b8; font-size: 15px; margin-bottom: 15px; }
         
+        .cloud-badge { display: inline-flex; align-items: center; gap: 6px; background: #334155; padding: 4px 14px; border-radius: 20px; font-size: 13px; margin-bottom: 12px; }
+        .dot { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 6px #22c55e; }
+
         .nav-links { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
         .nav-link { background: linear-gradient(135deg, #f59e0b, #d97706); color: white; padding: 12px 25px; text-decoration: none; border-radius: 50px; font-weight: bold; font-size: 16px; transition: 0.3s; box-shadow: 0 4px 10px rgba(245, 158, 11, 0.4); }
         .nav-link:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(245, 158, 11, 0.5); }
@@ -73,13 +76,11 @@ html_content = """<!DOCTYPE html>
         .badge-skip { background: #cbd5e1; color: #475569; }
         .delete-btn { padding: 6px 12px; background: #fef2f2; border: 1px solid #fca5a5; border-radius: 4px; cursor: pointer; color: #ef4444; font-size: 12px; font-weight: bold; }
 
-        /* ================= 獨立 AI 算牌引擎 ================= */
+        /* 獨立 AI 算牌引擎 */
         .ai-predict-panel { background: #0f172a; color: white; padding: 30px; border-radius: 12px; margin-top: 40px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); border: 3px solid #3b82f6; text-align: center; }
         .ai-predict-panel h2 { color: #60a5fa; font-size: 26px; margin-bottom: 20px; }
-        
         .dash-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; margin-bottom: 20px; }
 
-        /* 1800碰 / 9000碰 儀表板 */
         .stats-box { border-radius: 10px; padding: 20px; text-align: left; position: relative; }
         .stats-box-1800 { background: rgba(16, 185, 129, 0.1); border: 1px solid #10b981; }
         .stats-box-9000 { background: rgba(245, 158, 11, 0.1); border: 1px solid #f59e0b; }
@@ -90,7 +91,6 @@ html_content = """<!DOCTYPE html>
         .stats-box .highlight-text { color: #fca5a5; font-weight: bold; font-size: 18px; }
         .stats-box .break-line { margin-top: 10px; padding-top: 10px; border-top: 1px dashed rgba(255,255,255,0.2); }
 
-        /* 冷熱門號碼儀表板 */
         .stats-hot-cold-box { padding: 20px; border-radius: 10px; text-align: left; }
         .box-hot { background: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444; }
         .box-cold { background: rgba(59, 130, 246, 0.1); border: 1px solid #3b82f6; margin-top: 15px; }
@@ -143,6 +143,10 @@ html_content = """<!DOCTYPE html>
 <div class="container">
     <header>
         <h1>⚔️ 539 PK 對決 & 專業算牌系統</h1>
+        <div class="cloud-badge">
+            <div class="dot"></div>
+            <span>Firebase 雲端即時連線中</span>
+        </div>
         <p>上半部：記錄每天實際開獎與對決勝負 / 下半部：沉浸式 AI 搖獎算牌</p>
         <div class="nav-links">
             <a href="index3.html" class="nav-link">🎰 前往專屬幸運搖獎機</a>
@@ -208,12 +212,12 @@ html_content = """<!DOCTYPE html>
                 <input type="text" id="my-nums" placeholder="輸入你自己猜的號碼">
             </div>
         </div>
-        <button class="btn-submit" onclick="addRecord()">⚔️ 儲存對獎紀錄，立即計算 PK 勝率！</button>
+        <button class="btn-submit" onclick="addRecord()">☁️ 儲存雲端對獎紀錄，立即計算 PK 勝率！</button>
     </div>
 
     <!-- 歷史紀錄表 -->
     <div class="panel">
-        <h2 style="border-left: 6px solid #64748b;">📊 歷史戰績與大數據庫</h2>
+        <h2 style="border-left: 6px solid #64748b;">📊 歷史戰績與大數據庫 (雲端即時同步)</h2>
         <div style="overflow-x: auto;">
             <table>
                 <thead>
@@ -248,7 +252,7 @@ html_content = """<!DOCTYPE html>
                 </p>
             </div>
 
-            <!-- 9000碰 儀表板 (新增) -->
+            <!-- 9000碰 儀表板 -->
             <div class="stats-box stats-box-9000">
                 <h3>📊 9000碰 獨家版路分析</h3>
                 <p><strong>設定條件：</strong> 區一(01-09) | 區二(10-19) | 區三(20-29) | 區四(30-39)</p>
@@ -261,7 +265,7 @@ html_content = """<!DOCTYPE html>
             </div>
         </div>
 
-        <!-- 熱門號碼追蹤儀表板 (新增) -->
+        <!-- 熱門號碼追蹤儀表板 -->
         <div class="stats-hot-cold-box box-hot">
             <h3>🔥 追熱必看：近期最常開出前 8 名 (發燙熱牌)</h3>
             <p style="font-size: 13px; color: #94a3b8; margin-bottom: 5px;">自動計算大數據中最常出現的 8 個活躍號碼，適合連莊或主支。</p>
@@ -304,107 +308,96 @@ html_content = """<!DOCTYPE html>
 
     <!-- 快速補登區 -->
     <div class="panel batch-panel">
-        <h2>🚀 快速補登：一次匯入多期歷史開獎</h2>
+        <h2>🚀 快速補登：一次匯入多期歷史開獎 (同步雲端)</h2>
         <p style="font-size: 13px; color: #64748b; margin-bottom: 10px;">想快速餵給 AI 幾十期的歷史資料嗎？請在此貼上多行紀錄。系統支援自動日期排序與民國年轉換。<br>格式範例：<br>2026-07-01 05 12 18 30 39<br>115/06/30 01,02,03,04,05</p>
         <textarea id="batch-input" placeholder="請貼上多期歷史資料..."></textarea>
-        <button class="batch-btn" onclick="batchImport()">📥 一鍵批次匯入</button>
+        <button class="batch-btn" onclick="batchImport()">📥 一鍵批次匯入雲端</button>
     </div>
 
 </div>
 
-<script>
-    // === 人流統計 ===
-    function addPeople() {
-        let stats = JSON.parse(localStorage.getItem('sys_people_stats') || '{"total":0, "todayDate":"", "todayCount":0}');
-        let todayStr = new Date().toISOString().split('T')[0];
-        if (stats.todayDate !== todayStr) { stats.todayDate = todayStr; stats.todayCount = 0; }
-        stats.todayCount++; stats.total++;
-        localStorage.setItem('sys_people_stats', JSON.stringify(stats));
-        updatePeopleUI();
-    }
-    function updatePeopleUI() {
-        let stats = JSON.parse(localStorage.getItem('sys_people_stats') || '{"total":0, "todayDate":"", "todayCount":0}');
+<!-- ==========================================
+     🔥 Firebase SDK 與 539 雲端即時同步 🔥
+=========================================== -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { 
+        getFirestore, 
+        collection, 
+        doc, 
+        setDoc, 
+        deleteDoc, 
+        writeBatch, 
+        onSnapshot 
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    // 🔴 請將此處替換為你的 Firebase 專案設定
+    const firebaseConfig = {
+        apiKey: "AIzaSy...",
+        authDomain: "gogogo539.firebaseapp.com",
+        projectId: "gogogo539",
+        storageBucket: "gogogo539.appspot.com",
+        messagingSenderId: "123456789",
+        appId: "1:123456789:web:abcdef"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const historyCol = collection(db, "539_battle_history");
+    const peopleDocRef = doc(db, "system_counters", "people_539");
+
+    let battleHistory = [];
+
+    // 1. 監聽人流計數器
+    onSnapshot(peopleDocRef, (snap) => {
+        let stats = snap.exists() ? snap.data() : { total: 0, todayDate: "", todayCount: 0 };
         let todayStr = new Date().toISOString().split('T')[0];
         document.getElementById('today-count').innerText = (stats.todayDate === todayStr) ? stats.todayCount : 0;
-        document.getElementById('total-count').innerText = stats.total;
-    }
+        document.getElementById('total-count').innerText = stats.total || 0;
+    });
 
-    // === 核心資料庫與版路變數 ===
-    let battleHistory = JSON.parse(localStorage.getItem('sys_battle_history') || '[]');
-    
-    // 1800碰 變數
-    const COL1_1800 = [10,11,12,13,14,15,16,17,18];
-    const COL2_1800 = [20,21,22,23,24,25,26,27,28,29];
-    const COL3_1800 = [1,2,3,4,5,6,7,8,9,19,30,31,32,33,34,35,36,37,38,39];
-    let lastBroken_1800 = [];
-
-    // 9000碰 變數 (4區)
-    const COL1_9000 = [1,2,3,4,5,6,7,8,9];
-    const COL2_9000 = [10,11,12,13,14,15,16,17,18,19];
-    const COL3_9000 = [20,21,22,23,24,25,26,27,28,29];
-    const COL4_9000 = [30,31,32,33,34,35,36,37,38,39];
-    let lastBroken_9000 = [];
-
-    window.onload = function() {
-        document.getElementById('input-date').value = new Date().toISOString().split('T')[0];
+    // 2. 監聽 539 歷史開獎紀錄 (任何更新即時重算)
+    onSnapshot(historyCol, (snapshot) => {
+        battleHistory = [];
+        snapshot.forEach((docSnap) => {
+            battleHistory.push(docSnap.data());
+        });
+        
         battleHistory.sort((a, b) => {
             if (a.date > b.date) return -1;
             if (a.date < b.date) return 1;
             return b.id - a.id;
         });
-        updatePeopleUI();
+
         renderBattle();
-    };
+    });
+
+    // === 人流 +1 功能 (雲端同步) ===
+    async function addPeople() {
+        let todayStr = new Date().toISOString().split('T')[0];
+        let todayCount = parseInt(document.getElementById('today-count').innerText) || 0;
+        let totalCount = parseInt(document.getElementById('total-count').innerText) || 0;
+
+        try {
+            await setDoc(peopleDocRef, {
+                todayDate: todayStr,
+                todayCount: todayCount + 1,
+                total: totalCount + 1
+            }, { merge: true });
+        } catch (e) {
+            console.error("人流更新失敗:", e);
+        }
+    }
 
     function parseNumbers(inputStr) {
+        if (!inputStr) return [];
         let nums = inputStr.match(/\d+/g);
         if (!nums) return [];
         return [...new Set(nums.map(n => parseInt(n, 10)).filter(n => n >= 1 && n <= 39))].sort((a, b) => a - b);
     }
 
-    // === 快速批次匯入 ===
-    function batchImport() {
-        let text = document.getElementById('batch-input').value;
-        let lines = text.split('\n');
-        let added = 0;
-        
-        lines.forEach(line => {
-            let parts = line.trim().split(/\s+/);
-            if(parts.length >= 2) {
-                let dateStr = parts[0];
-                if(dateStr.includes('/')) {
-                    let dParts = dateStr.split('/');
-                    if(dParts[0].length === 3) dParts[0] = parseInt(dParts[0]) + 1911;
-                    dateStr = dParts.join('-');
-                }
-                
-                let numsStr = parts.slice(1).join(' ');
-                let nums = parseNumbers(numsStr);
-                if(nums && nums.length >= 5) {
-                    nums = nums.slice(0,5);
-                    battleHistory.push({ id: Date.now() + Math.random(), date: dateStr, ai: [], my: [], draw: nums, aiHits: null, myHits: null, winner: "僅記錄開獎" });
-                    added++;
-                }
-            }
-        });
-
-        if(added > 0) {
-            battleHistory.sort((a, b) => {
-                if (a.date > b.date) return -1;
-                if (a.date < b.date) return 1;
-                return b.id - a.id;
-            });
-            localStorage.setItem('sys_battle_history', JSON.stringify(battleHistory));
-            document.getElementById('batch-input').value = "";
-            renderBattle();
-            alert(`✅ 成功匯入 ${added} 期歷史資料並自動排序完畢！`);
-        } else {
-            alert("⚠️ 找不到符合格式的資料，請確認格式是否正確。");
-        }
-    }
-
-    // === 步驟一：儲存紀錄與 PK ===
-    function addRecord() {
+    // === 步驟一：儲存紀錄與 PK (寫入雲端) ===
+    async function addRecord() {
         let date = document.getElementById('input-date').value;
         let aiNums = parseNumbers(document.getElementById('ai-nums').value);
         let myNums = parseNumbers(document.getElementById('my-nums').value);
@@ -425,37 +418,130 @@ html_content = """<!DOCTYPE html>
         } else if (aiHitCount !== null && myHitCount === null) winner = "AI 獨測";
         else if (myHitCount !== null && aiHitCount === null) winner = "我 獨測";
 
-        battleHistory.push({ id: Date.now(), date: date, ai: aiNums, my: myNums, draw: drawNums, aiHits: aiHitCount, myHits: myHitCount, winner: winner });
-        
-        battleHistory.sort((a, b) => {
-            if (a.date > b.date) return -1;
-            if (a.date < b.date) return 1;
-            return b.id - a.id;
-        });
+        let recordId = Date.now().toString();
+        let record = { 
+            id: recordId, 
+            date: date, 
+            ai: aiNums, 
+            my: myNums, 
+            draw: drawNums, 
+            aiHits: aiHitCount, 
+            myHits: myHitCount, 
+            winner: winner 
+        };
 
-        localStorage.setItem('sys_battle_history', JSON.stringify(battleHistory));
+        try {
+            await setDoc(doc(db, "539_battle_history", recordId), record);
+            document.getElementById('ai-nums').value = "";
+            document.getElementById('my-nums').value = "";
+            document.getElementById('draw-nums').value = "";
+            
+            document.getElementById('predict-results').style.display = 'none';
+            document.getElementById('ai-machine').style.display = 'none';
+            document.getElementById('btn-ai-gen').innerText = "🧠 啟動台彩算牌演算法，開始搖獎";
 
-        document.getElementById('ai-nums').value = "";
-        document.getElementById('my-nums').value = "";
-        document.getElementById('draw-nums').value = "";
-        
-        document.getElementById('predict-results').style.display = 'none';
-        document.getElementById('ai-machine').style.display = 'none';
-        document.getElementById('btn-ai-gen').innerText = "🧠 啟動台彩算牌演算法，開始搖獎";
-
-        renderBattle();
-        setTimeout(() => document.getElementById('ai-section').scrollIntoView({ behavior: 'smooth' }), 300);
+            setTimeout(() => document.getElementById('ai-section').scrollIntoView({ behavior: 'smooth' }), 300);
+        } catch (e) {
+            alert("雲端儲存失敗：" + e.message);
+        }
     }
 
-    // === 分析 版路狀態 (共用邏輯) ===
+    // === 快速批次匯入 (使用 Firebase Batch 寫入) ===
+    async function batchImport() {
+        let text = document.getElementById('batch-input').value;
+        let lines = text.split('\n');
+        let batch = writeBatch(db);
+        let added = 0;
+        
+        lines.forEach((line, idx) => {
+            let parts = line.trim().split(/\s+/);
+            if(parts.length >= 2) {
+                let dateStr = parts[0];
+                if(dateStr.includes('/')) {
+                    let dParts = dateStr.split('/');
+                    if(dParts[0].length === 3) dParts[0] = parseInt(dParts[0]) + 1911;
+                    dateStr = dParts.join('-');
+                }
+                
+                let numsStr = parts.slice(1).join(' ');
+                let nums = parseNumbers(numsStr);
+                if(nums && nums.length >= 5) {
+                    nums = nums.slice(0,5);
+                    let recId = (Date.now() + idx).toString();
+                    let recRef = doc(db, "539_battle_history", recId);
+                    batch.set(recRef, { 
+                        id: recId, 
+                        date: dateStr, 
+                        ai: [], 
+                        my: [], 
+                        draw: nums, 
+                        aiHits: null, 
+                        myHits: null, 
+                        winner: "僅記錄開獎" 
+                    });
+                    added++;
+                }
+            }
+        });
+
+        if(added > 0) {
+            try {
+                await batch.commit();
+                document.getElementById('batch-input').value = "";
+                alert(`✅ 成功匯入 ${added} 期歷史資料至雲端！`);
+            } catch (e) {
+                alert("批次匯入失敗：" + e.message);
+            }
+        } else {
+            alert("⚠️ 找不到符合格式的資料，請確認格式是否正確。");
+        }
+    }
+
+    // === 刪除紀錄 (從雲端移除) ===
+    async function deleteRecord(id) {
+        if (confirm("確定刪除這筆雲端紀錄？這會重新計算大數據喔！")) {
+            try {
+                await deleteDoc(doc(db, "539_battle_history", id.toString()));
+            } catch (e) {
+                alert("刪除失敗：" + e.message);
+            }
+        }
+    }
+
+    // 掛載至 window
+    window.addPeople = addPeople;
+    window.addRecord = addRecord;
+    window.batchImport = batchImport;
+    window.deleteRecord = deleteRecord;
+    window.getBattleHistory = () => battleHistory;
+</script>
+
+<!-- ==========================================
+     📊 運算邏輯、版路分析與 39球搖獎機 📊
+=========================================== -->
+<script>
+    const COL1_1800 = [10,11,12,13,14,15,16,17,18];
+    const COL2_1800 = [20,21,22,23,24,25,26,27,28,29];
+    const COL3_1800 = [1,2,3,4,5,6,7,8,9,19,30,31,32,33,34,35,36,37,38,39];
+    let lastBroken_1800 = [];
+
+    const COL1_9000 = [1,2,3,4,5,6,7,8,9];
+    const COL2_9000 = [10,11,12,13,14,15,16,17,18,19];
+    const COL3_9000 = [20,21,22,23,24,25,26,27,28,29];
+    const COL4_9000 = [30,31,32,33,34,35,36,37,38,39];
+    let lastBroken_9000 = [];
+
+    window.onload = function() {
+        document.getElementById('input-date').value = new Date().toISOString().split('T')[0];
+    };
+
     function updatePanelStats() {
+        const battleHistory = window.getBattleHistory ? window.getBattleHistory() : [];
         if (battleHistory.length === 0) return;
 
-        // --- 1800碰 分析 ---
         let str1800 = 0, win1800 = 0, validDraws = 0, ended1800 = false;
         lastBroken_1800 = [];
 
-        // --- 9000碰 分析 ---
         let str9000 = 0, win9000 = 0, ended9000 = false;
         lastBroken_9000 = [];
 
@@ -464,7 +550,6 @@ html_content = """<!DOCTYPE html>
             if(!draw || draw.length < 5) continue;
             validDraws++;
 
-            // 1800 檢測
             let c1=0, c2=0, c3=0;
             draw.forEach(n => {
                 if(COL1_1800.includes(n)) c1++;
@@ -484,7 +569,6 @@ html_content = """<!DOCTYPE html>
                 } else { ended1800 = true; }
             }
 
-            // 9000 檢測
             let q1=0, q2=0, q3=0, q4=0;
             draw.forEach(n => {
                 if(COL1_9000.includes(n)) q1++;
@@ -507,7 +591,6 @@ html_content = """<!DOCTYPE html>
             }
         }
 
-        // 更新 1800 UI
         let prob18 = validDraws > 0 ? ((win1800 / validDraws) * 100).toFixed(1) : 0;
         document.getElementById('streak-1800').innerText = str1800;
         document.getElementById('prob-1800').innerText = prob18 + "%";
@@ -519,7 +602,6 @@ html_content = """<!DOCTYPE html>
         else if (str1800 >= 1) { g18.innerText = "⚡ 偏高 (蓄力中)"; g18.style.color = "#f59e0b"; } 
         else { g18.innerText = "穩定 (上期剛開)"; g18.style.color = "#10b981"; }
 
-        // 更新 9000 UI
         let prob90 = validDraws > 0 ? ((win9000 / validDraws) * 100).toFixed(1) : 0;
         document.getElementById('streak-9000').innerText = str9000;
         document.getElementById('prob-9000').innerText = prob90 + "%";
@@ -532,8 +614,8 @@ html_content = """<!DOCTYPE html>
         else { g90.innerText = "穩定 (上期剛開)"; g90.style.color = "#10b981"; }
     }
 
-    // === 分析冷熱門號碼 (Top 8) ===
     function updateHotColdStats() {
+        const battleHistory = window.getBattleHistory ? window.getBattleHistory() : [];
         const hotContainer = document.getElementById('hot-tracking-container');
         const coldContainer = document.getElementById('cold-tracking-container');
         
@@ -552,7 +634,6 @@ html_content = """<!DOCTYPE html>
             }
             
             let hotCount = 0;
-            // 抓近 30 期的活躍度
             let recent = Math.min(30, battleHistory.length);
             for (let j = 0; j < recent; j++) {
                 if (battleHistory[j].draw && battleHistory[j].draw.includes(i)) hotCount++;
@@ -560,13 +641,11 @@ html_content = """<!DOCTYPE html>
             numStats.push({ num: i, cold: coldCount, hot: hotCount });
         }
 
-        // 熱牌排序 (依出現次數降冪)
         let hotSorted = [...numStats].sort((a, b) => {
             if(b.hot !== a.hot) return b.hot - a.hot;
             return a.num - b.num;
         });
         
-        // 冷牌排序 (依未開期數降冪)
         let coldSorted = [...numStats].sort((a, b) => {
             if (b.cold !== a.cold) return b.cold - a.cold;
             return a.num - b.num;
@@ -593,13 +672,12 @@ html_content = """<!DOCTYPE html>
         });
     }
 
-    // === 步驟二：獨立 AI 算牌引擎 ===
     function predictNextPeriod() {
+        const battleHistory = window.getBattleHistory ? window.getBattleHistory() : [];
         if (battleHistory.length < 2) {
             return alert("資料庫太少囉！請至少輸入 2 期開獎，AI 才能抓出趨勢。");
         }
 
-        // 1. 抓取大數據分析
         let stats = {};
         for(let i=1; i<=39; i++) stats[i] = 0;
         battleHistory.forEach(record => {
@@ -616,7 +694,6 @@ html_content = """<!DOCTYPE html>
             return arr.splice(idx, 1)[0];
         };
 
-        // --- 第一組：全車推薦 4 碼 (純抓熱門) ---
         let carPicks = [];
         let tempHot1 = [...hotPool];
         for(let i=0; i<4; i++) {
@@ -625,10 +702,8 @@ html_content = """<!DOCTYPE html>
         }
         carPicks.sort((a,b) => a-b);
 
-        // --- 第二組：版路補缺 4 碼 ---
         let comboPicks = [];
         let brokenPool = [];
-        // 結合 1800 與 9000 碰的斷區
         if (lastBroken_1800.includes('第一柱(10-18)')) brokenPool = brokenPool.concat(COL1_1800);
         if (lastBroken_1800.includes('第二柱(20-29)')) brokenPool = brokenPool.concat(COL2_1800);
         if (lastBroken_1800.includes('第三柱(01-09,19,30-39)')) brokenPool = brokenPool.concat(COL3_1800);
@@ -638,7 +713,6 @@ html_content = """<!DOCTYPE html>
         if (lastBroken_9000.includes('區三(20-29)')) brokenPool = brokenPool.concat(COL3_9000);
         if (lastBroken_9000.includes('區四(30-39)')) brokenPool = brokenPool.concat(COL4_9000);
         
-        // 去重複
         brokenPool = [...new Set(brokenPool)].filter(n => !carPicks.includes(n));
         
         if (brokenPool.length > 0) comboPicks.push(pickRandom(brokenPool));
@@ -651,8 +725,6 @@ html_content = """<!DOCTYPE html>
         while(comboPicks.length < 4 && tempAll2.length > 0) comboPicks.push(pickRandom(tempAll2));
         comboPicks.sort((a,b) => a-b);
 
-
-        // 2. 啟動搖獎機動畫 UI
         const btn = document.getElementById('btn-ai-gen');
         const machine = document.getElementById('ai-machine');
         const resDiv = document.getElementById('predict-results');
@@ -688,7 +760,6 @@ html_content = """<!DOCTYPE html>
             });
         }, 120);
 
-        // 3. 動畫結束
         setTimeout(() => {
             clearInterval(shakeInt);
             machine.classList.remove('shaking');
@@ -725,16 +796,8 @@ html_content = """<!DOCTYPE html>
         }, 2500);
     }
 
-    // === 刪除與渲染 ===
-    function deleteRecord(id) {
-        if (confirm("確定刪除這筆紀錄？這會重新計算大數據喔！")) {
-            battleHistory = battleHistory.filter(item => item.id !== id);
-            localStorage.setItem('sys_battle_history', JSON.stringify(battleHistory));
-            renderBattle();
-        }
-    }
-
     function renderBattle() {
+        const battleHistory = window.getBattleHistory ? window.getBattleHistory() : [];
         const tbody = document.getElementById('history-tbody');
         tbody.innerHTML = '';
 
@@ -771,7 +834,7 @@ html_content = """<!DOCTYPE html>
                 <td>${genBalls(myNumsArr)}${myHitText}</td>
                 <td>${genBalls(item.draw, true)}</td>
                 <td>${badge}</td>
-                <td><button class="delete-btn" onclick="deleteRecord(${item.id})">刪除</button></td>
+                <td><button class="delete-btn" onclick="deleteRecord('${item.id}')">刪除</button></td>
             `;
             tbody.appendChild(tr);
         });
@@ -798,16 +861,9 @@ html_content = """<!DOCTYPE html>
             pkEl.innerText = "平分秋色"; pkEl.style.color = "var(--hit-color)";
         }
 
-        // 重新渲染後，更新各分析儀表板
         updatePanelStats();
         updateHotColdStats();
     }
 </script>
 </body>
 </html>
-"""
-
-with open("539_system.html", "w", encoding="utf-8") as f:
-    f.write(html_content)
-
-print("Generated HTML file successfully. 🔥熱牌與9000碰已整合完畢！")
