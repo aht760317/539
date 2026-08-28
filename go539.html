@@ -33,6 +33,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: space-between;
+            cursor: pointer;
         }
 
         /* 背景滿天下雨 Canvas */
@@ -306,8 +307,8 @@
 </head>
 <body>
 
-<!-- 🎵 賺大錢.mp3 背景音樂 (直接載入同目錄下的 賺大錢.mp3) -->
-<audio id="bg-music" src="賺大錢.mp3" preload="auto" loop></audio>
+<!-- 🎵 拜託讓我中一次.mp3 背景音樂 -->
+<audio id="bg-music" src="拜託讓我中一次.mp3" preload="auto" loop playsinline></audio>
 
 <!-- 掉落黃金 + 白銀 + 紅包雨 Canvas -->
 <canvas id="money-canvas"></canvas>
@@ -316,8 +317,8 @@
 <div class="gods-layer" id="gods-layer"></div>
 
 <!-- 音樂開關按鈕 -->
-<button class="sound-btn" id="sound-btn" onclick="toggleMusic()">
-    🎵 賺大錢音樂：開
+<button class="sound-btn" id="sound-btn" onclick="toggleMusic(event)">
+    🎵 拜託讓我中一次：開
 </button>
 
 <div class="main-container">
@@ -331,18 +332,18 @@
         <p class="header-sub">🎉 財神向您恭喜發財！黃金白銀紅包滾滾來 🎉</p>
     </div>
 
-    <!-- 三大系統一鍵進入卡片 -->
+    <!-- 三大系統一鍵進入卡片 (順序：539 -> 天天樂 -> 幸運機) -->
     <div class="portal-grid">
 
-        <!-- 卡片 1 -->
-        <a href="https://aht760317.github.io/539/index3.html" class="portal-card" target="_blank">
-            <div class="card-icon">🎰</div>
-            <div class="card-title">GOGO 專屬幸運搖獎機</div>
-            <div class="card-desc">全擬真 3D 物理碰撞搖號機！享受彩球瘋狂旋轉與抽出幸運大獎的快感。</div>
-            <div class="btn-enter">⚡ 立即搖號進入</div>
+        <!-- 第 1 個：539 專業算牌系統 -->
+        <a href="https://aht760317.github.io/539/index5.html" class="portal-card" target="_blank">
+            <div class="card-icon">🧠</div>
+            <div class="card-title">GOGO 539 專業算牌系統</div>
+            <div class="card-desc">獨家 1800碰 / 9000碰 斷區回補演算法與極熱牌追蹤算牌引擎。</div>
+            <div class="btn-enter">🔮 啟動算牌引擎</div>
         </a>
 
-        <!-- 卡片 2 -->
+        <!-- 第 2 個：天天樂 預測對決擂台 -->
         <a href="https://aht760317.github.io/539/index4.html" class="portal-card" target="_blank">
             <div class="card-icon">⚔️</div>
             <div class="card-title">天天樂 預測對決擂台</div>
@@ -350,12 +351,12 @@
             <div class="btn-enter">🔥 開啟對決擂台</div>
         </a>
 
-        <!-- 卡片 3 -->
-        <a href="https://aht760317.github.io/539/index5.html" class="portal-card" target="_blank">
-            <div class="card-icon">🧠</div>
-            <div class="card-title">GOGO 539 專業算牌系統</div>
-            <div class="card-desc">獨家 1800碰 / 9000碰 斷區回補演算法與極熱牌追蹤算牌引擎。</div>
-            <div class="btn-enter">🔮 啟動算牌引擎</div>
+        <!-- 第 3 個：GOGO 專屬幸運搖獎機 -->
+        <a href="https://aht760317.github.io/539/index3.html" class="portal-card" target="_blank">
+            <div class="card-icon">🎰</div>
+            <div class="card-title">GOGO 專屬幸運搖獎機</div>
+            <div class="card-desc">全擬真 3D 物理碰撞搖號機！享受彩球瘋狂旋轉與抽出幸運大獎的快感。</div>
+            <div class="btn-enter">⚡ 立即搖號進入</div>
         </a>
 
     </div>
@@ -374,10 +375,54 @@
 </footer>
 
 <!-- ==========================================
-     🌟 1. 下雨特效 2. 財神巡遊 3. 賺大錢.mp3 控制 🌟
+     🌟 點擊即播 + 下雨特效 + 財神巡遊 🌟
 =========================================== -->
 <script>
-    /* ================= 1. 黃金 + 白銀 + 紅包雨 ================= */
+    /* ================= 1. 拜託讓我中一次.mp3 點擊即播控制 ================= */
+    const bgMusic = document.getElementById('bg-music');
+    const soundBtn = document.getElementById('sound-btn');
+    let hasInteracted = false;
+
+    function startMusic() {
+        if (bgMusic.paused) {
+            bgMusic.play().then(() => {
+                soundBtn.innerText = "🎵 拜託讓我中一次：開";
+                soundBtn.style.background = "linear-gradient(135deg, #f59e0b, #b45309)";
+                soundBtn.style.borderColor = "#fef08a";
+            }).catch(err => {
+                console.log("等待手勢點擊觸發:", err);
+            });
+        }
+    }
+
+    function stopMusic() {
+        bgMusic.pause();
+        soundBtn.innerText = "🔇 音樂：關";
+        soundBtn.style.background = "#334155";
+        soundBtn.style.borderColor = "#64748b";
+    }
+
+    function toggleMusic(e) {
+        if (e) e.stopPropagation();
+        if (bgMusic.paused) {
+            startMusic();
+        } else {
+            stopMusic();
+        }
+    }
+
+    // 點擊/觸控畫面任意位置立即開始播放
+    ['click', 'touchstart', 'touchend', 'mousedown'].forEach(evt => {
+        window.addEventListener(evt, () => {
+            if (!hasInteracted) {
+                hasInteracted = true;
+                startMusic();
+            }
+        }, { passive: true });
+    });
+
+
+    /* ================= 2. 黃金 + 白銀 + 紅包雨 (Canvas) ================= */
     const canvas = document.getElementById('money-canvas');
     const ctx = canvas.getContext('2d');
     let width = canvas.width = window.innerWidth;
@@ -452,7 +497,7 @@
     renderMoneyRain();
 
 
-    /* ================= 2. 滿天浮動財神群 ================= */
+    /* ================= 3. 滿天浮動財神群 ================= */
     const godsLayer = document.getElementById('gods-layer');
     const godGreetings = ['恭喜發財 🧧', '日進斗金 💰', '財運亨通 ✨', '黃金萬兩 🪙', '富貴吉祥 👑', '大吉大利 🍊', '財源滾滾 🌊', '招財進寶 🥇'];
     const godAvatars = ['🎅', '🧙‍♂️', '🤴', '👲'];
@@ -500,7 +545,7 @@
     }
 
 
-    /* ================= 3. 主財神噴錢特效 ================= */
+    /* ================= 4. 主財神噴錢特效 ================= */
     const mainGodWrap = document.getElementById('main-god-wrap');
     const burstWords = ['+88,888 🪙', '+168,888 💰', '黃金萬兩 ✨', '恭喜中獎！🎉', '大發特發 🧧', '發大財啦！🔥', '+888,888 🥇'];
 
@@ -538,42 +583,7 @@
         }
     }
 
-
-    /* ================= 4. 賺大錢.mp3 音樂控制 ================= */
-    const bgMusic = document.getElementById('bg-music');
-    let isMusicPlaying = false;
-
-    function toggleMusic() {
-        const btn = document.getElementById('sound-btn');
-        if (bgMusic.paused) {
-            bgMusic.play().then(() => {
-                isMusicPlaying = true;
-                btn.innerText = "🎵 賺大錢音樂：開";
-                btn.style.background = "linear-gradient(135deg, #f59e0b, #b45309)";
-                btn.style.borderColor = "#fef08a";
-            }).catch(e => {
-                console.log("播放受瀏覽器限制，請點擊畫面任意處播放:", e);
-            });
-        } else {
-            bgMusic.pause();
-            isMusicPlaying = false;
-            btn.innerText = "🔇 賺大錢音樂：關";
-            btn.style.background = "#334155";
-            btn.style.borderColor = "#64748b";
-        }
-    }
-
-    // 點擊畫面任意處自動解鎖播放
-    window.addEventListener('click', () => {
-        if (!isMusicPlaying && bgMusic.paused) {
-            bgMusic.play().then(() => {
-                isMusicPlaying = true;
-            }).catch(() => {});
-        }
-    }, { once: true });
-
-
-    /* 點擊財神輔助金幣清脆聲 */
+    /* 點擊財神輔助金幣清脆音效 */
     let audioCtx = null;
     function playDingSound() {
         try {
