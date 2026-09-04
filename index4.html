@@ -2,53 +2,52 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>天天樂 光量子 AI 科技對決擂台 (Firebase 雲端同步版)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>天天樂 光量子 AI 科技對決擂台 (RWD 雙棲旗艦版)</title>
     <style>
         :root {
             --bg-color: #f1f5f9; 
-            --panel-bg: rgba(255, 255, 255, 0.92);
+            --panel-bg: rgba(255, 255, 255, 0.94);
             --panel-border: rgba(148, 163, 184, 0.35);
             --text-main: #0f172a;
             --text-muted: #64748b;
             --ai-color: #0284c7; 
-            --p1-color: #059669; 
-            --p2-color: #e11d48; 
+            --my-color: #059669; 
             --draw-color: #d97706; 
             --neon-purple: #7c3aed;
             --hit-color: #ef4444; 
             --ball-size: 38px;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: "JetBrains Mono", "Segoe UI", "Microsoft JhengHei", sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: "JetBrains Mono", -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft JhengHei", sans-serif; -webkit-tap-highlight-color: transparent; }
         body { 
             background-color: var(--bg-color); 
             color: var(--text-main); 
-            padding: 24px 16px; 
-            line-height: 1.6;
+            padding: 20px 16px; 
+            line-height: 1.5;
             background-image: 
                 linear-gradient(rgba(14, 165, 233, 0.05) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(14, 165, 233, 0.05) 1px, transparent 1px);
-            background-size: 28px 28px;
+            background-size: 24px 24px;
         }
         .container { max-width: 1360px; margin: 0 auto; }
 
-        /* Header 亮色光量子 */
+        /* Header 亮色量子風格 */
         header { 
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(240, 249, 255, 0.95)); 
             border: 1px solid rgba(14, 165, 233, 0.3);
-            box-shadow: 0 10px 30px rgba(14, 165, 233, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.8);
-            padding: 24px; 
-            border-radius: 18px; 
-            margin-bottom: 24px; 
+            box-shadow: 0 8px 25px rgba(14, 165, 233, 0.1);
+            padding: 20px; 
+            border-radius: 16px; 
+            margin-bottom: 20px; 
             text-align: center; 
             position: relative;
             backdrop-filter: blur(12px);
         }
         header h1 { 
-            font-size: 28px; 
-            letter-spacing: 2px;
-            background: linear-gradient(90deg, #0284c7, #7c3aed, #e11d48);
+            font-size: clamp(20px, 4vw, 28px); 
+            letter-spacing: 1.5px;
+            background: linear-gradient(90deg, #0284c7, #7c3aed, #059669);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             font-weight: 900;
@@ -56,55 +55,53 @@
         .cloud-badge { 
             display: inline-flex; 
             align-items: center; 
-            gap: 8px; 
+            gap: 6px; 
             background: #ffffff; 
             border: 1px solid rgba(16, 185, 129, 0.4);
-            padding: 4px 16px; 
+            padding: 4px 14px; 
             border-radius: 20px; 
-            font-size: 13px; 
+            font-size: 12px; 
             font-weight: bold;
             color: #065f46;
-            margin-top: 10px; 
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
+            margin-top: 8px; 
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.12);
         }
-        .dot { width: 9px; height: 9px; border-radius: 50%; background: #10b981; box-shadow: 0 0 10px #10b981; }
+        .dot { width: 8px; height: 8px; border-radius: 50%; background: #10b981; box-shadow: 0 0 8px #10b981; }
 
         /* 統計戰力板 */
-        .stats-board { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px; }
+        .stats-board { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-bottom: 20px; }
         .stat-card { 
             background: var(--panel-bg); 
-            padding: 22px; 
-            border-radius: 16px; 
+            padding: 18px; 
+            border-radius: 14px; 
             border: 1px solid var(--panel-border); 
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.04); 
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.03); 
             text-align: center; 
             position: relative; 
             backdrop-filter: blur(12px);
-            transition: transform 0.2s ease;
+            transition: transform 0.2s;
         }
-        .stat-card:hover { transform: translateY(-2px); }
         .stat-card.ai-card { border-top: 4px solid var(--ai-color); }
-        .stat-card.p1-card { border-top: 4px solid var(--p1-color); }
-        .stat-card.p2-card { border-top: 4px solid var(--p2-color); }
+        .stat-card.my-card { border-top: 4px solid var(--my-color); }
         .stat-card.pk-card { border-top: 4px solid var(--draw-color); background: #fffbeb; }
-        .stat-title { font-size: 13px; color: var(--text-muted); font-weight: 800; letter-spacing: 1px; }
-        .stat-value { font-size: 34px; font-weight: 900; margin: 8px 0; font-family: monospace; }
-        .stat-sub { font-size: 12px; color: #64748b; font-weight: 600; }
+        .stat-title { font-size: 12px; color: var(--text-muted); font-weight: 800; letter-spacing: 1px; }
+        .stat-value { font-size: 30px; font-weight: 900; margin: 6px 0; font-family: monospace; }
+        .stat-sub { font-size: 11px; color: #64748b; font-weight: 600; }
 
-        /* 冷熱門數據 & 搖號機面板 */
-        .tools-panel { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 20px; margin-bottom: 24px; }
+        /* 工具面板區 */
+        .tools-panel { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 18px; margin-bottom: 20px; }
         .tool-card { 
             background: var(--panel-bg); 
-            padding: 24px; 
+            padding: 20px; 
             border-radius: 16px; 
             border: 1px solid var(--panel-border); 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.04); 
+            box-shadow: 0 6px 18px rgba(0,0,0,0.03); 
             backdrop-filter: blur(12px);
         }
         .tool-card h3 { 
-            font-size: 16px; 
-            margin-bottom: 16px; 
-            padding-bottom: 10px; 
+            font-size: 15px; 
+            margin-bottom: 14px; 
+            padding-bottom: 8px; 
             border-bottom: 1px solid rgba(0,0,0,0.06); 
             display: flex;
             align-items: center;
@@ -113,41 +110,38 @@
             font-weight: 900;
         }
         
-        .badge-list { display: flex; flex-wrap: wrap; gap: 10px; }
+        .badge-list { display: flex; flex-wrap: wrap; gap: 8px; }
         .info-badge { 
             display: flex; 
             flex-direction: column; 
             align-items: center; 
             background: #ffffff; 
-            padding: 8px 12px; 
-            border-radius: 12px; 
-            min-width: 56px;
+            padding: 6px 10px; 
+            border-radius: 10px; 
+            min-width: 50px;
             border: 1.5px solid #e2e8f0;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.04);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.03);
             position: relative;
-            transition: all 0.2s;
         }
-        .info-badge .num { font-size: 22px; font-weight: 900; font-family: monospace; }
-        .info-badge .desc { font-size: 11px; margin-top: 2px; font-weight: bold; }
+        .info-badge .num { font-size: 20px; font-weight: 900; font-family: monospace; }
+        .info-badge .desc { font-size: 10px; margin-top: 1px; font-weight: bold; }
 
-        /* 🌟 開獎命中高亮樣式 */
         .info-badge.hit-today {
-            transform: scale(1.08);
-            box-shadow: 0 0 14px rgba(239, 68, 68, 0.4);
+            transform: scale(1.06);
+            box-shadow: 0 0 12px rgba(239, 68, 68, 0.35);
             border-width: 2px;
         }
         .info-badge.hit-today::after {
             content: '開出';
             position: absolute;
-            top: -7px;
-            right: -7px;
+            top: -6px;
+            right: -6px;
             background: #ef4444;
             color: white;
-            font-size: 9px;
+            font-size: 8px;
             font-weight: 900;
-            padding: 1px 5px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(239, 68, 68, 0.4);
+            padding: 1px 4px;
+            border-radius: 6px;
         }
 
         .hot-badge { border-color: rgba(239, 68, 68, 0.4); background: linear-gradient(180deg, #ffffff, #fef2f2); }
@@ -158,97 +152,141 @@
         .cold-badge .num { color: #0284c7; }
         .cold-badge .desc { color: #0369a1; }
 
+        /* 推薦卡片 */
+        .recom-section {
+            margin-top: 20px;
+            padding-top: 14px;
+            border-top: 2px dashed rgba(148, 163, 184, 0.35);
+        }
+        .recom-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 10px; }
+        .recom-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 12px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+        }
+        .recom-header { display: flex; flex-direction: column; gap: 2px; }
+        .recom-title { font-size: 13px; font-weight: 900; }
+        .recom-sub { font-size: 11px; color: #64748b; }
+        .recom-balls { display: flex; gap: 6px; flex-wrap: wrap; }
+        .recom-ball {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 900;
+            font-family: monospace;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+        }
+        .recom-ball.hot { background: #fef2f2; color: #dc2626; border: 1.5px solid #f87171; }
+        .recom-ball.cold { background: #f0f9ff; color: #0284c7; border: 1.5px solid #38bdf8; }
+        .recom-btns { display: flex; gap: 6px; }
+        .btn-fast-apply {
+            border: none;
+            color: white;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-fast-apply:hover { filter: brightness(1.1); transform: translateY(-1px); }
+
         /* 雙軌搖號機 */
-        .dual-machine-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 15px; }
-        .machine-unit { display: flex; flex-direction: column; align-items: center; background: #ffffff; padding: 18px; border-radius: 14px; border: 1px solid #e2e8f0; box-shadow: inset 0 2px 6px rgba(0,0,0,0.02); }
-        .machine-unit-title { font-size: 14px; font-weight: 900; margin-bottom: 10px; letter-spacing: 1px; }
+        .dual-machine-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 15px; }
+        .machine-unit { display: flex; flex-direction: column; align-items: center; background: #ffffff; padding: 14px; border-radius: 12px; border: 1px solid #e2e8f0; }
+        .machine-unit-title { font-size: 13px; font-weight: 900; margin-bottom: 8px; letter-spacing: 1px; }
 
-        .realistic-machine { position: relative; width: 150px; height: 150px; margin-top: 15px; }
-        .glass-sphere { width: 150px; height: 150px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #ffffff 0%, #e0f2fe 60%, #bae6fd 100%); border: 3px solid #7dd3fc; position: absolute; top: 0; left: 0; box-shadow: 0 8px 25px rgba(14, 165, 233, 0.25); }
-        .glass-overlay { width: 100%; height: 100%; border-radius: 50%; position: absolute; top: 0; left: 0; box-shadow: inset -10px -10px 20px rgba(14, 165, 233, 0.2), inset 8px 8px 15px rgba(255,255,255,0.9); pointer-events: none; z-index: 10; }
-        .suction-tube { position: absolute; top: -25px; left: 50%; transform: translateX(-50%); width: 28px; height: 35px; background: linear-gradient(to right, rgba(255,255,255,0.9), rgba(186,230,253,0.7), rgba(255,255,255,0.9)); border: 2px solid #0284c7; border-bottom: none; border-radius: 6px 6px 0 0; z-index: 15; }
-        .machine-base { position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%); width: 85px; height: 20px; background: #334155; border-radius: 4px; z-index: 12; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
-        .mini-ball { position: absolute; width: 19px; height: 19px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #fde047, #f59e0b); color: #78350f; font-size: 10px; font-weight: 900; display: flex; align-items: center; justify-content: center; top: 0; left: 0; box-shadow: 0 2px 4px rgba(0,0,0,0.2); z-index: 5; transition: transform 0s, opacity 0.5s; }
+        .realistic-machine { position: relative; width: 140px; height: 140px; margin-top: 10px; }
+        .glass-sphere { width: 140px; height: 140px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #ffffff 0%, #e0f2fe 60%, #bae6fd 100%); border: 3px solid #7dd3fc; position: absolute; top: 0; left: 0; box-shadow: 0 6px 20px rgba(14, 165, 233, 0.2); }
+        .glass-overlay { width: 100%; height: 100%; border-radius: 50%; position: absolute; top: 0; left: 0; box-shadow: inset -8px -8px 16px rgba(14, 165, 233, 0.2), inset 6px 6px 12px rgba(255,255,255,0.9); pointer-events: none; z-index: 10; }
+        .suction-tube { position: absolute; top: -20px; left: 50%; transform: translateX(-50%); width: 26px; height: 30px; background: linear-gradient(to right, rgba(255,255,255,0.9), rgba(186,230,253,0.7), rgba(255,255,255,0.9)); border: 2px solid #0284c7; border-bottom: none; border-radius: 6px 6px 0 0; z-index: 15; }
+        .machine-base { position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); width: 75px; height: 18px; background: #334155; border-radius: 4px; z-index: 12; }
+        .mini-ball { position: absolute; width: 18px; height: 18px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #fde047, #f59e0b); color: #78350f; font-size: 9px; font-weight: 900; display: flex; align-items: center; justify-content: center; top: 0; left: 0; box-shadow: 0 2px 4px rgba(0,0,0,0.2); z-index: 5; transition: transform 0s, opacity 0.5s; }
         
-        .machine-balls { display: flex; justify-content: center; gap: 8px; padding: 12px; background: #f8fafc; border-radius: 26px; margin-top: 15px; width: 100%; border: 1px solid #e2e8f0; }
-        .machine-ball { width: 46px; height: 46px; border-radius: 50%; background: #ffffff; color: #94a3b8; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 900; border: 2px dashed #cbd5e1; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); font-family: monospace; }
-        .machine-ball.revealed { background: linear-gradient(135deg, #fde047, #f59e0b); color: #78350f; border: 2px solid #b45309; box-shadow: 0 6px 14px rgba(245, 158, 11, 0.35); transform: scale(1.12); }
+        .machine-balls { display: flex; justify-content: center; gap: 6px; padding: 10px; background: #f8fafc; border-radius: 20px; margin-top: 12px; width: 100%; border: 1px solid #e2e8f0; }
+        .machine-ball { width: 38px; height: 38px; border-radius: 50%; background: #ffffff; color: #94a3b8; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 900; border: 2px dashed #cbd5e1; transition: all 0.4s; font-family: monospace; }
+        .machine-ball.revealed { background: linear-gradient(135deg, #fde047, #f59e0b); color: #78350f; border: 2px solid #b45309; box-shadow: 0 4px 10px rgba(245, 158, 11, 0.35); transform: scale(1.1); }
 
-        .btn-roll { background: linear-gradient(135deg, #4f46e5, #7c3aed); color: white; border: none; padding: 12px 24px; font-size: 15px; font-weight: 900; border-radius: 10px; cursor: pointer; transition: 0.2s; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.3); }
+        .btn-roll { width: 100%; max-width: 320px; background: linear-gradient(135deg, #4f46e5, #7c3aed); color: white; border: none; padding: 12px 20px; font-size: 14px; font-weight: 900; border-radius: 10px; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 15px rgba(124, 58, 237, 0.25); }
         .btn-roll:hover { filter: brightness(1.1); transform: translateY(-1px); }
         .btn-roll:disabled { background: #cbd5e1; cursor: not-allowed; box-shadow: none; filter: none; }
-        .btn-apply-group { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin-top: 12px; }
-        .btn-apply { color: white; border: none; padding: 6px 11px; font-size: 11px; font-weight: bold; border-radius: 6px; cursor: pointer; display: none; }
+        .btn-apply-group { display: flex; flex-wrap: wrap; justify-content: center; gap: 5px; margin-top: 10px; }
+        .btn-apply { color: white; border: none; padding: 5px 8px; font-size: 10px; font-weight: bold; border-radius: 6px; cursor: pointer; display: none; }
         .btn-apply-ai { background: var(--ai-color); }
-        .btn-apply-p1 { background: var(--p1-color); }
-        .btn-apply-p2 { background: var(--p2-color); }
+        .btn-apply-my { background: var(--my-color); }
 
-        /* 面板與表單樣式 */
+        /* 輸入表單區塊 */
         .input-panel { 
             background: var(--panel-bg); 
-            padding: 26px; 
-            border-radius: 18px; 
+            padding: 22px; 
+            border-radius: 16px; 
             border: 1px solid var(--panel-border); 
-            margin-bottom: 24px; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.04); 
+            margin-bottom: 20px; 
+            box-shadow: 0 6px 18px rgba(0,0,0,0.03); 
             backdrop-filter: blur(12px);
         }
-        .input-panel h2 { margin-bottom: 16px; font-size: 18px; color: var(--text-main); border-left: 5px solid var(--draw-color); padding-left: 12px; letter-spacing: 1px; font-weight: 900; }
+        .input-panel h2 { margin-bottom: 14px; font-size: 16px; color: var(--text-main); border-left: 5px solid var(--draw-color); padding-left: 10px; letter-spacing: 1px; font-weight: 900; }
         .crawl-panel h2 { border-left-color: var(--neon-purple); }
 
-        .form-row { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 16px; }
-        .form-group { flex: 1; min-width: 200px; display: flex; flex-direction: column; gap: 6px; }
-        .form-group label { font-size: 13px; font-weight: 800; color: #334155; }
+        .form-row { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 14px; }
+        .form-group { flex: 1; min-width: 180px; display: flex; flex-direction: column; gap: 5px; }
+        .form-group label { font-size: 12px; font-weight: 800; color: #334155; }
         .form-group input { 
-            padding: 12px 14px; 
+            padding: 10px 12px; 
             background: #ffffff; 
             border: 1.5px solid #cbd5e1; 
             color: #0f172a; 
-            border-radius: 10px; 
-            font-size: 16px; 
+            border-radius: 8px; 
+            font-size: 15px; 
             outline: none; 
             font-family: monospace;
             font-weight: 600;
         }
-        .form-group input:focus { border-color: var(--ai-color); box-shadow: 0 0 12px rgba(2, 132, 199, 0.2); }
+        .form-group input:focus { border-color: var(--ai-color); box-shadow: 0 0 10px rgba(2, 132, 199, 0.2); }
         
         .btn-submit { 
             width: 100%; 
             background: linear-gradient(135deg, #0284c7, #2563eb); 
             color: white; 
             border: none; 
-            padding: 15px; 
-            font-size: 16px; 
+            padding: 14px; 
+            font-size: 15px; 
             font-weight: 900; 
-            border-radius: 10px; 
+            border-radius: 8px; 
             cursor: pointer; 
             transition: 0.2s; 
-            margin-top: 8px; 
-            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.25);
+            margin-top: 6px; 
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.2);
         }
         .btn-submit:hover { filter: brightness(1.1); transform: translateY(-1px); }
 
-        .btn-crawl { background: linear-gradient(135deg, #7c3aed, #c026d3); color: white; border: none; padding: 14px 26px; font-size: 15px; font-weight: 900; border-radius: 10px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.25); }
-        .btn-crawl:hover { filter: brightness(1.1); }
-        .btn-crawl:disabled { background: #cbd5e1; cursor: not-allowed; box-shadow: none; filter: none; }
-
-        /* 大尺寸號碼球表格 */
+        /* 歷史戰績大號碼球 */
         .history-panel { 
             background: var(--panel-bg); 
-            padding: 24px; 
-            border-radius: 18px; 
+            padding: 22px; 
+            border-radius: 16px; 
             border: 1px solid var(--panel-border); 
-            overflow-x: auto; 
-            margin-bottom: 24px; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.04);
+            margin-bottom: 20px; 
+            box-shadow: 0 6px 18px rgba(0,0,0,0.03);
             backdrop-filter: blur(12px);
         }
         table { width: 100%; border-collapse: collapse; text-align: center; }
-        th { background: #f8fafc; padding: 16px; border-bottom: 2px solid #e2e8f0; font-weight: 900; font-size: 14px; color: #475569; }
-        td { padding: 16px 10px; border-bottom: 1px solid #e2e8f0; vertical-align: middle; }
+        th { background: #f8fafc; padding: 14px; border-bottom: 2px solid #e2e8f0; font-weight: 900; font-size: 13px; color: #475569; }
+        td { padding: 14px 8px; border-bottom: 1px solid #e2e8f0; vertical-align: middle; }
         tr:hover { background: rgba(241, 245, 249, 0.6); }
 
-        .num-container { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; }
+        .num-container { display: flex; gap: 5px; justify-content: center; flex-wrap: wrap; }
         .num-ball { 
             width: var(--ball-size); 
             height: var(--ball-size); 
@@ -256,56 +294,119 @@
             display: flex; 
             align-items: center; 
             justify-content: center; 
-            font-size: 16px; 
+            font-size: 15px; 
             font-weight: 900; 
             background: #ffffff; 
             color: #334155; 
             font-family: monospace; 
             border: 2px solid #cbd5e1; 
-            box-shadow: 0 2px 5px rgba(0,0,0,0.06);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
             transition: all 0.2s ease;
         }
         .num-ball.hit { 
             background: linear-gradient(135deg, #ef4444, #dc2626); 
             color: #ffffff; 
-            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.45); 
-            transform: scale(1.12); 
+            box-shadow: 0 3px 10px rgba(239, 68, 68, 0.4); 
+            transform: scale(1.1); 
             border-color: #b91c1c; 
         }
         .num-ball.draw { 
             background: linear-gradient(135deg, #fbbf24, #f59e0b); 
             color: #78350f; 
             border-color: #d97706; 
-            box-shadow: 0 3px 8px rgba(245, 158, 11, 0.3); 
+            box-shadow: 0 2px 6px rgba(245, 158, 11, 0.25); 
         }
 
-        .empty-label { color: #94a3b8; font-size: 13px; letter-spacing: 1px; font-family: monospace; font-weight: bold; }
+        .empty-label { color: #94a3b8; font-size: 12px; letter-spacing: 1px; font-family: monospace; font-weight: bold; }
 
-        .winner-badge { padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 900; display: inline-block; font-family: monospace; }
+        .winner-badge { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 900; display: inline-block; font-family: monospace; }
         .badge-ai { background: #e0f2fe; color: #0284c7; border: 1px solid #38bdf8; }
-        .badge-p1 { background: #dcfce7; color: #059669; border: 1px solid #34d399; }
-        .badge-p2 { background: #ffe4e6; color: #e11d48; border: 1px solid #fb7185; }
+        .badge-my { background: #dcfce7; color: #059669; border: 1px solid #34d399; }
         .badge-tie { background: #f1f5f9; color: #64748b; border: 1px solid #cbd5e1; }
         .badge-pending { background: #fef3c7; color: #d97706; border: 1px solid #f59e0b; } 
         
-        .action-btn { padding: 6px 12px; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: bold; margin: 2px; border: 1px solid #cbd5e1; }
+        .action-btn { padding: 5px 10px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: bold; margin: 2px; border: 1px solid #cbd5e1; }
         .delete-btn { background: #fee2e2; color: #dc2626; }
         .delete-btn:hover { background: #fecaca; }
         .edit-btn { background: #f1f5f9; color: #334155; }
         .edit-btn:hover { background: #e2e8f0; }
+
+        /* =========================================================
+           📱 手機專屬響應式美化模式 (Mobile Optimization)
+        ========================================================= */
+        @media (max-width: 768px) {
+            body { padding: 12px 8px; }
+            header { padding: 16px 12px; margin-bottom: 14px; border-radius: 12px; }
+            
+            /* 統計卡轉為 2x2 輕巧矩陣 */
+            .stats-board { grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+            .stat-card { padding: 12px; border-radius: 12px; }
+            .stat-value { font-size: 24px; margin: 4px 0; }
+            .stat-title { font-size: 11px; }
+            .stat-sub { font-size: 10px; }
+
+            /* 雙搖號機轉為直式堆疊 */
+            .dual-machine-grid { grid-template-columns: 1fr; gap: 12px; }
+            .machine-unit { padding: 12px; }
+            .realistic-machine { width: 130px; height: 130px; }
+            .glass-sphere { width: 130px; height: 130px; }
+
+            .input-panel { padding: 16px; border-radius: 14px; }
+            .form-row { flex-direction: column; gap: 10px; }
+            .form-group { width: 100%; min-width: 100%; }
+
+            /* 🌟 手機端歷史戰績轉為「卡片流」，不再需要左右橫向拖曳 */
+            .history-panel { padding: 14px; border-radius: 14px; }
+            table, thead, tbody, th, td, tr { display: block; }
+            thead tr { position: absolute; top: -9999px; left: -9999px; }
+            tr { 
+                background: #ffffff; 
+                border: 1px solid #e2e8f0; 
+                border-radius: 12px; 
+                margin-bottom: 12px; 
+                padding: 12px; 
+                box-shadow: 0 2px 5px rgba(0,0,0,0.03); 
+            }
+            td { 
+                border: none; 
+                padding: 6px 0; 
+                display: flex; 
+                align-items: center; 
+                justify-content: space-between; 
+                text-align: right; 
+                border-bottom: 1px dashed #f1f5f9;
+            }
+            td:last-child { border-bottom: none; padding-top: 8px; justify-content: flex-end; gap: 6px; }
+            td::before { 
+                content: attr(data-label); 
+                font-weight: 800; 
+                font-size: 12px; 
+                color: #64748b; 
+                text-align: left;
+                min-width: 75px;
+            }
+            .num-ball { 
+                width: 32px; 
+                height: 32px; 
+                font-size: 13px; 
+            }
+            .recom-card { flex-direction: column; align-items: flex-start; }
+            .recom-btns { width: 100%; justify-content: flex-end; }
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
     <header>
-        <h1>⚡ QUANTUM AI LOTTERY BATTLE ARENA (39/5) ⚡</h1>
+        <h1>⚡ QUANTUM AI LOTTERY BATTLE ARENA ⚡</h1>
         <div class="cloud-badge">
             <div class="dot"></div>
-            <span>Firebase 雲端量子同步中</span>
+            <span>Firebase 雲端量子網絡同步中</span>
         </div>
     </header>
 
+    <!-- 頂部戰力板 -->
     <div class="stats-board">
         <div class="stat-card">
             <div class="stat-title">已結算期數</div>
@@ -317,45 +418,51 @@
             <div class="stat-value" id="ai-hits" style="color:var(--ai-color)">0</div>
             <div class="stat-sub">場均：<span id="ai-avg">0.00</span> 顆</div>
         </div>
-        <div class="stat-card p1-card">
-            <div class="stat-title" style="color:var(--p1-color)">🧑 玩家 1 總命中</div>
-            <div class="stat-value" id="p1-hits" style="color:var(--p1-color)">0</div>
-            <div class="stat-sub">參賽 <span id="p1-rounds">0</span> 期 (場均：<span id="p1-avg">0.00</span>)</div>
-        </div>
-        <div class="stat-card p2-card">
-            <div class="stat-title" style="color:var(--p2-color)">🧑 玩家 2 總命中</div>
-            <div class="stat-value" id="p2-hits" style="color:var(--p2-color)">0</div>
-            <div class="stat-sub">參賽 <span id="p2-rounds">0</span> 期 (場均：<span id="p2-avg">0.00</span>)</div>
+        <div class="stat-card my-card">
+            <div class="stat-title" style="color:var(--my-color)">🧑 我 總命中</div>
+            <div class="stat-value" id="my-hits" style="color:var(--my-color)">0</div>
+            <div class="stat-sub">參賽 <span id="my-rounds">0</span> 期 (場均：<span id="my-avg">0.00</span>)</div>
         </div>
         <div class="stat-card pk-card">
             <div class="stat-title" style="color:var(--draw-color)">🏆 目前勝率霸主</div>
-            <div class="stat-value" id="pk-winner" style="color:var(--draw-color); font-size:24px;">等待開獎</div>
+            <div class="stat-value" id="pk-winner" style="color:var(--draw-color); font-size:20px;">等待開獎</div>
             <div class="stat-sub">以平均命中率判定</div>
         </div>
     </div>
 
-    <!-- 冷熱牌面板（與今日最新開獎 5 碼即時聯動） -->
+    <!-- 冷熱牌 & AI 推薦星組 -->
     <div class="tools-panel">
         <div class="tool-card">
             <h3 style="color:#dc2626;">
                 <span>🔥 常開高頻熱門號 (TOP 8)</span>
-                <span id="hot-hit-summary" style="font-size:12px; font-weight:normal; color:#ef4444;"></span>
+                <span id="hot-hit-summary" style="font-size:11px; font-weight:normal; color:#ef4444;"></span>
             </h3>
             <div class="badge-list" id="hot-numbers">
-                <div style="font-size:13px; color:#94a3b8;">累積開獎數據後顯示...</div>
+                <div style="font-size:12px; color:#94a3b8;">累積開獎數據後顯示...</div>
             </div>
             
-            <h3 style="color:#0284c7; margin-top:24px;">
+            <h3 style="color:#0284c7; margin-top:20px;">
                 <span>❄️ 極凍遺漏冷門號 (TOP 8)</span>
-                <span id="cold-hit-summary" style="font-size:12px; font-weight:normal; color:#0284c7;"></span>
+                <span id="cold-hit-summary" style="font-size:11px; font-weight:normal; color:#0284c7;"></span>
             </h3>
             <div class="badge-list" id="cold-numbers">
-                <div style="font-size:13px; color:#94a3b8;">累積開獎數據後顯示...</div>
+                <div style="font-size:12px; color:#94a3b8;">累積開獎數據後顯示...</div>
+            </div>
+
+            <!-- 智能推薦三星／四星 -->
+            <div class="recom-section">
+                <h3 style="margin-bottom:8px; border:none; padding-bottom:0; color:#475569;">
+                    <span>🎯 AI 智能推薦牌組 (冷熱演算)</span>
+                    <button onclick="refreshRecommendations()" style="border:none; background:#f1f5f9; padding:4px 8px; border-radius:6px; font-size:11px; cursor:pointer; color:#0284c7; font-weight:bold;">🔄 換一組</button>
+                </h3>
+                <div class="recom-grid" id="recom-container">
+                    <div style="font-size:12px; color:#94a3b8;">累積足夠開獎資料後生成...</div>
+                </div>
             </div>
         </div>
 
         <div class="tool-card">
-            <h3 style="color:var(--neon-purple);">🎰 雙軌 3D 物理滾球量子搖號機 (可選 4 或 5 碼)</h3>
+            <h3 style="color:var(--neon-purple);">🎰 雙軌 3D 物理滾球搖號機 (可選 4 或 5 碼)</h3>
             <div class="dual-machine-grid">
                 <div class="machine-unit">
                     <div class="machine-unit-title" style="color:var(--ai-color)">🎲 1 號機 (Alpha)</div>
@@ -369,15 +476,15 @@
                         <div class="machine-ball">?</div><div class="machine-ball">?</div><div class="machine-ball">?</div><div class="machine-ball">?</div><div class="machine-ball">?</div>
                     </div>
                     <div class="btn-apply-group">
-                        <button class="btn-apply btn-apply-ai" id="apply-m1-ai-4" onclick="applyToInput(finalNums1, 'ai', 4)">帶入AI(4碼)</button>
-                        <button class="btn-apply btn-apply-ai" id="apply-m1-ai-5" onclick="applyToInput(finalNums1, 'ai', 5)">帶入AI(全5碼)</button>
-                        <button class="btn-apply btn-apply-p1" id="apply-m1-p1-4" onclick="applyToInput(finalNums1, 'p1', 4)">帶入P1(4碼)</button>
-                        <button class="btn-apply btn-apply-p1" id="apply-m1-p1-5" onclick="applyToInput(finalNums1, 'p1', 5)">帶入P1(全5碼)</button>
+                        <button class="btn-apply btn-apply-ai" id="apply-m1-ai-4" onclick="applyToInput(finalNums1, 'ai', 4)">入AI(4碼)</button>
+                        <button class="btn-apply btn-apply-ai" id="apply-m1-ai-5" onclick="applyToInput(finalNums1, 'ai', 5)">入AI(5碼)</button>
+                        <button class="btn-apply btn-apply-my" id="apply-m1-my-4" onclick="applyToInput(finalNums1, 'my', 4)">入我(4碼)</button>
+                        <button class="btn-apply btn-apply-my" id="apply-m1-my-5" onclick="applyToInput(finalNums1, 'my', 5)">入我(5碼)</button>
                     </div>
                 </div>
 
                 <div class="machine-unit">
-                    <div class="machine-unit-title" style="color:var(--p2-color)">🎲 2 號機 (Beta 同款)</div>
+                    <div class="machine-unit-title" style="color:var(--my-color)">🎲 2 號機 (Beta)</div>
                     <div class="realistic-machine">
                         <div class="suction-tube"></div>
                         <div class="glass-sphere" id="physics-container-2"></div>
@@ -388,15 +495,15 @@
                         <div class="machine-ball">?</div><div class="machine-ball">?</div><div class="machine-ball">?</div><div class="machine-ball">?</div><div class="machine-ball">?</div>
                     </div>
                     <div class="btn-apply-group">
-                        <button class="btn-apply btn-apply-p2" id="apply-m2-p2-4" onclick="applyToInput(finalNums2, 'p2', 4)">帶入P2(4碼)</button>
-                        <button class="btn-apply btn-apply-p2" id="apply-m2-p2-5" onclick="applyToInput(finalNums2, 'p2', 5)">帶入P2(全5碼)</button>
-                        <button class="btn-apply btn-apply-p1" id="apply-m2-p1-4" onclick="applyToInput(finalNums2, 'p1', 4)">帶入P1(4碼)</button>
-                        <button class="btn-apply btn-apply-p1" id="apply-m2-p1-5" onclick="applyToInput(finalNums2, 'p1', 5)">帶入P1(全5碼)</button>
+                        <button class="btn-apply btn-apply-my" id="apply-m2-my-4" onclick="applyToInput(finalNums2, 'my', 4)">入我(4碼)</button>
+                        <button class="btn-apply btn-apply-my" id="apply-m2-my-5" onclick="applyToInput(finalNums2, 'my', 5)">入我(5碼)</button>
+                        <button class="btn-apply btn-apply-ai" id="apply-m2-ai-4" onclick="applyToInput(finalNums2, 'ai', 4)">入AI(4碼)</button>
+                        <button class="btn-apply btn-apply-ai" id="apply-m2-ai-5" onclick="applyToInput(finalNums2, 'ai', 5)">入AI(5碼)</button>
                     </div>
                 </div>
             </div>
 
-            <div style="text-align: center;">
+            <div style="text-align: center; margin-top: 10px;">
                 <button class="btn-roll" id="btn-roll-all" onclick="startRollDual()">🌪️ 雙機同步啟動量子搖號</button>
             </div>
         </div>
@@ -415,33 +522,28 @@
                 <input type="text" id="ai-nums" placeholder="例: 05, 12, 28, 33">
             </div>
             <div class="form-group">
-                <label style="color:var(--p1-color)">🧑 玩家 1 (4 或 5 碼，不補則留空)</label>
-                <input type="text" id="p1-nums" placeholder="例: 01, 10, 20, 30">
-            </div>
-            <div class="form-group">
-                <label style="color:var(--p2-color)">🧑 玩家 2 (4 或 5 碼，不補則留空)</label>
-                <input type="text" id="p2-nums" placeholder="例: 07, 14, 21, 35">
+                <label style="color:var(--my-color)">🧑 我的預測 (4 或 5 碼，不補則留空)</label>
+                <input type="text" id="my-nums" placeholder="例: 01, 10, 20, 30">
             </div>
         </div>
         <div class="form-row">
             <div class="form-group">
-                <label style="color:var(--draw-color)">📺 今日實際開獎 5 碼 (開獎後填入此處，或由最下方自動導入)</label>
+                <label style="color:var(--draw-color)">📺 今日實際開獎 5 碼 (開獎後填入此處，或在最下方直接貼上多天開獎)</label>
                 <input type="text" id="draw-nums" placeholder="例: 06, 07, 14, 28, 33">
             </div>
         </div>
         <button class="btn-submit" onclick="addRecord()">☁️ 儲存 / 補填對決紀錄至雲端 (即刻對獎)</button>
     </div>
 
-    <!-- 歷史對決表格 (大球展示) -->
+    <!-- 歷史對決 (電腦表格 / 手動自適應手機卡片) -->
     <div class="history-panel">
-        <h2 style="font-size: 18px; margin-bottom: 16px; letter-spacing: 1px;">📊 歷史戰績矩陣對照表 (對決開獎號碼大球顯示)</h2>
+        <h2 style="font-size: 16px; margin-bottom: 14px; letter-spacing: 1px;">📊 歷史戰績矩陣對照表 (AI vs 我)</h2>
         <table>
             <thead>
                 <tr>
                     <th>📅 日期</th>
                     <th>🤖 AI 預測</th>
-                    <th>🧑 玩家 1</th>
-                    <th>🧑 玩家 2</th>
+                    <th>🧑 我的預測</th>
                     <th>📺 今日開獎 5 碼</th>
                     <th>單期霸主</th>
                     <th>操作</th>
@@ -451,25 +553,19 @@
         </table>
     </div>
 
-    <!-- 自動導入開獎號碼面板 (最下方) -->
+    <!-- 免連線！sc888 網頁多天開獎一鍵全選複製貼上面板 (最下方) -->
     <div class="input-panel crawl-panel">
-        <h2>🌐 聯網自動導入天天樂開獎 (sc888.net 數據網)</h2>
-        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 14px;">
-            一鍵連線導入天天樂最新開獎 5 碼。若當期尚未建立，系統會<strong>自動生成新紀錄並將 5 碼入庫</strong>；您可隨後在上方表單選取該日期補填號碼，存檔後立即結算！
+        <h2>📋 免連線・sc888 多天開獎號碼整頁貼上一鍵導入</h2>
+        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">
+            免去網路跨域限制！直接在瀏覽器打開 <code>https://sc888.net/index.php?s=/LotteryFan/index</code>，按下 <strong>Ctrl+A 全選、Ctrl+C 複製</strong>，把整頁文字貼到下方，系統會<strong>自動萃取出裡面所有日期的天天樂開獎 5 碼</strong>並寫入雲端！
         </p>
-        <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
-            <button class="btn-crawl" id="btn-crawl" onclick="crawlSc888Data()">
-                ⚡ 一鍵連線導入天天樂開獎
+        <textarea id="sc888-paste-area" rows="4" style="width:100%; padding:10px; font-size:13px; background:#ffffff; border:1.5px solid #cbd5e1; color:#0f172a; border-radius:8px; font-family:monospace; line-height:1.4;" placeholder="在此按 Ctrl+V (手機長按貼上) 從 sc888.net 複製的多天開獎文字內容..."></textarea>
+        <div style="margin-top:8px; display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+            <button onclick="parseAndImportMultiDraws()" style="background:linear-gradient(135deg, #7c3aed, #0284c7); color:white; border:none; padding:10px 20px; font-size:14px; font-weight:900; border-radius:8px; cursor:pointer;">
+                ⚡ 一鍵極速解析並匯入多期開獎
             </button>
-            <span id="crawl-status" style="font-size: 13px; color: #64748b; font-weight: bold;">尚未執行導入</span>
+            <span id="paste-import-status" style="font-size:12px; color:#64748b; font-weight:bold;"></span>
         </div>
-
-        <details style="margin-top: 16px; font-size: 13px; color: var(--text-muted); background: #ffffff; padding: 14px; border-radius: 10px; border: 1px solid #cbd5e1;">
-            <summary style="cursor: pointer; font-weight: bold; color:#0f172a;">連線備用方案（手動貼上 sc888 網頁內容）</summary>
-            <p style="margin: 8px 0 6px 0;">若瀏覽器受 CORS 代理阻擋，可開啟 <code>https://sc888.net/index.php?s=/LotteryFan/index</code> 全選複製文字貼在下方：</p>
-            <textarea id="sc888-manual-text" rows="3" style="width:100%; padding:10px; font-size:13px; background:#f8fafc; border:1.5px solid #cbd5e1; color:#0f172a; border-radius:8px; font-family:monospace;" placeholder="在此貼上 sc888 複製過來的開獎文字..."></textarea>
-            <button onclick="parseSc888ManualText()" style="margin-top:8px; padding:7px 16px; background:#0284c7; color:white; border:none; border-radius:6px; cursor:pointer; font-weight:bold;">解析並自動建檔/更新</button>
-        </details>
     </div>
 </div>
 
@@ -504,13 +600,14 @@
     const lotteryCol = collection(db, "battle_history");
 
     let battleHistory = [];
+    let cachedHotNumbers = [];
+    let cachedColdNumbers = [];
 
     onSnapshot(lotteryCol, (snapshot) => {
         battleHistory = [];
         snapshot.forEach((docSnap) => {
             let data = docSnap.data();
-            if (data.my && !data.p1) data.p1 = data.my;
-            if (!data.p2) data.p2 = [];
+            if (data.p1 && !data.my) data.my = data.p1;
             battleHistory.push(data);
         });
         sortHistoryByDate();
@@ -541,73 +638,65 @@
         return nums && (nums.length === 4 || nums.length === 5);
     }
 
-    // 🌟 嚴謹比對實際開出的 5 顆球
-    function calculateResult(aiNums, p1Nums, p2Nums, drawNums) {
+    function calculateResult(aiNums, myNums, drawNums) {
         const d = drawNums || [];
         let aiHits = (aiNums || []).filter(n => d.includes(n)).length;
-        let p1Hits = (p1Nums || []).filter(n => d.includes(n)).length;
-        let p2Hits = (p2Nums || []).filter(n => d.includes(n)).length;
+        let myHits = (myNums || []).filter(n => d.includes(n)).length;
 
         const hasAi = isValidPrediction(aiNums);
-        const hasP1 = isValidPrediction(p1Nums);
-        const hasP2 = isValidPrediction(p2Nums);
-
-        let contestants = [];
-        if (hasAi) contestants.push({ name: "AI", hits: aiHits });
-        if (hasP1) contestants.push({ name: "玩家1", hits: p1Hits });
-        if (hasP2) contestants.push({ name: "玩家2", hits: p2Hits });
+        const hasMy = isValidPrediction(myNums);
 
         let winner = "等待開獎";
         if (d.length === 5) {
-            if (contestants.length === 0) {
+            if (!hasAi && !hasMy) {
                 winner = "無人預測";
+            } else if (hasAi && !hasMy) {
+                winner = "僅 AI";
+            } else if (!hasAi && hasMy) {
+                winner = "僅 我";
             } else {
-                let maxHits = Math.max(...contestants.map(c => c.hits));
-                let topLeaders = contestants.filter(c => c.hits === maxHits);
-
-                if (topLeaders.length === contestants.length && contestants.length > 1) {
-                    winner = "平手";
-                } else if (topLeaders.length === 1) {
-                    winner = `${topLeaders[0].name} 勝`;
-                } else {
-                    winner = topLeaders.map(c => c.name).join(' & ') + " 並列";
-                }
+                if (aiHits > myHits) winner = "AI 勝";
+                else if (myHits > aiHits) winner = "我 勝";
+                else winner = "平手";
             }
         }
 
-        return { aiHits, p1Hits, p2Hits, winner };
+        return { aiHits, myHits, winner };
     }
 
-    function parseLotteryFromHtml(htmlString) {
-        const parser = new DOMParser();
-        const docHtml = parser.parseFromString(htmlString, 'text/html');
+    function extractMultiDrawsFromText(rawText) {
+        const lines = rawText.split('\n');
         let results = [];
+        const currentYear = new Date().getFullYear();
 
-        const elements = docHtml.querySelectorAll('div, tr, li, p');
-        elements.forEach(el => {
-            const text = el.innerText || el.textContent || "";
-            if (text.includes("天天樂") || text.includes("加州") || text.includes("39")) {
-                let dMatch = text.match(/(\d{4}[-/]\d{1,2}[-/]\d{1,2})/) || text.match(/(\d{1,2}[-/]\d{1,2})/);
-                let numMatches = text.match(/\b(0?[1-9]|[1-3][0-9])\b/g);
+        for (let i = 0; i < lines.length; i++) {
+            let line = lines[i].trim();
+            if (!line) continue;
 
-                if (dMatch && numMatches) {
-                    let dStr = dMatch[0].replace(/\//g, '-');
-                    if (dStr.length <= 5) {
-                        dStr = `${new Date().getFullYear()}-${dStr.padStart(5, '0')}`;
-                    }
-                    let nums = [...new Set(numMatches.map(n => parseInt(n, 10)).filter(n => n >= 1 && n <= 39))];
-                    if (nums.length >= 5) {
+            let dateMatch = line.match(/\b(20\d{2}[-/]\d{1,2}[-/]\d{1,2})\b/) || line.match(/\b(\d{1,2}[-/]\d{1,2})\b/);
+            
+            if (dateMatch) {
+                let dStr = dateMatch[0].replace(/\//g, '-');
+                if (dStr.length <= 5) {
+                    dStr = `${currentYear}-${dStr.padStart(5, '0')}`;
+                }
+
+                let textChunk = line;
+                for (let j = 1; j <= 3; j++) {
+                    if (i + j < lines.length) textChunk += " " + lines[i + j];
+                }
+
+                let nums = textChunk.match(/\b(0?[1-9]|[1-3][0-9])\b/g);
+                if (nums) {
+                    let validNums = [...new Set(nums.map(n => parseInt(n, 10)).filter(n => n >= 1 && n <= 39))];
+                    if (validNums.length >= 5) {
                         results.push({
                             date: dStr,
-                            draw: nums.slice(0, 5).sort((a, b) => a - b)
+                            draw: validNums.slice(0, 5).sort((a, b) => a - b)
                         });
                     }
                 }
             }
-        });
-
-        if (results.length === 0) {
-            results = parseLotteryFromRawText(docHtml.body ? docHtml.body.innerText : htmlString);
         }
 
         let uniqueMap = new Map();
@@ -618,49 +707,36 @@
         return Array.from(uniqueMap.values());
     }
 
-    function parseLotteryFromRawText(rawText) {
-        const lines = rawText.split('\n');
-        let results = [];
-        lines.forEach(line => {
-            const dateMatch = line.match(/\d{4}[-/]\d{1,2}[-/]\d{1,2}/);
-            const nums = line.match(/\b(0?[1-9]|[1-3][0-9])\b/g);
-            if (dateMatch && nums) {
-                let validNums = [...new Set(nums.map(n => parseInt(n, 10)).filter(n => n >= 1 && n <= 39))];
-                if (validNums.length >= 5) {
-                    results.push({
-                        date: dateMatch[0].replace(/\//g, '-'),
-                        draw: validNums.slice(0, 5).sort((a, b) => a - b)
-                    });
-                }
-            }
-        });
-        return results;
-    }
+    async function parseAndImportMultiDraws() {
+        const text = document.getElementById('sc888-paste-area').value.trim();
+        const statusEl = document.getElementById('paste-import-status');
+        if (!text) return alert("請先貼上從 sc888 複製過來的開獎文字內容！");
 
-    async function applySc888DrawResults(sc888DataList) {
-        if (!sc888DataList || sc888DataList.length === 0) {
-            alert("⚠️ 未能在網頁中辨識出天天樂號碼！");
-            return;
+        statusEl.innerText = "⏳ 正在解析多天開獎號碼...";
+        const drawList = extractMultiDrawsFromText(text);
+
+        if (drawList.length === 0) {
+            statusEl.innerText = "❌ 未能在貼上文字中識別出天天樂號碼";
+            return alert("⚠️ 未能在貼上的文字中識別出開獎號碼，請確認複製內容包含日期與球號！");
         }
 
         let updatedCount = 0;
         let createdCount = 0;
         const batch = writeBatch(db);
 
-        sc888DataList.forEach((item, idx) => {
+        drawList.forEach((item, idx) => {
             const targetRecord = battleHistory.find(r => r.date === item.date);
 
             if (targetRecord) {
                 const isDrawChanged = !targetRecord.draw || targetRecord.draw.join(',') !== item.draw.join(',');
                 if (targetRecord.isPending || isDrawChanged) {
-                    const res = calculateResult(targetRecord.ai || [], targetRecord.p1 || [], targetRecord.p2 || [], item.draw);
+                    const res = calculateResult(targetRecord.ai || [], targetRecord.my || [], item.draw);
                     const docRef = doc(db, "battle_history", targetRecord.id.toString());
                     batch.update(docRef, {
                         draw: item.draw,
                         isPending: false,
                         aiHits: res.aiHits,
-                        p1Hits: res.p1Hits,
-                        p2Hits: res.p2Hits,
+                        myHits: res.myHits,
                         winner: res.winner
                     });
                     updatedCount++;
@@ -668,18 +744,16 @@
             } else {
                 const newId = (Date.now() + idx).toString();
                 const docRef = doc(db, "battle_history", newId);
-                const res = calculateResult([], [], [], item.draw);
+                const res = calculateResult([], [], item.draw);
 
                 batch.set(docRef, {
                     id: newId,
                     date: item.date,
                     ai: [],
-                    p1: [],
-                    p2: [],
+                    my: [],
                     draw: item.draw,
                     aiHits: 0,
-                    p1Hits: 0,
-                    p2Hits: 0,
+                    myHits: 0,
                     winner: res.winner,
                     isPending: false
                 });
@@ -687,70 +761,15 @@
             }
         });
 
-        if (updatedCount > 0 || createdCount > 0) {
-            await batch.commit();
-            alert(`🎉 導入成功！\n• 自動建立新開獎期數：${createdCount} 期\n• 自動更新現有開獎期數：${updatedCount} 期\n系統已連動刷新冷熱矩陣與歷史戰績！`);
-        } else {
-            alert(`ℹ️ 已抓取 ${sc888DataList.length} 筆開獎資料，雲端皆已是最新狀態。`);
-        }
-    }
-
-    async function crawlSc888Data() {
-        const btn = document.getElementById('btn-crawl');
-        const statusEl = document.getElementById('crawl-status');
-        const targetUrl = "https://sc888.net/index.php?s=/LotteryFan/index";
-        
-        btn.disabled = true;
-        btn.innerHTML = "⚡ 量子連線擷取中...";
-        statusEl.innerText = "嘗試透過跨域代理通道連線 sc888.net...";
-
-        const proxyUrls = [
-            `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`,
-            `https://corsproxy.io/?${encodeURIComponent(targetUrl)}`
-        ];
-
-        let htmlData = null;
-
-        for (let pUrl of proxyUrls) {
-            try {
-                const resp = await fetch(pUrl, { method: 'GET', headers: { 'Accept': 'text/html,application/xhtml+xml' } });
-                if (resp.ok) {
-                    htmlData = await resp.text();
-                    if (htmlData && htmlData.length > 200) break;
-                }
-            } catch (e) {
-                console.warn("Proxy 失敗:", pUrl, e);
-            }
-        }
-
-        if (!htmlData) {
-            statusEl.innerText = "連線受阻 (CORS)";
-            btn.disabled = false;
-            btn.innerHTML = "⚡ 重新連線導入";
-            alert("⚠️ 跨域請求連線受限！請展開下方「連線備用方案」貼上網頁文字即可一鍵解析。");
-            return;
-        }
-
         try {
-            statusEl.innerText = "連線成功，正在自動建檔開獎球號...";
-            const parsedList = parseLotteryFromHtml(htmlData);
-            await applySc888DrawResults(parsedList);
-            statusEl.innerText = `同步成功 (共 ${parsedList.length} 期)`;
-        } catch (err) {
-            console.error(err);
-            statusEl.innerText = "解析失敗";
-            alert("解析時發生錯誤：" + err.message);
-        } finally {
-            btn.disabled = false;
-            btn.innerHTML = "⚡ 一鍵連線導入天天樂開獎";
+            await batch.commit();
+            statusEl.innerText = `🎉 成功解析並匯入 ${drawList.length} 天開獎號碼！`;
+            alert(`🎉 批次匯入成功！\n• 自動建立新開獎：${createdCount} 期\n• 自動更新現有開獎：${updatedCount} 期\n系統已連動刷新冷熱排行榜與命中戰績！`);
+            document.getElementById('sc888-paste-area').value = "";
+        } catch (e) {
+            statusEl.innerText = "❌ 寫入雲端失敗";
+            alert("寫入失敗：" + e.message);
         }
-    }
-
-    function parseSc888ManualText() {
-        const text = document.getElementById('sc888-manual-text').value.trim();
-        if (!text) return alert("請先貼上網頁內容文字！");
-        const list = parseLotteryFromRawText(text);
-        applySc888DrawResults(list);
     }
 
     async function addRecord() {
@@ -758,40 +777,34 @@
         if (!date) return alert("請先選擇開獎日期！");
 
         let aiInput = document.getElementById('ai-nums').value;
-        let p1Input = document.getElementById('p1-nums').value;
-        let p2Input = document.getElementById('p2-nums').value;
+        let myInput = document.getElementById('my-nums').value;
         let drawInput = document.getElementById('draw-nums').value;
 
         let aiNums = parseNumbers(aiInput);
-        let p1Nums = parseNumbers(p1Input);
-        let p2Nums = parseNumbers(p2Input);
+        let myNums = parseNumbers(myInput);
         let drawNums = parseNumbers(drawInput);
 
         if (aiInput.trim() !== "" && !isValidPrediction(aiNums)) return alert("🤖 AI 號碼如果有填，必須是 4 碼或 5 碼！");
-        if (p1Input.trim() !== "" && !isValidPrediction(p1Nums)) return alert("🧑 玩家 1 號碼如果有填，必須是 4 碼或 5 碼！");
-        if (p2Input.trim() !== "" && !isValidPrediction(p2Nums)) return alert("🧑 玩家 2 號碼如果有填，必須是 4 碼或 5 碼！");
+        if (myInput.trim() !== "" && !isValidPrediction(myNums)) return alert("🧑 我的號碼如果有填，必須是 4 碼或 5 碼！");
         if (drawInput.trim() !== "" && drawNums.length !== 5) return alert("📺 實際開獎號碼如果有填，必須剛好是 5 碼！");
 
         let existingRecord = battleHistory.find(r => r.date === date);
 
         if (existingRecord) {
             let finalAi = aiInput.trim() !== "" ? aiNums : (existingRecord.ai || []);
-            let finalP1 = p1Input.trim() !== "" ? p1Nums : (existingRecord.p1 || []);
-            let finalP2 = p2Input.trim() !== "" ? p2Nums : (existingRecord.p2 || []);
+            let finalMy = myInput.trim() !== "" ? myNums : (existingRecord.my || []);
             let finalDraw = drawInput.trim() !== "" ? drawNums : (existingRecord.draw || []);
 
             let isPending = finalDraw.length !== 5;
-            let res = calculateResult(finalAi, finalP1, finalP2, finalDraw);
+            let res = calculateResult(finalAi, finalMy, finalDraw);
 
             try {
                 await updateDoc(doc(db, "battle_history", existingRecord.id.toString()), {
                     ai: finalAi,
-                    p1: finalP1,
-                    p2: finalP2,
+                    my: finalMy,
                     draw: finalDraw,
                     aiHits: res.aiHits,
-                    p1Hits: res.p1Hits,
-                    p2Hits: res.p2Hits,
+                    myHits: res.myHits,
                     winner: isPending ? "等待開獎" : res.winner,
                     isPending: isPending
                 });
@@ -802,19 +815,17 @@
             }
         } else {
             let isPending = drawNums.length === 0;
-            let res = calculateResult(aiNums, p1Nums, p2Nums, drawNums);
+            let res = calculateResult(aiNums, myNums, drawNums);
 
             let recordId = Date.now().toString();
             let record = { 
                 id: recordId, 
                 date: date, 
                 ai: aiNums, 
-                p1: p1Nums, 
-                p2: p2Nums, 
+                my: myNums, 
                 draw: drawNums, 
                 aiHits: res.aiHits, 
-                p1Hits: res.p1Hits, 
-                p2Hits: res.p2Hits, 
+                myHits: res.myHits, 
                 winner: isPending ? "等待開獎" : res.winner, 
                 isPending: isPending 
             };
@@ -831,8 +842,7 @@
 
     function clearInputs() {
         document.getElementById('ai-nums').value = "";
-        document.getElementById('p1-nums').value = "";
-        document.getElementById('p2-nums').value = "";
+        document.getElementById('my-nums').value = "";
         document.getElementById('draw-nums').value = "";
     }
 
@@ -841,8 +851,7 @@
         if (r) {
             document.getElementById('input-date').value = r.date;
             document.getElementById('ai-nums').value = (r.ai && r.ai.length > 0) ? r.ai.join(', ') : '';
-            document.getElementById('p1-nums').value = (r.p1 && r.p1.length > 0) ? r.p1.join(', ') : '';
-            document.getElementById('p2-nums').value = (r.p2 && r.p2.length > 0) ? r.p2.join(', ') : '';
+            document.getElementById('my-nums').value = (r.my && r.my.length > 0) ? r.my.join(', ') : '';
             document.getElementById('draw-nums').value = (r.draw && r.draw.length > 0) ? r.draw.join(', ') : '';
             window.scrollTo({ top: document.querySelector('.input-panel').offsetTop - 20, behavior: 'smooth' });
         }
@@ -871,13 +880,11 @@
         }
     }
 
-    // 🌟 統計冷熱門並與「今日最新開獎 5 碼」精準連動標記
     function analyzeHotColdNumbers() {
         let completedDraws = battleHistory.filter(item => !item.isPending && item.draw && item.draw.length === 5);
         if(completedDraws.length === 0) return;
 
-        // 取得最新一期的開獎 5 碼（對應今日/最新開出）
-        let latestRecord = completedDraws[0]; // 已按日期降序排列
+        let latestRecord = completedDraws[0];
         let latestDrawNums = latestRecord ? latestRecord.draw : [];
 
         let numStats = {};
@@ -889,34 +896,30 @@
             record.draw.forEach(n => {
                 numStats[n].count++;
                 if (numStats[n].lastSeenAgo === 999) {
-                    numStats[n].lastSeenAgo = index; // 0 代表最新這期開出
+                    numStats[n].lastSeenAgo = index;
                 }
             });
         });
 
         let statsArray = Object.values(numStats);
         
-        // 熱門：出現次數多者優先
-        let hotNumbers = [...statsArray].sort((a, b) => {
+        cachedHotNumbers = [...statsArray].sort((a, b) => {
             if (b.count !== a.count) return b.count - a.count;
             return a.lastSeenAgo - b.lastSeenAgo;
         }).slice(0, 8);
 
-        // 冷門：遺漏期數多者優先
-        let coldNumbers = [...statsArray].sort((a, b) => {
+        cachedColdNumbers = [...statsArray].sort((a, b) => {
             if (b.lastSeenAgo !== a.lastSeenAgo) return b.lastSeenAgo - a.lastSeenAgo;
             return a.count - b.count;
         }).slice(0, 8);
 
-        // 計算最新開獎命中熱門與冷門的數量
-        let hotHitCount = hotNumbers.filter(item => latestDrawNums.includes(item.num)).length;
-        let coldHitCount = coldNumbers.filter(item => latestDrawNums.includes(item.num)).length;
+        let hotHitCount = cachedHotNumbers.filter(item => latestDrawNums.includes(item.num)).length;
+        let coldHitCount = cachedColdNumbers.filter(item => latestDrawNums.includes(item.num)).length;
 
         document.getElementById('hot-hit-summary').innerText = latestRecord ? `[${latestRecord.date} 開出 ${hotHitCount} 顆]` : '';
         document.getElementById('cold-hit-summary').innerText = latestRecord ? `[${latestRecord.date} 開出 ${coldHitCount} 顆]` : '';
 
-        // 渲染熱門號 (若在最新開獎 5 碼中則標記 hit-today)
-        document.getElementById('hot-numbers').innerHTML = hotNumbers.map(item => {
+        document.getElementById('hot-numbers').innerHTML = cachedHotNumbers.map(item => {
             let isHitToday = latestDrawNums.includes(item.num) ? 'hit-today' : '';
             return `
                 <div class="info-badge hot-badge ${isHitToday}">
@@ -926,8 +929,7 @@
             `;
         }).join('');
 
-        // 渲染冷門號 (若在最新開獎 5 碼中則標記 hit-today)
-        document.getElementById('cold-numbers').innerHTML = coldNumbers.map(item => {
+        document.getElementById('cold-numbers').innerHTML = cachedColdNumbers.map(item => {
             let isHitToday = latestDrawNums.includes(item.num) ? 'hit-today' : '';
             return `
                 <div class="info-badge cold-badge ${isHitToday}">
@@ -936,15 +938,75 @@
                 </div>
             `;
         }).join('');
+
+        renderRecommendations();
     }
+
+    function renderRecommendations() {
+        if (!cachedHotNumbers || cachedHotNumbers.length < 4 || !cachedColdNumbers || cachedColdNumbers.length < 4) return;
+
+        const container = document.getElementById('recom-container');
+        const sample = (arr, count) => {
+            let shuffled = [...arr].sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, count);
+        };
+
+        let s3Hot = sample(cachedHotNumbers.slice(0, 6).map(x => ({ num: x.num, type: 'hot' })), 3).sort((a,b) => a.num - b.num);
+        let s3BalH = sample(cachedHotNumbers.slice(0, 6).map(x => ({ num: x.num, type: 'hot' })), 2);
+        let s3BalC = sample(cachedColdNumbers.slice(0, 6).map(x => ({ num: x.num, type: 'cold' })), 1);
+        let s3Balance = [...s3BalH, ...s3BalC].sort((a,b) => a.num - b.num);
+
+        let s4BalH = sample(cachedHotNumbers.slice(0, 8).map(x => ({ num: x.num, type: 'hot' })), 2);
+        let s4BalC = sample(cachedColdNumbers.slice(0, 8).map(x => ({ num: x.num, type: 'cold' })), 2);
+        let s4Balance = [...s4BalH, ...s4BalC].sort((a,b) => a.num - b.num);
+
+        let s4Hot = sample(cachedHotNumbers.slice(0, 8).map(x => ({ num: x.num, type: 'hot' })), 4).sort((a,b) => a.num - b.num);
+
+        const list = [
+            { title: '⭐ 三星・熱門強勢組合', sub: '高頻熱碼精選', balls: s3Hot },
+            { title: '⭐ 三星・冰火平衡防守', sub: '2熱碼 + 1破冰冷碼', balls: s3Balance },
+            { title: '🌟 四星・冰火全能旗艦', sub: '2熱門動能 + 2極凍伏擊', balls: s4Balance },
+            { title: '🌟 四星・極速熱碼連碰', sub: '強勢熱門動能 4 碼', balls: s4Hot }
+        ];
+
+        container.innerHTML = list.map((item) => {
+            const rawNums = item.balls.map(b => b.num.toString().padStart(2, '0')).join(', ');
+            return `
+                <div class="recom-card">
+                    <div class="recom-header">
+                        <div class="recom-title">${item.title}</div>
+                        <div class="recom-sub">${item.sub}</div>
+                    </div>
+                    <div class="recom-balls">
+                        ${item.balls.map(b => `<div class="recom-ball ${b.type}">${b.num.toString().padStart(2, '0')}</div>`).join('')}
+                    </div>
+                    <div class="recom-btns">
+                        <button class="btn-fast-apply" style="background:var(--ai-color);" onclick="applyRecomNums('${rawNums}', 'ai')">入 AI</button>
+                        <button class="btn-fast-apply" style="background:var(--my-color);" onclick="applyRecomNums('${rawNums}', 'my')">入 我的</button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    window.refreshRecommendations = function() {
+        renderRecommendations();
+    };
+
+    window.applyRecomNums = function(numsStr, targetKey) {
+        let targetMap = { ai: 'ai-nums', my: 'my-nums' };
+        let nameMap = { ai: 'AI', my: '我的' };
+        document.getElementById(targetMap[targetKey]).value = numsStr;
+        alert(`✅ 已將推薦號碼 [ ${numsStr} ] 帶入【${nameMap[targetKey]}】！`);
+    };
 
     function renderAll() {
         const tbody = document.getElementById('history-tbody');
         tbody.innerHTML = '';
 
         let totalRounds = 0;
-        let totalAiHits = 0, totalP1Hits = 0, totalP2Hits = 0;
-        let p1Rounds = 0, p2Rounds = 0, aiRounds = 0;
+        let totalAiHits = 0, totalMyHits = 0;
+        let myRounds = 0, aiRounds = 0;
 
         analyzeHotColdNumbers();
 
@@ -956,13 +1018,9 @@
                     aiRounds++;
                     totalAiHits += item.aiHits || 0;
                 }
-                if (isValidPrediction(item.p1)) {
-                    p1Rounds++;
-                    totalP1Hits += item.p1Hits || 0;
-                }
-                if (isValidPrediction(item.p2)) {
-                    p2Rounds++;
-                    totalP2Hits += item.p2Hits || 0;
+                if (isValidPrediction(item.my)) {
+                    myRounds++;
+                    totalMyHits += item.myHits || 0;
                 }
             }
 
@@ -975,34 +1033,28 @@
             const genDrawBalls = (nums) => `<div class="num-container">` + (nums || []).map(n => `<div class="num-ball draw">${n.toString().padStart(2,'0')}</div>`).join('') + `</div>`;
 
             let aiColumnHtml = isValidPrediction(item.ai)
-                ? genBalls(item.ai) + (!item.isPending && hasDraw ? `<div style="font-size:12px; margin-top:6px; color:var(--ai-color); font-weight:bold;">中 ${item.aiHits} 顆 (${item.ai.length}碼)</div>` : '')
+                ? genBalls(item.ai) + (!item.isPending && hasDraw ? `<div style="font-size:11px; margin-top:4px; color:var(--ai-color); font-weight:bold;">中 ${item.aiHits} 顆 (${item.ai.length}碼)</div>` : '')
                 : `<span class="empty-label">— 待補 —</span>`;
 
-            let p1ColumnHtml = isValidPrediction(item.p1)
-                ? genBalls(item.p1) + (!item.isPending && hasDraw ? `<div style="font-size:12px; margin-top:6px; color:var(--p1-color); font-weight:bold;">中 ${item.p1Hits} 顆 (${item.p1.length}碼)</div>` : '')
+            let myColumnHtml = isValidPrediction(item.my)
+                ? genBalls(item.my) + (!item.isPending && hasDraw ? `<div style="font-size:11px; margin-top:4px; color:var(--my-color); font-weight:bold;">中 ${item.myHits} 顆 (${item.my.length}碼)</div>` : '')
                 : `<span class="empty-label">— 待補 —</span>`;
 
-            let p2ColumnHtml = isValidPrediction(item.p2)
-                ? genBalls(item.p2) + (!item.isPending && hasDraw ? `<div style="font-size:12px; margin-top:6px; color:var(--p2-color); font-weight:bold;">中 ${item.p2Hits} 顆 (${item.p2.length}碼)</div>` : '')
-                : `<span class="empty-label">— 待補 —</span>`;
-
-            let drawColumnHtml = hasDraw ? genDrawBalls(item.draw) : `<span style="color:#d97706; font-size:13px; font-family:monospace; font-weight:bold;">⏳ 待開獎</span>`;
+            let drawColumnHtml = hasDraw ? genDrawBalls(item.draw) : `<span style="color:#d97706; font-size:12px; font-family:monospace; font-weight:bold;">⏳ 待開獎</span>`;
 
             let winnerBadge = `<span class="winner-badge badge-tie">平手</span>`;
             if (item.isPending || !hasDraw) winnerBadge = `<span class="winner-badge badge-pending">⏳ 等待開獎</span>`;
             else if (item.winner === "AI 勝") winnerBadge = `<span class="winner-badge badge-ai">🤖 AI 勝</span>`;
-            else if (item.winner === "玩家1 勝") winnerBadge = `<span class="winner-badge badge-p1">🧑 玩家 1 勝</span>`;
-            else if (item.winner === "玩家2 勝") winnerBadge = `<span class="winner-badge badge-p2">🧑 玩家 2 勝</span>`;
+            else if (item.winner === "我 勝") winnerBadge = `<span class="winner-badge badge-my">🧑 我 勝</span>`;
             else if (item.winner) winnerBadge = `<span class="winner-badge" style="background:#f1f5f9; color:#475569; border:1px solid #cbd5e1;">${item.winner}</span>`;
 
             tr.innerHTML = `
-                <td><strong style="color:#0284c7; font-family:monospace; font-size:15px;">${item.date}</strong></td>
-                <td>${aiColumnHtml}</td>
-                <td>${p1ColumnHtml}</td>
-                <td>${p2ColumnHtml}</td>
-                <td>${drawColumnHtml}</td>
-                <td>${winnerBadge}</td>
-                <td style="min-width: 110px;">
+                <td data-label="📅 開獎日期"><strong style="color:#0284c7; font-family:monospace; font-size:14px;">${item.date}</strong></td>
+                <td data-label="🤖 AI 預測">${aiColumnHtml}</td>
+                <td data-label="🧑 我的預測">${myColumnHtml}</td>
+                <td data-label="📺 開獎 5 碼">${drawColumnHtml}</td>
+                <td data-label="🏆 勝負判定">${winnerBadge}</td>
+                <td data-label="⚙️ 操作管理">
                     <button class="action-btn edit-btn" title="帶入上方表單補填或修改號碼" onclick="loadRecordToForm('${item.id}')">✏️ 補/改</button>
                     <button class="action-btn edit-btn" onclick="editDate('${item.id}', '${item.date}')">📅 改期</button>
                     <button class="action-btn delete-btn" onclick="deleteRecord('${item.id}')">刪除</button>
@@ -1012,52 +1064,40 @@
         });
 
         if (battleHistory.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="7" style="padding: 30px; color: #94a3b8; font-weight:bold;">目前尚無對決紀錄，可滑至最下方點擊連線導入天天樂號碼！</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="6" style="padding: 24px; color: #94a3b8; font-weight:bold;">目前尚無對決紀錄，可滑至最下方貼上多期天天樂號碼！</td></tr>`;
         }
 
         document.getElementById('total-rounds').innerText = totalRounds;
         document.getElementById('ai-hits').innerText = totalAiHits;
-        document.getElementById('p1-hits').innerText = totalP1Hits;
-        document.getElementById('p2-hits').innerText = totalP2Hits;
-        document.getElementById('p1-rounds').innerText = p1Rounds;
-        document.getElementById('p2-rounds').innerText = p2Rounds;
+        document.getElementById('my-hits').innerText = totalMyHits;
+        document.getElementById('my-rounds').innerText = myRounds;
         
         let aiAvg = aiRounds > 0 ? (totalAiHits / aiRounds) : 0;
-        let p1Avg = p1Rounds > 0 ? (totalP1Hits / p1Rounds) : 0;
-        let p2Avg = p2Rounds > 0 ? (totalP2Hits / p2Rounds) : 0;
+        let myAvg = myRounds > 0 ? (totalMyHits / myRounds) : 0;
         document.getElementById('ai-avg').innerText = aiAvg.toFixed(2);
-        document.getElementById('p1-avg').innerText = p1Avg.toFixed(2);
-        document.getElementById('p2-avg').innerText = p2Avg.toFixed(2);
+        document.getElementById('my-avg').innerText = myAvg.toFixed(2);
 
         let pkEl = document.getElementById('pk-winner');
-        let candidates = [
-            { name: "🤖 AI", avg: aiAvg },
-            { name: "🧑 玩家 1", avg: p1Avg },
-            { name: "🧑 玩家 2", avg: p2Avg }
-        ];
-        let maxAvg = Math.max(...candidates.map(c => c.avg));
-
-        if (totalRounds === 0 || maxAvg === 0) {
+        if (totalRounds === 0 || (aiAvg === 0 && myAvg === 0)) {
             pkEl.innerText = "等待開獎";
             pkEl.style.color = "var(--draw-color)";
+        } else if (aiAvg > myAvg) {
+            pkEl.innerText = "🤖 AI 領先";
+            pkEl.style.color = "var(--ai-color)";
+        } else if (myAvg > aiAvg) {
+            pkEl.innerText = "🧑 人類(我)領先";
+            pkEl.style.color = "var(--my-color)";
         } else {
-            let winners = candidates.filter(c => c.avg === maxAvg);
-            if (winners.length === 1) {
-                pkEl.innerText = `${winners[0].name} 領先`;
-                pkEl.style.color = winners[0].name.includes("AI") ? "var(--ai-color)" : (winners[0].name.includes("1") ? "var(--p1-color)" : "var(--p2-color)");
-            } else {
-                pkEl.innerText = "平分秋色";
-                pkEl.style.color = "var(--draw-color)";
-            }
+            pkEl.innerText = "平分秋色";
+            pkEl.style.color = "var(--draw-color)";
         }
     }
 
     window.addRecord = addRecord;
     window.editDate = editDate;
     window.deleteRecord = deleteRecord;
-    window.crawlSc888Data = crawlSc888Data;
-    window.parseSc888ManualText = parseSc888ManualText;
     window.loadRecordToForm = loadRecordToForm;
+    window.parseAndImportMultiDraws = parseAndImportMultiDraws;
 </script>
 
 <!-- ==========================================
@@ -1069,7 +1109,7 @@
             this.container = document.getElementById(containerId);
             this.size = sphereSize;
             this.center = sphereSize / 2;
-            this.radius = 9.5;
+            this.radius = 9;
             this.maxRadius = this.center - this.radius - 3;
             this.balls = [];
             this.isMixing = false;
@@ -1167,8 +1207,9 @@
 
     window.onload = function() {
         document.getElementById('input-date').value = new Date().toISOString().split('T')[0];
-        m1 = new PhysicsMachine('physics-container-1', 150);
-        m2 = new PhysicsMachine('physics-container-2', 150);
+        let mSize = window.innerWidth <= 768 ? 130 : 140;
+        m1 = new PhysicsMachine('physics-container-1', mSize);
+        m2 = new PhysicsMachine('physics-container-2', mSize);
     };
 
     async function startRollDual() {
@@ -1227,11 +1268,11 @@
         let selected = nums.slice(0, count);
         let str = selected.map(n => n.toString().padStart(2, '0')).join(', ');
         
-        let targetMap = { ai: 'ai-nums', p1: 'p1-nums', p2: 'p2-nums' };
-        let nameMap = { ai: 'AI', p1: '玩家 1', p2: '玩家 2' };
+        let targetMap = { ai: 'ai-nums', my: 'my-nums' };
+        let nameMap = { ai: 'AI', my: '我的' };
 
         document.getElementById(targetMap[targetKey]).value = str;
-        alert(`✅ 已將搖出的 ${count} 碼帶入【${nameMap[targetKey]}】預測欄！`);
+        alert(`✅ 已將搖出的 ${count} 碼帶入【${nameMap[targetKey]}】！`);
     }
 </script>
 
