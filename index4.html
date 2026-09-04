@@ -3,25 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>天天樂 AI vs 直覺 預測對決統計表 (Firebase 雲端同步版)</title>
+    <title>天天樂 三方預測對決統計表 (Firebase 雲端同步版)</title>
     <style>
         :root {
             --bg-color: #f0fdf4; 
             --panel-bg: #ffffff;
             --text-main: #1e293b;
             --ai-color: #3b82f6; 
-            --my-color: #10b981; 
+            --p1-color: #10b981; 
+            --p2-color: #ec4899; 
             --draw-color: #f59e0b; 
             --hit-color: #ef4444; 
             --cold-color: #0ea5e9;
             --border: #cbd5e1;
-            --batch-color: #6366f1;
             --crawl-color: #0284c7;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Microsoft JhengHei", sans-serif; }
         body { background-color: var(--bg-color); color: var(--text-main); padding: 20px; line-height: 1.6; }
-        .container { max-width: 1200px; margin: 0 auto; }
+        .container { max-width: 1280px; margin: 0 auto; }
 
         header { background: #1e293b; color: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); position: relative; }
         header h1 { font-size: 26px; }
@@ -29,14 +29,15 @@
         .dot { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 6px #22c55e; }
 
         /* 統計戰力板 */
-        .stats-board { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-bottom: 20px; }
-        .stat-card { background: white; padding: 20px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 2px 5px rgba(0,0,0,0.05); text-align: center; position: relative; overflow: hidden; }
+        .stats-board { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .stat-card { background: white; padding: 18px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 2px 5px rgba(0,0,0,0.05); text-align: center; position: relative; overflow: hidden; }
         .stat-card.ai-card { border-bottom: 5px solid var(--ai-color); }
-        .stat-card.my-card { border-bottom: 5px solid var(--my-color); }
+        .stat-card.p1-card { border-bottom: 5px solid var(--p1-color); }
+        .stat-card.p2-card { border-bottom: 5px solid var(--p2-color); }
         .stat-card.pk-card { border-bottom: 5px solid var(--hit-color); background: #fef2f2; }
-        .stat-title { font-size: 14px; color: #64748b; font-weight: bold; }
-        .stat-value { font-size: 32px; font-weight: 900; margin: 10px 0; }
-        .stat-sub { font-size: 13px; color: #94a3b8; }
+        .stat-title { font-size: 13px; color: #64748b; font-weight: bold; }
+        .stat-value { font-size: 28px; font-weight: 900; margin: 8px 0; }
+        .stat-sub { font-size: 12px; color: #94a3b8; }
 
         /* 冷熱門數據 & 搖號機 區塊 */
         .tools-panel { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; margin-bottom: 20px; }
@@ -65,8 +66,12 @@
         .btn-roll { background: #8b5cf6; color: white; border: none; padding: 12px 24px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         .btn-roll:hover { background: #7c3aed; transform: translateY(-2px); }
         .btn-roll:disabled { background: #cbd5e1; cursor: not-allowed; transform: none; }
-        .btn-apply { background: var(--my-color); color: white; border: none; padding: 12px 18px; font-size: 14px; font-weight: bold; border-radius: 8px; cursor: pointer; margin-left: 10px; display: none; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .btn-apply:hover { background: #059669; }
+        .btn-apply-group { display: flex; gap: 8px; margin-top: 8px; }
+        .btn-apply { color: white; border: none; padding: 8px 14px; font-size: 13px; font-weight: bold; border-radius: 6px; cursor: pointer; display: none; }
+        .btn-apply-p1 { background: var(--p1-color); }
+        .btn-apply-p1:hover { background: #059669; }
+        .btn-apply-p2 { background: var(--p2-color); }
+        .btn-apply-p2:hover { background: #db2777; }
 
         /* 面板樣式 */
         .input-panel { background: white; padding: 25px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
@@ -74,7 +79,7 @@
         .crawl-panel h2 { border-left-color: var(--crawl-color); }
 
         .form-row { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 15px; }
-        .form-group { flex: 1; min-width: 200px; display: flex; flex-direction: column; gap: 5px; }
+        .form-group { flex: 1; min-width: 190px; display: flex; flex-direction: column; gap: 5px; }
         .form-group label { font-size: 14px; font-weight: bold; }
         .form-group input { padding: 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 15px; outline: none; }
         .form-group input:focus { border-color: var(--ai-color); }
@@ -86,68 +91,71 @@
         .btn-crawl:hover { background: #0369a1; }
         .btn-crawl:disabled { background: #cbd5e1; cursor: not-allowed; }
 
-        .history-panel { background: white; padding: 20px; border-radius: 12px; border: 1px solid var(--border); overflow-x: auto; }
+        .history-panel { background: white; padding: 20px; border-radius: 12px; border: 1px solid var(--border); overflow-x: auto; margin-bottom: 20px; }
         table { width: 100%; border-collapse: collapse; text-align: center; }
-        th { background: #f1f5f9; padding: 12px; border-bottom: 2px solid var(--border); font-weight: bold; }
+        th { background: #f1f5f9; padding: 12px; border-bottom: 2px solid var(--border); font-weight: bold; font-size: 14px; }
         td { padding: 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
         tr:hover { background: #f8fafc; }
 
-        .num-container { display: flex; gap: 5px; justify-content: center; flex-wrap: wrap; }
-        .num-ball { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; background: #e2e8f0; color: #475569; }
+        .num-container { display: flex; gap: 4px; justify-content: center; flex-wrap: wrap; }
+        .num-ball { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: bold; background: #e2e8f0; color: #475569; }
         .num-ball.hit { background: var(--hit-color); color: white; box-shadow: 0 0 8px rgba(239, 68, 68, 0.5); transform: scale(1.1); }
         .num-ball.draw { background: var(--draw-color); color: white; }
 
         .winner-badge { padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; color: white; display: inline-block;}
         .badge-ai { background: var(--ai-color); }
-        .badge-my { background: var(--my-color); }
+        .badge-p1 { background: var(--p1-color); }
+        .badge-p2 { background: var(--p2-color); }
         .badge-tie { background: #94a3b8; }
-        .badge-solo { background: #64748b; } 
         .badge-pending { background: #f59e0b; } 
         
-        .action-btn { padding: 5px 8px; border: 1px solid #cbd5e1; border-radius: 4px; cursor: pointer; font-size: 12px; margin: 2px; }
+        .action-btn { padding: 4px 8px; border: 1px solid #cbd5e1; border-radius: 4px; cursor: pointer; font-size: 12px; margin: 2px; }
         .delete-btn { background: #f1f5f9; color: #ef4444; }
         .delete-btn:hover { background: #fee2e2; }
-        .update-btn { background: var(--draw-color); color: white; border: none; font-weight: bold; }
-        .update-btn:hover { background: #d97706; }
         .edit-btn { background: #e2e8f0; color: #1e293b; }
         .edit-btn:hover { background: #cbd5e1; }
         
-        .pending-input { padding: 6px; border: 1px solid var(--my-color); border-radius: 4px; width: 140px; margin-bottom: 5px; text-align: center; }
-        .save-my-btn { background: var(--my-color); color: white; border: none; font-weight: bold; }
-        .save-my-btn:hover { background: #059669; }
+        .pending-input { padding: 5px; border-radius: 4px; width: 125px; margin-bottom: 4px; text-align: center; font-size: 13px; border: 1px solid #cbd5e1; }
+        .save-inline-btn { color: white; border: none; font-weight: bold; padding: 4px 8px; border-radius: 4px; font-size: 11px; cursor: pointer; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <header>
-        <h1>⚔️ 天天樂 (39選5) 預測對決擂台</h1>
+        <h1>⚔️ 天天樂 (39選5) 三方預測大對決</h1>
         <div class="cloud-badge">
             <div class="dot"></div>
             <span>Firebase 雲端即時連線中</span>
         </div>
     </header>
 
+    <!-- 頂部戰力卡片 -->
     <div class="stats-board">
         <div class="stat-card">
             <div class="stat-title">已開獎期數</div>
             <div class="stat-value" id="total-rounds">0</div>
-            <div class="stat-sub">有效結算的期數</div>
+            <div class="stat-sub">有效開獎期數</div>
         </div>
         <div class="stat-card ai-card">
-            <div class="stat-title" style="color:var(--ai-color)">🤖 AI 總命中球數</div>
+            <div class="stat-title" style="color:var(--ai-color)">🤖 AI 總命中</div>
             <div class="stat-value" id="ai-hits" style="color:var(--ai-color)">0</div>
-            <div class="stat-sub">平均每期命中：<span id="ai-avg">0.00</span> 顆</div>
+            <div class="stat-sub">場均：<span id="ai-avg">0.00</span> 顆</div>
         </div>
-        <div class="stat-card my-card">
-            <div class="stat-title" style="color:var(--my-color)">🧑 我 總命中球數</div>
-            <div class="stat-value" id="my-hits" style="color:var(--my-color)">0</div>
-            <div class="stat-sub">實際參與 <span id="my-rounds">0</span> 期 (平均：<span id="my-avg">0.00</span> 顆)</div>
+        <div class="stat-card p1-card">
+            <div class="stat-title" style="color:var(--p1-color)">🧑 玩家 1 總命中</div>
+            <div class="stat-value" id="p1-hits" style="color:var(--p1-color)">0</div>
+            <div class="stat-sub">參賽 <span id="p1-rounds">0</span> 期 (場均：<span id="p1-avg">0.00</span>)</div>
+        </div>
+        <div class="stat-card p2-card">
+            <div class="stat-title" style="color:var(--p2-color)">🧑 玩家 2 總命中</div>
+            <div class="stat-value" id="p2-hits" style="color:var(--p2-color)">0</div>
+            <div class="stat-sub">參賽 <span id="p2-rounds">0</span> 期 (場均：<span id="p2-avg">0.00</span>)</div>
         </div>
         <div class="stat-card pk-card">
             <div class="stat-title" style="color:var(--hit-color)">🏆 目前勝率霸主</div>
-            <div class="stat-value" id="pk-winner" style="color:var(--hit-color); font-size:24px;">等待開獎</div>
-            <div class="stat-sub">根據平均命中數判定</div>
+            <div class="stat-value" id="pk-winner" style="color:var(--hit-color); font-size:22px;">等待開獎</div>
+            <div class="stat-sub">依平均命中顆數判定</div>
         </div>
     </div>
 
@@ -183,77 +191,85 @@
                     <div class="machine-ball">?</div>
                 </div>
                 
-                <div style="margin-top: 5px;">
+                <div style="margin-top: 5px; text-align: center;">
                     <button class="btn-roll" id="btn-roll" onclick="startRoll()">🌪️ 啟動搖號機</button>
-                    <button class="btn-apply" id="btn-apply" onclick="applyMachineNumbers()">📥 將前4碼帶入我的預測</button>
+                    <div class="btn-apply-group">
+                        <button class="btn-apply btn-apply-p1" id="btn-apply-p1" onclick="applyMachineNumbers('p1')">📥 帶入玩家 1</button>
+                        <button class="btn-apply btn-apply-p2" id="btn-apply-p2" onclick="applyMachineNumbers('p2')">📥 帶入玩家 2</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- 🌐 自動導入開獎號碼 -->
-    <div class="input-panel crawl-panel">
-        <h2>🌐 一鍵導入開獎號碼 (已開獎則自動建檔，待事後補填預測)</h2>
-        <p style="font-size: 13px; color: #64748b; margin-bottom: 12px;">
-            點擊後自動讀取 <strong>sc888.net</strong> 開獎號碼。若雲端尚未建立該期，系統會<strong>直接寫入 5 個開獎號碼</strong>，隨後您可於下方歷史清單中<strong>隨時補上您的 4 碼預測</strong>，系統會即刻完成對獎。
-        </p>
-        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-            <button class="btn-crawl" id="btn-crawl" onclick="crawlSc888Data()">
-                🔄 連線導入最新開獎號碼
-            </button>
-            <span id="crawl-status" style="font-size: 13px; color: #64748b;">尚未執行導入</span>
-        </div>
-
-        <!-- 備用手動解析 -->
-        <details style="margin-top: 15px; font-size: 13px; color: #475569; background: #f8fafc; padding: 10px; border-radius: 6px; border: 1px solid #e2e8f0;">
-            <summary style="cursor: pointer; font-weight: bold;">網路受限時備用方案（手動貼上 sc888 網頁內容）</summary>
-            <p style="margin: 8px 0 5px 0;">若代理連線逾時，可開啟 sc888 網頁全選複製文字貼在此處：</p>
-            <textarea id="sc888-manual-text" rows="3" style="width:100%; padding:8px; font-size:13px; border:1px solid #cbd5e1; border-radius:4px;" placeholder="在此貼上 sc888 複製過來的開獎文字..."></textarea>
-            <button onclick="parseSc888ManualText()" style="margin-top:5px; padding:6px 12px; background:#0284c7; color:white; border:none; border-radius:4px; cursor:pointer;">解析並自動建檔/更新</button>
-        </details>
-    </div>
-
-    <!-- 手動新建預測 -->
+    <!-- 手動新建今日預測 -->
     <div class="input-panel">
         <h2>📝 新增今日預測 (開獎前先送出)</h2>
         <div class="form-row">
-            <div class="form-group" style="flex: 0.5;">
+            <div class="form-group" style="flex: 0.6;">
                 <label>📅 日期</label>
                 <input type="date" id="input-date">
             </div>
             <div class="form-group">
-                <label style="color:var(--ai-color)">🤖 AI 的 4 個號碼 (可留空)</label>
+                <label style="color:var(--ai-color)">🤖 AI 4 碼 (可留空)</label>
                 <input type="text" id="ai-nums" placeholder="例: 05, 12, 28, 33">
             </div>
             <div class="form-group">
-                <label style="color:var(--my-color)">🧑 我挑的 4 個號碼 (可留空，事後亦可補填)</label>
-                <input type="text" id="my-nums" placeholder="若無靈感可不填...">
+                <label style="color:var(--p1-color)">🧑 玩家 1 的 4 碼 (可留空)</label>
+                <input type="text" id="p1-nums" placeholder="例: 01, 10, 20, 30">
+            </div>
+            <div class="form-group">
+                <label style="color:var(--p2-color)">🧑 玩家 2 的 4 碼 (可留空)</label>
+                <input type="text" id="p2-nums" placeholder="例: 07, 14, 21, 35">
             </div>
         </div>
         <div class="form-row">
             <div class="form-group">
-                <label style="color:var(--draw-color)">📺 實際開獎 5 個號碼 (若還沒開獎請留空)</label>
-                <input type="text" id="draw-nums" placeholder="可留空，點上方導入按鈕自動抓取">
+                <label style="color:var(--draw-color)">📺 實際開獎 5 個號碼 (若尚未開獎請留空)</label>
+                <input type="text" id="draw-nums" placeholder="可留空，透過下方自動導入按鈕自動獲取">
             </div>
         </div>
         <button class="btn-submit" onclick="addRecord()">☁️ 儲存至雲端</button>
     </div>
 
+    <!-- 歷史對決表格 -->
     <div class="history-panel">
         <h2 style="font-size: 18px; margin-bottom: 15px;">📊 歷史戰績對照表 (雲端同步)</h2>
         <table>
             <thead>
                 <tr>
                     <th>📅 日期</th>
-                    <th>🤖 AI預測</th>
-                    <th>🧑 我的預測 (可事後補填)</th>
-                    <th>📺 實際開出 5 碼</th>
-                    <th>單期勝負</th>
+                    <th>🤖 AI 預測</th>
+                    <th>🧑 玩家 1 (事後補填)</th>
+                    <th>🧑 玩家 2 (事後補填)</th>
+                    <th>📺 今日開獎 5 碼</th>
+                    <th>單期霸主</th>
                     <th>操作</th>
                 </tr>
             </thead>
             <tbody id="history-tbody"></tbody>
         </table>
+    </div>
+
+    <!-- 🌟 已移動至最下方：sc888.net 自動導入與手動解析抽屜 -->
+    <div class="input-panel crawl-panel">
+        <h2>🌐 一鍵導入開獎號碼 (sc888.net 天天樂自動抓取)</h2>
+        <p style="font-size: 13px; color: #64748b; margin-bottom: 12px;">
+            點擊後自動讀取 <strong>sc888.net</strong> 最新天天樂開獎 5 碼。若雲端尚無當期紀錄，系統會<strong>直接建立並填妥 5 顆球號</strong>，隨後您可於上方歷史清單中補填預測號碼。
+        </p>
+        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+            <button class="btn-crawl" id="btn-crawl" onclick="crawlSc888Data()">
+                🔄 一鍵連線導入天天樂開獎
+            </button>
+            <span id="crawl-status" style="font-size: 13px; color: #64748b;">尚未執行導入</span>
+        </div>
+
+        <details style="margin-top: 15px; font-size: 13px; color: #475569; background: #f8fafc; padding: 12px; border-radius: 6px; border: 1px solid #e2e8f0;">
+            <summary style="cursor: pointer; font-weight: bold;">連線備用方案（手動貼上 sc888 網頁內容）</summary>
+            <p style="margin: 8px 0 5px 0;">若代理伺服器連線受限，可開啟 <code>https://sc888.net/index.php?s=/LotteryFan/index</code> 全選複製文字貼在此處：</p>
+            <textarea id="sc888-manual-text" rows="3" style="width:100%; padding:8px; font-size:13px; border:1px solid #cbd5e1; border-radius:4px;" placeholder="在此貼上 sc888 複製過來的開獎文字..."></textarea>
+            <button onclick="parseSc888ManualText()" style="margin-top:6px; padding:6px 12px; background:#0284c7; color:white; border:none; border-radius:4px; cursor:pointer; font-weight:bold;">一鍵解析並自動建檔/更新</button>
+        </details>
     </div>
 </div>
 
@@ -292,7 +308,10 @@
     onSnapshot(lotteryCol, (snapshot) => {
         battleHistory = [];
         snapshot.forEach((docSnap) => {
-            battleHistory.push(docSnap.data());
+            let data = docSnap.data();
+            if (data.my && !data.p1) data.p1 = data.my;
+            if (!data.p2) data.p2 = [];
+            battleHistory.push(data);
         });
         sortHistoryByDate();
         renderAll();
@@ -318,63 +337,84 @@
         return nums;
     }
 
-    function calculateResult(aiNums, myNums, drawNums) {
-        let aiHitCount = (aiNums || []).filter(n => (drawNums || []).includes(n)).length;
-        let myHitCount = (myNums || []).filter(n => (drawNums || []).includes(n)).length;
-        let winner = "平手";
+    function calculateResult(aiNums, p1Nums, p2Nums, drawNums) {
+        const d = drawNums || [];
+        let aiHits = (aiNums || []).filter(n => d.includes(n)).length;
+        let p1Hits = (p1Nums || []).filter(n => d.includes(n)).length;
+        let p2Hits = (p2Nums || []).filter(n => d.includes(n)).length;
 
         const hasAi = aiNums && aiNums.length === 4;
-        const hasMy = myNums && myNums.length === 4;
+        const hasP1 = p1Nums && p1Nums.length === 4;
+        const hasP2 = p2Nums && p2Nums.length === 4;
 
-        if (hasAi && !hasMy) {
-            winner = "僅 AI";
-        } else if (!hasAi && hasMy) {
-            winner = `中 ${myHitCount} 顆`;
-        } else if (hasAi && hasMy) {
-            if (aiHitCount > myHitCount) winner = "AI 勝";
-            else if (myHitCount > aiHitCount) winner = "我 勝";
-            else winner = "平手";
-        } else {
-            winner = "未預測";
+        let contestants = [];
+        if (hasAi) contestants.push({ name: "AI", hits: aiHits });
+        if (hasP1) contestants.push({ name: "玩家1", hits: p1Hits });
+        if (hasP2) contestants.push({ name: "玩家2", hits: p2Hits });
+
+        let winner = "等待開獎";
+        if (d.length === 5) {
+            if (contestants.length === 0) {
+                winner = "無人預測";
+            } else {
+                let maxHits = Math.max(...contestants.map(c => c.hits));
+                let topLeaders = contestants.filter(c => c.hits === maxHits);
+
+                if (topLeaders.length === contestants.length && contestants.length > 1) {
+                    winner = "平手";
+                } else if (topLeaders.length === 1) {
+                    winner = `${topLeaders[0].name} 勝`;
+                } else {
+                    winner = topLeaders.map(c => c.name).join(' & ') + " 並列";
+                }
+            }
         }
 
-        return { aiHitCount, myHitCount, winner };
+        return { aiHits, p1Hits, p2Hits, winner };
     }
 
-    // 抓取網頁內容並解析
+    // 🌟 專屬解析 sc888 天天樂開獎
     function parseLotteryFromHtml(htmlString) {
         const parser = new DOMParser();
         const docHtml = parser.parseFromString(htmlString, 'text/html');
         let results = [];
 
-        const rows = docHtml.querySelectorAll('tr, .lottery-item, .item, li');
-        rows.forEach(row => {
-            const text = row.textContent || "";
-            const dateMatch = text.match(/(\d{4}[-/]\d{1,2}[-/]\d{1,2})/) || text.match(/(\d{1,2}[-/]\d{1,2})/);
-            const nums = text.match(/\b(0?[1-9]|[1-3][0-9])\b/g);
-            
-            if (dateMatch && nums && nums.length >= 5) {
-                let dStr = dateMatch[0].replace(/\//g, '-');
-                if (dStr.length <= 5) {
-                    const currentYear = new Date().getFullYear();
-                    dStr = `${currentYear}-${dStr.padStart(5, '0')}`;
-                }
-                const parsedNums = [...new Set(nums.slice(0, 10).map(n => parseInt(n, 10)).filter(n => n >= 1 && n <= 39))];
-                if (parsedNums.length >= 5) {
-                    results.push({
-                        date: dStr,
-                        draw: parsedNums.slice(0, 5).sort((a, b) => a - b)
-                    });
+        // 優先過濾含有「天天樂」、「加州」等關鍵字的節點容器
+        const elements = docHtml.querySelectorAll('div, tr, li, p');
+        elements.forEach(el => {
+            const text = el.innerText || el.textContent || "";
+            if (text.includes("天天樂") || text.includes("加州") || text.includes("39")) {
+                let dMatch = text.match(/(\d{4}[-/]\d{1,2}[-/]\d{1,2})/) || text.match(/(\d{1,2}[-/]\d{1,2})/);
+                let numMatches = text.match(/\b(0?[1-9]|[1-3][0-9])\b/g);
+
+                if (dMatch && numMatches) {
+                    let dStr = dMatch[0].replace(/\//g, '-');
+                    if (dStr.length <= 5) {
+                        dStr = `${new Date().getFullYear()}-${dStr.padStart(5, '0')}`;
+                    }
+                    let nums = [...new Set(numMatches.map(n => parseInt(n, 10)).filter(n => n >= 1 && n <= 39))];
+                    if (nums.length >= 5) {
+                        results.push({
+                            date: dStr,
+                            draw: nums.slice(0, 5).sort((a, b) => a - b)
+                        });
+                    }
                 }
             }
         });
 
+        // 備用全面掃描
         if (results.length === 0) {
-            const fullText = docHtml.body ? docHtml.body.innerText : htmlString;
-            results = parseLotteryFromRawText(fullText);
+            results = parseLotteryFromRawText(docHtml.body ? docHtml.body.innerText : htmlString);
         }
 
-        return results;
+        // 去重
+        let uniqueMap = new Map();
+        results.forEach(r => {
+            if (!uniqueMap.has(r.date)) uniqueMap.set(r.date, r);
+        });
+
+        return Array.from(uniqueMap.values());
     }
 
     function parseLotteryFromRawText(rawText) {
@@ -396,7 +436,6 @@
         return results;
     }
 
-    // 🌟 自動回填，若歷史無此期則直接自動建檔 5 碼！
     async function applySc888DrawResults(sc888DataList) {
         if (!sc888DataList || sc888DataList.length === 0) {
             alert("⚠️ 未能在網頁中辨識出天天樂號碼！");
@@ -411,34 +450,35 @@
             const targetRecord = battleHistory.find(r => r.date === item.date);
 
             if (targetRecord) {
-                // 已有此日期：更新開獎球號並重新計算
                 const isDrawChanged = !targetRecord.draw || targetRecord.draw.join(',') !== item.draw.join(',');
                 if (targetRecord.isPending || isDrawChanged) {
-                    const res = calculateResult(targetRecord.ai || [], targetRecord.my || [], item.draw);
+                    const res = calculateResult(targetRecord.ai || [], targetRecord.p1 || [], targetRecord.p2 || [], item.draw);
                     const docRef = doc(db, "battle_history", targetRecord.id.toString());
                     batch.update(docRef, {
                         draw: item.draw,
                         isPending: false,
-                        aiHits: res.aiHitCount,
-                        myHits: res.myHitCount,
+                        aiHits: res.aiHits,
+                        p1Hits: res.p1Hits,
+                        p2Hits: res.p2Hits,
                         winner: res.winner
                     });
                     updatedCount++;
                 }
             } else {
-                // 尚未存在此日期：自動建檔一筆「已開出 5 碼，等待事後輸入個人預測」的紀錄
                 const newId = (Date.now() + idx).toString();
                 const docRef = doc(db, "battle_history", newId);
-                const res = calculateResult([], [], item.draw);
+                const res = calculateResult([], [], [], item.draw);
 
                 batch.set(docRef, {
                     id: newId,
                     date: item.date,
                     ai: [],
-                    my: [],
+                    p1: [],
+                    p2: [],
                     draw: item.draw,
                     aiHits: 0,
-                    myHits: 0,
+                    p1Hits: 0,
+                    p2Hits: 0,
                     winner: res.winner,
                     isPending: false
                 });
@@ -448,9 +488,9 @@
 
         if (updatedCount > 0 || createdCount > 0) {
             await batch.commit();
-            alert(`🎉 成功同步！\n• 自動建立新開獎期數：${createdCount} 期\n• 自動更新現有期數開獎：${updatedCount} 期\n您可以在列表中直接補填預測號碼！`);
+            alert(`🎉 導入成功！\n• 自動建立新開獎期數：${createdCount} 期\n• 自動更新現有開獎期數：${updatedCount} 期\n您可以在上方表格中隨時補填預測號碼！`);
         } else {
-            alert(`ℹ️ 已抓取 ${sc888DataList.length} 筆開獎資料，雲端資料庫皆已是最新狀態，無需異動。`);
+            alert(`ℹ️ 已抓取 ${sc888DataList.length} 筆開獎資料，雲端皆已是最新狀態。`);
         }
     }
 
@@ -486,7 +526,7 @@
             statusEl.innerText = "連線受阻 (CORS)";
             btn.disabled = false;
             btn.innerHTML = "🔄 重新嘗試導入";
-            alert("⚠️ 跨域請求暫時受限！請展開下方「備用方案」將網頁文字複製貼上即可一鍵建立。");
+            alert("⚠️ 跨域請求連線受限！請展開下方「連線備用方案」貼上網頁文字即可一鍵解析。");
             return;
         }
 
@@ -501,7 +541,7 @@
             alert("解析時發生錯誤：" + err.message);
         } finally {
             btn.disabled = false;
-            btn.innerHTML = "🔄 連線導入最新開獎號碼";
+            btn.innerHTML = "🔄 一鍵連線導入天天樂開獎";
         }
     }
 
@@ -512,26 +552,33 @@
         applySc888DrawResults(list);
     }
 
-    // 🌟 供使用者在歷史記錄中「事後補填我的預測」或修改
-    async function saveMyNumsInline(id) {
-        const inputEl = document.getElementById(`my-inline-${id}`);
+    async function savePlayerInline(id, playerKey) {
+        const inputEl = document.getElementById(`${playerKey}-inline-${id}`);
         if (!inputEl) return;
-        const myNums = parseNumbers(inputEl.value);
+        const nums = parseNumbers(inputEl.value);
 
-        if (myNums.length !== 4) {
-            return alert("🧑 預測號碼必須剛好填入 4 個不重複的數字 (1-39)！");
+        if (nums.length !== 4) {
+            return alert(`必須剛好填入 4 個不重複的數字 (1-39)！`);
         }
 
         const record = battleHistory.find(item => item.id == id);
         if (record) {
-            const res = calculateResult(record.ai || [], myNums, record.draw || []);
+            let updatePayload = {};
+            updatePayload[playerKey] = nums;
+
+            let updatedAi = record.ai || [];
+            let updatedP1 = playerKey === 'p1' ? nums : (record.p1 || []);
+            let updatedP2 = playerKey === 'p2' ? nums : (record.p2 || []);
+
+            const res = calculateResult(updatedAi, updatedP1, updatedP2, record.draw || []);
+            updatePayload.aiHits = res.aiHits;
+            updatePayload.p1Hits = res.p1Hits;
+            updatePayload.p2Hits = res.p2Hits;
+            updatePayload.winner = res.winner;
+
             try {
-                await updateDoc(doc(db, "battle_history", id.toString()), {
-                    my: myNums,
-                    myHits: res.myHitCount,
-                    winner: res.winner
-                });
-                alert("✅ 個人預測已成功寫入，系統已重新完成命中計算！");
+                await updateDoc(doc(db, "battle_history", id.toString()), updatePayload);
+                alert("✅ 預測號碼已成功寫入，系統已完成命中結算！");
             } catch (e) {
                 alert("寫入失敗：" + e.message);
             }
@@ -541,44 +588,43 @@
     async function addRecord() {
         let date = document.getElementById('input-date').value;
         let aiInput = document.getElementById('ai-nums').value;
-        let myInput = document.getElementById('my-nums').value;
+        let p1Input = document.getElementById('p1-nums').value;
+        let p2Input = document.getElementById('p2-nums').value;
         let drawInput = document.getElementById('draw-nums').value;
 
         let aiNums = parseNumbers(aiInput);
-        let myNums = parseNumbers(myInput);
+        let p1Nums = parseNumbers(p1Input);
+        let p2Nums = parseNumbers(p2Input);
         let drawNums = parseNumbers(drawInput);
 
         if (aiInput.trim() !== "" && aiNums.length !== 4) return alert("🤖 AI 號碼如果有填，必須剛好是 4 碼！");
-        if (myInput.trim() !== "" && myNums.length !== 4) return alert("🧑 你的號碼如果有填，必須剛好是 4 碼！");
+        if (p1Input.trim() !== "" && p1Nums.length !== 4) return alert("🧑 玩家 1 號碼如果有填，必須剛好是 4 碼！");
+        if (p2Input.trim() !== "" && p2Nums.length !== 4) return alert("🧑 玩家 2 號碼如果有填，必須剛好是 4 碼！");
         if (drawInput.trim() !== "" && drawNums.length !== 5) return alert("📺 實際開獎號碼如果有填，必須剛好是 5 碼！");
 
         let isPending = drawNums.length === 0;
-        let aiHitCount = 0, myHitCount = 0, winner = "等待開獎";
-
-        if (!isPending) {
-            let res = calculateResult(aiNums, myNums, drawNums);
-            aiHitCount = res.aiHitCount;
-            myHitCount = res.myHitCount;
-            winner = res.winner;
-        }
+        let res = calculateResult(aiNums, p1Nums, p2Nums, drawNums);
 
         let recordId = Date.now().toString();
         let record = { 
             id: recordId, 
             date: date, 
             ai: aiNums, 
-            my: myNums, 
+            p1: p1Nums, 
+            p2: p2Nums, 
             draw: drawNums, 
-            aiHits: aiHitCount, 
-            myHits: myHitCount, 
-            winner: winner, 
+            aiHits: res.aiHits, 
+            p1Hits: res.p1Hits, 
+            p2Hits: res.p2Hits, 
+            winner: isPending ? "等待開獎" : res.winner, 
             isPending: isPending 
         };
 
         try {
             await setDoc(doc(db, "battle_history", recordId), record);
             document.getElementById('ai-nums').value = "";
-            document.getElementById('my-nums').value = "";
+            document.getElementById('p1-nums').value = "";
+            document.getElementById('p2-nums').value = "";
             document.getElementById('draw-nums').value = "";
         } catch (e) {
             alert("雲端儲存失敗：" + e.message);
@@ -647,7 +693,10 @@
         const tbody = document.getElementById('history-tbody');
         tbody.innerHTML = '';
 
-        let totalRounds = 0, myRounds = 0, totalAiHits = 0, totalMyHits = 0;
+        let totalRounds = 0;
+        let totalAiHits = 0, totalP1Hits = 0, totalP2Hits = 0;
+        let p1Rounds = 0, p2Rounds = 0;
+
         analyzeHotColdNumbers();
 
         battleHistory.forEach(item => {
@@ -655,58 +704,78 @@
             if (!item.isPending && hasDraw) {
                 totalRounds++;
                 totalAiHits += item.aiHits || 0;
-                if (item.my && item.my.length === 4) {
-                    myRounds++;
-                    totalMyHits += item.myHits || 0;
+                if (item.p1 && item.p1.length === 4) {
+                    p1Rounds++;
+                    totalP1Hits += item.p1Hits || 0;
+                }
+                if (item.p2 && item.p2.length === 4) {
+                    p2Rounds++;
+                    totalP2Hits += item.p2Hits || 0;
                 }
             }
 
             const tr = document.createElement('tr');
-            const genBalls = (nums) => `<div class="num-container">` + nums.map(n => {
+            const genBalls = (nums) => `<div class="num-container">` + (nums || []).map(n => {
                 let isHit = (!item.isPending && hasDraw && item.draw.includes(n)) ? 'hit' : '';
                 return `<div class="num-ball ${isHit}">${n.toString().padStart(2,'0')}</div>`;
             }).join('') + `</div>`;
 
-            const genDrawBalls = (nums) => `<div class="num-container">` + nums.map(n => `<div class="num-ball draw">${n.toString().padStart(2,'0')}</div>`).join('') + `</div>`;
+            const genDrawBalls = (nums) => `<div class="num-container">` + (nums || []).map(n => `<div class="num-ball draw">${n.toString().padStart(2,'0')}</div>`).join('') + `</div>`;
 
-            // AI 欄位渲染
+            // 🤖 AI 預測欄
             let aiColumnHtml = item.ai && item.ai.length === 4
-                ? genBalls(item.ai) + (!item.isPending ? `<div style="font-size:12px; margin-top:4px; color:#ef4444;">中 ${item.aiHits} 顆</div>` : '')
-                : `<span style="color:#94a3b8; font-size:13px;">未提供預測</span>`;
+                ? genBalls(item.ai) + (!item.isPending && hasDraw ? `<div style="font-size:12px; margin-top:4px; color:var(--ai-color); font-weight:bold;">中 ${item.aiHits} 顆</div>` : '')
+                : `<span style="color:#94a3b8; font-size:13px;">未預測</span>`;
 
-            // 🧑 我的預測欄位：若無號碼，直接提供快速補填輸入框！
-            let myColumnHtml = '';
-            if (item.my && item.my.length === 4) {
-                myColumnHtml = genBalls(item.my) + 
-                    (!item.isPending ? `<div style="font-size:12px; margin-top:4px; color:#10b981; font-weight:bold;">中 ${item.myHits} 顆</div>` : '') +
-                    `<button class="action-btn edit-btn" style="margin-top:4px; font-size:11px;" onclick="promptEditMyNums('${item.id}', '${item.my.join(', ')}')">✏️ 重新改號</button>`;
+            // 🧑 玩家 1 欄位
+            let p1ColumnHtml = '';
+            if (item.p1 && item.p1.length === 4) {
+                p1ColumnHtml = genBalls(item.p1) + 
+                    (!item.isPending && hasDraw ? `<div style="font-size:12px; margin-top:4px; color:var(--p1-color); font-weight:bold;">中 ${item.p1Hits} 顆</div>` : '') +
+                    `<button class="action-btn edit-btn" style="margin-top:4px; font-size:11px;" onclick="promptEditPlayer('${item.id}', 'p1', '${item.p1.join(', ')}')">✏️ 改號</button>`;
             } else {
-                myColumnHtml = `
-                    <div style="display:flex; flex-direction:column; align-items:center; gap:4px;">
-                        <input type="text" id="my-inline-${item.id}" class="pending-input" placeholder="輸入我的 4 碼預測">
-                        <button class="action-btn save-my-btn" onclick="saveMyNumsInline('${item.id}')">📥 補填存入</button>
+                p1ColumnHtml = `
+                    <div style="display:flex; flex-direction:column; align-items:center; gap:2px;">
+                        <input type="text" id="p1-inline-${item.id}" class="pending-input" placeholder="填玩家 1 (4碼)">
+                        <button class="save-inline-btn" style="background:var(--p1-color);" onclick="savePlayerInline('${item.id}', 'p1')">📥 補填</button>
                     </div>
                 `;
             }
 
-            // 開獎欄位
+            // 🧑 玩家 2 欄位
+            let p2ColumnHtml = '';
+            if (item.p2 && item.p2.length === 4) {
+                p2ColumnHtml = genBalls(item.p2) + 
+                    (!item.isPending && hasDraw ? `<div style="font-size:12px; margin-top:4px; color:var(--p2-color); font-weight:bold;">中 ${item.p2Hits} 顆</div>` : '') +
+                    `<button class="action-btn edit-btn" style="margin-top:4px; font-size:11px;" onclick="promptEditPlayer('${item.id}', 'p2', '${item.p2.join(', ')}')">✏️ 改號</button>`;
+            } else {
+                p2ColumnHtml = `
+                    <div style="display:flex; flex-direction:column; align-items:center; gap:2px;">
+                        <input type="text" id="p2-inline-${item.id}" class="pending-input" placeholder="填玩家 2 (4碼)">
+                        <button class="save-inline-btn" style="background:var(--p2-color);" onclick="savePlayerInline('${item.id}', 'p2')">📥 補填</button>
+                    </div>
+                `;
+            }
+
+            // 📺 開獎欄
             let drawColumnHtml = hasDraw ? genDrawBalls(item.draw) : `<span style="color:#f59e0b; font-size:13px;">等待開獎</span>`;
 
-            // 勝負標籤
+            // 獲勝判定
             let winnerBadge = `<span class="winner-badge badge-tie">平手</span>`;
-            if (item.isPending) winnerBadge = `<span class="winner-badge badge-pending">⏳ 等待開獎</span>`;
+            if (item.isPending || !hasDraw) winnerBadge = `<span class="winner-badge badge-pending">⏳ 等待開獎</span>`;
             else if (item.winner === "AI 勝") winnerBadge = `<span class="winner-badge badge-ai">🤖 AI 勝</span>`;
-            else if (item.winner === "我 勝") winnerBadge = `<span class="winner-badge badge-my">🧑 我 勝</span>`;
-            else if (item.winner === "僅 AI") winnerBadge = `<span class="winner-badge badge-solo">🤖 僅 AI</span>`;
-            else if (item.winner) winnerBadge = `<span class="winner-badge" style="background:#0ea5e9;">${item.winner}</span>`;
+            else if (item.winner === "玩家1 勝") winnerBadge = `<span class="winner-badge badge-p1">🧑 玩家 1 勝</span>`;
+            else if (item.winner === "玩家2 勝") winnerBadge = `<span class="winner-badge badge-p2">🧑 玩家 2 勝</span>`;
+            else if (item.winner) winnerBadge = `<span class="winner-badge" style="background:#64748b;">${item.winner}</span>`;
 
             tr.innerHTML = `
                 <td><strong>${item.date}</strong></td>
                 <td>${aiColumnHtml}</td>
-                <td>${myColumnHtml}</td>
+                <td>${p1ColumnHtml}</td>
+                <td>${p2ColumnHtml}</td>
                 <td>${drawColumnHtml}</td>
                 <td>${winnerBadge}</td>
-                <td style="min-width: 100px;">
+                <td style="min-width: 90px;">
                     <button class="action-btn edit-btn" onclick="editDate('${item.id}', '${item.date}')">📅 改期</button>
                     <button class="action-btn delete-btn" onclick="deleteRecord('${item.id}')">刪除</button>
                 </td>
@@ -715,48 +784,68 @@
         });
 
         if (battleHistory.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="6" style="padding: 30px; color: #94a3b8;">目前尚無紀錄，可點上方按鈕自動導入開獎號碼！</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="7" style="padding: 30px; color: #94a3b8;">目前尚無紀錄，可滑至最下方點擊按鈕導入天天樂開獎號碼！</td></tr>`;
         }
 
         document.getElementById('total-rounds').innerText = totalRounds;
         document.getElementById('ai-hits').innerText = totalAiHits;
-        document.getElementById('my-hits').innerText = totalMyHits;
-        document.getElementById('my-rounds').innerText = myRounds;
+        document.getElementById('p1-hits').innerText = totalP1Hits;
+        document.getElementById('p2-hits').innerText = totalP2Hits;
+        document.getElementById('p1-rounds').innerText = p1Rounds;
+        document.getElementById('p2-rounds').innerText = p2Rounds;
         
         let aiAvg = totalRounds > 0 ? (totalAiHits / totalRounds) : 0;
-        let myAvg = myRounds > 0 ? (totalMyHits / myRounds) : 0;
+        let p1Avg = p1Rounds > 0 ? (totalP1Hits / p1Rounds) : 0;
+        let p2Avg = p2Rounds > 0 ? (totalP2Hits / p2Rounds) : 0;
         document.getElementById('ai-avg').innerText = aiAvg.toFixed(2);
-        document.getElementById('my-avg').innerText = myAvg.toFixed(2);
+        document.getElementById('p1-avg').innerText = p1Avg.toFixed(2);
+        document.getElementById('p2-avg').innerText = p2Avg.toFixed(2);
 
         let pkEl = document.getElementById('pk-winner');
-        if (myRounds === 0) {
-             pkEl.innerText = "等待補填預測";
-             pkEl.style.color = "var(--draw-color)";
-        } else if (aiAvg > myAvg) {
-            pkEl.innerText = "🤖 AI 領先";
-            pkEl.style.color = "var(--ai-color)";
-        } else if (myAvg > aiAvg) {
-            pkEl.innerText = "🧑 人類(你)領先";
-            pkEl.style.color = "var(--my-color)";
+        let candidates = [
+            { name: "🤖 AI", avg: aiAvg },
+            { name: "🧑 玩家 1", avg: p1Avg },
+            { name: "🧑 玩家 2", avg: p2Avg }
+        ];
+        let maxAvg = Math.max(...candidates.map(c => c.avg));
+
+        if (totalRounds === 0 || maxAvg === 0) {
+            pkEl.innerText = "等待開獎";
+            pkEl.style.color = "var(--draw-color)";
         } else {
-            pkEl.innerText = "平分秋色";
-            pkEl.style.color = "var(--hit-color)";
+            let winners = candidates.filter(c => c.avg === maxAvg);
+            if (winners.length === 1) {
+                pkEl.innerText = `${winners[0].name} 領先`;
+                pkEl.style.color = winners[0].name.includes("AI") ? "var(--ai-color)" : (winners[0].name.includes("1") ? "var(--p1-color)" : "var(--p2-color)");
+            } else {
+                pkEl.innerText = "平分秋色";
+                pkEl.style.color = "var(--hit-color)";
+            }
         }
     }
 
-    async function promptEditMyNums(id, oldNums) {
-        let val = prompt("請輸入修改後的 4 個號碼 (以逗號分隔)：", oldNums);
+    async function promptEditPlayer(id, playerKey, oldNums) {
+        let label = playerKey === 'p1' ? '玩家 1' : '玩家 2';
+        let val = prompt(`請輸入修改後的 ${label} 4 個號碼 (逗號隔開)：`, oldNums);
         if (val !== null) {
             let nums = parseNumbers(val);
             if (nums.length !== 4) return alert("必須剛好是 4 個不重複的號碼！");
             let record = battleHistory.find(r => r.id == id);
             if (record) {
-                let res = calculateResult(record.ai || [], nums, record.draw || []);
-                await updateDoc(doc(db, "battle_history", id.toString()), {
-                    my: nums,
-                    myHits: res.myHitCount,
-                    winner: res.winner
-                });
+                let updatePayload = {};
+                updatePayload[playerKey] = nums;
+
+                let updatedAi = record.ai || [];
+                let updatedP1 = playerKey === 'p1' ? nums : (record.p1 || []);
+                let updatedP2 = playerKey === 'p2' ? nums : (record.p2 || []);
+
+                const res = calculateResult(updatedAi, updatedP1, updatedP2, record.draw || []);
+                updatePayload.aiHits = res.aiHits;
+                updatePayload.p1Hits = res.p1Hits;
+                updatePayload.p2Hits = res.p2Hits;
+                updatePayload.winner = res.winner;
+
+                await updateDoc(doc(db, "battle_history", id.toString()), updatePayload);
             }
         }
     }
@@ -766,8 +855,8 @@
     window.deleteRecord = deleteRecord;
     window.crawlSc888Data = crawlSc888Data;
     window.parseSc888ManualText = parseSc888ManualText;
-    window.saveMyNumsInline = saveMyNumsInline;
-    window.promptEditMyNums = promptEditMyNums;
+    window.savePlayerInline = savePlayerInline;
+    window.promptEditPlayer = promptEditPlayer;
 </script>
 
 <!-- ==========================================
@@ -910,12 +999,14 @@
 
     async function startRoll() {
         const btnRoll = document.getElementById('btn-roll');
-        const btnApply = document.getElementById('btn-apply');
+        const btnApplyP1 = document.getElementById('btn-apply-p1');
+        const btnApplyP2 = document.getElementById('btn-apply-p2');
         const resultSlots = document.querySelectorAll('.machine-ball');
         
         btnRoll.disabled = true;
-        btnRoll.innerText = "🌪️ 彩球瘋狂攪拌中...";
-        btnApply.style.display = "none";
+        btnRoll.innerText = "🌪️ 攪拌中...";
+        btnApplyP1.style.display = "none";
+        btnApplyP2.style.display = "none";
         
         initPhysicsMachine();
         resultSlots.forEach(slot => {
@@ -945,15 +1036,21 @@
         
         isMixing = false;
         btnRoll.disabled = false;
-        btnRoll.innerText = "🎲 重新啟動搖號";
-        btnApply.style.display = "inline-block";
+        btnRoll.innerText = "🎲 重新搖號";
+        btnApplyP1.style.display = "inline-block";
+        btnApplyP2.style.display = "inline-block";
     }
 
-    function applyMachineNumbers() {
+    function applyMachineNumbers(target) {
         if(finalMachineNumbers.length >= 4) {
-            let my4Nums = finalMachineNumbers.slice(0, 4); 
-            document.getElementById('my-nums').value = my4Nums.map(n => n.toString().padStart(2, '0')).join(', ');
-            alert("✅ 已經將前 4 個幸運號碼帶入您的預測欄位！");
+            let selected = finalMachineNumbers.slice(0, 4).map(n => n.toString().padStart(2, '0')).join(', ');
+            if (target === 'p1') {
+                document.getElementById('p1-nums').value = selected;
+                alert("✅ 前 4 碼已帶入【玩家 1】預測！");
+            } else {
+                document.getElementById('p2-nums').value = selected;
+                alert("✅ 前 4 碼已帶入【玩家 2】預測！");
+            }
         }
     }
 </script>
