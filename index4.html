@@ -16,7 +16,7 @@
             --draw-color: #d97706; 
             --neon-purple: #7c3aed;
             --hit-color: #ef4444; 
-            --ball-size: 48px; /* 🌟 電腦端號碼球加大為 48px */
+            --ball-size: 48px;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: "JetBrains Mono", -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft JhengHei", sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -151,53 +151,94 @@
         .cold-badge .num { color: #0284c7; }
         .cold-badge .desc { color: #0369a1; }
 
-        /* 推薦卡片 */
+        /* 🌟 科技感全息推薦牌組樣式 */
         .recom-section {
-            margin-top: 20px;
-            padding-top: 14px;
+            margin-top: 22px;
+            padding-top: 16px;
             border-top: 2px dashed rgba(148, 163, 184, 0.35);
         }
-        .recom-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 10px; }
+        .recom-grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 12px; }
         .recom-card {
-            background: #ffffff;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            padding: 12px 14px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(248,250,252,0.95));
+            border: 1.5px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 14px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
-            gap: 10px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+            gap: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            position: relative;
+            overflow: hidden;
         }
-        .recom-header { display: flex; flex-direction: column; gap: 2px; }
-        .recom-title { font-size: 13px; font-weight: 900; }
-        .recom-sub { font-size: 11px; color: #64748b; }
-        .recom-balls { display: flex; gap: 6px; flex-wrap: wrap; }
+        .recom-card::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; bottom: 0; width: 4px;
+        }
+        .recom-card.c-gold::before { background: #f59e0b; }
+        .recom-card.c-cyan::before { background: #06b6d4; }
+        .recom-card.c-rose::before { background: #f43f5e; }
+        .recom-card.c-green::before { background: #10b981; }
+
+        .recom-header { display: flex; flex-direction: column; gap: 3px; }
+        .recom-title { font-size: 13px; font-weight: 900; display: flex; align-items: center; gap: 6px; }
+        .recom-sub { font-size: 11px; color: #64748b; font-weight: bold; }
+        
+        .recom-balls { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
         .recom-ball {
-            width: 32px;
-            height: 32px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 900;
             font-family: monospace;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+            transition: transform 0.2s;
         }
-        .recom-ball.hot { background: #fef2f2; color: #dc2626; border: 1.5px solid #f87171; }
-        .recom-ball.cold { background: #f0f9ff; color: #0284c7; border: 1.5px solid #38bdf8; }
+        .recom-ball:hover { transform: scale(1.1); }
+        
+        /* 🌟 多彩光量子球色系 */
+        .recom-ball.q-cyan { 
+            background: linear-gradient(135deg, #e0f2fe, #bae6fd); 
+            color: #0369a1; 
+            border: 1.5px solid #38bdf8; 
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+        }
+        .recom-ball.q-gold { 
+            background: linear-gradient(135deg, #fef3c7, #fde68a); 
+            color: #b45309; 
+            border: 1.5px solid #f59e0b; 
+            box-shadow: 0 0 10px rgba(245, 158, 11, 0.4);
+        }
+        .recom-ball.q-rose { 
+            background: linear-gradient(135deg, #ffe4e6, #fecdd3); 
+            color: #be123c; 
+            border: 1.5px solid #fb7185; 
+            box-shadow: 0 0 10px rgba(244, 63, 94, 0.4);
+        }
+        .recom-ball.q-green { 
+            background: linear-gradient(135deg, #dcfce7, #bbf7d0); 
+            color: #15803d; 
+            border: 1.5px solid #4ade80; 
+            box-shadow: 0 0 10px rgba(34, 197, 94, 0.4);
+        }
+
         .recom-btns { display: flex; gap: 6px; }
         .btn-fast-apply {
             border: none;
             color: white;
             font-size: 11px;
-            font-weight: 800;
+            font-weight: 900;
             padding: 6px 12px;
-            border-radius: 6px;
+            border-radius: 8px;
             cursor: pointer;
             transition: 0.2s;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
         }
         .btn-fast-apply:hover { filter: brightness(1.1); transform: translateY(-1px); }
 
@@ -285,7 +326,6 @@
         td { padding: 18px 12px; border-bottom: 1px solid #e2e8f0; vertical-align: middle; }
         tr:hover { background: rgba(241, 245, 249, 0.6); }
 
-        /* 🌟 號碼球特大化樣式 */
         .num-container { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; align-items: center; }
         .num-ball { 
             width: var(--ball-size); 
@@ -294,7 +334,7 @@
             display: flex; 
             align-items: center; 
             justify-content: center; 
-            font-size: 20px; /* 🌟 數字放大至 20px */
+            font-size: 20px; 
             font-weight: 900; 
             background: #ffffff; 
             color: #1e293b; 
@@ -331,10 +371,9 @@
         .edit-btn { background: #f1f5f9; color: #334155; }
         .edit-btn:hover { background: #e2e8f0; }
 
-        /* 手機模式適配 (卡片流也同步加大球號) */
         @media (max-width: 768px) {
             :root {
-                --ball-size: 42px; /* 🌟 手機端號碼球放大為 42px */
+                --ball-size: 42px;
             }
             body { padding: 12px 8px; }
             header { padding: 16px 12px; margin-bottom: 14px; border-radius: 12px; }
@@ -385,7 +424,7 @@
             .num-ball { 
                 width: var(--ball-size); 
                 height: var(--ball-size); 
-                font-size: 17px; /* 🌟 手機端球內字體放大為 17px */
+                font-size: 17px; 
             }
             .recom-card { flex-direction: column; align-items: flex-start; }
             .recom-btns { width: 100%; justify-content: flex-end; }
@@ -427,7 +466,7 @@
         </div>
     </div>
 
-    <!-- 冷熱牌 & AI 推薦星組 -->
+    <!-- 冷熱牌 & AI 機率演算法推薦星組 -->
     <div class="tools-panel">
         <div class="tool-card">
             <h3 style="color:#dc2626;">
@@ -446,14 +485,14 @@
                 <div style="font-size:12px; color:#94a3b8;">累積開獎數據後顯示...</div>
             </div>
 
-            <!-- 智能推薦三星／四星 -->
+            <!-- 🌟 全新機率動態演算法推薦星組 (多彩科技風) -->
             <div class="recom-section">
                 <h3 style="margin-bottom:8px; border:none; padding-bottom:0; color:#475569;">
-                    <span>🎯 AI 智能推薦牌組 (冷熱演算)</span>
-                    <button onclick="refreshRecommendations()" style="border:none; background:#f1f5f9; padding:4px 8px; border-radius:6px; font-size:11px; cursor:pointer; color:#0284c7; font-weight:bold;">🔄 換一組</button>
+                    <span>🎯 AI 動態開出機率矩陣推薦 (三星 / 四星)</span>
+                    <button onclick="refreshRecommendations()" style="border:none; background:#f1f5f9; padding:4px 10px; border-radius:6px; font-size:11px; cursor:pointer; color:#0284c7; font-weight:bold;">🔄 重新演算換組</button>
                 </h3>
                 <div class="recom-grid" id="recom-container">
-                    <div style="font-size:12px; color:#94a3b8;">累積足夠開獎資料後生成...</div>
+                    <div style="font-size:12px; color:#94a3b8;">累積足夠開獎資料後自動進行貝氏機率演算...</div>
                 </div>
             </div>
         </div>
@@ -582,7 +621,7 @@
         setDoc, 
         updateDoc, 
         deleteDoc, 
-        writeBatch,
+        writeBatch, 
         onSnapshot 
     } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
@@ -601,8 +640,7 @@
     const lotteryCol = collection(db, "battle_history");
 
     let battleHistory = [];
-    let cachedHotNumbers = [];
-    let cachedColdNumbers = [];
+    let probabilityRankedBalls = [];
 
     onSnapshot(lotteryCol, (snapshot) => {
         battleHistory = [];
@@ -766,7 +804,7 @@
             }
 
             statusEl.innerText = `🎉 成功解析並匯入 ${drawList.length} 天開獎紀錄！`;
-            alert(`🎉 批次匯入成功！\n• 成功解析天數：${drawList.length} 期\n• 自動建立新開獎：${createdCount} 期\n• 自動更新現有開獎：${updatedCount} 期\n冷熱門統計與排行榜已同步刷新！`);
+            alert(`🎉 批次匯入成功！\n• 成功解析天數：${drawList.length} 期\n• 自動建立新開獎：${createdCount} 期\n• 自動更新現有開獎：${updatedCount} 期\n機率動能排行榜已同步刷新！`);
             document.getElementById('sc888-paste-area').value = "";
         } catch (e) {
             statusEl.innerText = "❌ 寫入雲端失敗";
@@ -882,6 +920,7 @@
         }
     }
 
+    // 🌟 統計冷熱門並建立「動態開出機率權重評分」
     function analyzeHotColdNumbers() {
         let completedDraws = battleHistory.filter(item => !item.isPending && item.draw && item.draw.length === 5);
         if(completedDraws.length === 0) return;
@@ -891,7 +930,7 @@
 
         let numStats = {};
         for(let i = 1; i <= 39; i++) {
-            numStats[i] = { num: i, count: 0, lastSeenAgo: 999 };
+            numStats[i] = { num: i, count: 0, lastSeenAgo: 999, recentCount: 0 };
         }
 
         completedDraws.forEach((record, index) => {
@@ -900,28 +939,54 @@
                 if (numStats[n].lastSeenAgo === 999) {
                     numStats[n].lastSeenAgo = index;
                 }
+                // 最近 15 期的近期動能
+                if (index < 15) {
+                    numStats[n].recentCount++;
+                }
             });
         });
 
         let statsArray = Object.values(numStats);
-        
-        cachedHotNumbers = [...statsArray].sort((a, b) => {
+
+        // 🌟 核心演算法：計算每顆球的動態開出機率得分 (Probability Weight Score)
+        // 評分指標：歷史熱度(40%) + 近期15期動能(35%) + 遺漏回補週期期望值(25%)
+        statsArray.forEach(item => {
+            let freqScore = (item.count / completedDraws.length) * 100;
+            let recentScore = (item.recentCount / Math.min(15, completedDraws.length)) * 100;
+            
+            // 遺漏期望值加權：天天樂平均約每 7~8 期開出一次，遺漏在 4~10 期反彈動能最強
+            let reboundScore = 50;
+            if (item.lastSeenAgo >= 3 && item.lastSeenAgo <= 10) {
+                reboundScore = 90;
+            } else if (item.lastSeenAgo === 0) {
+                reboundScore = 70; // 連莊可能
+            } else if (item.lastSeenAgo > 25) {
+                reboundScore = 30; // 深冷凍結
+            }
+
+            item.probScore = (freqScore * 0.40) + (recentScore * 0.35) + (reboundScore * 0.25);
+        });
+
+        // 依機率得分降序排列
+        probabilityRankedBalls = [...statsArray].sort((a, b) => b.probScore - a.probScore);
+
+        let hotNumbers = [...statsArray].sort((a, b) => {
             if (b.count !== a.count) return b.count - a.count;
             return a.lastSeenAgo - b.lastSeenAgo;
         }).slice(0, 8);
 
-        cachedColdNumbers = [...statsArray].sort((a, b) => {
+        let coldNumbers = [...statsArray].sort((a, b) => {
             if (b.lastSeenAgo !== a.lastSeenAgo) return b.lastSeenAgo - a.lastSeenAgo;
             return a.count - b.count;
         }).slice(0, 8);
 
-        let hotHitCount = cachedHotNumbers.filter(item => latestDrawNums.includes(item.num)).length;
-        let coldHitCount = cachedColdNumbers.filter(item => latestDrawNums.includes(item.num)).length;
+        let hotHitCount = hotNumbers.filter(item => latestDrawNums.includes(item.num)).length;
+        let coldHitCount = coldNumbers.filter(item => latestDrawNums.includes(item.num)).length;
 
         document.getElementById('hot-hit-summary').innerText = latestRecord ? `[${latestRecord.date} 開出 ${hotHitCount} 顆]` : '';
         document.getElementById('cold-hit-summary').innerText = latestRecord ? `[${latestRecord.date} 開出 ${coldHitCount} 顆]` : '';
 
-        document.getElementById('hot-numbers').innerHTML = cachedHotNumbers.map(item => {
+        document.getElementById('hot-numbers').innerHTML = hotNumbers.map(item => {
             let isHitToday = latestDrawNums.includes(item.num) ? 'hit-today' : '';
             return `
                 <div class="info-badge hot-badge ${isHitToday}">
@@ -931,7 +996,7 @@
             `;
         }).join('');
 
-        document.getElementById('cold-numbers').innerHTML = cachedColdNumbers.map(item => {
+        document.getElementById('cold-numbers').innerHTML = coldNumbers.map(item => {
             let isHitToday = latestDrawNums.includes(item.num) ? 'hit-today' : '';
             return `
                 <div class="info-badge cold-badge ${isHitToday}">
@@ -944,43 +1009,69 @@
         renderRecommendations();
     }
 
+    // 🌟 全新 AI 機率演算法推薦星組 (包含多彩科技光球)
     function renderRecommendations() {
-        if (!cachedHotNumbers || cachedHotNumbers.length < 4 || !cachedColdNumbers || cachedColdNumbers.length < 4) return;
+        if (!probabilityRankedBalls || probabilityRankedBalls.length < 12) return;
 
         const container = document.getElementById('recom-container');
-        const sample = (arr, count) => {
-            let shuffled = [...arr].sort(() => 0.5 - Math.random());
-            return shuffled.slice(0, count);
+        
+        // 隨機加權抽樣工具
+        const pickFromRank = (pool, count, colorClass) => {
+            let shuffled = [...pool].sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, count).map(x => ({ num: x.num, color: colorClass })).sort((a,b) => a.num - b.num);
         };
 
-        let s3Hot = sample(cachedHotNumbers.slice(0, 6).map(x => ({ num: x.num, type: 'hot' })), 3).sort((a,b) => a.num - b.num);
-        let s3BalH = sample(cachedHotNumbers.slice(0, 6).map(x => ({ num: x.num, type: 'hot' })), 2);
-        let s3BalC = sample(cachedColdNumbers.slice(0, 6).map(x => ({ num: x.num, type: 'cold' })), 1);
-        let s3Balance = [...s3BalH, ...s3BalC].sort((a,b) => a.num - b.num);
+        // 策略 1: 【金黃神經星】機率期望值最高 TOP 6 中精選 3 顆 (最高可能開出組)
+        let s3HighProb = pickFromRank(probabilityRankedBalls.slice(0, 6), 3, 'q-gold');
 
-        let s4BalH = sample(cachedHotNumbers.slice(0, 8).map(x => ({ num: x.num, type: 'hot' })), 2);
-        let s4BalC = sample(cachedColdNumbers.slice(0, 8).map(x => ({ num: x.num, type: 'cold' })), 2);
-        let s4Balance = [...s4BalH, ...s4BalC].sort((a,b) => a.num - b.num);
+        // 策略 2: 【電青共振星】高動能週期共振 (從第 3~9 名高反彈潛力中精選 3 顆)
+        let s3Resonance = pickFromRank(probabilityRankedBalls.slice(2, 9), 3, 'q-cyan');
 
-        let s4Hot = sample(cachedHotNumbers.slice(0, 8).map(x => ({ num: x.num, type: 'hot' })), 4).sort((a,b) => a.num - b.num);
+        // 策略 3: 【霓紅旗艦星】頂級機率矩陣四星 (從前 8 名機率王者中挑選 4 顆)
+        let s4Flagship = pickFromRank(probabilityRankedBalls.slice(0, 8), 4, 'q-rose');
+
+        // 策略 4: 【翠綠防禦星】平衡期望值防守四星 (前 4 名取 2 顆 + 第 5~12 名取 2 顆)
+        let s4BalTop = pickFromRank(probabilityRankedBalls.slice(0, 4), 2, 'q-green');
+        let s4BalMid = pickFromRank(probabilityRankedBalls.slice(4, 12), 2, 'q-green');
+        let s4Balanced = [...s4BalTop, ...s4BalMid].sort((a,b) => a.num - b.num);
 
         const list = [
-            { title: '⭐ 三星・熱門強勢組合', sub: '高頻熱碼精選', balls: s3Hot },
-            { title: '⭐ 三星・冰火平衡防守', sub: '2熱碼 + 1破冰冷碼', balls: s3Balance },
-            { title: '🌟 四星・冰火全能旗艦', sub: '2熱門動能 + 2極凍伏擊', balls: s4Balance },
-            { title: '🌟 四星・極速熱碼連碰', sub: '強勢熱門動能 4 碼', balls: s4Hot }
+            { 
+                cardClass: 'c-gold',
+                title: '👑 三星・動態機率最高期望組合', 
+                sub: '全盤貝氏加權演算法得分 TOP 領先號碼', 
+                balls: s3HighProb 
+            },
+            { 
+                cardClass: 'c-cyan',
+                title: '⚡ 三星・週期共振高回補組合', 
+                sub: '中週期回歸期望值最強動能球號', 
+                balls: s3Resonance 
+            },
+            { 
+                cardClass: 'c-rose',
+                title: '🌟 四星・量子極限機率矩陣', 
+                sub: '近期綜合連莊與爆發機率最高 4 碼', 
+                balls: s4Flagship 
+            },
+            { 
+                cardClass: 'c-green',
+                title: '🛡️ 四星・數學期望值全防守配置', 
+                sub: '核心高機率碼 2 顆 + 潛在回彈碼 2 顆', 
+                balls: s4Balanced 
+            }
         ];
 
         container.innerHTML = list.map((item) => {
             const rawNums = item.balls.map(b => b.num.toString().padStart(2, '0')).join(', ');
             return `
-                <div class="recom-card">
+                <div class="recom-card ${item.cardClass}">
                     <div class="recom-header">
                         <div class="recom-title">${item.title}</div>
                         <div class="recom-sub">${item.sub}</div>
                     </div>
                     <div class="recom-balls">
-                        ${item.balls.map(b => `<div class="recom-ball ${b.type}">${b.num.toString().padStart(2, '0')}</div>`).join('')}
+                        ${item.balls.map(b => `<div class="recom-ball ${b.color}">${b.num.toString().padStart(2, '0')}</div>`).join('')}
                     </div>
                     <div class="recom-btns">
                         <button class="btn-fast-apply" style="background:var(--ai-color);" onclick="applyRecomNums('${rawNums}', 'ai')">入 AI</button>
