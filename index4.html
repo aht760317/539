@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>天天樂 光量子 AI 科技對決擂台 (Firebase 雲端同步版)</title>
+    <title>天天樂 光量子 AI 科技對決擂台 (走勢趨勢圖版)</title>
+    <!-- 引入輕量 CDN 圖表庫 Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
             --bg-color: #f1f5f9; 
@@ -87,6 +89,55 @@
         .stat-value { font-size: 30px; font-weight: 900; margin: 6px 0; font-family: monospace; }
         .stat-sub { font-size: 11px; color: #64748b; font-weight: 600; }
 
+        /* 趨勢走勢圖面板 */
+        .trend-panel {
+            background: var(--panel-bg); 
+            padding: 22px; 
+            border-radius: 18px; 
+            border: 1px solid var(--panel-border); 
+            margin-bottom: 20px; 
+            box-shadow: 0 8px 25px rgba(0,0,0,0.03); 
+            backdrop-filter: blur(12px);
+        }
+        .trend-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .trend-header h2 {
+            font-size: 17px;
+            font-weight: 900;
+            color: var(--text-main);
+            border-left: 5px solid var(--neon-purple);
+            padding-left: 10px;
+        }
+        .trend-btns { display: flex; gap: 8px; }
+        .trend-btn {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 800;
+            color: #475569;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .trend-btn.active {
+            background: linear-gradient(135deg, #0284c7, #2563eb);
+            color: #ffffff;
+            border-color: #0284c7;
+            box-shadow: 0 2px 8px rgba(2, 132, 199, 0.25);
+        }
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            height: 280px;
+        }
+
         /* 工具面板區 */
         .tools-panel { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 18px; margin-bottom: 20px; }
         .tool-card { 
@@ -151,7 +202,7 @@
         .cold-badge .num { color: #0284c7; }
         .cold-badge .desc { color: #0369a1; }
 
-        /* 🌟 科技感全息推薦牌組樣式 */
+        /* 推薦卡片 */
         .recom-section {
             margin-top: 22px;
             padding-top: 16px;
@@ -202,7 +253,6 @@
         }
         .recom-ball:hover { transform: scale(1.1); }
         
-        /* 🌟 多彩光量子球色系 */
         .recom-ball.q-cyan { 
             background: linear-gradient(135deg, #e0f2fe, #bae6fd); 
             color: #0369a1; 
@@ -383,6 +433,8 @@
             .stat-title { font-size: 11px; }
             .stat-sub { font-size: 10px; }
 
+            .chart-wrapper { height: 230px; }
+
             .dual-machine-grid { grid-template-columns: 1fr; gap: 12px; }
             .machine-unit { padding: 12px; }
             .realistic-machine { width: 130px; height: 130px; }
@@ -452,7 +504,7 @@
         <div class="stat-card ai-card">
             <div class="stat-title" style="color:var(--ai-color)">🤖 AI 總命中</div>
             <div class="stat-value" id="ai-hits" style="color:var(--ai-color)">0</div>
-            <div class="stat-sub">場均：<span id="ai-avg">0.00</span> 顆</div>
+            <div class="stat-sub">參賽 <span id="ai-rounds">0</span> 期 (場均：<span id="ai-avg">0.00</span>)</div>
         </div>
         <div class="stat-card my-card">
             <div class="stat-title" style="color:var(--my-color)">🧑 我 總命中</div>
@@ -463,6 +515,20 @@
             <div class="stat-title" style="color:var(--draw-color)">🏆 目前勝率霸主</div>
             <div class="stat-value" id="pk-winner" style="color:var(--draw-color); font-size:20px;">等待開獎</div>
             <div class="stat-sub">以平均命中率判定</div>
+        </div>
+    </div>
+
+    <!-- 🌟 新增：AI vs 玩家 參賽期數與命中趨勢走勢圖 -->
+    <div class="trend-panel">
+        <div class="trend-header">
+            <h2>📈 AI vs 玩家 預測走勢圖 (期數 & 命中曲度分析)</h2>
+            <div class="trend-btns">
+                <button class="trend-btn active" id="btn-trend-hits" onclick="switchTrendChart('hits')">🎯 累計命中球數走勢</button>
+                <button class="trend-btn" id="btn-trend-rounds" onclick="switchTrendChart('rounds')">📅 預測參賽期數走勢</button>
+            </div>
+        </div>
+        <div class="chart-wrapper">
+            <canvas id="trendChart"></canvas>
         </div>
     </div>
 
@@ -485,7 +551,7 @@
                 <div style="font-size:12px; color:#94a3b8;">累積開獎數據後顯示...</div>
             </div>
 
-            <!-- 🌟 全新機率動態演算法推薦星組 (多彩科技風) -->
+            <!-- 全新機率動態演算法推薦星組 -->
             <div class="recom-section">
                 <h3 style="margin-bottom:8px; border:none; padding-bottom:0; color:#475569;">
                     <span>🎯 AI 動態開出機率矩陣推薦 (三星 / 四星)</span>
@@ -641,6 +707,8 @@
 
     let battleHistory = [];
     let probabilityRankedBalls = [];
+    let trendChartInstance = null;
+    let currentTrendType = 'hits'; // 'hits' 或 'rounds'
 
     onSnapshot(lotteryCol, (snapshot) => {
         battleHistory = [];
@@ -804,7 +872,7 @@
             }
 
             statusEl.innerText = `🎉 成功解析並匯入 ${drawList.length} 天開獎紀錄！`;
-            alert(`🎉 批次匯入成功！\n• 成功解析天數：${drawList.length} 期\n• 自動建立新開獎：${createdCount} 期\n• 自動更新現有開獎：${updatedCount} 期\n機率動能排行榜已同步刷新！`);
+            alert(`🎉 批次匯入成功！\n• 成功解析天數：${drawList.length} 期\n• 自動建立新開獎：${createdCount} 期\n• 自動更新現有開獎：${updatedCount} 期\n機率動能排行榜與走勢圖已同步刷新！`);
             document.getElementById('sc888-paste-area').value = "";
         } catch (e) {
             statusEl.innerText = "❌ 寫入雲端失敗";
@@ -920,7 +988,6 @@
         }
     }
 
-    // 🌟 統計冷熱門並建立「動態開出機率權重評分」
     function analyzeHotColdNumbers() {
         let completedDraws = battleHistory.filter(item => !item.isPending && item.draw && item.draw.length === 5);
         if(completedDraws.length === 0) return;
@@ -939,7 +1006,6 @@
                 if (numStats[n].lastSeenAgo === 999) {
                     numStats[n].lastSeenAgo = index;
                 }
-                // 最近 15 期的近期動能
                 if (index < 15) {
                     numStats[n].recentCount++;
                 }
@@ -948,26 +1014,22 @@
 
         let statsArray = Object.values(numStats);
 
-        // 🌟 核心演算法：計算每顆球的動態開出機率得分 (Probability Weight Score)
-        // 評分指標：歷史熱度(40%) + 近期15期動能(35%) + 遺漏回補週期期望值(25%)
         statsArray.forEach(item => {
             let freqScore = (item.count / completedDraws.length) * 100;
             let recentScore = (item.recentCount / Math.min(15, completedDraws.length)) * 100;
             
-            // 遺漏期望值加權：天天樂平均約每 7~8 期開出一次，遺漏在 4~10 期反彈動能最強
             let reboundScore = 50;
             if (item.lastSeenAgo >= 3 && item.lastSeenAgo <= 10) {
                 reboundScore = 90;
             } else if (item.lastSeenAgo === 0) {
-                reboundScore = 70; // 連莊可能
+                reboundScore = 70;
             } else if (item.lastSeenAgo > 25) {
-                reboundScore = 30; // 深冷凍結
+                reboundScore = 30;
             }
 
             item.probScore = (freqScore * 0.40) + (recentScore * 0.35) + (reboundScore * 0.25);
         });
 
-        // 依機率得分降序排列
         probabilityRankedBalls = [...statsArray].sort((a, b) => b.probScore - a.probScore);
 
         let hotNumbers = [...statsArray].sort((a, b) => {
@@ -1009,28 +1071,19 @@
         renderRecommendations();
     }
 
-    // 🌟 全新 AI 機率演算法推薦星組 (包含多彩科技光球)
     function renderRecommendations() {
         if (!probabilityRankedBalls || probabilityRankedBalls.length < 12) return;
 
         const container = document.getElementById('recom-container');
         
-        // 隨機加權抽樣工具
         const pickFromRank = (pool, count, colorClass) => {
             let shuffled = [...pool].sort(() => 0.5 - Math.random());
             return shuffled.slice(0, count).map(x => ({ num: x.num, color: colorClass })).sort((a,b) => a.num - b.num);
         };
 
-        // 策略 1: 【金黃神經星】機率期望值最高 TOP 6 中精選 3 顆 (最高可能開出組)
         let s3HighProb = pickFromRank(probabilityRankedBalls.slice(0, 6), 3, 'q-gold');
-
-        // 策略 2: 【電青共振星】高動能週期共振 (從第 3~9 名高反彈潛力中精選 3 顆)
         let s3Resonance = pickFromRank(probabilityRankedBalls.slice(2, 9), 3, 'q-cyan');
-
-        // 策略 3: 【霓紅旗艦星】頂級機率矩陣四星 (從前 8 名機率王者中挑選 4 顆)
         let s4Flagship = pickFromRank(probabilityRankedBalls.slice(0, 8), 4, 'q-rose');
-
-        // 策略 4: 【翠綠防禦星】平衡期望值防守四星 (前 4 名取 2 顆 + 第 5~12 名取 2 顆)
         let s4BalTop = pickFromRank(probabilityRankedBalls.slice(0, 4), 2, 'q-green');
         let s4BalMid = pickFromRank(probabilityRankedBalls.slice(4, 12), 2, 'q-green');
         let s4Balanced = [...s4BalTop, ...s4BalMid].sort((a,b) => a.num - b.num);
@@ -1082,6 +1135,127 @@
         }).join('');
     }
 
+    // 🌟 渲染與切換 AI vs 玩家 趨勢曲線圖 (Chart.js)
+    function renderTrendChart() {
+        const ctx = document.getElementById('trendChart');
+        if (!ctx) return;
+
+        // 依日期時間正序 (由遠到近) 排列走勢
+        let sortedAsc = [...battleHistory].filter(item => !item.isPending && item.draw && item.draw.length === 5).sort((a, b) => new Date(a.date) - new Date(b.date));
+        
+        if (sortedAsc.length === 0) {
+            if (trendChartInstance) trendChartInstance.destroy();
+            return;
+        }
+
+        // 為了在手機與小螢幕上清晰顯示，最多取最近 30 期走勢
+        if (sortedAsc.length > 30) {
+            sortedAsc = sortedAsc.slice(sortedAsc.length - 30);
+        }
+
+        let labels = sortedAsc.map(item => item.date.slice(5)); // 顯示 MM-DD
+        let aiCumulative = 0;
+        let myCumulative = 0;
+        let aiData = [];
+        let myData = [];
+
+        sortedAsc.forEach(item => {
+            if (currentTrendType === 'hits') {
+                aiCumulative += (item.aiHits || 0);
+                myCumulative += (item.myHits || 0);
+            } else {
+                if (isValidPrediction(item.ai)) aiCumulative++;
+                if (isValidPrediction(item.my)) myCumulative++;
+            }
+            aiData.push(aiCumulative);
+            myData.push(myCumulative);
+        });
+
+        const chartConfig = {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: currentTrendType === 'hits' ? '🤖 AI 累計命中顆數' : '🤖 AI 累計參賽期數',
+                        data: aiData,
+                        borderColor: '#0284c7',
+                        backgroundColor: 'rgba(2, 132, 199, 0.08)',
+                        borderWidth: 3,
+                        pointBackgroundColor: '#0284c7',
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        tension: 0.35, // 平滑貝茲曲線
+                        fill: true
+                    },
+                    {
+                        label: currentTrendType === 'hits' ? '🧑 我的 累計命中顆數' : '🧑 我的 累計參賽期數',
+                        data: myData,
+                        borderColor: '#059669',
+                        backgroundColor: 'rgba(5, 150, 105, 0.08)',
+                        borderWidth: 3,
+                        pointBackgroundColor: '#059669',
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        tension: 0.35,
+                        fill: true
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    mode: 'index',
+                    intersect: false
+                },
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            font: { family: 'JetBrains Mono', weight: 'bold', size: 12 },
+                            color: '#334155',
+                            usePointStyle: true,
+                            pointStyle: 'circle'
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                        titleFont: { family: 'JetBrains Mono', weight: 'bold' },
+                        bodyFont: { family: 'JetBrains Mono' },
+                        padding: 10,
+                        cornerRadius: 8
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { color: 'rgba(226, 232, 240, 0.6)' },
+                        ticks: { color: '#64748b', font: { family: 'JetBrains Mono', size: 11 } }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: 'rgba(226, 232, 240, 0.6)' },
+                        ticks: { color: '#64748b', font: { family: 'JetBrains Mono', size: 11 }, precision: 0 }
+                    }
+                }
+            }
+        };
+
+        if (trendChartInstance) {
+            trendChartInstance.destroy();
+        }
+        trendChartInstance = new Chart(ctx, chartConfig);
+    }
+
+    function switchTrendChart(type) {
+        currentTrendType = type;
+        document.getElementById('btn-trend-hits').classList.toggle('active', type === 'hits');
+        document.getElementById('btn-trend-rounds').classList.toggle('active', type === 'rounds');
+        renderTrendChart();
+    }
+
     window.refreshRecommendations = function() {
         renderRecommendations();
     };
@@ -1092,6 +1266,8 @@
         document.getElementById(targetMap[targetKey]).value = numsStr;
         alert(`✅ 已將推薦號碼 [ ${numsStr} ] 帶入【${nameMap[targetKey]}】！`);
     };
+
+    window.switchTrendChart = switchTrendChart;
 
     function renderAll() {
         const tbody = document.getElementById('history-tbody');
@@ -1163,6 +1339,7 @@
         document.getElementById('total-rounds').innerText = totalRounds;
         document.getElementById('ai-hits').innerText = totalAiHits;
         document.getElementById('my-hits').innerText = totalMyHits;
+        document.getElementById('ai-rounds').innerText = aiRounds;
         document.getElementById('my-rounds').innerText = myRounds;
         
         let aiAvg = aiRounds > 0 ? (totalAiHits / aiRounds) : 0;
@@ -1184,6 +1361,9 @@
             pkEl.innerText = "平分秋色";
             pkEl.style.color = "var(--draw-color)";
         }
+
+        // 🌟 即時更新趨勢圖
+        renderTrendChart();
     }
 
     window.addRecord = addRecord;
