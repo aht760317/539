@@ -410,7 +410,6 @@
             font-weight: 900;
         }
         
-        /* 🌟 手機與電腦均強制每行顯示 4 個 */
         .badge-list { 
             display: grid; 
             grid-template-columns: repeat(4, 1fr); 
@@ -1070,26 +1069,22 @@
             </div>
         </div>
 
-        <!-- 🌟 旗艦大版台彩氣動開獎機 (球從氣缸吸入右側管道滾動一圈 & 顯示正確日期) -->
+        <!-- 🌟 旗艦大版台彩氣動開獎機 -->
         <div class="tool-card">
             <h3 style="color:var(--neon-purple);">🎰 台彩官方實景・氣動直立式開獎機 (旗艦大版)</h3>
             <div class="taicai-machine-wrapper">
-                <!-- 電視轉播大球特寫 -->
                 <div class="ball-spotlight-overlay" id="spotlight-window">01</div>
 
                 <div class="taicai-studio">
-                    <!-- 透明氣缸 -->
                     <div class="cylinder-chamber" id="airflow-cylinder">
                         <div class="cylinder-base"></div>
                     </div>
-                    <!-- 黑色控制箱與右側環繞滾動管道 -->
                     <div class="power-box">
                         <div class="rolling-platform-right"></div>
                         <div style="font-size:11px; color:#94a3b8; margin-bottom:2px; font-weight:bold;" id="live-draw-label">LIVE 539</div>
                         <div class="power-box-screen" id="power-screen">READY</div>
                     </div>
                 </div>
-                <!-- 底部開獎球槽 (5 顆) -->
                 <div class="machine-balls" id="machine-balls">
                     <div class="machine-ball">?</div><div class="machine-ball">?</div><div class="machine-ball">?</div><div class="machine-ball">?</div><div class="machine-ball">?</div>
                 </div>
@@ -1571,7 +1566,7 @@
         }).join('');
     }
 
-    // 🌟 點擊「🚀 準備發大財」才啟動的逐顆跳號開獎動畫
+    // 🌟 點擊「🚀 準備發大財」才啟動的期待感開獎動畫
     window.refreshRecommendationsWithSuspense = async function() {
         if (!probabilityRankedBalls || probabilityRankedBalls.length < 12) return;
 
@@ -1718,12 +1713,12 @@
         }
     }
 
-    // 計算今日開獎日期（若為禮拜日則自動順延顯示禮拜一）
+    // 模擬計算今日營業日 (若週日則順延週一)
     function getValid539DrawDate() {
         let d = new Date();
-        let dayOfWeek = d.getDay(); // 0 是禮拜日
+        let dayOfWeek = d.getDay();
         if (dayOfWeek === 0) {
-            d.setDate(d.getDate() + 1); // 禮拜日順延一天為禮拜一
+            d.setDate(d.getDate() + 1);
         }
         let yyyy = d.getFullYear();
         let mm = String(d.getMonth() + 1).padStart(2, '0');
@@ -1735,7 +1730,6 @@
         document.getElementById('input-date').value = new Date().toISOString().split('T')[0];
         taicaiMachine = new TaicaiAirMachine('airflow-cylinder');
 
-        // 更新頂部日期標籤 (禮拜日自動顯示禮拜一)
         let drawDateStr = getValid539DrawDate();
         document.getElementById('live-draw-date-badge').innerText = `LIVE 539 開獎日期：${drawDateStr} (週日公休自動順延)`;
         document.getElementById('live-draw-label').innerText = drawDateStr;
@@ -1769,9 +1763,29 @@
             }
         }
     };
+
+    // 🌟 倍投視算表控制函式
+    window.openProfitModal = function() {
+        document.getElementById('profit-modal').style.display = 'flex';
+        calculateSingleTargetPlan();
+        calculateFourTargetPlan();
+    };
+    window.closeProfitModal = function() {
+        document.getElementById('profit-modal').style.display = 'none';
+    };
+    window.closeModalOnOverlay = function(e) {
+        if (e.target.id === 'profit-modal') closeProfitModal();
+    };
+    window.switchModalTab = function(tabKey) {
+        const tabs = ['single-target', 'four-target', 'tier-track'];
+        tabs.forEach(t => {
+            document.getElementById(`tab-btn-${t}`).classList.toggle('active', t === tabKey);
+            document.getElementById(`tab-content-${t}`).style.display = (t === tabKey) ? 'block' : 'none';
+        });
+    };
 </script>
 
-<!-- 🌟 擬真台彩氣動開獎機 (球從氣缸吸入右側管道滾動一圈 & 顯示 BALL 5) -->
+<!-- 🌟 擬真台彩氣動開獎機引擎 -->
 <script>
     class TaicaiAirMachine {
         constructor(chamberId) {
@@ -1849,19 +1863,19 @@
             let el = ballObj.el;
             let ballNumStr = ballObj.id.toString().padStart(2, '0');
 
-            // 1. 球往右側管道吸入並繞行一圈滾過去
+            // 1. 球往右側管子吸出並在旁邊滾動繞行一圈
             el.style.transition = "all 1.1s cubic-bezier(0.25, 0.8, 0.25, 1)";
-            el.style.transform = `translate(95px, -65px) scale(1.25)";
+            el.style.transform = "translate(95px, -65px) scale(1.25)";
             el.style.zIndex = "100";
 
             await new Promise(r => setTimeout(r, 1100));
             el.style.opacity = "0";
 
-            // 2. 電視轉播大球特寫鏡頭 (Spotlight 放大顯示)
+            // 2. 電視轉播大球特寫鏡頭
             this.spotlight.innerText = ballNumStr;
             this.spotlight.classList.add('show');
 
-            await new Promise(r => setTimeout(r, 1500)); // 特寫停留 1.5 秒
+            await new Promise(r => setTimeout(r, 1500));
 
             // 3. 特寫縮小並歸位排入下方開獎號碼槽
             this.spotlight.classList.remove('show');
@@ -1874,7 +1888,7 @@
 
     let taicaiMachine;
 
-    async function startTaicaiRoll() {
+    window.startTaicaiRoll = async function() {
         const btn = document.getElementById('btn-roll');
         const screen = document.getElementById('power-screen');
         const slots = document.querySelectorAll('#machine-balls .machine-ball');
@@ -1902,7 +1916,7 @@
         btn.disabled = false;
         btn.innerText = "🎲 再次啟動台彩搖號";
         screen.innerText = "DONE";
-    }
+    };
 
     function generate5Numbers() {
         let arr = [];
@@ -1912,9 +1926,6 @@
         }
         return arr.sort((a, b) => a - b);
     }
-
-    window.startTaicaiRoll = startTaicaiRoll;
-    window.refreshRecommendationsWithSuspense = refreshRecommendationsWithSuspense;
 </script>
 
 </body>
