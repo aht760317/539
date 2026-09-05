@@ -88,7 +88,7 @@
         }
         .btn-open-modal:hover { filter: brightness(1.1); transform: translateY(-1px); }
 
-        /* 🌟 模態視窗樣式 */
+        /* 🌟 獨立彈出視窗 (Modal) */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -142,18 +142,21 @@
             font-weight: bold;
         }
         
+        /* 🌟 模態視窗四分頁 (Tabs) */
         .modal-tabs {
             display: flex;
             background: #f8fafc;
             border-bottom: 1px solid #e2e8f0;
             padding: 6px 12px 0 12px;
-            gap: 6px;
+            gap: 4px;
+            overflow-x: auto;
+            white-space: nowrap;
         }
         .tab-btn {
             background: transparent;
             border: 1px solid transparent;
             border-bottom: none;
-            padding: 8px 14px;
+            padding: 8px 12px;
             font-size: 12px;
             font-weight: 900;
             color: #64748b;
@@ -241,7 +244,7 @@
         .text-gold { color: #d97706; font-weight: 900; }
         .text-purple { color: #7c3aed; font-weight: 900; }
 
-        /* 🌟 手機專屬「一行一格」卡片網格容器 (預設桌機隱藏) */
+        /* 手機專屬一行一格卡片流 */
         .mobile-cards-container {
             display: none;
             flex-direction: column;
@@ -512,7 +515,6 @@
         td { padding: 12px 6px; border-bottom: 1px solid #e2e8f0; vertical-align: middle; }
         tr:hover { background: rgba(241, 245, 249, 0.6); }
 
-        /* 號碼球樣式 */
         .num-container { display: flex; gap: 5px; justify-content: center; flex-wrap: wrap; align-items: center; }
         .num-ball { 
             width: var(--ball-size); 
@@ -557,7 +559,7 @@
         .edit-btn { background: #f1f5f9; color: #334155; }
         .edit-btn:hover { background: #e2e8f0; }
 
-        /* 📱 手機端極致優化 */
+        /* 手機端排版優化 */
         @media (max-width: 768px) {
             :root {
                 --ball-size: 28px;
@@ -572,7 +574,6 @@
             .calc-form-grid { grid-template-columns: 1fr 1fr; gap: 6px; padding: 8px; }
             .btn-recalc { grid-column: span 2; width: 100%; height: 34px; }
 
-            /* 🌟 手機端隱藏橫向表格，改為「一行一格」卡片排列 */
             .profit-table-wrapper { display: none; }
             .mobile-cards-container { display: flex; }
 
@@ -629,10 +630,10 @@
         </div>
     </header>
 
-    <!-- 🌟 頂部獨立開啟規劃按鈕 -->
+    <!-- 頂部獨立開啟規劃按鈕 -->
     <div class="top-action-bar">
         <button class="btn-open-modal" onclick="openProfitModal()">
-            📊 點擊開啟：坐車目標獲利與倍投規劃表 (單碼 / 多碼雙模式)
+            📊 點擊開啟：天天樂坐車下注與紀律規劃表 (倍投 / 均注全模式)
         </button>
     </div>
 
@@ -640,18 +641,20 @@
     <div class="modal-overlay" id="profit-modal" onclick="closeModalOnOverlay(event)">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>💰 天天樂坐車下注・目標累計獲利倍投規劃表</h2>
+                <h2>💰 天天樂坐車下注・多維資金與紀律模式規劃表</h2>
                 <button class="modal-close" onclick="closeProfitModal()">&times;</button>
             </div>
             
-            <!-- 雙分頁按鈕 -->
+            <!-- 🌟 四大分頁按鈕 -->
             <div class="modal-tabs">
-                <button class="tab-btn active" id="tab-btn-single" onclick="switchModalTab('single')">🌟 單碼經典倍投 (0.1車起)</button>
-                <button class="tab-btn" id="tab-btn-multi" onclick="switchModalTab('multi')">🎯 多號碼坐車倍投 (自選 1~5 碼)</button>
+                <button class="tab-btn active" id="tab-btn-single" onclick="switchModalTab('single')">🌟 單碼經典倍投</button>
+                <button class="tab-btn" id="tab-btn-multi" onclick="switchModalTab('multi')">🎯 多號碼坐車倍投</button>
+                <button class="tab-btn" id="tab-btn-flat-single" onclick="switchModalTab('flat-single')">⚖️ 單顆球均注紀律</button>
+                <button class="tab-btn" id="tab-btn-flat-multi" onclick="switchModalTab('flat-multi')">🎲 多顆球均注紀律</button>
             </div>
 
             <div class="modal-body">
-                <!-- 分頁 1：單碼經典倍投 -->
+                <!-- 1. 單碼經典倍投 -->
                 <div id="tab-content-single">
                     <div class="calc-form-grid">
                         <div class="calc-input-group">
@@ -679,7 +682,6 @@
 
                     <div style="font-size:12px; font-weight:bold; color:#b45309; margin-bottom:8px;" id="single-plan-summary"></div>
 
-                    <!-- 電腦端表格 -->
                     <div class="profit-table-wrapper">
                         <table class="profit-table">
                             <thead>
@@ -696,12 +698,10 @@
                             <tbody id="single-plan-tbody"></tbody>
                         </table>
                     </div>
-
-                    <!-- 🌟 手機專屬一行一格卡片流 -->
                     <div class="mobile-cards-container" id="single-plan-mobile-cards"></div>
                 </div>
 
-                <!-- 分頁 2：多號碼坐車倍投規劃器 -->
+                <!-- 2. 多號碼坐車倍投 -->
                 <div id="tab-content-multi" style="display:none;">
                     <div class="calc-form-grid">
                         <div class="calc-input-group">
@@ -734,7 +734,6 @@
 
                     <div style="font-size:12px; font-weight:bold; color:#b45309; margin-bottom:8px;" id="multi-plan-summary"></div>
 
-                    <!-- 電腦端表格 -->
                     <div class="profit-table-wrapper">
                         <table class="profit-table">
                             <thead>
@@ -752,9 +751,102 @@
                             <tbody id="multi-plan-tbody"></tbody>
                         </table>
                     </div>
-
-                    <!-- 🌟 手機專屬一行一格卡片流 -->
                     <div class="mobile-cards-container" id="multi-plan-mobile-cards"></div>
+                </div>
+
+                <!-- 🌟 3. 單顆球均注紀律模式 -->
+                <div id="tab-content-flat-single" style="display:none;">
+                    <div class="calc-form-grid">
+                        <div class="calc-input-group">
+                            <label>🚗 每日固定下注車數</label>
+                            <input type="number" id="calc-fs-units" value="0.1" min="0.01" max="10" step="0.01">
+                        </div>
+                        <div class="calc-input-group">
+                            <label>📅 執行紀律天數</label>
+                            <input type="number" id="calc-fs-days" value="15" min="1" max="30" step="1">
+                        </div>
+                        <div class="calc-input-group">
+                            <label>💵 每全車成本 (本金)</label>
+                            <input type="number" id="calc-fs-cost" value="2755" min="1" max="50000" step="1">
+                        </div>
+                        <div class="calc-input-group">
+                            <label>🏆 每全車中獎彩金</label>
+                            <input type="number" id="calc-fs-prize" value="21200" min="1000" max="100000" step="100">
+                        </div>
+                        <button class="btn-recalc" onclick="calculateFlatSinglePlan()">⚡ 演算均注紀律</button>
+                    </div>
+
+                    <div style="font-size:12px; font-weight:bold; color:#059669; margin-bottom:8px;" id="fs-plan-summary"></div>
+
+                    <div class="profit-table-wrapper">
+                        <table class="profit-table">
+                            <thead>
+                                <tr>
+                                    <th>天數</th>
+                                    <th>每日固定車數</th>
+                                    <th>當天成本</th>
+                                    <th>累計總成本</th>
+                                    <th>當天中獎彩金</th>
+                                    <th>當天若中淨利</th>
+                                    <th>回本所需中獎天數</th>
+                                </tr>
+                            </thead>
+                            <tbody id="fs-plan-tbody"></tbody>
+                        </table>
+                    </div>
+                    <div class="mobile-cards-container" id="fs-plan-mobile-cards"></div>
+                </div>
+
+                <!-- 🌟 4. 多顆球均注紀律模式 -->
+                <div id="tab-content-flat-multi" style="display:none;">
+                    <div class="calc-form-grid">
+                        <div class="calc-input-group">
+                            <label>🎱 每期選碼數量</label>
+                            <select id="calc-fm-ball-count" onchange="calculateFlatMultiPlan()">
+                                <option value="2">2 碼均注</option>
+                                <option value="3">3 碼均注</option>
+                                <option value="4" selected>4 碼均注</option>
+                                <option value="5">5 碼均注</option>
+                            </select>
+                        </div>
+                        <div class="calc-input-group">
+                            <label>🚗 每碼固定車數</label>
+                            <input type="number" id="calc-fm-units" value="0.1" min="0.01" max="10" step="0.01">
+                        </div>
+                        <div class="calc-input-group">
+                            <label>📅 執行紀律天數</label>
+                            <input type="number" id="calc-fm-days" value="15" min="1" max="30" step="1">
+                        </div>
+                        <div class="calc-input-group">
+                            <label>💵 單碼每車成本</label>
+                            <input type="number" id="calc-fm-cost" value="2755" min="1" max="50000" step="1">
+                        </div>
+                        <div class="calc-input-group">
+                            <label>🏆 單碼中獎彩金</label>
+                            <input type="number" id="calc-fm-prize" value="21200" min="1000" max="100000" step="100">
+                        </div>
+                        <button class="btn-recalc" onclick="calculateFlatMultiPlan()">⚡ 演算多碼均注</button>
+                    </div>
+
+                    <div style="font-size:12px; font-weight:bold; color:#0284c7; margin-bottom:8px;" id="fm-plan-summary"></div>
+
+                    <div class="profit-table-wrapper">
+                        <table class="profit-table">
+                            <thead>
+                                <tr>
+                                    <th>期數</th>
+                                    <th>選碼下注配置</th>
+                                    <th>當期總成本</th>
+                                    <th>累計總成本</th>
+                                    <th>中 1 碼當期淨利</th>
+                                    <th>中 2 碼雙停淨利</th>
+                                    <th>中 1 碼損益平衡比率</th>
+                                </tr>
+                            </thead>
+                            <tbody id="fm-plan-tbody"></tbody>
+                        </table>
+                    </div>
+                    <div class="mobile-cards-container" id="fm-plan-mobile-cards"></div>
                 </div>
             </div>
         </div>
@@ -889,7 +981,7 @@
         <button class="btn-submit" onclick="addRecord()">☁️ 儲存 / 補填對決紀錄至雲端 (即刻對獎)</button>
     </div>
 
-    <!-- 歷史對決 -->
+    <!-- 歷史對決 (號碼球縮小版) -->
     <div class="history-panel">
         <h2 style="font-size: 15px; margin-bottom: 12px; letter-spacing: 1px;">📊 歷史戰績矩陣對照表 (AI vs 我)</h2>
         <table>
@@ -1419,7 +1511,6 @@
             let currentPrize = Math.round(units * prizePerUnit);
             let finalNetProfit = currentPrize - cumCost;
 
-            // 電腦版橫向表格
             rowsHtml += `
                 <tr>
                     <td><strong>第 ${day} 天</strong></td>
@@ -1432,12 +1523,11 @@
                 </tr>
             `;
 
-            // 🌟 手機專屬「一行一格」獨立卡片結構
             mobileCardsHtml += `
                 <div class="day-plan-card">
                     <div class="day-plan-card-header">
                         <span class="day-plan-tag">📅 第 ${day} 天</span>
-                        <span class="day-plan-target">目標累計：+${targetCumProfit.toLocaleString()} 元</span>
+                        <span class="day-plan-target">目標：+${targetCumProfit.toLocaleString()} 元</span>
                     </div>
                     <div class="day-plan-grid">
                         <div class="day-plan-item">
@@ -1457,9 +1547,9 @@
                             <span class="val">${currentPrize.toLocaleString()} 元</span>
                         </div>
                     </div>
-                    <div style="border-top:1px dashed #e2e8f0; padding-top:5px; display:flex; justify-content:space-between; align-items:center;">
+                    <div style="border-top:1px dashed #e2e8f0; padding-top:4px; display:flex; justify-content:space-between; align-items:center;">
                         <span style="font-size:11px; color:#475569; font-weight:bold;">中獎結算淨利</span>
-                        <span class="text-green" style="font-size:14px; font-weight:900;">+${finalNetProfit.toLocaleString()} 元</span>
+                        <span class="text-green" style="font-size:13px; font-weight:900;">+${finalNetProfit.toLocaleString()} 元</span>
                     </div>
                 </div>
             `;
@@ -1470,7 +1560,7 @@
         document.getElementById('single-plan-summary').innerText = `[${days}天單碼總累計備援本金：${cumCost.toLocaleString()} 元]`;
     }
 
-    // 🌟 2. 多號碼坐車倍投算式 (手機專屬一行一格卡片流)
+    // 🌟 2. 多號碼坐車倍投算式
     function calculateMultiProfitPlan() {
         const ballCount = parseInt(document.getElementById('calc-multi-ball-count').value, 10) || 4;
         const targetDailyProfit = parseFloat(document.getElementById('calc-multi-target-profit').value) || 1844;
@@ -1504,7 +1594,6 @@
             let prizeIfHitTwo = Math.round(units * prizePerUnit * 2);
             let netIfHitTwo = prizeIfHitTwo - cumCost;
 
-            // 電腦版橫向表格
             rowsHtml += `
                 <tr>
                     <td><strong>第 ${day} 期</strong></td>
@@ -1518,7 +1607,6 @@
                 </tr>
             `;
 
-            // 🌟 手機專屬一行一格卡片流 (多碼版)
             mobileCardsHtml += `
                 <div class="day-plan-card">
                     <div class="day-plan-card-header">
@@ -1543,9 +1631,9 @@
                             <span class="val text-green">+${netIfHitOne.toLocaleString()} 元</span>
                         </div>
                     </div>
-                    <div style="border-top:1px dashed #e2e8f0; padding-top:5px; display:flex; justify-content:space-between; align-items:center;">
-                        <span style="font-size:11px; color:#7c3aed; font-weight:bold;">⚡ 若開出2碼 (雙停超額暴利)</span>
-                        <span class="text-purple" style="font-size:13px; font-weight:900;">+${netIfHitTwo.toLocaleString()} 元</span>
+                    <div style="border-top:1px dashed #e2e8f0; padding-top:4px; display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-size:11px; color:#7c3aed; font-weight:bold;">⚡ 若中2碼(雙停暴利)</span>
+                        <span class="text-purple" style="font-size:12px; font-weight:900;">+${netIfHitTwo.toLocaleString()} 元</span>
                     </div>
                 </div>
             `;
@@ -1556,11 +1644,161 @@
         document.getElementById('multi-plan-summary').innerText = `[${days}期(${ballCount}碼)總備援資金建議：${cumCost.toLocaleString()} 元]`;
     }
 
-    // Modal 與分頁控制
+    // 🌟 3. 單顆球均注紀律模式推算
+    function calculateFlatSinglePlan() {
+        const units = parseFloat(document.getElementById('calc-fs-units').value) || 0.1;
+        const days = parseInt(document.getElementById('calc-fs-days').value, 10) || 15;
+        const costPerUnit = parseFloat(document.getElementById('calc-fs-cost').value) || 2755;
+        const prizePerUnit = parseFloat(document.getElementById('calc-fs-prize').value) || 21200;
+
+        const tbody = document.getElementById('fs-plan-tbody');
+        const mobileContainer = document.getElementById('fs-plan-mobile-cards');
+        tbody.innerHTML = '';
+        mobileContainer.innerHTML = '';
+
+        let dailyCost = Math.round(units * costPerUnit);
+        let dailyPrize = Math.round(units * prizePerUnit);
+        let netProfitPerHit = dailyPrize - dailyCost;
+        let cumCost = 0;
+        let rowsHtml = '';
+        let mobileCardsHtml = '';
+
+        for (let day = 1; day <= days; day++) {
+            cumCost += dailyCost;
+            let hitsNeeded = Math.ceil(cumCost / dailyPrize);
+
+            rowsHtml += `
+                <tr>
+                    <td><strong>第 ${day} 天</strong></td>
+                    <td class="text-gold">${units.toFixed(2)} 車</td>
+                    <td>${dailyCost.toLocaleString()} 元</td>
+                    <td style="color:#b91c1c;">${cumCost.toLocaleString()} 元</td>
+                    <td>${dailyPrize.toLocaleString()} 元</td>
+                    <td class="text-green">+${netProfitPerHit.toLocaleString()} 元</td>
+                    <td style="color:#0284c7; font-weight:bold;">中 ${hitsNeeded} 天即可回本獲利</td>
+                </tr>
+            `;
+
+            mobileCardsHtml += `
+                <div class="day-plan-card">
+                    <div class="day-plan-card-header">
+                        <span class="day-plan-tag">⚖️ 均注第 ${day} 天</span>
+                        <span class="day-plan-target" style="color:#0284c7;">需中 ${hitsNeeded} 天保證回本</span>
+                    </div>
+                    <div class="day-plan-grid">
+                        <div class="day-plan-item">
+                            <span class="label">🚗 固定車數</span>
+                            <span class="val text-gold">${units.toFixed(2)} 車</span>
+                        </div>
+                        <div class="day-plan-item">
+                            <span class="label">💵 每日成本</span>
+                            <span class="val">${dailyCost.toLocaleString()} 元</span>
+                        </div>
+                        <div class="day-plan-item">
+                            <span class="label">📉 累計總成本</span>
+                            <span class="val" style="color:#b91c1c;">${cumCost.toLocaleString()} 元</span>
+                        </div>
+                        <div class="day-plan-item">
+                            <span class="label">🏆 當天中獎彩金</span>
+                            <span class="val">${dailyPrize.toLocaleString()} 元</span>
+                        </div>
+                    </div>
+                    <div style="border-top:1px dashed #e2e8f0; padding-top:4px; display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-size:11px; color:#475569; font-weight:bold;">單次命中即賺淨利</span>
+                        <span class="text-green" style="font-size:13px; font-weight:900;">+${netProfitPerHit.toLocaleString()} 元</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        tbody.innerHTML = rowsHtml;
+        mobileContainer.innerHTML = mobileCardsHtml;
+        document.getElementById('fs-plan-summary').innerText = `[${days}天均注總成本：${cumCost.toLocaleString()} 元 | 每中一次淨賺 +${netProfitPerHit.toLocaleString()} 元]`;
+    }
+
+    // 🌟 4. 多顆球均注紀律模式推算
+    function calculateFlatMultiPlan() {
+        const ballCount = parseInt(document.getElementById('calc-fm-ball-count').value, 10) || 4;
+        const units = parseFloat(document.getElementById('calc-fm-units').value) || 0.1;
+        const days = parseInt(document.getElementById('calc-fm-days').value, 10) || 15;
+        const costPerUnit = parseFloat(document.getElementById('calc-fm-cost').value) || 2755;
+        const prizePerUnit = parseFloat(document.getElementById('calc-fm-prize').value) || 21200;
+
+        const tbody = document.getElementById('fm-plan-tbody');
+        const mobileContainer = document.getElementById('fm-plan-mobile-cards');
+        tbody.innerHTML = '';
+        mobileContainer.innerHTML = '';
+
+        let roundCost = Math.round(units * ballCount * costPerUnit);
+        let prizeHitOne = Math.round(units * prizePerUnit);
+        let netHitOne = prizeHitOne - roundCost;
+        let prizeHitTwo = Math.round(units * prizePerUnit * 2);
+        let netHitTwo = prizeHitTwo - roundCost;
+
+        let cumCost = 0;
+        let rowsHtml = '';
+        let mobileCardsHtml = '';
+
+        for (let day = 1; day <= days; day++) {
+            cumCost += roundCost;
+            let breakEvenHitCount = Math.ceil(cumCost / prizeHitOne);
+
+            rowsHtml += `
+                <tr>
+                    <td><strong>第 ${day} 期</strong></td>
+                    <td class="text-gold">${ballCount}碼 × ${units.toFixed(2)}車</td>
+                    <td>${roundCost.toLocaleString()} 元</td>
+                    <td style="color:#b91c1c;">${cumCost.toLocaleString()} 元</td>
+                    <td class="text-green">+${netHitOne.toLocaleString()} 元</td>
+                    <td class="text-purple">+${netHitTwo.toLocaleString()} 元</td>
+                    <td style="color:#0284c7; font-weight:bold;">累計只需中 ${breakEvenHitCount} 期</td>
+                </tr>
+            `;
+
+            mobileCardsHtml += `
+                <div class="day-plan-card">
+                    <div class="day-plan-card-header">
+                        <span class="day-plan-tag">🎲 多碼均注第 ${day} 期</span>
+                        <span class="day-plan-target" style="color:#0284c7;">需中 ${breakEvenHitCount} 次全盤保本</span>
+                    </div>
+                    <div class="day-plan-grid">
+                        <div class="day-plan-item">
+                            <span class="label">🎱 下注配置</span>
+                            <span class="val text-gold">${ballCount}碼 × ${units.toFixed(2)}車</span>
+                        </div>
+                        <div class="day-plan-item">
+                            <span class="label">💵 當期總成本</span>
+                            <span class="val">${roundCost.toLocaleString()} 元</span>
+                        </div>
+                        <div class="day-plan-item">
+                            <span class="label">📉 累計總投入</span>
+                            <span class="val" style="color:#b91c1c;">${cumCost.toLocaleString()} 元</span>
+                        </div>
+                        <div class="day-plan-item">
+                            <span class="label">中1碼當天淨利</span>
+                            <span class="val text-green">+${netHitOne.toLocaleString()} 元</span>
+                        </div>
+                    </div>
+                    <div style="border-top:1px dashed #e2e8f0; padding-top:4px; display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-size:11px; color:#7c3aed; font-weight:bold;">⚡ 若當天中2碼(雙停)</span>
+                        <span class="text-purple" style="font-size:12px; font-weight:900;">+${netHitTwo.toLocaleString()} 元</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        tbody.innerHTML = rowsHtml;
+        mobileContainer.innerHTML = mobileCardsHtml;
+        document.getElementById('fm-plan-summary').innerText = `[${days}期均注總本金：${cumCost.toLocaleString()} 元 | 中1碼當期現賺 +${netHitOne.toLocaleString()} 元]`;
+    }
+
+    // Modal 與分頁切換控制
     function openProfitModal() {
         document.getElementById('profit-modal').style.display = 'flex';
         calculateSingleProfitPlan();
         calculateMultiProfitPlan();
+        calculateFlatSinglePlan();
+        calculateFlatMultiPlan();
     }
     function closeProfitModal() {
         document.getElementById('profit-modal').style.display = 'none';
@@ -1569,10 +1807,11 @@
         if (e.target.id === 'profit-modal') closeProfitModal();
     }
     function switchModalTab(tabKey) {
-        document.getElementById('tab-btn-single').classList.toggle('active', tabKey === 'single');
-        document.getElementById('tab-btn-multi').classList.toggle('active', tabKey === 'multi');
-        document.getElementById('tab-content-single').style.display = (tabKey === 'single') ? 'block' : 'none';
-        document.getElementById('tab-content-multi').style.display = (tabKey === 'multi') ? 'block' : 'none';
+        const tabs = ['single', 'multi', 'flat-single', 'flat-multi'];
+        tabs.forEach(t => {
+            document.getElementById(`tab-btn-${t}`).classList.toggle('active', t === tabKey);
+            document.getElementById(`tab-content-${t}`).style.display = (t === tabKey) ? 'block' : 'none';
+        });
     }
 
     window.openProfitModal = openProfitModal;
@@ -1581,6 +1820,8 @@
     window.switchModalTab = switchModalTab;
     window.calculateSingleProfitPlan = calculateSingleProfitPlan;
     window.calculateMultiProfitPlan = calculateMultiProfitPlan;
+    window.calculateFlatSinglePlan = calculateFlatSinglePlan;
+    window.calculateFlatMultiPlan = calculateFlatMultiPlan;
     window.refreshRecommendations = function() { renderRecommendations(); };
 
     window.applyRecomNums = function(numsStr, targetKey) {
