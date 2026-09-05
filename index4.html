@@ -17,7 +17,7 @@
             --neon-purple: #7c3aed;
             --hit-color: #ef4444; 
             --gold-color: #d97706;
-            --ball-size: 34px; /* 電腦端號碼球適中尺寸 */
+            --ball-size: 34px;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: "JetBrains Mono", -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft JhengHei", sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -39,7 +39,7 @@
             box-shadow: 0 6px 20px rgba(14, 165, 233, 0.1);
             padding: 16px; 
             border-radius: 14px; 
-            margin-bottom: 16px; 
+            margin-bottom: 14px; 
             text-align: center; 
             backdrop-filter: blur(12px);
         }
@@ -66,6 +66,154 @@
         }
         .dot { width: 7px; height: 7px; border-radius: 50%; background: #10b981; box-shadow: 0 0 6px #10b981; }
 
+        /* 🌟 頂部獨立獲利規劃按鈕區塊 */
+        .top-action-bar {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+        .btn-open-modal {
+            background: linear-gradient(135deg, #d97706, #b45309);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 14px;
+            font-weight: 900;
+            border-radius: 10px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(217, 119, 6, 0.25);
+            transition: all 0.2s;
+        }
+        .btn-open-modal:hover { filter: brightness(1.1); transform: translateY(-1px); }
+
+        /* 🌟 獨立彈出視窗 (Modal) 樣式 */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(6px);
+            z-index: 999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+        .modal-content {
+            background: #ffffff;
+            border: 1.5px solid rgba(217, 119, 6, 0.4);
+            border-radius: 18px;
+            width: 100%;
+            max-width: 1050px;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+            animation: modalPop 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes modalPop {
+            from { transform: scale(0.95); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .modal-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #fffbeb;
+            border-radius: 18px 18px 0 0;
+        }
+        .modal-header h2 {
+            font-size: 16px;
+            font-weight: 900;
+            color: #92400e;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .modal-close {
+            background: transparent;
+            border: none;
+            font-size: 20px;
+            color: #78350f;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .modal-body {
+            padding: 18px 20px;
+            overflow-y: auto;
+        }
+
+        .calc-form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 10px;
+            margin-bottom: 14px;
+            background: #f8fafc;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+        }
+        .calc-input-group { display: flex; flex-direction: column; gap: 4px; }
+        .calc-input-group label { font-size: 11px; font-weight: 800; color: #475569; }
+        .calc-input-group input {
+            padding: 8px 10px;
+            background: #ffffff;
+            border: 1.5px solid #cbd5e1;
+            color: #0f172a;
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+            font-family: monospace;
+            font-weight: bold;
+        }
+        .calc-input-group input:focus { border-color: var(--gold-color); }
+        .btn-recalc {
+            background: linear-gradient(135deg, #d97706, #b45309);
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            font-size: 13px;
+            font-weight: 900;
+            border-radius: 6px;
+            cursor: pointer;
+            align-self: flex-end;
+            height: 38px;
+        }
+        .btn-recalc:hover { filter: brightness(1.1); }
+
+        .profit-table-wrapper {
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            overflow-x: auto;
+        }
+        .profit-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+        .profit-table th {
+            background: #f8fafc;
+            color: #475569;
+            padding: 10px 8px;
+            font-weight: 900;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        .profit-table td {
+            padding: 9px 8px;
+            border-bottom: 1px solid #f1f5f9;
+            font-family: monospace;
+            font-weight: 600;
+        }
+        .profit-table tr:hover { background: #fffbeb; }
+        .text-green { color: #059669; font-weight: 800; }
+        .text-gold { color: #d97706; font-weight: 900; }
+
         /* 統計戰力板 */
         .stats-board { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 16px; }
         .stat-card { 
@@ -83,104 +231,6 @@
         .stat-title { font-size: 11px; color: var(--text-muted); font-weight: 800; }
         .stat-value { font-size: 26px; font-weight: 900; margin: 4px 0; font-family: monospace; }
         .stat-sub { font-size: 11px; color: #64748b; }
-
-        /* 預估獲利規劃計算器 */
-        .profit-panel {
-            background: var(--panel-bg);
-            padding: 18px;
-            border-radius: 14px;
-            border: 1.5px solid rgba(217, 119, 6, 0.35);
-            margin-bottom: 18px;
-            box-shadow: 0 6px 18px rgba(217, 119, 6, 0.05);
-            backdrop-filter: blur(12px);
-        }
-        .profit-panel h2 {
-            margin-bottom: 12px;
-            font-size: 16px;
-            color: var(--text-main);
-            border-left: 4px solid var(--gold-color);
-            padding-left: 10px;
-            font-weight: 900;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
-        .calc-form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 10px;
-            margin-bottom: 14px;
-            background: #ffffff;
-            padding: 14px;
-            border-radius: 10px;
-            border: 1px solid #e2e8f0;
-        }
-        .calc-input-group { display: flex; flex-direction: column; gap: 4px; }
-        .calc-input-group label { font-size: 11px; font-weight: 800; color: #475569; }
-        .calc-input-group input {
-            padding: 8px 10px;
-            background: #f8fafc;
-            border: 1.5px solid #cbd5e1;
-            color: #0f172a;
-            border-radius: 6px;
-            font-size: 14px;
-            outline: none;
-            font-family: monospace;
-            font-weight: bold;
-        }
-        .calc-input-group input:focus {
-            border-color: var(--gold-color);
-            background: #ffffff;
-        }
-        .btn-recalc {
-            background: linear-gradient(135deg, #d97706, #b45309);
-            color: white;
-            border: none;
-            padding: 9px 16px;
-            font-size: 13px;
-            font-weight: 900;
-            border-radius: 6px;
-            cursor: pointer;
-            box-shadow: 0 3px 10px rgba(217, 119, 6, 0.2);
-            align-self: flex-end;
-            height: 38px;
-        }
-        .btn-recalc:hover { filter: brightness(1.1); }
-
-        .profit-table-wrapper {
-            max-height: 320px;
-            overflow-y: auto;
-            border: 1px solid #e2e8f0;
-            border-radius: 10px;
-            background: #ffffff;
-        }
-        .profit-table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: center;
-            font-size: 12px;
-        }
-        .profit-table th {
-            position: sticky;
-            top: 0;
-            background: #fffbeb;
-            color: #92400e;
-            padding: 10px 6px;
-            font-weight: 900;
-            border-bottom: 2px solid #fef3c7;
-            z-index: 2;
-        }
-        .profit-table td {
-            padding: 8px 6px;
-            border-bottom: 1px solid #f1f5f9;
-            font-family: monospace;
-            font-weight: 600;
-        }
-        .profit-table tr:hover { background: #fafaf9; }
-        .text-green { color: #059669; font-weight: 800; }
-        .text-gold { color: #d97706; font-weight: 900; }
 
         /* 工具面板區 */
         .tools-panel { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 14px; margin-bottom: 18px; }
@@ -426,10 +476,10 @@
         .edit-btn { background: #f1f5f9; color: #334155; }
         .edit-btn:hover { background: #e2e8f0; }
 
-        /* 📱 手機端精緻化縮小排版 */
+        /* 手機端排版優化 */
         @media (max-width: 768px) {
             :root {
-                --ball-size: 28px; /* 手機端縮小至 28px */
+                --ball-size: 28px;
             }
             body { padding: 10px 6px; }
             header { padding: 12px 8px; margin-bottom: 12px; }
@@ -475,7 +525,7 @@
             .num-ball { 
                 width: var(--ball-size); 
                 height: var(--ball-size); 
-                font-size: 12px; /* 球內字體 12px，乾淨緊湊 */
+                font-size: 12px;
             }
             .recom-card { flex-direction: column; align-items: flex-start; }
             .recom-btns { width: 100%; justify-content: flex-end; }
@@ -492,6 +542,67 @@
             <span>Firebase 雲端量子網絡同步中</span>
         </div>
     </header>
+
+    <!-- 🌟 頂部獨立開啟規劃按鈕 -->
+    <div class="top-action-bar">
+        <button class="btn-open-modal" onclick="openProfitModal()">
+            📊 點擊開啟：天天樂坐車目標獲利與倍投規劃表
+        </button>
+    </div>
+
+    <!-- 🌟 獨立彈出視窗 (Modal) -->
+    <div class="modal-overlay" id="profit-modal" onclick="closeModalOnOverlay(event)">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>💰 天天樂坐車下注・目標累計獲利倍投規劃表</h2>
+                <button class="modal-close" onclick="closeProfitModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="calc-form-grid">
+                    <div class="calc-input-group">
+                        <label>🚗 第 1 期起步車數</label>
+                        <input type="number" id="calc-first-units" value="0.1" min="0.01" max="100" step="0.01">
+                    </div>
+                    <div class="calc-input-group">
+                        <label>🎯 每期期望累計淨利 (增量)</label>
+                        <input type="number" id="calc-target-profit" value="1844" min="100" max="1000000" step="10">
+                    </div>
+                    <div class="calc-input-group">
+                        <label>📅 規劃天數 (期數)</label>
+                        <input type="number" id="calc-days" value="15" min="1" max="30" step="1">
+                    </div>
+                    <div class="calc-input-group">
+                        <label>💵 每全車成本 (本金)</label>
+                        <input type="number" id="calc-cost-per-unit" value="2755" min="1" max="50000" step="1">
+                    </div>
+                    <div class="calc-input-group">
+                        <label>🏆 每全車中獎彩金</label>
+                        <input type="number" id="calc-prize-per-unit" value="21200" min="1000" max="100000" step="100">
+                    </div>
+                    <button class="btn-recalc" onclick="calculateProfitPlan()">⚡ 重新精準演算</button>
+                </div>
+
+                <div style="font-size:12px; font-weight:bold; color:#b45309; margin-bottom:8px;" id="plan-summary-tag"></div>
+
+                <div class="profit-table-wrapper">
+                    <table class="profit-table">
+                        <thead>
+                            <tr>
+                                <th>天數</th>
+                                <th>目標累計淨利</th>
+                                <th>下注車數</th>
+                                <th>當期成本</th>
+                                <th>累計投入總成本</th>
+                                <th>中獎彩金</th>
+                                <th>結算淨利</th>
+                            </tr>
+                        </thead>
+                        <tbody id="profit-plan-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- 頂部戰力板 -->
     <div class="stats-board">
@@ -514,54 +625,6 @@
             <div class="stat-title" style="color:var(--draw-color)">🏆 目前勝率霸主</div>
             <div class="stat-value" id="pk-winner" style="color:var(--draw-color); font-size:18px;">等待開獎</div>
             <div class="stat-sub">以平均命中率判定</div>
-        </div>
-    </div>
-
-    <!-- 🌟 預估獲利規劃計算器 (首期車數起步 + 單期獲利倍投) -->
-    <div class="profit-panel">
-        <h2>
-            <span>💰 天天樂坐車下注・目標獲利與倍投規劃表</span>
-            <span id="plan-summary-tag" style="font-size: 12px; color: var(--gold-color); font-weight: bold;"></span>
-        </h2>
-
-        <div class="calc-form-grid">
-            <div class="calc-input-group">
-                <label>🚗 第 1 期起步車數</label>
-                <input type="number" id="calc-first-units" value="0.1" min="0.01" max="100" step="0.05">
-            </div>
-            <div class="calc-input-group">
-                <label>🎯 每期期望獲利 (淨利)</label>
-                <input type="number" id="calc-target-profit" value="1000" min="100" max="1000000" step="100">
-            </div>
-            <div class="calc-input-group">
-                <label>📅 規劃天數 (期數)</label>
-                <input type="number" id="calc-days" value="10" min="1" max="60" step="1">
-            </div>
-            <div class="calc-input-group">
-                <label>💵 每車成本 (本金)</label>
-                <input type="number" id="calc-cost-per-unit" value="74" min="1" max="10000" step="1">
-            </div>
-            <div class="calc-input-group">
-                <label>🏆 每車中獎彩金</label>
-                <input type="number" id="calc-prize-per-unit" value="21200" min="1000" max="100000" step="100">
-            </div>
-            <button class="btn-recalc" onclick="calculateProfitPlan()">⚡ 演算下注車數</button>
-        </div>
-
-        <div class="profit-table-wrapper">
-            <table class="profit-table">
-                <thead>
-                    <tr>
-                        <th>期數</th>
-                        <th>建議下注車數</th>
-                        <th>當期成本</th>
-                        <th>累計總投入</th>
-                        <th>中獎總彩金</th>
-                        <th>實得淨利</th>
-                    </tr>
-                </thead>
-                <tbody id="profit-plan-tbody"></tbody>
-            </table>
         </div>
     </div>
 
@@ -670,7 +733,7 @@
         <button class="btn-submit" onclick="addRecord()">☁️ 儲存 / 補填對決紀錄至雲端 (即刻對獎)</button>
     </div>
 
-    <!-- 歷史對決 (號碼球縮小版，手機排版不破版) -->
+    <!-- 歷史對決 (號碼球縮小版) -->
     <div class="history-panel">
         <h2 style="font-size: 15px; margin-bottom: 12px; letter-spacing: 1px;">📊 歷史戰績矩陣對照表 (AI vs 我)</h2>
         <table>
@@ -1166,12 +1229,12 @@
         }).join('');
     }
 
-    // 🌟 首期車數起步 + 每期期望淨利倍投計算核心
+    // 🌟 嚴格對齊你給定表格的真實全車倍投算式
     function calculateProfitPlan() {
         const firstUnits = parseFloat(document.getElementById('calc-first-units').value) || 0.1;
-        const targetProfit = parseFloat(document.getElementById('calc-target-profit').value) || 1000;
-        const days = parseInt(document.getElementById('calc-days').value, 10) || 10;
-        const costPerUnit = parseFloat(document.getElementById('calc-cost-per-unit').value) || 74;
+        const targetDailyProfit = parseFloat(document.getElementById('calc-target-profit').value) || 1844;
+        const days = parseInt(document.getElementById('calc-days').value, 10) || 15;
+        const costPerUnit = parseFloat(document.getElementById('calc-cost-per-unit').value) || 2755;
         const prizePerUnit = parseFloat(document.getElementById('calc-prize-per-unit').value) || 21200;
 
         const tbody = document.getElementById('profit-plan-tbody');
@@ -1179,44 +1242,61 @@
 
         let cumCost = 0;
         let rowsHtml = '';
-        let netWinRate = prizePerUnit - costPerUnit;
+        let netWinPerFullUnit = prizePerUnit - costPerUnit; // 21200 - 2755 = 18445
 
         for (let day = 1; day <= days; day++) {
+            let targetCumProfit = targetDailyProfit * day;
             let units = 0;
 
             if (day === 1) {
-                // 第 1 期依據使用者填寫的起始車數
                 units = firstUnits;
             } else {
-                // 第 2 期開始進行倍投：當期下注車數必須能在扣除所有累積成本後賺取目標淨利
-                // u * prizePerUnit - (cumCost + u * costPerUnit) >= targetProfit
-                // u * (prizePerUnit - costPerUnit) >= cumCost + targetProfit
-                units = (cumCost + targetProfit) / netWinRate;
-                // 取至小數點後 2 位，且每期車數至少不低於前一期
-                units = Math.max(firstUnits, Math.ceil(units * 100) / 100);
+                // 精準倍投推演公式：
+                // u * prizePerUnit - (cumCost + u * costPerUnit) >= targetCumProfit
+                // u * (prizePerUnit - costPerUnit) >= cumCost + targetCumProfit
+                units = (cumCost + targetCumProfit) / netWinPerFullUnit;
+                units = Math.ceil(units * 100) / 100;
             }
 
             let currentCost = Math.round(units * costPerUnit);
             cumCost += currentCost;
             let currentPrize = Math.round(units * prizePerUnit);
-            let netProfitIfHit = currentPrize - cumCost;
+            let finalNetProfit = currentPrize - cumCost;
 
             rowsHtml += `
                 <tr>
-                    <td><strong>第 ${day} 期</strong></td>
+                    <td><strong>第 ${day} 天</strong></td>
+                    <td class="text-green">+${targetCumProfit.toLocaleString()} 元</td>
                     <td class="text-gold" style="font-size:13px;">${units.toFixed(2)} 車</td>
                     <td>${currentCost.toLocaleString()} 元</td>
                     <td style="color:#b91c1c;">${cumCost.toLocaleString()} 元</td>
                     <td>${currentPrize.toLocaleString()} 元</td>
-                    <td class="text-green" style="font-size:13px;">+${netProfitIfHit.toLocaleString()} 元</td>
+                    <td class="text-green">+${finalNetProfit.toLocaleString()} 元</td>
                 </tr>
             `;
         }
 
         tbody.innerHTML = rowsHtml;
-        document.getElementById('plan-summary-tag').innerText = `[${days}期總備援本金建議：${cumCost.toLocaleString()} 元]`;
+        document.getElementById('plan-summary-tag').innerText = `[${days}天總累計備援本金：${cumCost.toLocaleString()} 元]`;
     }
 
+    // Modal 控制函數
+    function openProfitModal() {
+        document.getElementById('profit-modal').style.display = 'flex';
+        calculateProfitPlan();
+    }
+    function closeProfitModal() {
+        document.getElementById('profit-modal').style.display = 'none';
+    }
+    function closeModalOnOverlay(e) {
+        if (e.target.id === 'profit-modal') {
+            closeProfitModal();
+        }
+    }
+
+    window.openProfitModal = openProfitModal;
+    window.closeProfitModal = closeProfitModal;
+    window.closeModalOnOverlay = closeModalOnOverlay;
     window.refreshRecommendations = function() {
         renderRecommendations();
     };
@@ -1441,9 +1521,6 @@
         let mSize = 120;
         m1 = new PhysicsMachine('physics-container-1', mSize);
         m2 = new PhysicsMachine('physics-container-2', mSize);
-        
-        // 初始自動演算獲利規劃
-        calculateProfitPlan();
     };
 
     async function startRollDual() {
