@@ -483,7 +483,7 @@
         
         .recom-balls { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
         
-        /* 🌟 量子高科技號碼球 */
+        /* 量子高科技號碼球 */
         .quantum-ball {
             width: 32px;
             height: 32px;
@@ -505,72 +505,90 @@
         .quantum-ball.q-rose { border-color: #fb7185; color: #fda4af; text-shadow: 0 0 8px #e11d48; box-shadow: 0 0 10px rgba(251, 113, 133, 0.35); }
         .quantum-ball.q-green { border-color: #34d399; color: #86efac; text-shadow: 0 0 8px #059669; box-shadow: 0 0 10px rgba(52, 211, 153, 0.35); }
 
-        .recom-btns { display: flex; gap: 5px; }
-        .btn-fast-apply {
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: white;
-            font-size: 11px;
-            font-weight: 900;
-            padding: 5px 9px;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .btn-fast-apply:hover { filter: brightness(1.2); }
-
-        /* 🌟 單軌量子 3D 物理滾球機 (旗艦大版) */
-        .single-machine-box {
+        /* 🌟 台彩風格直立透明氣動搖號機 */
+        .taicai-machine-wrapper {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            background: radial-gradient(circle at 50% 50%, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.95) 100%);
-            padding: 20px 14px;
+            background: radial-gradient(circle at 50% 50%, rgba(30, 41, 59, 0.7) 0%, rgba(11, 15, 25, 0.95) 100%);
+            padding: 16px 12px;
             border-radius: 16px;
-            border: 1px solid rgba(56, 189, 248, 0.25);
-            box-shadow: inset 0 0 25px rgba(0,0,0,0.6);
+            border: 1px solid rgba(251, 191, 36, 0.25);
+            box-shadow: inset 0 0 25px rgba(0,0,0,0.8);
         }
 
-        .realistic-machine { position: relative; width: 160px; height: 160px; margin: 10px 0 15px; }
-        .glass-sphere { 
-            width: 160px; height: 160px; border-radius: 50%; 
-            background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.15) 0%, rgba(14, 165, 233, 0.08) 50%, rgba(15, 23, 42, 0.7) 100%); 
-            border: 2px solid rgba(56, 189, 248, 0.5); 
-            position: absolute; top: 0; left: 0; 
-            box-shadow: 0 0 25px rgba(56, 189, 248, 0.2), inset 0 0 20px rgba(56, 189, 248, 0.15); 
+        .taicai-studio {
+            display: flex;
+            align-items: flex-end;
+            gap: 12px;
+            margin: 12px 0 14px;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
-        .glass-overlay { 
-            width: 100%; height: 100%; border-radius: 50%; position: absolute; top: 0; left: 0; 
-            box-shadow: inset -8px -8px 16px rgba(0, 0, 0, 0.6), inset 6px 6px 12px rgba(255,255,255,0.3); 
-            pointer-events: none; z-index: 10; 
+
+        /* 直立透明圓柱氣缸 */
+        .cylinder-chamber {
+            position: relative;
+            width: 100px;
+            height: 150px;
+            background: radial-gradient(circle at 40% 30%, rgba(255, 255, 255, 0.12) 0%, rgba(56, 189, 248, 0.05) 50%, rgba(15, 23, 42, 0.75) 100%);
+            border: 2.5px solid rgba(56, 189, 248, 0.6);
+            border-top: 3px solid rgba(255, 255, 255, 0.8);
+            border-radius: 12px 12px 6px 6px;
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.25), inset 0 0 15px rgba(56, 189, 248, 0.15);
+            overflow: hidden;
         }
-        .suction-tube { 
-            position: absolute; top: -18px; left: 50%; transform: translateX(-50%); 
-            width: 28px; height: 26px; 
-            background: linear-gradient(to right, rgba(255,255,255,0.4), rgba(56, 189, 248, 0.6), rgba(255,255,255,0.4)); 
-            border: 1.5px solid #38bdf8; border-bottom: none; border-radius: 6px 6px 0 0; z-index: 15; 
+        .cylinder-base {
+            position: absolute; bottom: 0; left: 0; right: 0; height: 12px;
+            background: linear-gradient(90deg, #b45309, #fbbf24, #b45309);
+            border-radius: 0 0 4px 4px;
         }
-        .machine-base { 
-            position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); 
-            width: 80px; height: 18px; 
-            background: linear-gradient(180deg, #334155, #0f172a); 
-            border: 1px solid #475569;
-            border-radius: 4px; z-index: 12; 
+
+        /* 黑色動力箱與吸球軌道 */
+        .power-box {
+            position: relative;
+            width: 110px;
+            height: 130px;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border: 1.5px solid #475569;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
-        .mini-ball { 
-            position: absolute; width: 18px; height: 18px; border-radius: 50%; 
-            background: radial-gradient(circle at 35% 30%, #38bdf8, #0369a1); 
-            color: #ffffff; font-size: 8px; font-weight: 900; 
-            display: flex; align-items: center; justify-content: center; 
-            top: 0; left: 0; z-index: 5; 
-            box-shadow: 0 0 5px rgba(56, 189, 248, 0.8);
-            transition: transform 0s, opacity 0.5s; 
+        .power-box-screen {
+            width: 80px; height: 35px; background: #000000; border: 1px solid #334155; border-radius: 4px;
+            display: flex; align-items: center; justify-content: center;
+            color: #fbbf24; font-family: monospace; font-size: 14px; font-weight: 900;
+            box-shadow: inset 0 0 6px rgba(251, 191, 36, 0.4);
+            letter-spacing: 1px;
         }
-        
+        .suction-arm {
+            position: absolute; top: -14px; left: -22px; width: 35px; height: 16px;
+            background: linear-gradient(90deg, #64748b, #cbd5e1);
+            border: 1px solid #94a3b8; border-radius: 4px; z-index: 20;
+        }
+
+        /* 氣缸內的彈跳小球 */
+        .airflow-ball {
+            position: absolute;
+            width: 16px; height: 16px; border-radius: 50%;
+            background: radial-gradient(circle at 35% 30%, #fde047 0%, #d97706 100%);
+            color: #78350f; font-size: 7.5px; font-weight: 900;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 0 6px rgba(251, 191, 36, 0.8);
+            transition: transform 0.05s linear;
+        }
+
         .machine-balls { 
             display: flex; justify-content: center; gap: 6px; padding: 10px; 
             background: rgba(15, 23, 42, 0.7); 
-            border-radius: 20px; margin-top: 8px; width: 100%; max-width: 320px; 
+            border-radius: 20px; margin-top: 6px; width: 100%; max-width: 320px; 
             border: 1px solid rgba(255, 255, 255, 0.1); 
         }
         .machine-ball { 
@@ -594,20 +612,10 @@
             font-size: 14px; font-weight: 900; border-radius: 10px; cursor: pointer; 
             box-shadow: 0 4px 20px rgba(2, 132, 199, 0.35);
             transition: 0.2s;
-            margin-top: 14px;
+            margin-top: 10px;
         }
         .btn-roll:hover { filter: brightness(1.15); transform: translateY(-1px); }
         .btn-roll:disabled { background: #334155; cursor: not-allowed; box-shadow: none; }
-        
-        .btn-apply-group { 
-            display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin-top: 12px; width: 100%; max-width: 340px; 
-        }
-        .btn-apply { 
-            color: white; border: none; padding: 6px 10px; font-size: 11px; font-weight: bold; border-radius: 6px; cursor: pointer; display: none; 
-            flex: 1; min-width: 70px;
-        }
-        .btn-apply-ai { background: #0284c7; }
-        .btn-apply-my { background: #059669; }
 
         /* 輸入表單區塊 */
         .input-panel { 
@@ -778,7 +786,6 @@
                 font-size: 12px; 
             }
             .recom-card { flex-direction: column; align-items: flex-start; }
-            .recom-btns { width: 100%; justify-content: flex-end; }
         }
     </style>
 </head>
@@ -991,7 +998,7 @@
         </div>
     </div>
 
-    <!-- 冷熱牌 & 單軌量子搖號機 -->
+    <!-- 冷熱牌 & 台彩風格氣動搖號機 -->
     <div class="tools-panel">
         <div class="tool-card">
             <h3 style="color:#fb7185;">
@@ -1022,26 +1029,27 @@
             </div>
         </div>
 
-        <!-- 🌟 單一量子 3D 搖號機 -->
+        <!-- 🌟 台彩實景直立氣動開獎機 -->
         <div class="tool-card">
-            <h3 style="color:var(--neon-purple);">🎰 旗艦單軌 3D 物理滾球量子搖號機</h3>
-            <div class="single-machine-box">
-                <div class="realistic-machine">
-                    <div class="suction-tube"></div>
-                    <div class="glass-sphere" id="physics-container"></div>
-                    <div class="glass-overlay"></div>
-                    <div class="machine-base"></div>
+            <h3 style="color:var(--neon-purple);">🎰 台彩官方實景・氣動直立式開獎機</h3>
+            <div class="taicai-machine-wrapper">
+                <div class="taicai-studio">
+                    <!-- 透明氣缸 -->
+                    <div class="cylinder-chamber" id="airflow-cylinder">
+                        <div class="cylinder-base"></div>
+                    </div>
+                    <!-- 黑色控制箱與吸球臂 -->
+                    <div class="power-box">
+                        <div class="suction-arm"></div>
+                        <div style="font-size:10px; color:#94a3b8; margin-bottom:4px; font-weight:bold;">LIVE 539</div>
+                        <div class="power-box-screen" id="power-screen">READY</div>
+                    </div>
                 </div>
+                <!-- 底部開獎球槽 -->
                 <div class="machine-balls" id="machine-balls">
                     <div class="machine-ball">?</div><div class="machine-ball">?</div><div class="machine-ball">?</div><div class="machine-ball">?</div><div class="machine-ball">?</div>
                 </div>
-                <button class="btn-roll" id="btn-roll" onclick="startRollMachine()">🌪️ 啟動 3D 量子高速搖號</button>
-                <div class="btn-apply-group">
-                    <button class="btn-apply btn-apply-ai" id="apply-ai-4" onclick="applyToInput(finalNums, 'ai', 4)">入AI(4碼)</button>
-                    <button class="btn-apply btn-apply-ai" id="apply-ai-5" onclick="applyToInput(finalNums, 'ai', 5)">入AI(5碼)</button>
-                    <button class="btn-apply btn-apply-my" id="apply-my-4" onclick="applyToInput(finalNums, 'my', 4)">入我(4碼)</button>
-                    <button class="btn-apply btn-apply-my" id="apply-my-5" onclick="applyToInput(finalNums, 'my', 5)">入我(5碼)</button>
-                </div>
+                <button class="btn-roll" id="btn-roll" onclick="startTaicaiRoll()">🌪️ 啟動台彩官方氣動搖號</button>
             </div>
         </div>
     </div>
@@ -1095,7 +1103,7 @@
         <h2>📋 539 多天歷史開獎號碼整頁貼上一鍵導入</h2>
         <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 8px;">
             格式規範：每行開頭為日期 <code>YYYY-MM-DD</code>（或民國年如 <code>115/09/04</code>），後面為開出的 5 顆球號（支援空格、Tab、逗號隔開）。<br>
-            直接把文字全部貼在下方，按下方按鈕即可<strong>一次匯入所有期數</strong>！
+            直接無腦貼上，按下方按鈕即可<strong>一次匯入所有期數</strong>！
         </p>
         <textarea id="sc888-paste-area" rows="4" style="width:100%; padding:8px; font-size:12px; background:#1e293b; border:1.5px solid #334155; color:#f8fafc; border-radius:6px; font-family:monospace; line-height:1.4;" placeholder="例如貼上：
 2026-09-04 04,07,10,27,38
@@ -1256,7 +1264,7 @@
 
         if (drawList.length === 0) {
             statusEl.innerText = "❌ 格式不合，未找到「日期 + 5個號碼」";
-            return alert("⚠️ 未能在貼上的文字中識別出開獎號碼！\n請確認每行開頭是否有日期 (如 2026-09-04 或 115/09/04)，後方有 5 個球號。");
+            return alert("⚠️ 未能在貼上的文字中識別出開獎號碼！\n請確認每行開頭是否有日期，後方有 5 個球號。");
         }
 
         let updatedCount = 0;
@@ -1391,17 +1399,6 @@
         document.getElementById('draw-nums').value = "";
     }
 
-    function loadRecordToForm(id) {
-        let r = battleHistory.find(item => item.id == id);
-        if (r) {
-            document.getElementById('input-date').value = r.date;
-            document.getElementById('ai-nums').value = (r.ai && r.ai.length > 0) ? r.ai.join(', ') : '';
-            document.getElementById('my-nums').value = (r.my && r.my.length > 0) ? r.my.join(', ') : '';
-            document.getElementById('draw-nums').value = (r.draw && r.draw.length > 0) ? r.draw.join(', ') : '';
-            window.scrollTo({ top: document.querySelector('.input-panel').offsetTop - 20, behavior: 'smooth' });
-        }
-    }
-
     async function editDate(id, oldDate) {
         let newDate = prompt("請輸入修正後的日期 (格式：YYYY-MM-DD)", oldDate);
         if (newDate && newDate.trim() !== "") {
@@ -1425,7 +1422,7 @@
         }
     }
 
-    // 🌟 嚴格 50 期熱門號 + 連續未開冷門號演算
+    // 50 期熱門號 + 連續未開冷門號演算
     function analyzeHotColdNumbers() {
         let completedDraws = battleHistory.filter(item => !item.isPending && item.draw && item.draw.length === 5);
         if(completedDraws.length === 0) return;
@@ -1438,7 +1435,6 @@
             numStats[i] = { num: i, totalCount: 0, recent50Count: 0, missingStreak: 999 };
         }
 
-        // 計算連續沒開的期數 (Missing Streak) 與 近 50 期開出次數
         for (let i = 1; i <= 39; i++) {
             let streak = 0;
             let found = false;
@@ -1452,7 +1448,6 @@
             numStats[i].missingStreak = found ? streak : completedDraws.length;
         }
 
-        // 計算近 50 期熱度
         let max50 = Math.min(50, completedDraws.length);
         for (let d = 0; d < max50; d++) {
             completedDraws[d].draw.forEach(n => {
@@ -1472,24 +1467,22 @@
             let freqScore = (item.recent50Count / max50) * 100;
             let reboundScore = 50;
             if (item.missingStreak >= 5 && item.missingStreak <= 12) {
-                reboundScore = 95; // 回補黃金週期
+                reboundScore = 95;
             } else if (item.missingStreak === 0) {
-                reboundScore = 75; // 連莊可能
+                reboundScore = 75;
             } else if (item.missingStreak > 20) {
-                reboundScore = 35; // 極度深冷，防守牌
+                reboundScore = 35;
             }
             item.probScore = (freqScore * 0.65) + (reboundScore * 0.35);
         });
 
         probabilityRankedBalls = [...statsArray].sort((a, b) => b.probScore - a.probScore);
 
-        // 🔥 熱牌：近 50 期內開最多
         let hotNumbers = [...statsArray].sort((a, b) => {
             if (b.recent50Count !== a.recent50Count) return b.recent50Count - a.recent50Count;
             return a.missingStreak - b.missingStreak;
         }).slice(0, 8);
 
-        // ❄️ 冷牌：連續沒開最多 (遺漏期數最多)
         let coldNumbers = [...statsArray].sort((a, b) => {
             if (b.missingStreak !== a.missingStreak) return b.missingStreak - a.missingStreak;
             return a.recent50Count - b.recent50Count;
@@ -1569,7 +1562,6 @@
         ];
 
         container.innerHTML = list.map((item) => {
-            const rawNums = item.balls.map(b => b.num.toString().padStart(2, '0')).join(', ');
             return `
                 <div class="recom-card ${item.cardClass}">
                     <div class="recom-header">
@@ -1579,16 +1571,12 @@
                     <div class="recom-balls">
                         ${item.balls.map(b => `<div class="quantum-ball ${b.color}">${b.num.toString().padStart(2, '0')}</div>`).join('')}
                     </div>
-                    <div class="recom-btns">
-                        <button class="btn-fast-apply" style="background:var(--ai-color);" onclick="applyRecomNums('${rawNums}', 'ai')">入 AI</button>
-                        <button class="btn-fast-apply" style="background:var(--my-color);" onclick="applyRecomNums('${rawNums}', 'my')">入 我的</button>
-                    </div>
                 </div>
             `;
         }).join('');
     }
 
-    // 1. 單碼目標倍投 (539 預設成本 2900 / 彩金 21200)
+    // 1. 單碼目標倍投
     function calculateSingleTargetPlan() {
         const firstUnits = parseFloat(document.getElementById('calc-st-first-units').value) || 0.10;
         const targetDailyProfit = parseFloat(document.getElementById('calc-st-target-profit').value) || 1830;
@@ -2026,13 +2014,6 @@
     window.calculateFourTargetPlan = calculateFourTargetPlan;
     window.refreshRecommendations = function() { renderRecommendations(); };
 
-    window.applyRecomNums = function(numsStr, targetKey) {
-        let targetMap = { ai: 'ai-nums', my: 'my-nums' };
-        let nameMap = { ai: 'AI', my: '我的' };
-        document.getElementById(targetMap[targetKey]).value = numsStr;
-        alert(`✅ 已將推薦號碼 [ ${numsStr} ] 帶入【${nameMap[targetKey]}】！`);
-    };
-
     function renderAll() {
         const tbody = document.getElementById('history-tbody');
         tbody.innerHTML = '';
@@ -2088,7 +2069,6 @@
                 <td data-label="📺 開獎 5 碼">${drawColumnHtml}</td>
                 <td data-label="🏆 勝負判定">${winnerBadge}</td>
                 <td data-label="⚙️ 操作管理">
-                    <button class="action-btn edit-btn" title="帶入上方表單補填或修改號碼" onclick="loadRecordToForm('${item.id}')">✏️ 補/改</button>
                     <button class="action-btn edit-btn" onclick="editDate('${item.id}', '${item.date}')">📅 改期</button>
                     <button class="action-btn delete-btn" onclick="deleteRecord('${item.id}')">刪除</button>
                 </td>
@@ -2130,19 +2110,14 @@
     window.addRecord = addRecord;
     window.editDate = editDate;
     window.deleteRecord = deleteRecord;
-    window.loadRecordToForm = loadRecordToForm;
     window.parseAndImportMultiDraws = parseAndImportMultiDraws;
 </script>
 
-<!-- 單軌量子 3D 物理滾球機引擎 -->
+<!-- 台彩官方實景氣動搖號機引擎 -->
 <script>
-    class PhysicsMachine {
-        constructor(containerId, sphereSize) {
-            this.container = document.getElementById(containerId);
-            this.size = sphereSize;
-            this.center = sphereSize / 2;
-            this.radius = 9;
-            this.maxRadius = this.center - this.radius - 4;
+    class TaicaiAirMachine {
+        constructor(chamberId) {
+            this.chamber = document.getElementById(chamberId);
             this.balls = [];
             this.isMixing = false;
             this.reqFrame = null;
@@ -2150,24 +2125,25 @@
         }
 
         init() {
-            this.container.innerHTML = '';
+            // 清除舊球
+            this.chamber.querySelectorAll('.airflow-ball').forEach(b => b.remove());
             this.balls = [];
+
+            // 建立 39 顆小號碼球在直立氣缸內
             for (let i = 1; i <= 39; i++) {
                 let el = document.createElement('div');
-                el.className = 'mini-ball';
+                el.className = 'airflow-ball';
                 el.innerText = i.toString().padStart(2, '0');
-                this.container.appendChild(el);
-
-                let angle = Math.random() * Math.PI * 2;
-                let r = Math.random() * (this.maxRadius - 10);
-                let x = this.center + Math.cos(angle) * r;
-                let y = this.center + Math.sin(angle) * r;
+                this.chamber.appendChild(el);
 
                 this.balls.push({
-                    id: i, el: el, active: true,
-                    x: x, y: y,
-                    vx: (Math.random() - 0.5) * 5,
-                    vy: (Math.random() - 0.5) * 5
+                    id: i,
+                    el: el,
+                    active: true,
+                    x: Math.random() * 70 + 10, // 像素位置
+                    y: Math.random() * 110 + 20,
+                    vx: (Math.random() - 0.5) * 3,
+                    vy: (Math.random() - 0.5) * 4
                 });
             }
             if (this.reqFrame) cancelAnimationFrame(this.reqFrame);
@@ -2176,100 +2152,96 @@
         }
 
         loop() {
+            let chWidth = this.chamber.clientWidth || 100;
+            let chHeight = this.chamber.clientHeight || 150;
+
             this.balls.forEach(b => {
                 if (!b.active) return;
-                b.vy += 0.35;
 
                 if (this.isMixing) {
-                    b.vx += (Math.random() - 0.5) * 5;
-                    b.vy -= (Math.random()) * 2.5;
+                    // 強風向上氣流與亂流碰撞
+                    b.vy -= 0.15;
+                    b.vx += (Math.random() - 0.5) * 4;
+                    b.vy += (Math.random() - 0.5) * 4;
+
                     let speed = Math.sqrt(b.vx * b.vx + b.vy * b.vy);
-                    if (speed > 16) {
-                        b.vx = (b.vx / speed) * 16;
-                        b.vy = (b.vy / speed) * 16;
+                    if (speed > 7) {
+                        b.vx = (b.vx / speed) * 7;
+                        b.vy = (b.vy / speed) * 7;
                     }
                 } else {
-                    b.vx *= 0.98;
-                    b.vy *= 0.98;
+                    // 靜止時輕微浮動
+                    b.vy += 0.1;
+                    b.vx *= 0.95;
                 }
 
                 b.x += b.vx;
                 b.y += b.vy;
 
-                let dx = b.x - this.center;
-                let dy = b.y - this.center;
-                let dist = Math.sqrt(dx * dx + dy * dy);
+                // 邊界碰撞
+                if (b.x < 5) { b.x = 5; b.vx *= -0.8; }
+                if (b.x > chWidth - 21) { b.x = chWidth - 21; b.vx *= -0.8; }
+                if (b.y < 10) { b.y = 10; b.vy *= -0.8; }
+                if (b.y > chHeight - 26) { b.y = chHeight - 26; b.vy *= -0.9; }
 
-                if (dist > this.maxRadius) {
-                    let nx = dx / dist;
-                    let ny = dy / dist;
-                    b.x = this.center + nx * this.maxRadius;
-                    b.y = this.center + ny * this.maxRadius;
-                    let dot = b.vx * nx + b.vy * ny;
-                    b.vx = (b.vx - 2 * dot * nx) * 0.8;
-                    b.vy = (b.vy - 2 * dot * ny) * 0.8;
-                }
-            });
-
-            this.balls.forEach(b => {
-                if (b.active) {
-                    b.el.style.transform = `translate(${b.x - this.radius}px, ${b.y - this.radius}px)`;
-                }
+                b.el.style.transform = `translate(${b.x}px, ${b.y}px)`;
             });
 
             this.reqFrame = requestAnimationFrame(this.loop);
         }
 
-        drawBall(ballObj, slotEl, callback) {
+        async drawBall(ballObj, slotEl) {
             ballObj.active = false;
-            ballObj.el.style.transition = "transform 0.4s cubic-bezier(0.5, -0.5, 0.2, 1.2), opacity 0.5s";
-            ballObj.el.style.transform = `translate(${this.center - this.radius}px, -20px) scale(1.3)`;
+            let el = ballObj.el;
 
-            setTimeout(() => {
-                ballObj.el.style.opacity = "0";
-                slotEl.innerText = ballObj.id.toString().padStart(2, '0');
-                slotEl.classList.add('revealed');
-                if (callback) callback();
-            }, 500);
+            // 緩慢向上吸取動畫 (模擬台彩慢速吸球上升)
+            el.style.transition = "all 1.2s cubic-bezier(0.25, 1, 0.5, 1)";
+            el.style.transform = `translate(35px, -35px) scale(1.3)`;
+            el.style.zIndex = "100";
+
+            await new Promise(r => setTimeout(r, 1200));
+
+            el.style.opacity = "0";
+            slotEl.innerText = ballObj.id.toString().padStart(2, '0');
+            slotEl.classList.add('revealed');
         }
     }
 
-    let singleMachine;
-    let finalNums = [];
+    let taicaiMachine;
 
     window.onload = function() {
         document.getElementById('input-date').value = new Date().toISOString().split('T')[0];
-        singleMachine = new PhysicsMachine('physics-container', 160);
+        taicaiMachine = new TaicaiAirMachine('airflow-cylinder');
     };
 
-    async function startRollMachine() {
+    async function startTaicaiRoll() {
         const btn = document.getElementById('btn-roll');
+        const screen = document.getElementById('power-screen');
         const slots = document.querySelectorAll('#machine-balls .machine-ball');
         
         btn.disabled = true;
-        btn.innerText = "🌪️ 量子高速對撞搖號中...";
-        
-        document.querySelectorAll('.btn-apply').forEach(b => b.style.display = 'none');
+        btn.innerText = "🌪️ 氣動噴發混珠中...";
+        screen.innerText = "MIXING";
 
-        singleMachine.init();
+        taicaiMachine.init();
         slots.forEach(s => { s.innerText = "?"; s.classList.remove('revealed'); });
 
-        singleMachine.isMixing = true;
-        await new Promise(r => setTimeout(r, 1200));
+        taicaiMachine.isMixing = true;
+        await new Promise(r => setTimeout(r, 1500));
 
-        finalNums = generate5Numbers();
+        let final5 = generate5Numbers();
 
         for (let i = 0; i < 5; i++) {
-            let b = singleMachine.balls.find(ball => ball.id === finalNums[i]);
-            await new Promise(res => singleMachine.drawBall(b, slots[i], res));
-            await new Promise(r => setTimeout(r, 250));
+            screen.innerText = `BALL ${i+1}`;
+            let targetBall = taicaiMachine.balls.find(b => b.id === final5[i]);
+            await taicaiMachine.drawBall(targetBall, slots[i]);
+            await new Promise(r => setTimeout(r, 400)); // 球與球之間的間隔拉長，更有臨場感
         }
 
-        singleMachine.isMixing = false;
+        taicaiMachine.isMixing = false;
         btn.disabled = false;
-        btn.innerText = "🎲 再次啟動量子搖號";
-
-        document.querySelectorAll('.btn-apply').forEach(b => b.style.display = 'inline-block');
+        btn.innerText = "🎲 再次啟動台彩搖號";
+        screen.innerText = "DONE";
     }
 
     function generate5Numbers() {
@@ -2281,20 +2253,7 @@
         return arr.sort((a, b) => a - b);
     }
 
-    function applyToInput(nums, targetKey, count = 4) {
-        if (!nums || nums.length < count) return;
-        let selected = nums.slice(0, count);
-        let str = selected.map(n => n.toString().padStart(2, '0')).join(', ');
-        
-        let targetMap = { ai: 'ai-nums', my: 'my-nums' };
-        let nameMap = { ai: 'AI', my: '我的' };
-
-        document.getElementById(targetMap[targetKey]).value = str;
-        alert(`✅ 已將搖出的 ${count} 碼帶入【${nameMap[targetKey]}】！`);
-    }
-
-    window.startRollMachine = startRollMachine;
-    window.applyToInput = applyToInput;
+    window.startTaicaiRoll = startTaicaiRoll;
 </script>
 
 </body>
