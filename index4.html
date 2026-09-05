@@ -106,7 +106,7 @@
             border: 1.5px solid rgba(217, 119, 6, 0.4);
             border-radius: 18px;
             width: 100%;
-            max-width: 1050px;
+            max-width: 1100px;
             max-height: 92vh;
             display: flex;
             flex-direction: column;
@@ -229,6 +229,9 @@
             margin-bottom: 10px;
             display: flex;
             justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
         }
         .status-grid {
             display: grid;
@@ -264,6 +267,67 @@
         .btn-win { background: #16a34a; color: #ffffff; box-shadow: 0 2px 8px rgba(22, 163, 74, 0.25); }
         .btn-lose { background: #dc2626; color: #ffffff; box-shadow: 0 2px 8px rgba(220, 38, 38, 0.25); }
         .btn-reset { background: #64748b; color: #ffffff; flex: 0.4; }
+
+        /* 階梯模式子切換鍵 */
+        .tier-sub-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .sub-tab-btn {
+            padding: 6px 14px;
+            border-radius: 6px;
+            border: 1.5px solid #cbd5e1;
+            background: #ffffff;
+            font-size: 12px;
+            font-weight: 900;
+            color: #475569;
+            cursor: pointer;
+        }
+        .sub-tab-btn.active {
+            border-color: #7c3aed;
+            background: #f5f3ff;
+            color: #7c3aed;
+        }
+
+        /* 參數輸入控制列 */
+        .plan-config-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #ffffff;
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 1.5px solid #cbd5e1;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+        .plan-config-bar label {
+            font-size: 12px;
+            font-weight: 900;
+            color: #334155;
+        }
+        .plan-config-bar input {
+            padding: 6px 10px;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 6px;
+            font-family: monospace;
+            font-weight: 900;
+            width: 90px;
+            text-align: center;
+            outline: none;
+        }
+        .plan-config-bar input:focus { border-color: var(--gold-color); }
+        .btn-config-calc {
+            background: linear-gradient(135deg, #d97706, #b45309);
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            font-size: 12px;
+            font-weight: 900;
+            border-radius: 6px;
+            cursor: pointer;
+        }
 
         /* 表格結構 */
         .profit-table-wrapper {
@@ -326,7 +390,7 @@
             padding-bottom: 5px;
         }
         .day-plan-tag { font-size: 13px; font-weight: 900; color: #0284c7; }
-        .day-plan-target { font-size: 12px; font-weight: 800; color: #059669; }
+        .day-plan-tier { font-size: 11px; font-weight: 800; color: #7c3aed; background: #f5f3ff; padding: 2px 6px; border-radius: 4px; }
         .day-plan-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -671,7 +735,7 @@
     <!-- 頂部按鈕 -->
     <div class="top-action-bar">
         <button class="btn-open-modal" onclick="openProfitModal()">
-            📊 點擊開啟：天天樂坐車目標獲利與倍投規劃表 (單碼/多碼/階梯)
+            📊 點擊開啟：坐車目標獲利與階梯均注規劃表
         </button>
     </div>
 
@@ -679,7 +743,7 @@
     <div class="modal-overlay" id="profit-modal" onclick="closeModalOnOverlay(event)">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>💰 天天樂坐車下注・多維目標倍投與紀律規劃表</h2>
+                <h2>💰 天天樂坐車下注・目標倍投與階梯紀律規劃表</h2>
                 <button class="modal-close" onclick="closeProfitModal()">&times;</button>
             </div>
             
@@ -687,11 +751,11 @@
             <div class="modal-tabs">
                 <button class="tab-btn active" id="tab-btn-single-target" onclick="switchModalTab('single-target')">🌟 單碼目標倍投 (自訂起步/期期賺錢)</button>
                 <button class="tab-btn" id="tab-btn-four-target" onclick="switchModalTab('four-target')">🎯 4碼目標倍投 (自訂起步/期期賺錢)</button>
-                <button class="tab-btn" id="tab-btn-tier-track" onclick="switchModalTab('tier-track')">⚖️ 階梯均注紀律追蹤表 (3期一階)</button>
+                <button class="tab-btn" id="tab-btn-tier-track" onclick="switchModalTab('tier-track')">⚖️ 階梯均注紀律追蹤表 (不限期數)</button>
             </div>
 
             <div class="modal-body">
-                <!-- 🌟 分頁 1：單碼目標倍投 (每期全正數淨利，自訂起始車數) -->
+                <!-- 🌟 分頁 1：單碼目標倍投 -->
                 <div id="tab-content-single-target">
                     <div class="calc-form-grid">
                         <div class="calc-input-group">
@@ -704,7 +768,7 @@
                         </div>
                         <div class="calc-input-group">
                             <label>📅 規劃天數 (期數)</label>
-                            <input type="number" id="calc-st-days" value="15" min="1" max="30" step="1">
+                            <input type="number" id="calc-st-days" value="15" min="1" max="60" step="1">
                         </div>
                         <div class="calc-input-group">
                             <label>💵 每全車成本</label>
@@ -738,7 +802,7 @@
                     <div class="mobile-cards-container" id="st-plan-mobile-cards"></div>
                 </div>
 
-                <!-- 🌟 分頁 2：4碼目標倍投 (自訂起步，期期保證賺錢 + 雙停暴利) -->
+                <!-- 🌟 分頁 2：4碼目標倍投 -->
                 <div id="tab-content-four-target" style="display:none;">
                     <div class="calc-form-grid">
                         <div class="calc-input-group">
@@ -751,7 +815,7 @@
                         </div>
                         <div class="calc-input-group">
                             <label>📅 規劃天數 (建議4~8天)</label>
-                            <input type="number" id="calc-ft-days" value="6" min="1" max="15" step="1">
+                            <input type="number" id="calc-ft-days" value="6" min="1" max="20" step="1">
                         </div>
                         <div class="calc-input-group">
                             <label>💵 單碼成本 (全車)</label>
@@ -786,12 +850,18 @@
                     <div class="mobile-cards-container" id="ft-plan-mobile-cards"></div>
                 </div>
 
-                <!-- 🌟 分頁 3：階梯均注紀律追蹤表 (附過關/沒過按鈕) -->
+                <!-- 🌟 分頁 3：階梯均注紀律追蹤表 (不限期數，包含單碼與4碼) -->
                 <div id="tab-content-tier-track" style="display:none;">
+                    <!-- 子玩法切換 -->
+                    <div class="tier-sub-tabs">
+                        <button class="sub-tab-btn active" id="sub-tier-single" onclick="switchTierSubMode('single')">🌟 單碼階梯 (3期一階)</button>
+                        <button class="sub-tab-btn" id="sub-tier-four" onclick="switchTierSubMode('four')">🎯 4碼階梯 (2期一階)</button>
+                    </div>
+
                     <div class="tracker-card">
                         <div class="tracker-title">
-                            <span id="tracker-mode-name">單顆球玩法 (3期一階) 當前執行狀態</span>
-                            <span id="tracker-stoploss-tip" style="color:#dc2626; font-size:11px;">15期停損上限</span>
+                            <span id="tracker-mode-name">單碼階梯均注 (3期一階) 當前執行狀態</span>
+                            <span id="tracker-stoploss-tip" style="color:#dc2626; font-size:11px;">執行進度</span>
                         </div>
                         <div class="status-grid">
                             <div class="status-item"><div class="label">當前期數</div><div class="val" id="disp-day">第 1 期</div></div>
@@ -802,10 +872,19 @@
                             <div class="status-item"><div class="label">中獎實得淨利</div><div class="val win" id="disp-win-profit">+1,844 元</div></div>
                         </div>
                         <div class="action-btns">
-                            <button class="act-btn btn-win" onclick="recordResult(true)">🎉 過關！(結算並回第一階)</button>
-                            <button class="act-btn btn-lose" onclick="recordResult(false)">❌ 沒過 (進入下一期)</button>
-                            <button class="act-btn btn-reset" onclick="resetGame()">重置循環</button>
+                            <button class="act-btn btn-win" onclick="recordTierResult(true)">🎉 過關！(結算並回第一階)</button>
+                            <button class="act-btn btn-lose" onclick="recordTierResult(false)">❌ 沒過 (進入下一期)</button>
+                            <button class="act-btn btn-reset" onclick="resetTierGame()">重置循環</button>
                         </div>
+                    </div>
+
+                    <!-- 🌟 自訂參數：不限制期數，自由設定！ -->
+                    <div class="plan-config-bar">
+                        <label>🚗 起始車數：</label>
+                        <input type="number" id="cfg-tier-cars" value="0.10" min="0.01" max="10" step="0.05">
+                        <label style="margin-left:8px;">📅 總規劃期數：</label>
+                        <input type="number" id="cfg-tier-total-days" value="15" min="3" max="60" step="1">
+                        <button class="btn-config-calc" onclick="applyDynamicTierConfig()">⚡ 重新生成不限期表格</button>
                     </div>
 
                     <div class="profit-table-wrapper">
@@ -818,7 +897,7 @@
                                     <th>當期成本</th>
                                     <th>累計總成本</th>
                                     <th>中獎彩金</th>
-                                    <th>結算淨利</th>
+                                    <th>結算淨利 (保證賺錢)</th>
                                 </tr>
                             </thead>
                             <tbody id="tier-table-body"></tbody>
@@ -959,7 +1038,7 @@
         <button class="btn-submit" onclick="addRecord()">☁️ 儲存 / 補填對決紀錄至雲端 (即刻對獎)</button>
     </div>
 
-    <!-- 歷史對決 (號碼球縮小版) -->
+    <!-- 歷史對決 -->
     <div class="history-panel">
         <h2 style="font-size: 15px; margin-bottom: 12px; letter-spacing: 1px;">📊 歷史戰績矩陣對照表 (AI vs 我)</h2>
         <table>
@@ -1455,9 +1534,7 @@
         }).join('');
     }
 
-    // ==============================================================
-    // 🌟 1. 單碼目標倍投（自訂起步車數，每期保證全正數賺錢）
-    // ==============================================================
+    // 1. 單碼目標倍投
     function calculateSingleTargetPlan() {
         const firstUnits = parseFloat(document.getElementById('calc-st-first-units').value) || 0.10;
         const targetDailyProfit = parseFloat(document.getElementById('calc-st-target-profit').value) || 1844;
@@ -1473,7 +1550,7 @@
         let cumCost = 0;
         let rowsHtml = '';
         let mobileCardsHtml = '';
-        let netWinPerFullUnit = prizePerUnit - costPerUnit; // 18445 元
+        let netWinPerFullUnit = prizePerUnit - costPerUnit;
 
         for (let day = 1; day <= days; day++) {
             let targetCumProfit = targetDailyProfit * day;
@@ -1482,7 +1559,6 @@
             if (day === 1) {
                 units = firstUnits;
             } else {
-                // u * prize - (cumCost + u * cost) >= targetCumProfit
                 units = (cumCost + targetCumProfit) / netWinPerFullUnit;
                 units = Math.ceil(units * 100) / 100;
             }
@@ -1541,9 +1617,7 @@
         document.getElementById('st-plan-summary').innerText = `[${days}天單碼總備援本金建議：${cumCost.toLocaleString()} 元]`;
     }
 
-    // ==============================================================
-    // 🌟 2. 4 碼目標倍投（自訂起步車數，期期保證正獲利 + 雙停暴利）
-    // ==============================================================
+    // 2. 4 碼目標倍投
     function calculateFourTargetPlan() {
         const firstUnits = parseFloat(document.getElementById('calc-ft-first-units').value) || 0.10;
         const targetDailyProfit = parseFloat(document.getElementById('calc-ft-target-profit').value) || 1844;
@@ -1559,8 +1633,7 @@
         let cumCost = 0;
         let rowsHtml = '';
         let mobileCardsHtml = '';
-        // 4 碼買全車，中 1 碼時每 1 車的單期毛利
-        let netWinIfHitOne = prizePerUnit - (4 * costPerUnit); // 21200 - 11020 = 10180 元
+        let netWinIfHitOne = prizePerUnit - (4 * costPerUnit);
 
         for (let day = 1; day <= days; day++) {
             let targetCumProfit = targetDailyProfit * day;
@@ -1569,7 +1642,6 @@
             if (day === 1) {
                 units = firstUnits;
             } else {
-                // u * prize - (cumCost + u * 4 * cost) >= targetCumProfit
                 units = (cumCost + targetCumProfit) / netWinIfHitOne;
                 units = Math.ceil(units * 100) / 100;
             }
@@ -1634,34 +1706,161 @@
     }
 
     // ==============================================================
-    // 🌟 3. 階梯均注紀律追蹤表 (3期一階)
+    // 🌟 3. 不限期數・動態階梯均注紀律 (單碼 3 期一階 / 4 碼 2 期一階)
     // ==============================================================
-    const SINGLE_TIER_PLAN = [
-        { day: 1,  tier: "第一階", cars: 0.10, cost: 276,   total: 276,   prize: 2120,  profit: 1844 },
-        { day: 2,  tier: "第一階", cars: 0.10, cost: 276,   total: 552,   prize: 2120,  profit: 1568 },
-        { day: 3,  tier: "第一階", cars: 0.10, cost: 276,   total: 828,   prize: 2120,  profit: 1292 },
-        { day: 4,  tier: "第二階", cars: 0.17, cost: 468,   total: 1296,  prize: 3604,  profit: 2308 },
-        { day: 5,  tier: "第二階", cars: 0.17, cost: 468,   total: 1764,  prize: 3604,  profit: 1840 },
-        { day: 6,  tier: "第二階", cars: 0.17, cost: 468,   total: 2232,  prize: 3604,  profit: 1372 },
-        { day: 7,  tier: "第三階", cars: 0.30, cost: 827,   total: 3059,  prize: 6360,  profit: 3301 },
-        { day: 8,  tier: "第三階", cars: 0.30, cost: 827,   total: 3886,  prize: 6360,  profit: 2474 },
-        { day: 9,  tier: "第三階", cars: 0.30, cost: 827,   total: 4713,  prize: 6360,  profit: 1647 },
-        { day: 10, tier: "第四階", cars: 0.55, cost: 1515,  total: 6228,  prize: 11660, profit: 5432 },
-        { day: 11, tier: "第四階", cars: 0.55, cost: 1515,  total: 7743,  prize: 11660, profit: 3917 },
-        { day: 12, tier: "第四階", cars: 0.55, cost: 1515,  total: 9258,  prize: 11660, profit: 2402 },
-        { day: 13, tier: "第五階", cars: 1.05, cost: 2893,  total: 12151, prize: 22260, profit: 10109 },
-        { day: 14, tier: "第五階", cars: 1.05, cost: 2893,  total: 15044, prize: 22260, profit: 7216 },
-        { day: 15, tier: "第五階", cars: 1.05, cost: 2893,  total: 17937, prize: 22260, profit: 4323 }
-    ];
-
+    let currentTierSubMode = 'single'; // 'single' 或 'four'
     let currentTierIdx = 0;
+    let customTierStartCars = 0.10;
+    let customTierTotalDays = 15;
+
+    // 中文數字轉換
+    function getChineseTierName(idx) {
+        const cNums = ["一", "二", "三", "四", "五", "六", "七", "八", "九", "十", "十一", "十二", "十三", "十四", "十五", "十六", "十七", "十八", "十九", "二十"];
+        return `第${cNums[idx] || (idx + 1)}階`;
+    }
+
+    // 動態建構任意天數單碼階梯 (3期一階)
+    function buildDynamicSingleTier(startCars, totalDays) {
+        const costPerCar = 2755;
+        const prizePerCar = 21200;
+        let plan = [];
+        let cumCost = 0;
+        let tierStep = 3;
+        let totalTiers = Math.ceil(totalDays / tierStep);
+
+        for (let t = 0; t < totalTiers; t++) {
+            let cars = 0;
+            if (t === 0) {
+                cars = startCars;
+            } else {
+                // 確保在第3天(該階最末天)開出依然獲利至少 1000 元
+                cars = (cumCost + 1000) / (prizePerCar - (tierStep * costPerCar));
+                cars = Math.ceil(cars * 100) / 100;
+                if (cars <= plan[plan.length - 1].cars) {
+                    cars = plan[plan.length - 1].cars + 0.05;
+                }
+            }
+
+            for (let d = 1; d <= tierStep; d++) {
+                let dayNum = t * tierStep + d;
+                if (dayNum > totalDays) break;
+
+                let curCost = Math.round(cars * costPerCar);
+                cumCost += curCost;
+                let prize = Math.round(cars * prizePerCar);
+                let profit = prize - cumCost;
+
+                plan.push({
+                    day: dayNum,
+                    tier: getChineseTierName(t),
+                    cars: cars,
+                    cost: curCost,
+                    total: cumCost,
+                    prize: prize,
+                    profit: profit
+                });
+            }
+        }
+        return plan;
+    }
+
+    // 動態建構任意天數4碼階梯 (2期一階，全盤正獲利保證)
+    function buildDynamicFourTier(startCars, totalDays) {
+        const singleCost = 2755;
+        const roundFourCost = singleCost * 4; // 11020 元
+        const prizePerCar = 21200;
+        let plan = [];
+        let cumCost = 0;
+        let tierStep = 2;
+        let totalTiers = Math.ceil(totalDays / tierStep);
+
+        for (let t = 0; t < totalTiers; t++) {
+            let cars = 0;
+            if (t === 0) {
+                cars = startCars;
+            } else {
+                cars = (cumCost + 1200) / (prizePerCar - roundFourCost);
+                cars = Math.ceil(cars * 100) / 100;
+                if (cars <= plan[plan.length - 1].cars) {
+                    cars = Math.ceil(plan[plan.length - 1].cars * 2.2 * 100) / 100;
+                }
+            }
+
+            for (let d = 1; d <= tierStep; d++) {
+                let dayNum = t * tierStep + d;
+                if (dayNum > totalDays) break;
+
+                let curCost = Math.round(cars * roundFourCost);
+                cumCost += curCost;
+                let prize = Math.round(cars * prizePerCar);
+                let profit = prize - cumCost;
+
+                // 若該階第2天微虧，自動調高車數保證賺錢
+                if (profit < 0) {
+                    let neededCars = (cumCost - curCost + 500) / (prizePerCar - roundFourCost);
+                    cars = Math.ceil(neededCars * 100) / 100;
+                    cumCost = cumCost - curCost + Math.round(cars * roundFourCost);
+                    curCost = Math.round(cars * roundFourCost);
+                    prize = Math.round(cars * prizePerCar);
+                    profit = prize - cumCost;
+                }
+
+                plan.push({
+                    day: dayNum,
+                    tier: getChineseTierName(t),
+                    cars: cars,
+                    cost: curCost,
+                    total: cumCost,
+                    prize: prize,
+                    profit: profit
+                });
+            }
+        }
+        return plan;
+    }
+
+    function getDynamicTierPlan() {
+        return currentTierSubMode === 'single'
+            ? buildDynamicSingleTier(customTierStartCars, customTierTotalDays)
+            : buildDynamicFourTier(customTierStartCars, customTierTotalDays);
+    }
+
+    function switchTierSubMode(mode) {
+        currentTierSubMode = mode;
+        currentTierIdx = 0;
+        document.getElementById('sub-tier-single').classList.toggle('active', mode === 'single');
+        document.getElementById('sub-tier-four').classList.toggle('active', mode === 'four');
+
+        document.getElementById('tracker-mode-name').innerText = mode === 'single' 
+            ? '單碼階梯均注 (3期一階) 當前執行狀態' 
+            : '4碼階梯均注 (2期一階・保證賺錢) 當前執行狀態';
+        renderTierTracker();
+    }
+
+    function applyDynamicTierConfig() {
+        let carsVal = parseFloat(document.getElementById('cfg-tier-cars').value);
+        let daysVal = parseInt(document.getElementById('cfg-tier-total-days').value, 10);
+
+        if (isNaN(carsVal) || carsVal <= 0) return alert("請輸入有效的起始車數！");
+        if (isNaN(daysVal) || daysVal < 2) return alert("規劃期數至少需要 2 期以上！");
+
+        customTierStartCars = carsVal;
+        customTierTotalDays = daysVal;
+        currentTierIdx = 0;
+        renderTierTracker();
+        alert(`✅ 已為你動態生成共 ${customTierTotalDays} 期的階梯均注計畫表！`);
+    }
 
     function renderTierTracker() {
-        const cur = SINGLE_TIER_PLAN[currentTierIdx];
+        const plan = getDynamicTierPlan();
+        if (currentTierIdx >= plan.length) currentTierIdx = 0;
+        const cur = plan[currentTierIdx];
 
         document.getElementById('disp-day').innerText = `第 ${cur.day} 期`;
         document.getElementById('disp-tier').innerText = cur.tier;
-        document.getElementById('disp-cars').innerText = `${cur.cars.toFixed(2)} 車`;
+        document.getElementById('disp-cars').innerText = currentTierSubMode === 'single' 
+            ? `${cur.cars.toFixed(2)} 車` 
+            : `各 ${cur.cars.toFixed(2)} 車 (共 ${(cur.cars * 4).toFixed(2)} 車)`;
         document.getElementById('disp-cost').innerText = `${cur.cost.toLocaleString()} 元`;
         document.getElementById('disp-total-cost').innerText = `${cur.total.toLocaleString()} 元`;
         
@@ -1669,9 +1868,12 @@
         profitEl.innerText = `${cur.profit > 0 ? '+' : ''}${cur.profit.toLocaleString()} 元`;
         profitEl.className = cur.profit >= 0 ? 'val win' : 'val highlight';
 
+        document.getElementById('tracker-stoploss-tip').innerText = `總共 ${plan.length} 期`;
+
+        // 電腦端表格
         const tbody = document.getElementById('tier-table-body');
         tbody.innerHTML = '';
-        SINGLE_TIER_PLAN.forEach((row, idx) => {
+        plan.forEach((row, idx) => {
             const tr = document.createElement('tr');
             if (idx === currentTierIdx) tr.className = 'active-row';
             tr.innerHTML = `
@@ -1686,9 +1888,10 @@
             tbody.appendChild(tr);
         });
 
+        // 手機端一行一格卡片流
         const mobileContainer = document.getElementById('tier-mobile-cards-container');
         mobileContainer.innerHTML = '';
-        SINGLE_TIER_PLAN.forEach((row, idx) => {
+        plan.forEach((row, idx) => {
             const isAct = idx === currentTierIdx;
             const card = document.createElement('div');
             card.className = `day-plan-card ${isAct ? 'current-active' : ''}`;
@@ -1699,7 +1902,7 @@
                 </div>
                 <div class="day-plan-grid">
                     <div class="day-plan-item">
-                        <span class="label">🚗 車數</span>
+                        <span class="label">🚗 ${currentTierSubMode === 'single' ? '下注車數' : '每碼車數'}</span>
                         <span class="val text-gold">${row.cars.toFixed(2)} 車</span>
                     </div>
                     <div class="day-plan-item">
@@ -1724,22 +1927,23 @@
         });
     }
 
-    function recordResult(won) {
+    function recordTierResult(won) {
+        const plan = getDynamicTierPlan();
         if (won) {
-            alert(`🎉 恭喜過關！淨獲利 ${SINGLE_TIER_PLAN[currentTierIdx].profit.toLocaleString()} 元！自動回歸第 1 期重啟循環。`);
+            alert(`🎉 恭喜過關！淨獲利 ${plan[currentTierIdx].profit.toLocaleString()} 元！自動回歸第 1 期重啟循環。`);
             currentTierIdx = 0;
         } else {
-            if (currentTierIdx < SINGLE_TIER_PLAN.length - 1) {
+            if (currentTierIdx < plan.length - 1) {
                 currentTierIdx++;
             } else {
-                alert('⚠️ 已達本輪停損上限 (15期)！請嚴守紀律立即重置。');
+                alert(`⚠️ 已達設定的最後一期 (${plan.length}期)！請嚴守紀律立即重置。`);
                 currentTierIdx = 0;
             }
         }
         renderTierTracker();
     }
 
-    function resetGame() {
+    function resetTierGame() {
         currentTierIdx = 0;
         renderTierTracker();
     }
@@ -1769,10 +1973,12 @@
     window.closeProfitModal = closeProfitModal;
     window.closeModalOnOverlay = closeModalOnOverlay;
     window.switchModalTab = switchModalTab;
+    window.switchTierSubMode = switchTierSubMode;
+    window.applyDynamicTierConfig = applyDynamicTierConfig;
+    window.recordTierResult = recordTierResult;
+    window.resetTierGame = resetTierGame;
     window.calculateSingleTargetPlan = calculateSingleTargetPlan;
     window.calculateFourTargetPlan = calculateFourTargetPlan;
-    window.recordResult = recordResult;
-    window.resetGame = resetGame;
     window.refreshRecommendations = function() { renderRecommendations(); };
 
     window.applyRecomNums = function(numsStr, targetKey) {
