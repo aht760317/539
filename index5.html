@@ -6,18 +6,18 @@
     <title>今彩 539 光量子 AI 科技對決擂台 (Firebase 雲端同步旗艦版)</title>
     <style>
         :root {
-            --bg-color: #f1f5f9; 
-            --panel-bg: rgba(255, 255, 255, 0.95);
-            --panel-border: rgba(148, 163, 184, 0.35);
-            --text-main: #0f172a;
-            --text-muted: #64748b;
-            --ai-color: #0284c7; 
-            --my-color: #059669; 
-            --draw-color: #d97706; 
-            --neon-purple: #7c3aed;
-            --hit-color: #ef4444; 
-            --gold-color: #d97706;
-            --ball-size: 34px;
+            --bg-color: #0b0f19; 
+            --panel-bg: rgba(15, 23, 42, 0.85);
+            --panel-border: rgba(56, 189, 248, 0.2);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --ai-color: #38bdf8; 
+            --my-color: #10b981; 
+            --draw-color: #f59e0b; 
+            --neon-purple: #a855f7;
+            --hit-color: #ff3366; 
+            --gold-color: #fbbf24;
+            --ball-size: 36px;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: "JetBrains Mono", -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft JhengHei", sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -27,44 +27,47 @@
             padding: 16px 12px; 
             line-height: 1.45;
             background-image: 
-                linear-gradient(rgba(14, 165, 233, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(14, 165, 233, 0.05) 1px, transparent 1px);
-            background-size: 24px 24px;
+                radial-gradient(circle at 50% 0%, rgba(56, 189, 248, 0.12) 0%, transparent 60%),
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 100% 100%, 28px 28px, 28px 28px;
         }
         .container { max-width: 1360px; margin: 0 auto; }
 
         header { 
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(240, 249, 255, 0.95)); 
-            border: 1px solid rgba(14, 165, 233, 0.3);
-            box-shadow: 0 6px 20px rgba(14, 165, 233, 0.1);
-            padding: 16px; 
-            border-radius: 14px; 
-            margin-bottom: 14px; 
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.9)); 
+            border: 1px solid rgba(56, 189, 248, 0.35);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 15px rgba(56, 189, 248, 0.15);
+            padding: 18px; 
+            border-radius: 16px; 
+            margin-bottom: 16px; 
             text-align: center; 
-            backdrop-filter: blur(12px);
+            backdrop-filter: blur(14px);
         }
         header h1 { 
-            font-size: clamp(18px, 3.5vw, 26px); 
-            letter-spacing: 1.2px;
-            background: linear-gradient(90deg, #0284c7, #7c3aed, #059669);
+            font-size: clamp(19px, 3.8vw, 27px); 
+            letter-spacing: 1.5px;
+            background: linear-gradient(90deg, #38bdf8, #a855f7, #34d399);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             font-weight: 900;
+            text-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
         }
         .cloud-badge { 
             display: inline-flex; 
             align-items: center; 
             gap: 6px; 
-            background: #ffffff; 
+            background: rgba(16, 185, 129, 0.1); 
             border: 1px solid rgba(16, 185, 129, 0.4);
             padding: 3px 12px; 
             border-radius: 20px; 
             font-size: 11px; 
             font-weight: bold;
-            color: #065f46;
-            margin-top: 6px; 
+            color: #34d399;
+            margin-top: 8px; 
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.15);
         }
-        .dot { width: 7px; height: 7px; border-radius: 50%; background: #10b981; box-shadow: 0 0 6px #10b981; }
+        .dot { width: 7px; height: 7px; border-radius: 50%; background: #10b981; box-shadow: 0 0 8px #10b981; }
 
         .top-action-bar {
             display: flex;
@@ -74,26 +77,26 @@
         .btn-open-modal {
             background: linear-gradient(135deg, #d97706, #b45309);
             color: white;
-            border: none;
+            border: 1px solid #f59e0b;
             padding: 12px 24px;
             font-size: 14px;
             font-weight: 900;
-            border-radius: 10px;
+            border-radius: 12px;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            box-shadow: 0 4px 15px rgba(217, 119, 6, 0.25);
+            box-shadow: 0 4px 20px rgba(217, 119, 6, 0.35);
             transition: all 0.2s;
         }
-        .btn-open-modal:hover { filter: brightness(1.1); transform: translateY(-1px); }
+        .btn-open-modal:hover { filter: brightness(1.15); transform: translateY(-1px); }
 
         /* 彈出視窗 */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(15, 23, 42, 0.75);
-            backdrop-filter: blur(6px);
+            background: rgba(5, 10, 20, 0.85);
+            backdrop-filter: blur(8px);
             z-index: 999;
             display: none;
             align-items: center;
@@ -101,15 +104,15 @@
             padding: 12px;
         }
         .modal-content {
-            background: #ffffff;
-            border: 1.5px solid rgba(217, 119, 6, 0.4);
+            background: #0f172a;
+            border: 1.5px solid rgba(217, 119, 6, 0.5);
             border-radius: 18px;
             width: 100%;
             max-width: 1050px;
             height: 90vh;
             display: flex;
             flex-direction: column;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
             overflow: hidden;
             animation: modalPop 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
@@ -119,41 +122,24 @@
         }
         .modal-header {
             padding: 12px 18px;
-            border-bottom: 1px solid #e2e8f0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background: #fffbeb;
+            background: rgba(30, 41, 59, 0.7);
             flex-shrink: 0;
         }
-        .modal-header h2 {
-            font-size: 15px;
-            font-weight: 900;
-            color: #92400e;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .modal-close {
-            background: transparent;
-            border: none;
-            font-size: 26px;
-            color: #78350f;
-            cursor: pointer;
-            font-weight: bold;
-            padding: 0 4px;
-        }
+        .modal-header h2 { font-size: 15px; font-weight: 900; color: #fbbf24; }
+        .modal-close { background: transparent; border: none; font-size: 26px; color: #94a3b8; cursor: pointer; }
         
         .modal-tabs {
             display: flex;
-            background: #f8fafc;
-            border-bottom: 1.5px solid #e2e8f0;
+            background: #0b0f19;
+            border-bottom: 1.5px solid rgba(255, 255, 255, 0.1);
             padding: 6px 12px 0 12px;
             gap: 6px;
             overflow-x: auto;
-            white-space: nowrap;
             flex-shrink: 0;
-            -webkit-overflow-scrolling: touch;
         }
         .modal-tabs::-webkit-scrollbar { display: none; }
         .tab-btn {
@@ -169,38 +155,30 @@
             transition: 0.2s;
         }
         .tab-btn.active {
-            background: #ffffff;
-            border-color: #cbd5e1;
-            color: #d97706;
-            border-top: 3px solid #d97706;
+            background: #0f172a;
+            border-color: rgba(255, 255, 255, 0.15);
+            color: #fbbf24;
+            border-top: 3px solid #fbbf24;
         }
-        
-        .modal-body {
-            padding: 14px 16px;
-            overflow-y: auto;
-            flex: 1;
-            overscroll-behavior: contain;
-            -webkit-overflow-scrolling: touch;
-        }
+        .modal-body { padding: 14px 16px; overflow-y: auto; flex: 1; }
 
-        /* 試算表輸入面板 */
         .calc-form-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
             gap: 8px;
             margin-bottom: 12px;
-            background: #f8fafc;
+            background: rgba(255, 255, 255, 0.03);
             padding: 10px;
             border-radius: 10px;
-            border: 1px solid #e2e8f0;
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
         .calc-input-group { display: flex; flex-direction: column; gap: 3px; }
-        .calc-input-group label { font-size: 11px; font-weight: 800; color: #475569; }
+        .calc-input-group label { font-size: 11px; font-weight: 800; color: #94a3b8; }
         .calc-input-group input {
             padding: 7px 9px;
-            background: #ffffff;
-            border: 1.5px solid #cbd5e1;
-            color: #0f172a;
+            background: #1e293b;
+            border: 1.5px solid #334155;
+            color: #f8fafc;
             border-radius: 6px;
             font-size: 13px;
             outline: none;
@@ -220,12 +198,10 @@
             align-self: flex-end;
             height: 35px;
         }
-        .btn-recalc:hover { filter: brightness(1.1); }
 
-        /* 狀態儀表卡 */
         .tracker-card {
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 12px;
             padding: 14px;
             margin-bottom: 16px;
@@ -233,13 +209,11 @@
         .tracker-title {
             font-size: 13px;
             font-weight: 900;
-            color: #334155;
+            color: #cbd5e1;
             margin-bottom: 10px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 6px;
         }
         .status-grid {
             display: grid;
@@ -248,16 +222,16 @@
             margin-bottom: 12px;
         }
         .status-item {
-            background: #ffffff;
+            background: #1e293b;
             padding: 10px;
             border-radius: 8px;
-            border: 1px solid #cbd5e1;
+            border: 1px solid #334155;
             text-align: center;
         }
-        .status-item .label { font-size: 11px; color: #64748b; margin-bottom: 2px; font-weight: bold; }
-        .status-item .val { font-size: 16px; font-weight: 900; color: #0f172a; font-family: monospace; }
-        .status-item .val.highlight { color: #dc2626; }
-        .status-item .val.win { color: #16a34a; }
+        .status-item .label { font-size: 11px; color: #94a3b8; margin-bottom: 2px; }
+        .status-item .val { font-size: 16px; font-weight: 900; color: #f8fafc; font-family: monospace; }
+        .status-item .val.highlight { color: #f43f5e; }
+        .status-item .val.win { color: #10b981; }
 
         .action-btns { display: flex; gap: 8px; flex-wrap: wrap; }
         .act-btn {
@@ -269,45 +243,45 @@
             font-size: 13px;
             font-weight: 900;
             cursor: pointer;
-            transition: 0.2s;
         }
-        .act-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
-        .btn-win { background: #16a34a; color: #ffffff; box-shadow: 0 2px 8px rgba(22, 163, 74, 0.25); }
-        .btn-lose { background: #dc2626; color: #ffffff; box-shadow: 0 2px 8px rgba(220, 38, 38, 0.25); }
-        .btn-reset { background: #64748b; color: #ffffff; flex: 0.4; }
+        .btn-win { background: #059669; color: #ffffff; }
+        .btn-lose { background: #e11d48; color: #ffffff; }
+        .btn-reset { background: #475569; color: #ffffff; flex: 0.4; }
 
         .tier-sub-tabs { display: flex; gap: 8px; margin-bottom: 12px; }
         .sub-tab-btn {
             padding: 6px 14px;
             border-radius: 6px;
-            border: 1.5px solid #cbd5e1;
-            background: #ffffff;
+            border: 1px solid #334155;
+            background: #1e293b;
             font-size: 12px;
             font-weight: 900;
-            color: #475569;
+            color: #94a3b8;
             cursor: pointer;
         }
         .sub-tab-btn.active {
-            border-color: #7c3aed;
-            background: #f5f3ff;
-            color: #7c3aed;
+            border-color: #a855f7;
+            background: rgba(168, 85, 247, 0.15);
+            color: #c084fc;
         }
 
         .plan-config-bar {
             display: flex;
             align-items: center;
             gap: 10px;
-            background: #ffffff;
+            background: #1e293b;
             padding: 10px 14px;
             border-radius: 10px;
-            border: 1.5px solid #cbd5e1;
+            border: 1px solid #334155;
             margin-bottom: 12px;
             flex-wrap: wrap;
         }
-        .plan-config-bar label { font-size: 12px; font-weight: 900; color: #334155; }
+        .plan-config-bar label { font-size: 12px; font-weight: 900; color: #cbd5e1; }
         .plan-config-bar input {
             padding: 6px 10px;
-            border: 1.5px solid #cbd5e1;
+            border: 1px solid #475569;
+            background: #0f172a;
+            color: #f8fafc;
             border-radius: 6px;
             font-family: monospace;
             font-weight: 900;
@@ -315,7 +289,6 @@
             text-align: center;
             outline: none;
         }
-        .plan-config-bar input:focus { border-color: var(--gold-color); }
         .btn-config-calc {
             background: linear-gradient(135deg, #d97706, #b45309);
             color: white;
@@ -327,9 +300,8 @@
             cursor: pointer;
         }
 
-        /* 表格結構 */
         .profit-table-wrapper {
-            border: 1px solid #e2e8f0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 10px;
             overflow-x: auto;
         }
@@ -341,50 +313,49 @@
             white-space: nowrap;
         }
         .profit-table th {
-            background: #f8fafc;
-            color: #475569;
+            background: rgba(30, 41, 59, 0.8);
+            color: #94a3b8;
             padding: 10px 8px;
             font-weight: 900;
-            border-bottom: 2px solid #e2e8f0;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
         }
         .profit-table td {
             padding: 9px 8px;
-            border-bottom: 1px solid #f1f5f9;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             font-family: monospace;
             font-weight: 600;
+            color: #e2e8f0;
         }
-        .profit-table tr:hover { background: #fffbeb; }
-        .profit-table tr.active-row { background: #e0f2fe; font-weight: 900; }
-        .text-green { color: #059669; font-weight: 800; }
-        .text-gold { color: #d97706; font-weight: 900; }
-        .text-purple { color: #7c3aed; font-weight: 900; }
+        .profit-table tr:hover { background: rgba(255, 255, 255, 0.03); }
+        .profit-table tr.active-row { background: rgba(56, 189, 248, 0.15); font-weight: 900; }
+        .text-green { color: #34d399; font-weight: 800; }
+        .text-gold { color: #fbbf24; font-weight: 900; }
+        .text-purple { color: #c084fc; font-weight: 900; }
 
-        /* 手機卡片流 */
         .mobile-cards-container { display: none; flex-direction: column; gap: 10px; }
         .day-plan-card {
-            background: #ffffff;
-            border: 1.5px solid #e2e8f0;
+            background: #1e293b;
+            border: 1px solid #334155;
             border-radius: 12px;
             padding: 12px 14px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
             display: flex;
             flex-direction: column;
             gap: 6px;
         }
         .day-plan-card.current-active {
-            border-color: #0284c7;
-            background: #f0f9ff;
-            box-shadow: 0 0 12px rgba(2, 132, 199, 0.2);
+            border-color: #38bdf8;
+            background: rgba(56, 189, 248, 0.08);
+            box-shadow: 0 0 12px rgba(56, 189, 248, 0.2);
         }
         .day-plan-card-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid #e2e8f0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
             padding-bottom: 5px;
         }
-        .day-plan-tag { font-size: 13px; font-weight: 900; color: #0284c7; }
-        .day-plan-tier { font-size: 11px; font-weight: 800; color: #7c3aed; background: #f5f3ff; padding: 2px 6px; border-radius: 4px; }
+        .day-plan-tag { font-size: 13px; font-weight: 900; color: #38bdf8; }
+        .day-plan-tier { font-size: 11px; font-weight: 800; color: #c084fc; background: rgba(168, 85, 247, 0.15); padding: 2px 6px; border-radius: 4px; }
         .day-plan-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -397,73 +368,74 @@
             font-size: 11.5px;
             padding: 2px 0;
         }
-        .day-plan-item span.label { color: #64748b; font-weight: 700; }
+        .day-plan-item span.label { color: #94a3b8; font-weight: 700; }
         .day-plan-item span.val { font-family: monospace; font-weight: 800; }
 
         /* 統計戰力板 */
         .stats-board { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 16px; }
         .stat-card { 
             background: var(--panel-bg); 
-            padding: 14px; 
-            border-radius: 12px; 
+            padding: 16px; 
+            border-radius: 14px; 
             border: 1px solid var(--panel-border); 
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02); 
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4); 
             text-align: center; 
             backdrop-filter: blur(12px);
         }
         .stat-card.ai-card { border-top: 3.5px solid var(--ai-color); }
         .stat-card.my-card { border-top: 3.5px solid var(--my-color); }
-        .stat-card.pk-card { border-top: 3.5px solid var(--draw-color); background: #fffbeb; }
+        .stat-card.pk-card { border-top: 3.5px solid var(--draw-color); background: rgba(30, 41, 59, 0.7); }
         .stat-title { font-size: 11px; color: var(--text-muted); font-weight: 800; }
-        .stat-value { font-size: 26px; font-weight: 900; margin: 4px 0; font-family: monospace; }
+        .stat-value { font-size: 26px; font-weight: 900; margin: 4px 0; font-family: monospace; text-shadow: 0 0 12px rgba(255,255,255,0.2); }
         .stat-sub { font-size: 11px; color: #64748b; }
 
         /* 工具面板區 */
-        .tools-panel { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 14px; margin-bottom: 18px; }
+        .tools-panel { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 14px; margin-bottom: 18px; }
         .tool-card { 
             background: var(--panel-bg); 
-            padding: 16px; 
-            border-radius: 14px; 
+            padding: 18px; 
+            border-radius: 16px; 
             border: 1px solid var(--panel-border); 
-            box-shadow: 0 4px 14px rgba(0,0,0,0.02); 
-            backdrop-filter: blur(12px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3); 
+            backdrop-filter: blur(14px);
         }
         .tool-card h3 { 
             font-size: 14px; 
             margin-bottom: 12px; 
             padding-bottom: 8px; 
-            border-bottom: 1px solid rgba(0,0,0,0.06); 
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08); 
             display: flex;
             align-items: center;
             justify-content: space-between;
             font-weight: 900;
         }
         
-        .badge-list { display: flex; flex-wrap: wrap; gap: 6px; }
+        .badge-list { display: flex; flex-wrap: wrap; gap: 8px; }
         .info-badge { 
             display: flex; 
             flex-direction: column; 
             align-items: center; 
-            background: #ffffff; 
-            padding: 5px 8px; 
-            border-radius: 8px; 
-            min-width: 44px;
-            border: 1px solid #e2e8f0;
+            background: rgba(15, 23, 42, 0.9); 
+            padding: 6px 10px; 
+            border-radius: 10px; 
+            min-width: 48px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
             position: relative;
+            box-shadow: inset 0 0 8px rgba(0,0,0,0.5);
         }
-        .info-badge .num { font-size: 17px; font-weight: 900; font-family: monospace; }
-        .info-badge .desc { font-size: 10px; margin-top: 1px; font-weight: bold; }
+        .info-badge .num { font-size: 18px; font-weight: 900; font-family: monospace; }
+        .info-badge .desc { font-size: 10px; margin-top: 2px; font-weight: bold; }
 
         .info-badge.hit-today {
-            box-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
-            border-color: #ef4444;
+            border-color: #f43f5e;
+            box-shadow: 0 0 12px rgba(244, 63, 94, 0.5);
         }
         .info-badge.hit-today::after {
             content: '開';
             position: absolute;
             top: -5px;
             right: -5px;
-            background: #ef4444;
+            background: #f43f5e;
             color: white;
             font-size: 8px;
             font-weight: 900;
@@ -471,154 +443,232 @@
             border-radius: 6px;
         }
 
-        .hot-badge { background: linear-gradient(180deg, #ffffff, #fef2f2); }
-        .hot-badge .num { color: #dc2626; }
-        .hot-badge .desc { color: #b91c1c; }
+        .hot-badge { border-color: rgba(244, 63, 94, 0.35); }
+        .hot-badge .num { color: #fb7185; text-shadow: 0 0 8px rgba(251, 113, 133, 0.5); }
+        .hot-badge .desc { color: #f43f5e; }
 
-        .cold-badge { background: linear-gradient(180deg, #ffffff, #f0f9ff); }
-        .cold-badge .num { color: #0284c7; }
-        .cold-badge .desc { color: #0369a1; }
+        .cold-badge { border-color: rgba(56, 189, 248, 0.35); }
+        .cold-badge .num { color: #38bdf8; text-shadow: 0 0 8px rgba(56, 189, 248, 0.5); }
+        .cold-badge .desc { color: #0284c7; }
 
         /* 推薦卡片 */
         .recom-section {
             margin-top: 16px;
-            padding-top: 12px;
-            border-top: 2px dashed rgba(148, 163, 184, 0.3);
+            padding-top: 14px;
+            border-top: 1px dashed rgba(255, 255, 255, 0.15);
         }
-        .recom-grid { display: grid; grid-template-columns: 1fr; gap: 8px; margin-top: 8px; }
+        .recom-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 10px; }
         .recom-card {
-            background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(248,250,252,0.95));
-            border: 1px solid #e2e8f0;
-            border-radius: 10px;
-            padding: 10px 12px;
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 12px 14px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 10px;
             position: relative;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
-        .recom-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3.5px; }
-        .recom-card.c-gold::before { background: #f59e0b; }
-        .recom-card.c-cyan::before { background: #06b6d4; }
-        .recom-card.c-rose::before { background: #f43f5e; }
-        .recom-card.c-green::before { background: #10b981; }
+        .recom-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; border-radius: 12px 0 0 12px; }
+        .recom-card.c-gold::before { background: #fbbf24; box-shadow: 0 0 8px #fbbf24; }
+        .recom-card.c-cyan::before { background: #38bdf8; box-shadow: 0 0 8px #38bdf8; }
+        .recom-card.c-rose::before { background: #fb7185; box-shadow: 0 0 8px #fb7185; }
+        .recom-card.c-green::before { background: #34d399; box-shadow: 0 0 8px #34d399; }
 
-        .recom-header { display: flex; flex-direction: column; gap: 1px; }
-        .recom-title { font-size: 12px; font-weight: 900; }
-        .recom-sub { font-size: 10px; color: #64748b; font-weight: bold; }
+        .recom-header { display: flex; flex-direction: column; gap: 2px; }
+        .recom-title { font-size: 13px; font-weight: 900; }
+        .recom-sub { font-size: 10.5px; color: #94a3b8; }
         
-        .recom-balls { display: flex; gap: 5px; align-items: center; flex-wrap: wrap; }
-        .recom-ball {
-            width: 28px;
-            height: 28px;
+        .recom-balls { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+        
+        /* 🌟 量子高科技號碼球 */
+        .quantum-ball {
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 900;
             font-family: monospace;
+            position: relative;
+            background: radial-gradient(circle at 35% 30%, #1e293b 0%, #090d16 100%);
+            border: 1.5px solid;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.6), inset 0 2px 4px rgba(255,255,255,0.25);
+            transition: all 0.25s;
         }
-        .recom-ball.q-cyan { background: #e0f2fe; color: #0369a1; border: 1.5px solid #38bdf8; }
-        .recom-ball.q-gold { background: #fef3c7; color: #b45309; border: 1.5px solid #f59e0b; }
-        .recom-ball.q-rose { background: #ffe4e6; color: #be123c; border: 1.5px solid #fb7185; }
-        .recom-ball.q-green { background: #dcfce7; color: #15803d; border: 1.5px solid #4ade80; }
+        .quantum-ball.q-cyan { border-color: #38bdf8; color: #7dd3fc; text-shadow: 0 0 8px #0284c7; box-shadow: 0 0 10px rgba(56, 189, 248, 0.35); }
+        .quantum-ball.q-gold { border-color: #fbbf24; color: #fde047; text-shadow: 0 0 8px #d97706; box-shadow: 0 0 10px rgba(251, 191, 36, 0.35); }
+        .quantum-ball.q-rose { border-color: #fb7185; color: #fda4af; text-shadow: 0 0 8px #e11d48; box-shadow: 0 0 10px rgba(251, 113, 133, 0.35); }
+        .quantum-ball.q-green { border-color: #34d399; color: #86efac; text-shadow: 0 0 8px #059669; box-shadow: 0 0 10px rgba(52, 211, 153, 0.35); }
 
-        .recom-btns { display: flex; gap: 4px; }
+        .recom-btns { display: flex; gap: 5px; }
         .btn-fast-apply {
-            border: none;
+            border: 1px solid rgba(255, 255, 255, 0.2);
             color: white;
-            font-size: 10px;
+            font-size: 11px;
             font-weight: 900;
-            padding: 4px 8px;
-            border-radius: 5px;
+            padding: 5px 9px;
+            border-radius: 6px;
             cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-fast-apply:hover { filter: brightness(1.2); }
+
+        /* 🌟 單軌量子 3D 物理滾球機 (旗艦大版) */
+        .single-machine-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle at 50% 50%, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.95) 100%);
+            padding: 20px 14px;
+            border-radius: 16px;
+            border: 1px solid rgba(56, 189, 248, 0.25);
+            box-shadow: inset 0 0 25px rgba(0,0,0,0.6);
         }
 
-        /* 雙軌搖號機 */
-        .dual-machine-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
-        .machine-unit { display: flex; flex-direction: column; align-items: center; background: #ffffff; padding: 10px; border-radius: 10px; border: 1px solid #e2e8f0; }
-        .machine-unit-title { font-size: 12px; font-weight: 900; margin-bottom: 6px; }
-
-        .realistic-machine { position: relative; width: 120px; height: 120px; margin-top: 8px; }
-        .glass-sphere { width: 120px; height: 120px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #ffffff 0%, #e0f2fe 60%, #bae6fd 100%); border: 2.5px solid #7dd3fc; position: absolute; top: 0; left: 0; box-shadow: 0 4px 14px rgba(14, 165, 233, 0.15); }
-        .glass-overlay { width: 100%; height: 100%; border-radius: 50%; position: absolute; top: 0; left: 0; box-shadow: inset -6px -6px 12px rgba(14, 165, 233, 0.2), inset 5px 5px 10px rgba(255,255,255,0.9); pointer-events: none; z-index: 10; }
-        .suction-tube { position: absolute; top: -16px; left: 50%; transform: translateX(-50%); width: 22px; height: 24px; background: linear-gradient(to right, rgba(255,255,255,0.9), rgba(186,230,253,0.7), rgba(255,255,255,0.9)); border: 1.5px solid #0284c7; border-bottom: none; border-radius: 5px 5px 0 0; z-index: 15; }
-        .machine-base { position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); width: 65px; height: 15px; background: #334155; border-radius: 3px; z-index: 12; }
-        .mini-ball { position: absolute; width: 16px; height: 16px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #fde047, #f59e0b); color: #78350f; font-size: 8px; font-weight: 900; display: flex; align-items: center; justify-content: center; top: 0; left: 0; z-index: 5; transition: transform 0s, opacity 0.5s; }
+        .realistic-machine { position: relative; width: 160px; height: 160px; margin: 10px 0 15px; }
+        .glass-sphere { 
+            width: 160px; height: 160px; border-radius: 50%; 
+            background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.15) 0%, rgba(14, 165, 233, 0.08) 50%, rgba(15, 23, 42, 0.7) 100%); 
+            border: 2px solid rgba(56, 189, 248, 0.5); 
+            position: absolute; top: 0; left: 0; 
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.2), inset 0 0 20px rgba(56, 189, 248, 0.15); 
+        }
+        .glass-overlay { 
+            width: 100%; height: 100%; border-radius: 50%; position: absolute; top: 0; left: 0; 
+            box-shadow: inset -8px -8px 16px rgba(0, 0, 0, 0.6), inset 6px 6px 12px rgba(255,255,255,0.3); 
+            pointer-events: none; z-index: 10; 
+        }
+        .suction-tube { 
+            position: absolute; top: -18px; left: 50%; transform: translateX(-50%); 
+            width: 28px; height: 26px; 
+            background: linear-gradient(to right, rgba(255,255,255,0.4), rgba(56, 189, 248, 0.6), rgba(255,255,255,0.4)); 
+            border: 1.5px solid #38bdf8; border-bottom: none; border-radius: 6px 6px 0 0; z-index: 15; 
+        }
+        .machine-base { 
+            position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); 
+            width: 80px; height: 18px; 
+            background: linear-gradient(180deg, #334155, #0f172a); 
+            border: 1px solid #475569;
+            border-radius: 4px; z-index: 12; 
+        }
+        .mini-ball { 
+            position: absolute; width: 18px; height: 18px; border-radius: 50%; 
+            background: radial-gradient(circle at 35% 30%, #38bdf8, #0369a1); 
+            color: #ffffff; font-size: 8px; font-weight: 900; 
+            display: flex; align-items: center; justify-content: center; 
+            top: 0; left: 0; z-index: 5; 
+            box-shadow: 0 0 5px rgba(56, 189, 248, 0.8);
+            transition: transform 0s, opacity 0.5s; 
+        }
         
-        .machine-balls { display: flex; justify-content: center; gap: 4px; padding: 6px; background: #f8fafc; border-radius: 16px; margin-top: 10px; width: 100%; border: 1px solid #e2e8f0; }
-        .machine-ball { width: 32px; height: 32px; border-radius: 50%; background: #ffffff; color: #94a3b8; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 900; border: 1.5px dashed #cbd5e1; transition: all 0.4s; font-family: monospace; }
-        .machine-ball.revealed { background: linear-gradient(135deg, #fde047, #f59e0b); color: #78350f; border: 1.5px solid #b45309; box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3); transform: scale(1.08); }
+        .machine-balls { 
+            display: flex; justify-content: center; gap: 6px; padding: 10px; 
+            background: rgba(15, 23, 42, 0.7); 
+            border-radius: 20px; margin-top: 8px; width: 100%; max-width: 320px; 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+        }
+        .machine-ball { 
+            width: 38px; height: 38px; border-radius: 50%; 
+            background: rgba(30, 41, 59, 0.5); 
+            color: #64748b; display: flex; align-items: center; justify-content: center; 
+            font-size: 16px; font-weight: 900; 
+            border: 1.5px dashed #475569; transition: all 0.4s; font-family: monospace; 
+        }
+        .machine-ball.revealed { 
+            background: radial-gradient(circle at 35% 30%, #fbbf24 0%, #b45309 100%); 
+            color: #ffffff; border: 1.5px solid #fde047; 
+            box-shadow: 0 0 15px rgba(251, 191, 36, 0.5); 
+            transform: scale(1.08); 
+        }
 
-        .btn-roll { width: 100%; max-width: 280px; background: linear-gradient(135deg, #4f46e5, #7c3aed); color: white; border: none; padding: 10px 16px; font-size: 13px; font-weight: 900; border-radius: 8px; cursor: pointer; }
-        .btn-roll:hover { filter: brightness(1.1); }
-        .btn-roll:disabled { background: #cbd5e1; cursor: not-allowed; }
-        .btn-apply-group { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; margin-top: 8px; }
-        .btn-apply { color: white; border: none; padding: 4px 7px; font-size: 10px; font-weight: bold; border-radius: 5px; cursor: pointer; display: none; }
-        .btn-apply-ai { background: var(--ai-color); }
-        .btn-apply-my { background: var(--my-color); }
+        .btn-roll { 
+            width: 100%; max-width: 320px; 
+            background: linear-gradient(135deg, #0284c7, #7c3aed); 
+            color: white; border: none; padding: 12px 20px; 
+            font-size: 14px; font-weight: 900; border-radius: 10px; cursor: pointer; 
+            box-shadow: 0 4px 20px rgba(2, 132, 199, 0.35);
+            transition: 0.2s;
+            margin-top: 14px;
+        }
+        .btn-roll:hover { filter: brightness(1.15); transform: translateY(-1px); }
+        .btn-roll:disabled { background: #334155; cursor: not-allowed; box-shadow: none; }
+        
+        .btn-apply-group { 
+            display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin-top: 12px; width: 100%; max-width: 340px; 
+        }
+        .btn-apply { 
+            color: white; border: none; padding: 6px 10px; font-size: 11px; font-weight: bold; border-radius: 6px; cursor: pointer; display: none; 
+            flex: 1; min-width: 70px;
+        }
+        .btn-apply-ai { background: #0284c7; }
+        .btn-apply-my { background: #059669; }
 
         /* 輸入表單區塊 */
         .input-panel { 
             background: var(--panel-bg); 
             padding: 18px; 
-            border-radius: 14px; 
+            border-radius: 16px; 
             border: 1px solid var(--panel-border); 
             margin-bottom: 18px; 
-            backdrop-filter: blur(12px);
+            backdrop-filter: blur(14px);
         }
         .input-panel h2 { margin-bottom: 12px; font-size: 15px; color: var(--text-main); border-left: 4px solid var(--draw-color); padding-left: 10px; font-weight: 900; }
         .crawl-panel h2 { border-left-color: var(--neon-purple); }
 
         .form-row { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 12px; }
         .form-group { flex: 1; min-width: 170px; display: flex; flex-direction: column; gap: 4px; }
-        .form-group label { font-size: 11px; font-weight: 800; color: #334155; }
+        .form-group label { font-size: 11px; font-weight: 800; color: #94a3b8; }
         .form-group input { 
-            padding: 8px 10px; 
-            background: #ffffff; 
-            border: 1.5px solid #cbd5e1; 
-            color: #0f172a; 
-            border-radius: 6px; 
+            padding: 9px 12px; 
+            background: #1e293b; 
+            border: 1.5px solid #334155; 
+            color: #f8fafc; 
+            border-radius: 8px; 
             font-size: 14px; 
             outline: none; 
             font-family: monospace;
             font-weight: 600;
         }
-        .form-group input:focus { border-color: var(--ai-color); }
+        .form-group input:focus { border-color: var(--ai-color); box-shadow: 0 0 10px rgba(56, 189, 248, 0.3); }
         
         .btn-submit { 
             width: 100%; 
             background: linear-gradient(135deg, #0284c7, #2563eb); 
             color: white; 
             border: none; 
-            padding: 12px; 
+            padding: 13px; 
             font-size: 14px; 
             font-weight: 900; 
-            border-radius: 8px; 
+            border-radius: 10px; 
             cursor: pointer; 
             margin-top: 4px; 
+            box-shadow: 0 4px 15px rgba(2, 132, 199, 0.3);
         }
-        .btn-submit:hover { filter: brightness(1.1); }
+        .btn-submit:hover { filter: brightness(1.15); }
 
         /* 歷史戰績表格 */
         .history-panel { 
             background: var(--panel-bg); 
             padding: 18px; 
-            border-radius: 14px; 
+            border-radius: 16px; 
             border: 1px solid var(--panel-border); 
             margin-bottom: 18px; 
-            box-shadow: 0 4px 14px rgba(0,0,0,0.02);
-            backdrop-filter: blur(12px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            backdrop-filter: blur(14px);
         }
         table { width: 100%; border-collapse: collapse; text-align: center; }
-        th { background: #f8fafc; padding: 12px 6px; border-bottom: 2px solid #e2e8f0; font-weight: 900; font-size: 13px; color: #475569; }
-        td { padding: 12px 6px; border-bottom: 1px solid #e2e8f0; vertical-align: middle; }
-        tr:hover { background: rgba(241, 245, 249, 0.6); }
+        th { background: rgba(30, 41, 59, 0.7); padding: 12px 6px; border-bottom: 2px solid rgba(255, 255, 255, 0.1); font-weight: 900; font-size: 13px; color: #94a3b8; }
+        td { padding: 12px 6px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); vertical-align: middle; }
+        tr:hover { background: rgba(255, 255, 255, 0.02); }
 
         /* 號碼球樣式 */
-        .num-container { display: flex; gap: 5px; justify-content: center; flex-wrap: wrap; align-items: center; }
+        .num-container { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; align-items: center; }
         .num-ball { 
             width: var(--ball-size); 
             height: var(--ball-size); 
@@ -628,45 +678,49 @@
             justify-content: center; 
             font-size: 15px; 
             font-weight: 900; 
-            background: #ffffff; 
-            color: #1e293b; 
+            background: radial-gradient(circle at 35% 30%, #1e293b 0%, #090d16 100%); 
+            color: #f8fafc; 
             font-family: monospace; 
-            border: 1.5px solid #cbd5e1; 
-            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+            border: 1.5px solid #475569; 
+            box-shadow: 0 3px 8px rgba(0,0,0,0.5), inset 0 2px 4px rgba(255,255,255,0.15);
+            transition: transform 0.2s;
         }
         .num-ball.hit { 
-            background: linear-gradient(135deg, #ef4444, #dc2626); 
+            background: radial-gradient(circle at 35% 30%, #fb7185 0%, #be123c 100%); 
             color: #ffffff; 
-            box-shadow: 0 3px 8px rgba(239, 68, 68, 0.35); 
-            transform: scale(1.08); 
-            border-color: #991b1b; 
+            box-shadow: 0 0 15px rgba(251, 113, 133, 0.6); 
+            transform: scale(1.12); 
+            border-color: #fda4af; 
         }
         .num-ball.draw { 
-            background: linear-gradient(135deg, #fbbf24, #f59e0b); 
-            color: #78350f; 
-            border-color: #b45309; 
-            box-shadow: 0 2px 6px rgba(245, 158, 11, 0.25); 
+            background: radial-gradient(circle at 35% 30%, #fde047 0%, #b45309 100%); 
+            color: #ffffff; 
+            border-color: #fef08a; 
+            box-shadow: 0 0 12px rgba(245, 158, 11, 0.5); 
         }
 
-        .empty-label { color: #94a3b8; font-size: 12px; letter-spacing: 1px; font-family: monospace; font-weight: bold; }
+        .empty-label { color: #64748b; font-size: 12px; letter-spacing: 1px; font-family: monospace; font-weight: bold; }
 
         .winner-badge { padding: 4px 10px; border-radius: 16px; font-size: 11px; font-weight: 900; display: inline-block; font-family: monospace; }
-        .badge-ai { background: #e0f2fe; color: #0284c7; border: 1px solid #38bdf8; }
-        .badge-my { background: #dcfce7; color: #059669; border: 1px solid #34d399; }
-        .badge-tie { background: #f1f5f9; color: #64748b; border: 1px solid #cbd5e1; }
-        .badge-pending { background: #fef3c7; color: #d97706; border: 1px solid #f59e0b; } 
+        .badge-ai { background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid #38bdf8; box-shadow: 0 0 8px rgba(56, 189, 248, 0.2); }
+        .badge-my { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid #34d399; box-shadow: 0 0 8px rgba(16, 185, 129, 0.2); }
+        .badge-tie { background: rgba(148, 163, 184, 0.15); color: #94a3b8; border: 1px solid #64748b; }
+        .badge-pending { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid #f59e0b; } 
         
-        .action-btn { padding: 5px 9px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: bold; margin: 2px; border: 1px solid #cbd5e1; }
-        .delete-btn { background: #fee2e2; color: #dc2626; }
-        .delete-btn:hover { background: #fecaca; }
-        .edit-btn { background: #f1f5f9; color: #334155; }
-        .edit-btn:hover { background: #e2e8f0; }
+        .action-btn { padding: 5px 9px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: bold; margin: 2px; border: 1px solid #475569; }
+        .delete-btn { background: rgba(244, 63, 94, 0.15); color: #fb7185; border-color: rgba(244, 63, 94, 0.3); }
+        .delete-btn:hover { background: rgba(244, 63, 94, 0.25); }
+        .edit-btn { background: rgba(255, 255, 255, 0.05); color: #cbd5e1; }
+        .edit-btn:hover { background: rgba(255, 255, 255, 0.1); }
 
         /* 手機端排版 */
+        @media (max-width: 860px) {
+            .tools-panel { grid-template-columns: 1fr; }
+        }
         @media (max-width: 768px) {
             :root { --ball-size: 28px; }
             body { padding: 10px 6px; }
-            header { padding: 12px 8px; margin-bottom: 12px; }
+            header { padding: 14px 8px; margin-bottom: 12px; }
             .stats-board { grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
             .stat-card { padding: 10px; }
             .stat-value { font-size: 22px; margin: 2px 0; }
@@ -687,7 +741,6 @@
             .profit-table-wrapper { display: none; }
             .mobile-cards-container { display: flex; }
 
-            .dual-machine-grid { grid-template-columns: 1fr; gap: 10px; }
             .input-panel { padding: 14px; }
             .form-row { flex-direction: column; gap: 8px; }
 
@@ -695,12 +748,12 @@
             table, thead, tbody, th, td, tr { display: block; }
             thead tr { position: absolute; top: -9999px; left: -9999px; }
             tr { 
-                background: #ffffff; 
-                border: 1px solid #e2e8f0; 
+                background: #1e293b; 
+                border: 1px solid rgba(255, 255, 255, 0.08); 
                 border-radius: 10px; 
                 margin-bottom: 10px; 
                 padding: 10px; 
-                box-shadow: 0 2px 5px rgba(0,0,0,0.02); 
+                box-shadow: 0 2px 8px rgba(0,0,0,0.3); 
             }
             td { 
                 border: none; 
@@ -708,14 +761,14 @@
                 display: flex; 
                 align-items: center; 
                 justify-content: space-between; 
-                border-bottom: 1px dashed #f1f5f9; 
+                border-bottom: 1px dashed rgba(255, 255, 255, 0.05); 
             }
             td:last-child { border-bottom: none; padding-top: 8px; justify-content: flex-end; gap: 4px; }
             td::before { 
                 content: attr(data-label); 
                 font-weight: 900; 
                 font-size: 11px; 
-                color: #64748b; 
+                color: #94a3b8; 
                 text-align: left; 
                 min-width: 65px; 
             }
@@ -788,7 +841,7 @@
                         <button class="btn-recalc" onclick="calculateSingleTargetPlan()">⚡ 演算單碼倍投</button>
                     </div>
 
-                    <div style="font-size:12px; font-weight:bold; color:#b45309; margin-bottom:8px;" id="st-plan-summary"></div>
+                    <div style="font-size:12px; font-weight:bold; color:#fbbf24; margin-bottom:8px;" id="st-plan-summary"></div>
 
                     <div class="profit-table-wrapper">
                         <table class="profit-table">
@@ -835,7 +888,7 @@
                         <button class="btn-recalc" onclick="calculateFourTargetPlan()">⚡ 演算4碼倍投</button>
                     </div>
 
-                    <div style="font-size:12px; font-weight:bold; color:#b45309; margin-bottom:8px;" id="ft-plan-summary"></div>
+                    <div style="font-size:12px; font-weight:bold; color:#fbbf24; margin-bottom:8px;" id="ft-plan-summary"></div>
 
                     <div class="profit-table-wrapper">
                         <table class="profit-table">
@@ -867,7 +920,7 @@
                     <div class="tracker-card">
                         <div class="tracker-title">
                             <span id="tracker-mode-name">單碼階梯均注 (3期一階) 當前執行狀態</span>
-                            <span id="tracker-stoploss-tip" style="color:#dc2626; font-size:11px;">執行進度</span>
+                            <span id="tracker-stoploss-tip" style="color:#fb7185; font-size:11px;">執行進度</span>
                         </div>
                         <div class="status-grid">
                             <div class="status-item"><div class="label">當前期數</div><div class="val" id="disp-day">第 1 期</div></div>
@@ -918,7 +971,7 @@
     <div class="stats-board">
         <div class="stat-card">
             <div class="stat-title">已結算期數</div>
-            <div class="stat-value" id="total-rounds" style="color:#0f172a;">0</div>
+            <div class="stat-value" id="total-rounds" style="color:#f8fafc;">0</div>
             <div class="stat-sub">有效開獎期數</div>
         </div>
         <div class="stat-card ai-card">
@@ -938,81 +991,57 @@
         </div>
     </div>
 
-    <!-- 冷熱牌 & AI 機率推薦星組 -->
+    <!-- 冷熱牌 & 單軌量子搖號機 -->
     <div class="tools-panel">
         <div class="tool-card">
-            <h3 style="color:#dc2626;">
-                <span>🔥 539 常開高頻熱門號 (TOP 8)</span>
-                <span id="hot-hit-summary" style="font-size:11px; font-weight:normal; color:#ef4444;"></span>
+            <h3 style="color:#fb7185;">
+                <span>🔥 539 常開高頻熱門號 (近 50 期 TOP 8)</span>
+                <span id="hot-hit-summary" style="font-size:11px; font-weight:normal; color:#fb7185;"></span>
             </h3>
             <div class="badge-list" id="hot-numbers">
-                <div style="font-size:12px; color:#94a3b8;">累積開獎數據後顯示...</div>
+                <div style="font-size:12px; color:#64748b;">累積開獎數據後顯示...</div>
             </div>
             
-            <h3 style="color:#0284c7; margin-top:16px;">
-                <span>❄️ 539 極凍遺漏冷門號 (TOP 8)</span>
-                <span id="cold-hit-summary" style="font-size:11px; font-weight:normal; color:#0284c7;"></span>
+            <h3 style="color:#38bdf8; margin-top:16px;">
+                <span>❄️ 539 連續未開極凍冷門號 (TOP 8)</span>
+                <span id="cold-hit-summary" style="font-size:11px; font-weight:normal; color:#38bdf8;"></span>
             </h3>
             <div class="badge-list" id="cold-numbers">
-                <div style="font-size:12px; color:#94a3b8;">累積開獎數據後顯示...</div>
+                <div style="font-size:12px; color:#64748b;">累積開獎數據後顯示...</div>
             </div>
 
             <!-- 機率矩陣推薦 -->
             <div class="recom-section">
-                <h3 style="margin-bottom:6px; border:none; padding-bottom:0; color:#475569;">
+                <h3 style="margin-bottom:6px; border:none; padding-bottom:0; color:#cbd5e1;">
                     <span>🎯 AI 動態開出機率矩陣推薦 (三星 / 四星)</span>
-                    <button onclick="refreshRecommendations()" style="border:none; background:#f1f5f9; padding:3px 8px; border-radius:5px; font-size:11px; cursor:pointer; color:#0284c7; font-weight:bold;">🔄 換一組</button>
+                    <button onclick="refreshRecommendations()" style="border:none; background:#1e293b; padding:4px 10px; border-radius:6px; font-size:11px; cursor:pointer; color:#38bdf8; font-weight:bold; border:1px solid #334155;">🔄 換一組</button>
                 </h3>
                 <div class="recom-grid" id="recom-container">
-                    <div style="font-size:12px; color:#94a3b8;">累積足夠開獎資料後生成...</div>
+                    <div style="font-size:12px; color:#64748b;">累積足夠開獎資料後生成...</div>
                 </div>
             </div>
         </div>
 
+        <!-- 🌟 單一量子 3D 搖號機 -->
         <div class="tool-card">
-            <h3 style="color:var(--neon-purple);">🎰 雙軌 3D 物理滾球量子搖號機 (可選 4 或 5 碼)</h3>
-            <div class="dual-machine-grid">
-                <div class="machine-unit">
-                    <div class="machine-unit-title" style="color:var(--ai-color)">🎲 1 號機 (Alpha)</div>
-                    <div class="realistic-machine">
-                        <div class="suction-tube"></div>
-                        <div class="glass-sphere" id="physics-container-1"></div>
-                        <div class="glass-overlay"></div>
-                        <div class="machine-base"></div>
-                    </div>
-                    <div class="machine-balls" id="machine-balls-1">
-                        <div class="machine-ball">?</div><div class="machine-ball">?</div><div class="machine-ball">?</div><div class="machine-ball">?</div><div class="machine-ball">?</div>
-                    </div>
-                    <div class="btn-apply-group">
-                        <button class="btn-apply btn-apply-ai" id="apply-m1-ai-4" onclick="applyToInput(finalNums1, 'ai', 4)">入AI(4碼)</button>
-                        <button class="btn-apply btn-apply-ai" id="apply-m1-ai-5" onclick="applyToInput(finalNums1, 'ai', 5)">入AI(5碼)</button>
-                        <button class="btn-apply btn-apply-my" id="apply-m1-my-4" onclick="applyToInput(finalNums1, 'my', 4)">入我(4碼)</button>
-                        <button class="btn-apply btn-apply-my" id="apply-m1-my-5" onclick="applyToInput(finalNums1, 'my', 5)">入我(5碼)</button>
-                    </div>
+            <h3 style="color:var(--neon-purple);">🎰 旗艦單軌 3D 物理滾球量子搖號機</h3>
+            <div class="single-machine-box">
+                <div class="realistic-machine">
+                    <div class="suction-tube"></div>
+                    <div class="glass-sphere" id="physics-container"></div>
+                    <div class="glass-overlay"></div>
+                    <div class="machine-base"></div>
                 </div>
-
-                <div class="machine-unit">
-                    <div class="machine-unit-title" style="color:var(--my-color)">🎲 2 號機 (Beta)</div>
-                    <div class="realistic-machine">
-                        <div class="suction-tube"></div>
-                        <div class="glass-sphere" id="physics-container-2"></div>
-                        <div class="glass-overlay"></div>
-                        <div class="machine-base"></div>
-                    </div>
-                    <div class="machine-balls" id="machine-balls-2">
-                        <div class="machine-ball">?</div><div class="machine-ball">?</div><div class="machine-ball">?</div><div class="machine-ball">?</div><div class="machine-ball">?</div>
-                    </div>
-                    <div class="btn-apply-group">
-                        <button class="btn-apply btn-apply-my" id="apply-m2-my-4" onclick="applyToInput(finalNums2, 'my', 4)">入我(4碼)</button>
-                        <button class="btn-apply btn-apply-my" id="apply-m2-my-5" onclick="applyToInput(finalNums2, 'my', 5)">入我(5碼)</button>
-                        <button class="btn-apply btn-apply-ai" id="apply-m2-ai-4" onclick="applyToInput(finalNums2, 'ai', 4)">入AI(4碼)</button>
-                        <button class="btn-apply btn-apply-ai" id="apply-m2-ai-5" onclick="applyToInput(finalNums2, 'ai', 5)">入AI(5碼)</button>
-                    </div>
+                <div class="machine-balls" id="machine-balls">
+                    <div class="machine-ball">?</div><div class="machine-ball">?</div><div class="machine-ball">?</div><div class="machine-ball">?</div><div class="machine-ball">?</div>
                 </div>
-            </div>
-
-            <div style="text-align: center; margin-top: 8px;">
-                <button class="btn-roll" id="btn-roll-all" onclick="startRollDual()">🌪️ 雙機同步啟動量子搖號</button>
+                <button class="btn-roll" id="btn-roll" onclick="startRollMachine()">🌪️ 啟動 3D 量子高速搖號</button>
+                <div class="btn-apply-group">
+                    <button class="btn-apply btn-apply-ai" id="apply-ai-4" onclick="applyToInput(finalNums, 'ai', 4)">入AI(4碼)</button>
+                    <button class="btn-apply btn-apply-ai" id="apply-ai-5" onclick="applyToInput(finalNums, 'ai', 5)">入AI(5碼)</button>
+                    <button class="btn-apply btn-apply-my" id="apply-my-4" onclick="applyToInput(finalNums, 'my', 4)">入我(4碼)</button>
+                    <button class="btn-apply btn-apply-my" id="apply-my-5" onclick="applyToInput(finalNums, 'my', 5)">入我(5碼)</button>
+                </div>
             </div>
         </div>
     </div>
@@ -1068,7 +1097,7 @@
             格式規範：每行開頭為日期 <code>YYYY-MM-DD</code>（或民國年如 <code>115/09/04</code>），後面為開出的 5 顆球號（支援空格、Tab、逗號隔開）。<br>
             直接把文字全部貼在下方，按下方按鈕即可<strong>一次匯入所有期數</strong>！
         </p>
-        <textarea id="sc888-paste-area" rows="4" style="width:100%; padding:8px; font-size:12px; background:#ffffff; border:1.5px solid #cbd5e1; color:#0f172a; border-radius:6px; font-family:monospace; line-height:1.4;" placeholder="例如貼上：
+        <textarea id="sc888-paste-area" rows="4" style="width:100%; padding:8px; font-size:12px; background:#1e293b; border:1.5px solid #334155; color:#f8fafc; border-radius:6px; font-family:monospace; line-height:1.4;" placeholder="例如貼上：
 2026-09-04 04,07,10,27,38
 2026-09-03 03,06,23,29,35
 115/09/02 01 07 08 18 39..."></textarea>
@@ -1076,7 +1105,7 @@
             <button onclick="parseAndImportMultiDraws()" style="background:linear-gradient(135deg, #7c3aed, #0284c7); color:white; border:none; padding:9px 18px; font-size:13px; font-weight:900; border-radius:6px; cursor:pointer;">
                 ⚡ 一鍵極速解析並匯入 539 多期開獎
             </button>
-            <span id="paste-import-status" style="font-size:11px; color:#64748b; font-weight:bold;"></span>
+            <span id="paste-import-status" style="font-size:11px; color:#94a3b8; font-weight:bold;"></span>
         </div>
     </div>
 </div>
@@ -1107,7 +1136,6 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
-    // 連接 539 集合
     const lotteryCol = collection(db, "539_battle_history");
 
     let battleHistory = [];
@@ -1397,6 +1425,7 @@
         }
     }
 
+    // 🌟 嚴格 50 期熱門號 + 連續未開冷門號演算
     function analyzeHotColdNumbers() {
         let completedDraws = battleHistory.filter(item => !item.isPending && item.draw && item.draw.length === 5);
         if(completedDraws.length === 0) return;
@@ -1406,49 +1435,64 @@
 
         let numStats = {};
         for(let i = 1; i <= 39; i++) {
-            numStats[i] = { num: i, count: 0, lastSeenAgo: 999, recentCount: 0 };
+            numStats[i] = { num: i, totalCount: 0, recent50Count: 0, missingStreak: 999 };
         }
 
-        completedDraws.forEach((record, index) => {
+        // 計算連續沒開的期數 (Missing Streak) 與 近 50 期開出次數
+        for (let i = 1; i <= 39; i++) {
+            let streak = 0;
+            let found = false;
+            for (let d = 0; d < completedDraws.length; d++) {
+                if (completedDraws[d].draw.includes(i)) {
+                    found = true;
+                    streak = d;
+                    break;
+                }
+            }
+            numStats[i].missingStreak = found ? streak : completedDraws.length;
+        }
+
+        // 計算近 50 期熱度
+        let max50 = Math.min(50, completedDraws.length);
+        for (let d = 0; d < max50; d++) {
+            completedDraws[d].draw.forEach(n => {
+                numStats[n].recent50Count++;
+            });
+        }
+
+        completedDraws.forEach(record => {
             record.draw.forEach(n => {
-                numStats[n].count++;
-                if (numStats[n].lastSeenAgo === 999) {
-                    numStats[n].lastSeenAgo = index;
-                }
-                if (index < 15) {
-                    numStats[n].recentCount++;
-                }
+                numStats[n].totalCount++;
             });
         });
 
         let statsArray = Object.values(numStats);
 
         statsArray.forEach(item => {
-            let freqScore = (item.count / completedDraws.length) * 100;
-            let recentScore = (item.recentCount / Math.min(15, completedDraws.length)) * 100;
-            
+            let freqScore = (item.recent50Count / max50) * 100;
             let reboundScore = 50;
-            if (item.lastSeenAgo >= 3 && item.lastSeenAgo <= 10) {
-                reboundScore = 90;
-            } else if (item.lastSeenAgo === 0) {
-                reboundScore = 70;
-            } else if (item.lastSeenAgo > 25) {
-                reboundScore = 30;
+            if (item.missingStreak >= 5 && item.missingStreak <= 12) {
+                reboundScore = 95; // 回補黃金週期
+            } else if (item.missingStreak === 0) {
+                reboundScore = 75; // 連莊可能
+            } else if (item.missingStreak > 20) {
+                reboundScore = 35; // 極度深冷，防守牌
             }
-
-            item.probScore = (freqScore * 0.40) + (recentScore * 0.35) + (reboundScore * 0.25);
+            item.probScore = (freqScore * 0.65) + (reboundScore * 0.35);
         });
 
         probabilityRankedBalls = [...statsArray].sort((a, b) => b.probScore - a.probScore);
 
+        // 🔥 熱牌：近 50 期內開最多
         let hotNumbers = [...statsArray].sort((a, b) => {
-            if (b.count !== a.count) return b.count - a.count;
-            return a.lastSeenAgo - b.lastSeenAgo;
+            if (b.recent50Count !== a.recent50Count) return b.recent50Count - a.recent50Count;
+            return a.missingStreak - b.missingStreak;
         }).slice(0, 8);
 
+        // ❄️ 冷牌：連續沒開最多 (遺漏期數最多)
         let coldNumbers = [...statsArray].sort((a, b) => {
-            if (b.lastSeenAgo !== a.lastSeenAgo) return b.lastSeenAgo - a.lastSeenAgo;
-            return a.count - b.count;
+            if (b.missingStreak !== a.missingStreak) return b.missingStreak - a.missingStreak;
+            return a.recent50Count - b.recent50Count;
         }).slice(0, 8);
 
         let hotHitCount = hotNumbers.filter(item => latestDrawNums.includes(item.num)).length;
@@ -1462,7 +1506,7 @@
             return `
                 <div class="info-badge hot-badge ${isHitToday}">
                     <span class="num">${item.num.toString().padStart(2, '0')}</span>
-                    <span class="desc">開 ${item.count} 次</span>
+                    <span class="desc">開 ${item.recent50Count} 次</span>
                 </div>
             `;
         }).join('');
@@ -1472,7 +1516,7 @@
             return `
                 <div class="info-badge cold-badge ${isHitToday}">
                     <span class="num">${item.num.toString().padStart(2, '0')}</span>
-                    <span class="desc">${item.lastSeenAgo === 999 ? '未開過' : (item.lastSeenAgo === 0 ? '今日開出' : '漏 '+item.lastSeenAgo+' 期')}</span>
+                    <span class="desc">${item.missingStreak === 0 ? '今日開出' : '漏 '+item.missingStreak+' 期'}</span>
                 </div>
             `;
         }).join('');
@@ -1533,7 +1577,7 @@
                         <div class="recom-sub">${item.sub}</div>
                     </div>
                     <div class="recom-balls">
-                        ${item.balls.map(b => `<div class="recom-ball ${b.color}">${b.num.toString().padStart(2, '0')}</div>`).join('')}
+                        ${item.balls.map(b => `<div class="quantum-ball ${b.color}">${b.num.toString().padStart(2, '0')}</div>`).join('')}
                     </div>
                     <div class="recom-btns">
                         <button class="btn-fast-apply" style="background:var(--ai-color);" onclick="applyRecomNums('${rawNums}', 'ai')">入 AI</button>
@@ -1584,7 +1628,7 @@
                     <td class="text-green">+${targetCumProfit.toLocaleString()} 元</td>
                     <td class="text-gold">${units.toFixed(2)} 車</td>
                     <td>${currentCost.toLocaleString()} 元</td>
-                    <td style="color:#b91c1c;">${cumCost.toLocaleString()} 元</td>
+                    <td style="color:#f43f5e;">${cumCost.toLocaleString()} 元</td>
                     <td>${currentPrize.toLocaleString()} 元</td>
                     <td class="text-green">+${finalNetProfit.toLocaleString()} 元</td>
                 </tr>
@@ -1607,15 +1651,15 @@
                         </div>
                         <div class="day-plan-item">
                             <span class="label">📉 累計總投入</span>
-                            <span class="val" style="color:#b91c1c;">${cumCost.toLocaleString()} 元</span>
+                            <span class="val" style="color:#f43f5e;">${cumCost.toLocaleString()} 元</span>
                         </div>
                         <div class="day-plan-item">
                             <span class="label">🏆 中獎彩金</span>
                             <span class="val">${currentPrize.toLocaleString()} 元</span>
                         </div>
                     </div>
-                    <div style="border-top:1px dashed #e2e8f0; padding-top:4px; display:flex; justify-content:space-between; align-items:center;">
-                        <span style="font-size:11px; color:#475569; font-weight:bold;">中獎結算淨利</span>
+                    <div style="border-top:1px dashed rgba(255,255,255,0.1); padding-top:4px; display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-size:11px; color:#94a3b8; font-weight:bold;">中獎結算淨利</span>
                         <span class="text-green" style="font-size:13px; font-weight:900;">+${finalNetProfit.toLocaleString()} 元</span>
                     </div>
                 </div>
@@ -1671,7 +1715,7 @@
                     <td class="text-green">+${targetCumProfit.toLocaleString()} 元</td>
                     <td class="text-gold" style="font-size:13px;">${units.toFixed(2)} 車/碼</td>
                     <td>${currentRoundCost.toLocaleString()} 元</td>
-                    <td style="color:#b91c1c;">${cumCost.toLocaleString()} 元</td>
+                    <td style="color:#f43f5e;">${cumCost.toLocaleString()} 元</td>
                     <td>${prizeIfHitOne.toLocaleString()} 元</td>
                     <td class="text-green">+${netIfHitOne.toLocaleString()} 元</td>
                     <td class="text-purple">+${netIfHitTwo.toLocaleString()} 元</td>
@@ -1695,15 +1739,15 @@
                         </div>
                         <div class="day-plan-item">
                             <span class="label">📉 累計總投入</span>
-                            <span class="val" style="color:#b91c1c;">${cumCost.toLocaleString()} 元</span>
+                            <span class="val" style="color:#f43f5e;">${cumCost.toLocaleString()} 元</span>
                         </div>
                         <div class="day-plan-item">
                             <span class="label">保底淨利(中1碼)</span>
                             <span class="val text-green">+${netIfHitOne.toLocaleString()} 元</span>
                         </div>
                     </div>
-                    <div style="border-top:1px dashed #e2e8f0; padding-top:4px; display:flex; justify-content:space-between; align-items:center;">
-                        <span style="font-size:11px; color:#7c3aed; font-weight:bold;">⚡ 若中2碼(雙停暴利)</span>
+                    <div style="border-top:1px dashed rgba(255,255,255,0.1); padding-top:4px; display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-size:11px; color:#c084fc; font-weight:bold;">⚡ 若中2碼(雙停暴利)</span>
                         <span class="text-purple" style="font-size:12px; font-weight:900;">+${netIfHitTwo.toLocaleString()} 元</span>
                     </div>
                 </div>
@@ -1883,9 +1927,9 @@
                 <td>${row.tier}</td>
                 <td>${row.cars.toFixed(2)} 車</td>
                 <td>${row.cost.toLocaleString()} 元</td>
-                <td style="color:#b91c1c;">${row.total.toLocaleString()} 元</td>
+                <td style="color:#f43f5e;">${row.total.toLocaleString()} 元</td>
                 <td>${row.prize.toLocaleString()} 元</td>
-                <td style="color:${row.profit >= 0 ? '#16a34a' : '#dc2626'}">${row.profit > 0 ? '+' : ''}${row.profit.toLocaleString()} 元</td>
+                <td style="color:${row.profit >= 0 ? '#34d399' : '#f43f5e'}">${row.profit > 0 ? '+' : ''}${row.profit.toLocaleString()} 元</td>
             `;
             tbody.appendChild(tr);
         });
@@ -1912,15 +1956,15 @@
                     </div>
                     <div class="day-plan-item">
                         <span class="label">📉 累計總投入</span>
-                        <span class="val" style="color:#b91c1c;">${row.total.toLocaleString()} 元</span>
+                        <span class="val" style="color:#f43f5e;">${row.total.toLocaleString()} 元</span>
                     </div>
                     <div class="day-plan-item">
                         <span class="label">🏆 中獎彩金</span>
                         <span class="val">${row.prize.toLocaleString()} 元</span>
                     </div>
                 </div>
-                <div style="border-top:1px dashed #e2e8f0; padding-top:4px; display:flex; justify-content:space-between; align-items:center;">
-                    <span style="font-size:11px; color:#475569; font-weight:bold;">中獎實得淨利</span>
+                <div style="border-top:1px dashed rgba(255,255,255,0.1); padding-top:4px; display:flex; justify-content:space-between; align-items:center;">
+                    <span style="font-size:11px; color:#94a3b8; font-weight:bold;">中獎實得淨利</span>
                     <span class="${row.profit >= 0 ? 'text-green' : 'text-gold'}" style="font-size:13px; font-weight:900;">+${row.profit.toLocaleString()} 元</span>
                 </div>
             `;
@@ -2029,16 +2073,16 @@
                 ? genBalls(item.my) + (!item.isPending && hasDraw ? `<div style="font-size:11px; margin-top:3px; color:var(--my-color); font-weight:bold;">中 ${item.myHits} 顆 (${item.my.length}碼)</div>` : '')
                 : `<span class="empty-label">— 待補 —</span>`;
 
-            let drawColumnHtml = hasDraw ? genDrawBalls(item.draw) : `<span style="color:#d97706; font-size:12px; font-family:monospace; font-weight:bold;">⏳ 待開獎</span>`;
+            let drawColumnHtml = hasDraw ? genDrawBalls(item.draw) : `<span style="color:#fbbf24; font-size:12px; font-family:monospace; font-weight:bold;">⏳ 待開獎</span>`;
 
             let winnerBadge = `<span class="winner-badge badge-tie">平手</span>`;
             if (item.isPending || !hasDraw) winnerBadge = `<span class="winner-badge badge-pending">⏳ 等待開獎</span>`;
             else if (item.winner === "AI 勝") winnerBadge = `<span class="winner-badge badge-ai">🤖 AI 勝</span>`;
             else if (item.winner === "我 勝") winnerBadge = `<span class="winner-badge badge-my">🧑 我 勝</span>`;
-            else if (item.winner) winnerBadge = `<span class="winner-badge" style="background:#f1f5f9; color:#475569; border:1px solid #cbd5e1;">${item.winner}</span>`;
+            else if (item.winner) winnerBadge = `<span class="winner-badge" style="background:#1e293b; color:#94a3b8; border:1px solid #475569;">${item.winner}</span>`;
 
             tr.innerHTML = `
-                <td data-label="📅 開獎日期"><strong style="color:#0284c7; font-family:monospace; font-size:13px;">${item.date}</strong></td>
+                <td data-label="📅 開獎日期"><strong style="color:#38bdf8; font-family:monospace; font-size:13px;">${item.date}</strong></td>
                 <td data-label="🤖 AI 預測">${aiColumnHtml}</td>
                 <td data-label="🧑 我的預測">${myColumnHtml}</td>
                 <td data-label="📺 開獎 5 碼">${drawColumnHtml}</td>
@@ -2053,7 +2097,7 @@
         });
 
         if (battleHistory.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="6" style="padding: 20px; color: #94a3b8; font-weight:bold;">目前尚無對決紀錄，可滑至最下方貼上多期 539 號碼！</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="6" style="padding: 20px; color: #64748b; font-weight:bold;">目前尚無對決紀錄，可滑至最下方貼上多期 539 號碼！</td></tr>`;
         }
 
         document.getElementById('total-rounds').innerText = totalRounds;
@@ -2090,15 +2134,15 @@
     window.parseAndImportMultiDraws = parseAndImportMultiDraws;
 </script>
 
-<!-- 雙 3D 物理滾球量子搖號機邏輯 -->
+<!-- 單軌量子 3D 物理滾球機引擎 -->
 <script>
     class PhysicsMachine {
         constructor(containerId, sphereSize) {
             this.container = document.getElementById(containerId);
             this.size = sphereSize;
             this.center = sphereSize / 2;
-            this.radius = 8;
-            this.maxRadius = this.center - this.radius - 3;
+            this.radius = 9;
+            this.maxRadius = this.center - this.radius - 4;
             this.balls = [];
             this.isMixing = false;
             this.reqFrame = null;
@@ -2122,8 +2166,8 @@
                 this.balls.push({
                     id: i, el: el, active: true,
                     x: x, y: y,
-                    vx: (Math.random() - 0.5) * 4,
-                    vy: (Math.random() - 0.5) * 4
+                    vx: (Math.random() - 0.5) * 5,
+                    vy: (Math.random() - 0.5) * 5
                 });
             }
             if (this.reqFrame) cancelAnimationFrame(this.reqFrame);
@@ -2137,12 +2181,12 @@
                 b.vy += 0.35;
 
                 if (this.isMixing) {
-                    b.vx += (Math.random() - 0.5) * 4;
-                    b.vy -= (Math.random()) * 2;
+                    b.vx += (Math.random() - 0.5) * 5;
+                    b.vy -= (Math.random()) * 2.5;
                     let speed = Math.sqrt(b.vx * b.vx + b.vy * b.vy);
-                    if (speed > 15) {
-                        b.vx = (b.vx / speed) * 15;
-                        b.vy = (b.vy / speed) * 15;
+                    if (speed > 16) {
+                        b.vx = (b.vx / speed) * 16;
+                        b.vy = (b.vy / speed) * 16;
                     }
                 } else {
                     b.vx *= 0.98;
@@ -2179,7 +2223,7 @@
         drawBall(ballObj, slotEl, callback) {
             ballObj.active = false;
             ballObj.el.style.transition = "transform 0.4s cubic-bezier(0.5, -0.5, 0.2, 1.2), opacity 0.5s";
-            ballObj.el.style.transform = `translate(${this.center - this.radius}px, -18px) scale(1.2)`;
+            ballObj.el.style.transform = `translate(${this.center - this.radius}px, -20px) scale(1.3)`;
 
             setTimeout(() => {
                 ballObj.el.style.opacity = "0";
@@ -2190,54 +2234,40 @@
         }
     }
 
-    let m1, m2;
-    let finalNums1 = [], finalNums2 = [];
+    let singleMachine;
+    let finalNums = [];
 
     window.onload = function() {
         document.getElementById('input-date').value = new Date().toISOString().split('T')[0];
-        let mSize = 120;
-        m1 = new PhysicsMachine('physics-container-1', mSize);
-        m2 = new PhysicsMachine('physics-container-2', mSize);
+        singleMachine = new PhysicsMachine('physics-container', 160);
     };
 
-    async function startRollDual() {
-        const btn = document.getElementById('btn-roll-all');
-        const slots1 = document.querySelectorAll('#machine-balls-1 .machine-ball');
-        const slots2 = document.querySelectorAll('#machine-balls-2 .machine-ball');
+    async function startRollMachine() {
+        const btn = document.getElementById('btn-roll');
+        const slots = document.querySelectorAll('#machine-balls .machine-ball');
         
         btn.disabled = true;
-        btn.innerText = "🌪️ 雙機同步搖號中...";
+        btn.innerText = "🌪️ 量子高速對撞搖號中...";
         
         document.querySelectorAll('.btn-apply').forEach(b => b.style.display = 'none');
 
-        m1.init();
-        m2.init();
-        slots1.forEach(s => { s.innerText = "?"; s.classList.remove('revealed'); });
-        slots2.forEach(s => { s.innerText = "?"; s.classList.remove('revealed'); });
+        singleMachine.init();
+        slots.forEach(s => { s.innerText = "?"; s.classList.remove('revealed'); });
 
-        m1.isMixing = true;
-        m2.isMixing = true;
-
+        singleMachine.isMixing = true;
         await new Promise(r => setTimeout(r, 1200));
 
-        finalNums1 = generate5Numbers();
-        finalNums2 = generate5Numbers();
+        finalNums = generate5Numbers();
 
         for (let i = 0; i < 5; i++) {
-            let b1 = m1.balls.find(b => b.id === finalNums1[i]);
-            let b2 = m2.balls.find(b => b.id === finalNums2[i]);
-
-            await Promise.all([
-                new Promise(res => m1.drawBall(b1, slots1[i], res)),
-                new Promise(res => m2.drawBall(b2, slots2[i], res))
-            ]);
+            let b = singleMachine.balls.find(ball => ball.id === finalNums[i]);
+            await new Promise(res => singleMachine.drawBall(b, slots[i], res));
             await new Promise(r => setTimeout(r, 250));
         }
 
-        m1.isMixing = false;
-        m2.isMixing = false;
+        singleMachine.isMixing = false;
         btn.disabled = false;
-        btn.innerText = "🎲 再次啟動雙機搖號";
+        btn.innerText = "🎲 再次啟動量子搖號";
 
         document.querySelectorAll('.btn-apply').forEach(b => b.style.display = 'inline-block');
     }
@@ -2262,6 +2292,9 @@
         document.getElementById(targetMap[targetKey]).value = str;
         alert(`✅ 已將搖出的 ${count} 碼帶入【${nameMap[targetKey]}】！`);
     }
+
+    window.startRollMachine = startRollMachine;
+    window.applyToInput = applyToInput;
 </script>
 
 </body>
