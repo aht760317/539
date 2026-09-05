@@ -516,15 +516,17 @@
             border-radius: 16px;
             border: 1px solid rgba(251, 191, 36, 0.25);
             box-shadow: inset 0 0 25px rgba(0,0,0,0.8);
+            position: relative;
+            overflow: hidden;
         }
 
         .taicai-studio {
             display: flex;
             align-items: flex-end;
-            gap: 12px;
-            margin: 12px 0 14px;
+            gap: 10px;
+            margin: 10px 0 12px;
             background: rgba(0, 0, 0, 0.4);
-            padding: 12px 16px;
+            padding: 10px 14px;
             border-radius: 12px;
             border: 1px solid rgba(255, 255, 255, 0.08);
             position: relative;
@@ -533,26 +535,26 @@
         /* 透明氣缸 */
         .cylinder-chamber {
             position: relative;
-            width: 105px;
-            height: 160px;
+            width: 95px;
+            height: 150px;
             background: radial-gradient(circle at 40% 30%, rgba(255, 255, 255, 0.15) 0%, rgba(56, 189, 248, 0.06) 50%, rgba(15, 23, 42, 0.8) 100%);
             border: 2.5px solid rgba(56, 189, 248, 0.65);
             border-top: 3px solid rgba(255, 255, 255, 0.9);
-            border-radius: 12px 12px 6px 6px;
-            box-shadow: 0 0 25px rgba(56, 189, 248, 0.3), inset 0 0 15px rgba(56, 189, 248, 0.2);
-            overflow: visible; /* 允許球吸出氣缸邊界 */
+            border-radius: 10px 10px 6px 6px;
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.3), inset 0 0 15px rgba(56, 189, 248, 0.2);
+            overflow: visible;
         }
         .cylinder-base {
-            position: absolute; bottom: 0; left: 0; right: 0; height: 12px;
+            position: absolute; bottom: 0; left: 0; right: 0; height: 10px;
             background: linear-gradient(90deg, #b45309, #fbbf24, #b45309);
             border-radius: 0 0 4px 4px;
         }
 
-        /* 黑色動力箱與吸球導管 */
+        /* 黑色動力箱與旁邊的滾動平台導管 */
         .power-box {
             position: relative;
-            width: 110px;
-            height: 130px;
+            width: 130px;
+            height: 120px;
             background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
             border: 1.5px solid #475569;
             border-radius: 8px;
@@ -563,33 +565,54 @@
             justify-content: center;
         }
         .power-box-screen {
-            width: 80px; height: 35px; background: #000000; border: 1px solid #334155; border-radius: 4px;
+            width: 80px; height: 32px; background: #000000; border: 1px solid #334155; border-radius: 4px;
             display: flex; align-items: center; justify-content: center;
             color: #fbbf24; font-family: monospace; font-size: 13px; font-weight: 900;
             box-shadow: inset 0 0 6px rgba(251, 191, 36, 0.4);
             letter-spacing: 1px;
+            margin-top: 4px;
         }
-        /* 吸球導管手臂 */
-        .suction-tube-arm {
-            position: absolute; 
-            top: 15px; left: -25px; 
-            width: 25px; height: 10px;
-            background: linear-gradient(90deg, #94a3b8, #f8fafc);
+        
+        /* 橫向滾動平台軌道 */
+        .rolling-platform {
+            position: absolute;
+            top: 22px; left: -20px;
+            width: 100px; height: 14px;
+            background: linear-gradient(90deg, #475569, #94a3b8, #334155);
             border: 1px solid #cbd5e1;
             border-radius: 3px;
             z-index: 25;
-            box-shadow: 0 0 8px rgba(56,189,248,0.5);
+            box-shadow: 0 0 10px rgba(56,189,248,0.4);
         }
 
         /* 氣缸內的彈跳小球 */
         .airflow-ball {
             position: absolute;
-            width: 17px; height: 17px; border-radius: 50%;
+            width: 16px; height: 16px; border-radius: 50%;
             background: radial-gradient(circle at 35% 30%, #fde047 0%, #d97706 100%);
-            color: #78350f; font-size: 7.5px; font-weight: 900;
+            color: #78350f; font-size: 7px; font-weight: 900;
             display: flex; align-items: center; justify-content: center;
             box-shadow: 0 0 6px rgba(251, 191, 36, 0.8);
             transition: transform 0.05s linear;
+        }
+
+        /* 動態特寫放大鏡視窗 (電視轉播特寫) */
+        .ball-spotlight-overlay {
+            position: absolute;
+            top: 15px; left: 50%; transform: translateX(-50%) scale(0);
+            width: 75px; height: 75px;
+            background: radial-gradient(circle, rgba(251,191,36,0.95) 0%, rgba(180,83,9,0.9) 70%, rgba(15,23,42,0.95) 100%);
+            border: 3px solid #fef08a;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 0 30px rgba(251,191,36,0.8), inset 0 0 15px rgba(255,255,255,0.6);
+            z-index: 100;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-size: 30px; font-weight: 900; color: #ffffff; font-family: monospace;
+            text-shadow: 0 2px 6px rgba(0,0,0,0.7);
+        }
+        .ball-spotlight-overlay.show {
+            transform: translateX(-50%) scale(1);
         }
 
         .machine-balls { 
@@ -967,7 +990,7 @@
                                     <th>階梯</th>
                                     <th>下注車數</th>
                                     <th>當期成本</th>
-                                    <th>累計總成本</th>
+                                    <th>累計總投入</th>
                                     <th>中獎彩金</th>
                                     <th>結算淨利 (保證賺錢)</th>
                                 </tr>
@@ -1036,19 +1059,22 @@
             </div>
         </div>
 
-        <!-- 🌟 台彩實景直立氣動開獎機 -->
+        <!-- 🌟 台彩實景直立氣動開獎機 (含平台滾動與特寫放大) -->
         <div class="tool-card">
             <h3 style="color:var(--neon-purple);">🎰 台彩官方實景・氣動直立式開獎機</h3>
             <div class="taicai-machine-wrapper">
+                <!-- 螢幕中央電視轉播動態特寫放大鏡視窗 -->
+                <div class="ball-spotlight-overlay" id="spotlight-window">01</div>
+
                 <div class="taicai-studio">
                     <!-- 透明氣缸 -->
                     <div class="cylinder-chamber" id="airflow-cylinder">
                         <div class="cylinder-base"></div>
                     </div>
-                    <!-- 黑色控制箱與吸球軌道手臂 -->
+                    <!-- 黑色控制箱與側向滾動平台軌道 -->
                     <div class="power-box">
-                        <div class="suction-tube-arm"></div>
-                        <div style="font-size:10px; color:#94a3b8; margin-bottom:4px; font-weight:bold;">LIVE 539</div>
+                        <div class="rolling-platform"></div>
+                        <div style="font-size:10px; color:#94a3b8; margin-bottom:2px; font-weight:bold;">LIVE 539</div>
                         <div class="power-box-screen" id="power-screen">READY</div>
                     </div>
                 </div>
@@ -1084,7 +1110,7 @@
                 <input type="text" id="draw-nums" placeholder="例: 06, 07, 14, 28, 33">
             </div>
         </div>
-        <button class="btn-submit" onclick="addRecord()">☁️ 儲存 / 補填 539 對決紀錄至雲端 (即刻對獎)</button>
+        <button class="btn-submit" onclick="addRecordWithAuth()">☁️ 儲存 / 補填 539 對決紀錄至雲端 (即刻對獎)</button>
     </div>
 
     <!-- 歷史對決表格 -->
@@ -1117,7 +1143,7 @@
 2026-09-03 03,06,23,29,35
 115/09/02 01 07 08 18 39..."></textarea>
         <div style="margin-top:8px; display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
-            <button onclick="parseAndImportMultiDraws()" style="background:linear-gradient(135deg, #7c3aed, #0284c7); color:white; border:none; padding:9px 18px; font-size:13px; font-weight:900; border-radius:6px; cursor:pointer;">
+            <button onclick="parseAndImportMultiDrawsWithAuth()" style="background:linear-gradient(135deg, #7c3aed, #0284c7); color:white; border:none; padding:9px 18px; font-size:13px; font-weight:900; border-radius:6px; cursor:pointer;">
                 ⚡ 一鍵極速解析並匯入 539 多期開獎
             </button>
             <span id="paste-import-status" style="font-size:11px; color:#94a3b8; font-weight:bold;"></span>
@@ -1261,7 +1287,13 @@
         return Array.from(uniqueMap.values());
     }
 
-    async function parseAndImportMultiDraws() {
+    // 🔒 密碼驗證包裝：批次匯入
+    window.parseAndImportMultiDrawsWithAuth = async function() {
+        let pwd = prompt("請輸入安全授權密碼：");
+        if (pwd !== "110119110") {
+            return alert("❌ 密碼錯誤，拒絕寫入雲端！");
+        }
+
         const text = document.getElementById('sc888-paste-area').value.trim();
         const statusEl = document.getElementById('paste-import-status');
         if (!text) return alert("請先在文字框中貼上歷史開獎內容！");
@@ -1271,7 +1303,7 @@
 
         if (drawList.length === 0) {
             statusEl.innerText = "❌ 格式不合，未找到「日期 + 5個號碼」";
-            return alert("⚠️ 未能在貼上的文字中識別出開獎號碼！\n請確認每行開頭是否有日期，後方有 5 個球號。");
+            return alert("⚠️ 未能在貼上的文字中識別出開獎號碼！");
         }
 
         let updatedCount = 0;
@@ -1324,15 +1356,21 @@
             }
 
             statusEl.innerText = `🎉 成功解析並匯入 ${drawList.length} 天 539 紀錄！`;
-            alert(`🎉 批次匯入成功！\n• 成功解析天數：${drawList.length} 期\n• 自動建立新開獎：${createdCount} 期\n• 自動更新現有開獎：${updatedCount} 期\n排行榜已同步刷新！`);
+            alert(`🎉 批次匯入成功！\n• 成功解析天數：${drawList.length} 期\n• 自動建立新開獎：${createdCount} 期\n• 自動更新現有開獎：${updatedCount} 期`);
             document.getElementById('sc888-paste-area').value = "";
         } catch (e) {
             statusEl.innerText = "❌ 寫入雲端失敗";
             alert("寫入失敗：" + e.message);
         }
-    }
+    };
 
-    async function addRecord() {
+    // 🔒 密碼驗證包裝：單筆存檔/補填
+    window.addRecordWithAuth = async function() {
+        let pwd = prompt("請輸入安全授權密碼：");
+        if (pwd !== "110119110") {
+            return alert("❌ 密碼錯誤，拒絕寫入雲端！");
+        }
+
         let date = document.getElementById('input-date').value;
         if (!date) return alert("請先選擇開獎日期！");
 
@@ -1368,7 +1406,7 @@
                     winner: isPending ? "等待開獎" : res.winner,
                     isPending: isPending
                 });
-                alert(`✅ 成功為 ${date} 補填/更新預測號碼，系統已自動重新結算！`);
+                alert(`✅ 成功為 ${date} 補填/更新預測號碼！`);
                 clearInputs();
             } catch (e) {
                 alert("雲端更新失敗：" + e.message);
@@ -1398,7 +1436,7 @@
                 alert("雲端儲存失敗：" + e.message);
             }
         }
-    }
+    };
 
     function clearInputs() {
         document.getElementById('ai-nums').value = "";
@@ -1406,7 +1444,10 @@
         document.getElementById('draw-nums').value = "";
     }
 
-    async function editDate(id, oldDate) {
+    window.editDate = async function(id, oldDate) {
+        let pwd = prompt("請輸入安全授權密碼：");
+        if (pwd !== "110119110") return alert("❌ 密碼錯誤！");
+
         let newDate = prompt("請輸入修正後的日期 (格式：YYYY-MM-DD)", oldDate);
         if (newDate && newDate.trim() !== "") {
             try {
@@ -1417,9 +1458,12 @@
                 alert("改期失敗：" + e.message);
             }
         }
-    }
+    };
 
-    async function deleteRecord(id) {
+    window.deleteRecord = async function(id) {
+        let pwd = prompt("請輸入安全授權密碼：");
+        if (pwd !== "110119110") return alert("❌ 密碼錯誤！");
+
         if (confirm("確定刪除這筆紀錄？")) {
             try {
                 await deleteDoc(doc(db, "539_battle_history", id.toString()));
@@ -1427,7 +1471,7 @@
                 alert("刪除失敗：" + e.message);
             }
         }
-    }
+    };
 
     // 50 期熱門號 + 連續未開冷門號演算
     function analyzeHotColdNumbers() {
@@ -2114,17 +2158,42 @@
         }
     }
 
-    window.addRecord = addRecord;
-    window.editDate = editDate;
-    window.deleteRecord = deleteRecord;
-    window.parseAndImportMultiDraws = parseAndImportMultiDraws;
+    window.editDate = async function(id, oldDate) {
+        let pwd = prompt("請輸入安全授權密碼：");
+        if (pwd !== "110119110") return alert("❌ 密碼錯誤！");
+
+        let newDate = prompt("請輸入修正後的日期 (格式：YYYY-MM-DD)", oldDate);
+        if (newDate && newDate.trim() !== "") {
+            try {
+                await updateDoc(doc(db, "539_battle_history", id.toString()), {
+                    date: newDate.trim()
+                });
+            } catch (e) {
+                alert("改期失敗：" + e.message);
+            }
+        }
+    };
+
+    window.deleteRecord = async function(id) {
+        let pwd = prompt("請輸入安全授權密碼：");
+        if (pwd !== "110119110") return alert("❌ 密碼錯誤！");
+
+        if (confirm("確定刪除這筆紀錄？")) {
+            try {
+                await deleteDoc(doc(db, "539_battle_history", id.toString()));
+            } catch (e) {
+                alert("刪除失敗：" + e.message);
+            }
+        }
+    };
 </script>
 
-<!-- 擬真台彩氣動開獎機引擎 (支援緩慢平滑吸球上升) -->
+<!-- 擬真台彩氣動開獎機 (含平台滾動與特寫放大鏡動畫) -->
 <script>
     class TaicaiAirMachine {
         constructor(chamberId) {
             this.chamber = document.getElementById(chamberId);
+            this.spotlight = document.getElementById('spotlight-window');
             this.balls = [];
             this.isMixing = false;
             this.reqFrame = null;
@@ -2145,8 +2214,8 @@
                     id: i,
                     el: el,
                     active: true,
-                    x: Math.random() * 75 + 10,
-                    y: Math.random() * 120 + 20,
+                    x: Math.random() * 65 + 10,
+                    y: Math.random() * 110 + 20,
                     vx: (Math.random() - 0.5) * 3.5,
                     vy: (Math.random() - 0.5) * 4.5
                 });
@@ -2157,8 +2226,8 @@
         }
 
         loop() {
-            let chWidth = this.chamber.clientWidth || 105;
-            let chHeight = this.chamber.clientHeight || 160;
+            let chWidth = this.chamber.clientWidth || 95;
+            let chHeight = this.chamber.clientHeight || 150;
 
             this.balls.forEach(b => {
                 if (!b.active) return;
@@ -2182,9 +2251,9 @@
                 b.y += b.vy;
 
                 if (b.x < 4) { b.x = 4; b.vx *= -0.8; }
-                if (b.x > chWidth - 21) { b.x = chWidth - 21; b.vx *= -0.8; }
+                if (b.x > chWidth - 20) { b.x = chWidth - 20; b.vx *= -0.8; }
                 if (b.y < 8) { b.y = 8; b.vy *= -0.8; }
-                if (b.y > chHeight - 25) { b.y = chHeight - 25; b.vy *= -0.9; }
+                if (b.y > chHeight - 24) { b.y = chHeight - 24; b.vy *= -0.9; }
 
                 b.el.style.transform = `translate(${b.x}px, ${b.y}px)`;
             });
@@ -2195,16 +2264,27 @@
         async drawBall(ballObj, slotEl) {
             ballObj.active = false;
             let el = ballObj.el;
+            let ballNumStr = ballObj.id.toString().padStart(2, '0');
 
-            // 🌟 緩慢平滑吸球上升動畫 (仿台彩官方開獎特寫)
-            el.style.transition = "all 1.6s cubic-bezier(0.25, 0.8, 0.25, 1)";
-            el.style.transform = `translate(40px, -45px) scale(1.35)`;
+            // 1. 從氣缸內緩慢向上吸出
+            el.style.transition = "all 1.4s cubic-bezier(0.25, 0.8, 0.25, 1)";
+            el.style.transform = `translate(40px, -50px) scale(1.25)`;
             el.style.zIndex = "100";
 
-            await new Promise(r => setTimeout(r, 1600));
-
+            await new Promise(r => setTimeout(r, 1400));
             el.style.opacity = "0";
-            slotEl.innerText = ballObj.id.toString().padStart(2, '0');
+
+            // 2. 彈出電視轉播大球特寫 (Spotlight 放大鏡)
+            this.spotlight.innerText = ballNumStr;
+            this.spotlight.classList.add('show');
+
+            await new Promise(r => setTimeout(r, 1400)); // 特寫停留 1.4 秒
+
+            // 3. 特寫縮小並歸位排入下方號碼槽
+            this.spotlight.classList.remove('show');
+            await new Promise(r => setTimeout(r, 300));
+
+            slotEl.innerText = ballNumStr;
             slotEl.classList.add('revealed');
         }
     }
@@ -2237,7 +2317,7 @@
             screen.innerText = `BALL ${i+1}`;
             let targetBall = taicaiMachine.balls.find(b => b.id === final5[i]);
             await taicaiMachine.drawBall(targetBall, slots[i]);
-            await new Promise(r => setTimeout(r, 500)); // 拉開吸球間距，展現高質感儀式感
+            await new Promise(r => setTimeout(r, 400));
         }
 
         taicaiMachine.isMixing = false;
