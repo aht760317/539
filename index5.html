@@ -513,7 +513,7 @@
             animation: numberJitter 0.35s infinite ease-in-out;
         }
 
-        /* 🌟 放大版擬真台彩氣動開獎機 (充分運用下方空間) */
+        /* 🌟 放大版擬真台彩氣動開獎機 (含平台右側滾動一圈導管) */
         .taicai-machine-wrapper {
             display: flex;
             flex-direction: column;
@@ -540,7 +540,6 @@
             position: relative;
         }
 
-        /* 加大版透明氣缸 */
         .cylinder-chamber {
             position: relative;
             width: 120px;
@@ -558,7 +557,6 @@
             border-radius: 0 0 4px 4px;
         }
 
-        /* 放大版黑色動力箱 */
         .power-box {
             position: relative;
             width: 155px;
@@ -582,10 +580,10 @@
             margin-top: 6px;
         }
         
-        /* 🌟 側向環繞滾動一圈的導管軌道 */
-        .rolling-platform {
+        /* 🌟 右側環繞滾動一圈的導管軌道 (精準對應右側平台) */
+        .rolling-platform-right {
             position: absolute;
-            top: 25px; left: -45px;
+            top: 25px; right: -40px;
             width: 135px; height: 18px;
             background: linear-gradient(90deg, #334155, #94a3b8, #475569, #334155);
             border: 2px solid #cbd5e1;
@@ -998,7 +996,7 @@
                                     <th>階梯</th>
                                     <th>下注車數</th>
                                     <th>當期成本</th>
-                                    <th>累計總成本</th>
+                                    <th>累計總投入</th>
                                     <th>中獎彩金</th>
                                     <th>結算淨利 (保證賺錢)</th>
                                 </tr>
@@ -1069,7 +1067,7 @@
             </div>
         </div>
 
-        <!-- 🌟 放大版台彩官方實景氣動開獎機 -->
+        <!-- 🌟 放大版台彩官方實景氣動開獎機 (含右側平台環繞管) -->
         <div class="tool-card">
             <h3 style="color:var(--neon-purple);">🎰 台彩官方實景・氣動直立式開獎機 (旗艦大版)</h3>
             <div class="taicai-machine-wrapper">
@@ -1081,9 +1079,9 @@
                     <div class="cylinder-chamber" id="airflow-cylinder">
                         <div class="cylinder-base"></div>
                     </div>
-                    <!-- 放大版黑色控制箱與側向環繞導管軌道 -->
+                    <!-- 放大版黑色控制箱與右側環繞滾動管道 -->
                     <div class="power-box">
-                        <div class="rolling-platform"></div>
+                        <div class="rolling-platform-right"></div>
                         <div style="font-size:11px; color:#94a3b8; margin-bottom:4px; font-weight:bold;">LIVE 539</div>
                         <div class="power-box-screen" id="power-screen">READY</div>
                     </div>
@@ -1570,7 +1568,7 @@
         }).join('');
     }
 
-    // 🌟 點擊「準備發大財」才啟動的期待感開獎動畫
+    // 🌟 點擊「🚀 準備發大財」才啟動的期待感開獎動畫
     window.refreshRecommendationsWithSuspense = async function() {
         if (!probabilityRankedBalls || probabilityRankedBalls.length < 12) return;
 
@@ -1747,7 +1745,7 @@
     };
 </script>
 
-<!-- 台彩官方實景氣動開獎機 (含平台環繞滾動與特寫放大鏡動畫) -->
+<!-- 🌟 擬真台彩氣動開獎機 (球從氣缸往右側平台導管滾動一圈) -->
 <script>
     class TaicaiAirMachine {
         constructor(chamberId) {
@@ -1825,12 +1823,12 @@
             let el = ballObj.el;
             let ballNumStr = ballObj.id.toString().padStart(2, '0');
 
-            // 1. 從氣缸內順著管道往上吸出並在旁邊環繞滾動一圈
-            el.style.transition = "all 1.2s cubic-bezier(0.25, 0.8, 0.25, 1)";
-            el.style.transform = `translate(60px, -75px) scale(1.25)`;
+            // 1. 從氣缸內往右上方吸出，並順著右側平台導管滾動一圈
+            el.style.transition = "all 1.1s cubic-bezier(0.25, 0.8, 0.25, 1)";
+            el.style.transform = `translate(80px, -60px) scale(1.2)`;
             el.style.zIndex = "100";
 
-            await new Promise(r => setTimeout(r, 1200));
+            await new Promise(r => setTimeout(r, 1100));
             el.style.opacity = "0";
 
             // 2. 彈出電視轉播大球特寫鏡頭 (Spotlight 放大顯示)
