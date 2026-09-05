@@ -66,7 +66,6 @@
         }
         .dot { width: 7px; height: 7px; border-radius: 50%; background: #10b981; box-shadow: 0 0 6px #10b981; }
 
-        /* 頂部按鈕 */
         .top-action-bar {
             display: flex;
             justify-content: center;
@@ -89,11 +88,11 @@
         }
         .btn-open-modal:hover { filter: brightness(1.1); transform: translateY(-1px); }
 
-        /* 模態視窗 */
+        /* 🌟 修復核心：獨立彈出視窗 (手機版頂部固定且支援內部獨立滾動) */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(15, 23, 42, 0.7);
+            background: rgba(15, 23, 42, 0.75);
             backdrop-filter: blur(6px);
             z-index: 999;
             display: none;
@@ -106,28 +105,29 @@
             border: 1.5px solid rgba(217, 119, 6, 0.4);
             border-radius: 18px;
             width: 100%;
-            max-width: 1100px;
-            max-height: 92vh;
+            max-width: 1050px;
+            height: 90vh; /* 鎖定最大高度 */
             display: flex;
             flex-direction: column;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+            overflow: hidden; /* 防止子元素撐爆 */
             animation: modalPop 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         @keyframes modalPop {
-            from { transform: scale(0.95); opacity: 0; }
+            from { transform: scale(0.96); opacity: 0; }
             to { transform: scale(1); opacity: 1; }
         }
         .modal-header {
-            padding: 14px 20px;
+            padding: 12px 18px;
             border-bottom: 1px solid #e2e8f0;
             display: flex;
             align-items: center;
             justify-content: space-between;
             background: #fffbeb;
-            border-radius: 18px 18px 0 0;
+            flex-shrink: 0; /* 永不被壓縮 */
         }
         .modal-header h2 {
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 900;
             color: #92400e;
             display: flex;
@@ -137,27 +137,32 @@
         .modal-close {
             background: transparent;
             border: none;
-            font-size: 24px;
+            font-size: 26px;
             color: #78350f;
             cursor: pointer;
             font-weight: bold;
+            padding: 0 4px;
         }
         
+        /* 🌟 分頁導航欄：橫向滑動且固定在頂部 */
         .modal-tabs {
             display: flex;
             background: #f8fafc;
-            border-bottom: 1px solid #e2e8f0;
+            border-bottom: 1.5px solid #e2e8f0;
             padding: 6px 12px 0 12px;
-            gap: 8px;
+            gap: 6px;
             overflow-x: auto;
             white-space: nowrap;
+            flex-shrink: 0; /* 固定頂部 */
+            -webkit-overflow-scrolling: touch;
         }
+        .modal-tabs::-webkit-scrollbar { display: none; }
         .tab-btn {
             background: transparent;
             border: 1px solid transparent;
             border-bottom: none;
-            padding: 9px 16px;
-            font-size: 13px;
+            padding: 8px 14px;
+            font-size: 12px;
             font-weight: 900;
             color: #64748b;
             cursor: pointer;
@@ -170,9 +175,14 @@
             color: #d97706;
             border-top: 3px solid #d97706;
         }
+        
+        /* 🌟 內部滾動區塊：只有這裡負責上下滑動 */
         .modal-body {
-            padding: 16px 18px;
+            padding: 14px 16px;
             overflow-y: auto;
+            flex: 1;
+            overscroll-behavior: contain;
+            -webkit-overflow-scrolling: touch;
         }
 
         /* 參數輸入面板 */
@@ -268,7 +278,6 @@
         .btn-lose { background: #dc2626; color: #ffffff; box-shadow: 0 2px 8px rgba(220, 38, 38, 0.25); }
         .btn-reset { background: #64748b; color: #ffffff; flex: 0.4; }
 
-        /* 階梯模式子切換鍵 */
         .tier-sub-tabs {
             display: flex;
             gap: 8px;
@@ -290,7 +299,6 @@
             color: #7c3aed;
         }
 
-        /* 參數輸入控制列 */
         .plan-config-bar {
             display: flex;
             align-items: center;
@@ -302,11 +310,7 @@
             margin-bottom: 12px;
             flex-wrap: wrap;
         }
-        .plan-config-bar label {
-            font-size: 12px;
-            font-weight: 900;
-            color: #334155;
-        }
+        .plan-config-bar label { font-size: 12px; font-weight: 900; color: #334155; }
         .plan-config-bar input {
             padding: 6px 10px;
             border: 1.5px solid #cbd5e1;
@@ -623,6 +627,7 @@
         td { padding: 12px 6px; border-bottom: 1px solid #e2e8f0; vertical-align: middle; }
         tr:hover { background: rgba(241, 245, 249, 0.6); }
 
+        /* 號碼球樣式 */
         .num-container { display: flex; gap: 5px; justify-content: center; flex-wrap: wrap; align-items: center; }
         .num-ball { 
             width: var(--ball-size); 
@@ -667,6 +672,7 @@
         .edit-btn { background: #f1f5f9; color: #334155; }
         .edit-btn:hover { background: #e2e8f0; }
 
+        /* 📱 手機端排版修復 */
         @media (max-width: 768px) {
             :root { --ball-size: 28px; }
             body { padding: 10px 6px; }
@@ -675,7 +681,21 @@
             .stat-card { padding: 10px; }
             .stat-value { font-size: 22px; margin: 2px 0; }
 
-            .modal-content { max-height: 95vh; }
+            /* 彈窗在手機上填滿且維持內部彈性高度 */
+            .modal-overlay { padding: 8px; }
+            .modal-content { height: 96vh; border-radius: 14px; }
+            .modal-header { padding: 10px 14px; }
+            .modal-tabs { padding: 4px 8px 0 8px; }
+            .tab-btn { padding: 7px 10px; font-size: 11.5px; }
+
+            /* 表單在手機端排版緊湊 */
+            .calc-form-grid { grid-template-columns: 1fr 1fr; gap: 6px; padding: 8px; }
+            .btn-recalc { grid-column: span 2; width: 100%; height: 34px; }
+
+            .plan-config-bar { padding: 8px 10px; gap: 6px; }
+            .plan-config-bar input { width: 75px; }
+            .btn-config-calc { width: 100%; margin-top: 4px; }
+
             .profit-table-wrapper { display: none; }
             .mobile-cards-container { display: flex; }
 
@@ -735,27 +755,29 @@
     <!-- 頂部按鈕 -->
     <div class="top-action-bar">
         <button class="btn-open-modal" onclick="openProfitModal()">
-            📊 點擊開啟：坐車目標獲利與階梯均注規劃表
+            📊 點擊開啟：天天樂坐車目標獲利與倍投規劃表 (單碼/多碼/階梯)
         </button>
     </div>
 
     <!-- 🌟 獨立彈出視窗 (Modal) -->
     <div class="modal-overlay" id="profit-modal" onclick="closeModalOnOverlay(event)">
         <div class="modal-content">
+            <!-- 🌟 永不消失的固定頭部 -->
             <div class="modal-header">
                 <h2>💰 天天樂坐車下注・目標倍投與階梯紀律規劃表</h2>
                 <button class="modal-close" onclick="closeProfitModal()">&times;</button>
             </div>
             
-            <!-- 🌟 三大核心分頁切換 -->
+            <!-- 🌟 永不消失的固定分頁標籤 -->
             <div class="modal-tabs">
-                <button class="tab-btn active" id="tab-btn-single-target" onclick="switchModalTab('single-target')">🌟 單碼目標倍投 (自訂起步/期期賺錢)</button>
-                <button class="tab-btn" id="tab-btn-four-target" onclick="switchModalTab('four-target')">🎯 4碼目標倍投 (自訂起步/期期賺錢)</button>
-                <button class="tab-btn" id="tab-btn-tier-track" onclick="switchModalTab('tier-track')">⚖️ 階梯均注紀律追蹤表 (不限期數)</button>
+                <button class="tab-btn active" id="tab-btn-single-target" onclick="switchModalTab('single-target')">🌟 單碼目標倍投</button>
+                <button class="tab-btn" id="tab-btn-four-target" onclick="switchModalTab('four-target')">🎯 4碼目標倍投</button>
+                <button class="tab-btn" id="tab-btn-tier-track" onclick="switchModalTab('tier-track')">⚖️ 階梯均注紀律追蹤表</button>
             </div>
 
+            <!-- 🌟 內部獨立滾動區塊 -->
             <div class="modal-body">
-                <!-- 🌟 分頁 1：單碼目標倍投 -->
+                <!-- 分頁 1：單碼目標倍投 -->
                 <div id="tab-content-single-target">
                     <div class="calc-form-grid">
                         <div class="calc-input-group">
@@ -793,7 +815,7 @@
                                     <th>當期成本</th>
                                     <th>累計總投入</th>
                                     <th>中獎彩金</th>
-                                    <th>結算淨利 (保證正獲利)</th>
+                                    <th>結算淨利</th>
                                 </tr>
                             </thead>
                             <tbody id="st-plan-tbody"></tbody>
@@ -802,7 +824,7 @@
                     <div class="mobile-cards-container" id="st-plan-mobile-cards"></div>
                 </div>
 
-                <!-- 🌟 分頁 2：4碼目標倍投 -->
+                <!-- 分頁 2：4碼目標倍投 -->
                 <div id="tab-content-four-target" style="display:none;">
                     <div class="calc-form-grid">
                         <div class="calc-input-group">
@@ -814,7 +836,7 @@
                             <input type="number" id="calc-ft-target-profit" value="1844" min="100" max="1000000" step="50">
                         </div>
                         <div class="calc-input-group">
-                            <label>📅 規劃天數 (建議4~8天)</label>
+                            <label>📅 規劃天數 (期數)</label>
                             <input type="number" id="calc-ft-days" value="6" min="1" max="20" step="1">
                         </div>
                         <div class="calc-input-group">
@@ -850,9 +872,8 @@
                     <div class="mobile-cards-container" id="ft-plan-mobile-cards"></div>
                 </div>
 
-                <!-- 🌟 分頁 3：階梯均注紀律追蹤表 (不限期數，包含單碼與4碼) -->
+                <!-- 分頁 3：階梯均注紀律追蹤表 (不限期數) -->
                 <div id="tab-content-tier-track" style="display:none;">
-                    <!-- 子玩法切換 -->
                     <div class="tier-sub-tabs">
                         <button class="sub-tab-btn active" id="sub-tier-single" onclick="switchTierSubMode('single')">🌟 單碼階梯 (3期一階)</button>
                         <button class="sub-tab-btn" id="sub-tier-four" onclick="switchTierSubMode('four')">🎯 4碼階梯 (2期一階)</button>
@@ -878,7 +899,6 @@
                         </div>
                     </div>
 
-                    <!-- 🌟 自訂參數：不限制期數，自由設定！ -->
                     <div class="plan-config-bar">
                         <label>🚗 起始車數：</label>
                         <input type="number" id="cfg-tier-cars" value="0.10" min="0.01" max="10" step="0.05">
@@ -1038,7 +1058,7 @@
         <button class="btn-submit" onclick="addRecord()">☁️ 儲存 / 補填對決紀錄至雲端 (即刻對獎)</button>
     </div>
 
-    <!-- 歷史對決 -->
+    <!-- 歷史對決 (號碼球縮小版) -->
     <div class="history-panel">
         <h2 style="font-size: 15px; margin-bottom: 12px; letter-spacing: 1px;">📊 歷史戰績矩陣對照表 (AI vs 我)</h2>
         <table>
@@ -1705,21 +1725,17 @@
         document.getElementById('ft-plan-summary').innerText = `[${days}期4碼總備援本金建議：${cumCost.toLocaleString()} 元]`;
     }
 
-    // ==============================================================
-    // 🌟 3. 不限期數・動態階梯均注紀律 (單碼 3 期一階 / 4 碼 2 期一階)
-    // ==============================================================
-    let currentTierSubMode = 'single'; // 'single' 或 'four'
+    // 3. 不限期數・動態階梯均注紀律
+    let currentTierSubMode = 'single';
     let currentTierIdx = 0;
     let customTierStartCars = 0.10;
     let customTierTotalDays = 15;
 
-    // 中文數字轉換
     function getChineseTierName(idx) {
         const cNums = ["一", "二", "三", "四", "五", "六", "七", "八", "九", "十", "十一", "十二", "十三", "十四", "十五", "十六", "十七", "十八", "十九", "二十"];
         return `第${cNums[idx] || (idx + 1)}階`;
     }
 
-    // 動態建構任意天數單碼階梯 (3期一階)
     function buildDynamicSingleTier(startCars, totalDays) {
         const costPerCar = 2755;
         const prizePerCar = 21200;
@@ -1733,7 +1749,6 @@
             if (t === 0) {
                 cars = startCars;
             } else {
-                // 確保在第3天(該階最末天)開出依然獲利至少 1000 元
                 cars = (cumCost + 1000) / (prizePerCar - (tierStep * costPerCar));
                 cars = Math.ceil(cars * 100) / 100;
                 if (cars <= plan[plan.length - 1].cars) {
@@ -1764,10 +1779,9 @@
         return plan;
     }
 
-    // 動態建構任意天數4碼階梯 (2期一階，全盤正獲利保證)
     function buildDynamicFourTier(startCars, totalDays) {
         const singleCost = 2755;
-        const roundFourCost = singleCost * 4; // 11020 元
+        const roundFourCost = singleCost * 4;
         const prizePerCar = 21200;
         let plan = [];
         let cumCost = 0;
@@ -1795,7 +1809,6 @@
                 let prize = Math.round(cars * prizePerCar);
                 let profit = prize - cumCost;
 
-                // 若該階第2天微虧，自動調高車數保證賺錢
                 if (profit < 0) {
                     let neededCars = (cumCost - curCost + 500) / (prizePerCar - roundFourCost);
                     cars = Math.ceil(neededCars * 100) / 100;
@@ -1848,7 +1861,7 @@
         customTierTotalDays = daysVal;
         currentTierIdx = 0;
         renderTierTracker();
-        alert(`✅ 已為你動態生成共 ${customTierTotalDays} 期的階梯均注計畫表！`);
+        alert(`✅ 已動態生成共 ${customTierTotalDays} 期的階梯均注計畫表！`);
     }
 
     function renderTierTracker() {
@@ -1870,7 +1883,6 @@
 
         document.getElementById('tracker-stoploss-tip').innerText = `總共 ${plan.length} 期`;
 
-        // 電腦端表格
         const tbody = document.getElementById('tier-table-body');
         tbody.innerHTML = '';
         plan.forEach((row, idx) => {
@@ -1888,7 +1900,6 @@
             tbody.appendChild(tr);
         });
 
-        // 手機端一行一格卡片流
         const mobileContainer = document.getElementById('tier-mobile-cards-container');
         mobileContainer.innerHTML = '';
         plan.forEach((row, idx) => {
