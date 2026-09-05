@@ -410,21 +410,26 @@
             font-weight: 900;
         }
         
-        .badge-list { display: flex; flex-wrap: wrap; gap: 8px; }
+        /* 🌟 手機與電腦均強制每行顯示 4 個 */
+        .badge-list { 
+            display: grid; 
+            grid-template-columns: repeat(4, 1fr); 
+            gap: 8px; 
+        }
         .info-badge { 
             display: flex; 
             flex-direction: column; 
             align-items: center; 
             background: rgba(15, 23, 42, 0.9); 
-            padding: 6px 10px; 
+            padding: 6px 4px; 
             border-radius: 10px; 
-            min-width: 48px;
+            width: 100%;
             border: 1px solid rgba(255, 255, 255, 0.1);
             position: relative;
             box-shadow: inset 0 0 8px rgba(0,0,0,0.5);
         }
-        .info-badge .num { font-size: 18px; font-weight: 900; font-family: monospace; }
-        .info-badge .desc { font-size: 10px; margin-top: 2px; font-weight: bold; }
+        .info-badge .num { font-size: 16px; font-weight: 900; font-family: monospace; }
+        .info-badge .desc { font-size: 9.5px; margin-top: 2px; font-weight: bold; text-align: center; }
 
         .info-badge.hit-today {
             border-color: #f43f5e;
@@ -513,7 +518,7 @@
             animation: numberJitter 0.35s infinite ease-in-out;
         }
 
-        /* 🌟 放大版擬真台彩氣動開獎機 (含平台右側滾動一圈導管) */
+        /* 擬真台彩氣動開獎機 */
         .taicai-machine-wrapper {
             display: flex;
             flex-direction: column;
@@ -580,14 +585,13 @@
             margin-top: 6px;
         }
         
-        /* 🌟 右側環繞滾動一圈的導管軌道 (精準對應右側平台) */
         .rolling-platform-right {
             position: absolute;
-            top: 25px; right: -40px;
-            width: 135px; height: 18px;
+            top: 25px; right: -45px;
+            width: 145px; height: 20px;
             background: linear-gradient(90deg, #334155, #94a3b8, #475569, #334155);
             border: 2px solid #cbd5e1;
-            border-radius: 8px;
+            border-radius: 10px;
             z-index: 25;
             box-shadow: 0 0 15px rgba(56,189,248,0.6);
         }
@@ -602,7 +606,6 @@
             transition: transform 0.05s linear;
         }
 
-        /* 電視轉播大球特寫 */
         .ball-spotlight-overlay {
             position: absolute;
             top: 15px; left: 50%; transform: translateX(-50%) scale(0);
@@ -832,7 +835,7 @@
         <h1>⚡ 539 光量子 AI 科技對決擂台 ⚡</h1>
         <div class="cloud-badge">
             <div class="dot"></div>
-            <span>Firebase 雲端 539 量子網絡同步中</span>
+            <span id="live-draw-date-badge">Firebase 雲端 539 量子網絡同步中</span>
         </div>
     </header>
 
@@ -1053,7 +1056,7 @@
                 <div style="font-size:12px; color:#64748b;">累積開獎數據後顯示...</div>
             </div>
 
-            <!-- 機率矩陣推薦 (改為按「準備發大財」才啟動) -->
+            <!-- 機率矩陣推薦 (按「準備發大財」才會逐顆跳號開獎) -->
             <div class="recom-section">
                 <h3 style="margin-bottom:6px; border:none; padding-bottom:0; color:#cbd5e1;">
                     <span>🎯 AI 動態開出機率矩陣推薦 (三星 / 四星)</span>
@@ -1067,26 +1070,26 @@
             </div>
         </div>
 
-        <!-- 🌟 放大版台彩官方實景氣動開獎機 (含右側平台環繞管) -->
+        <!-- 🌟 旗艦大版台彩氣動開獎機 (球從氣缸吸入右側管道滾動一圈 & 顯示正確日期) -->
         <div class="tool-card">
             <h3 style="color:var(--neon-purple);">🎰 台彩官方實景・氣動直立式開獎機 (旗艦大版)</h3>
             <div class="taicai-machine-wrapper">
-                <!-- 電視轉播動態特寫放大鏡視窗 -->
+                <!-- 電視轉播大球特寫 -->
                 <div class="ball-spotlight-overlay" id="spotlight-window">01</div>
 
                 <div class="taicai-studio">
-                    <!-- 放大版透明氣缸 -->
+                    <!-- 透明氣缸 -->
                     <div class="cylinder-chamber" id="airflow-cylinder">
                         <div class="cylinder-base"></div>
                     </div>
-                    <!-- 放大版黑色控制箱與右側環繞滾動管道 -->
+                    <!-- 黑色控制箱與右側環繞滾動管道 -->
                     <div class="power-box">
                         <div class="rolling-platform-right"></div>
-                        <div style="font-size:11px; color:#94a3b8; margin-bottom:4px; font-weight:bold;">LIVE 539</div>
+                        <div style="font-size:11px; color:#94a3b8; margin-bottom:2px; font-weight:bold;" id="live-draw-label">LIVE 539</div>
                         <div class="power-box-screen" id="power-screen">READY</div>
                     </div>
                 </div>
-                <!-- 底部開獎球槽 -->
+                <!-- 底部開獎球槽 (5 顆) -->
                 <div class="machine-balls" id="machine-balls">
                     <div class="machine-ball">?</div><div class="machine-ball">?</div><div class="machine-ball">?</div><div class="machine-ball">?</div><div class="machine-ball">?</div>
                 </div>
@@ -1095,7 +1098,25 @@
         </div>
     </div>
 
-    <!-- 統一輸入/補填面板 -->
+    <!-- 歷史對決表格 -->
+    <div class="history-panel">
+        <h2 style="font-size: 15px; margin-bottom: 12px; letter-spacing: 1px;">📊 539 歷史戰績矩陣對照表 (AI vs 我)</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>📅 日期</th>
+                    <th>🤖 AI 預測</th>
+                    <th>🧑 我的預測</th>
+                    <th>📺 開獎 5 碼</th>
+                    <th>單期霸主</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody id="history-tbody"></tbody>
+        </table>
+    </div>
+
+    <!-- 🌟 新增預測 / 事後補填面板 (已移至一鍵輸入上方) -->
     <div class="input-panel">
         <h2>📝 539 新增預測 / 事後補填 (若日期已存在，在此填寫按存檔即自動補入)</h2>
         <div class="form-row">
@@ -1119,24 +1140,6 @@
             </div>
         </div>
         <button class="btn-submit" onclick="addRecordWithAuth()">☁️ 儲存 / 補填 539 對決紀錄至雲端 (即刻對獎)</button>
-    </div>
-
-    <!-- 歷史對決表格 -->
-    <div class="history-panel">
-        <h2 style="font-size: 15px; margin-bottom: 12px; letter-spacing: 1px;">📊 539 歷史戰績矩陣對照表 (AI vs 我)</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>📅 日期</th>
-                    <th>🤖 AI 預測</th>
-                    <th>🧑 我的預測</th>
-                    <th>📺 開獎 5 碼</th>
-                    <th>單期霸主</th>
-                    <th>操作</th>
-                </tr>
-            </thead>
-            <tbody id="history-tbody"></tbody>
-        </table>
     </div>
 
     <!-- 多期開獎號碼一鍵貼上面板 -->
@@ -1568,7 +1571,7 @@
         }).join('');
     }
 
-    // 🌟 點擊「🚀 準備發大財」才啟動的期待感開獎動畫
+    // 🌟 點擊「🚀 準備發大財」才啟動的逐顆跳號開獎動畫
     window.refreshRecommendationsWithSuspense = async function() {
         if (!probabilityRankedBalls || probabilityRankedBalls.length < 12) return;
 
@@ -1615,7 +1618,7 @@
             
             ballsContainer.innerHTML = '';
             for (let bIdx = 0; bIdx < targetBalls.length; bIdx++) {
-                await new Promise(r => setTimeout(r, 200));
+                await new Promise(r => setTimeout(r, 250));
                 let b = targetBalls[bIdx];
                 ballsContainer.innerHTML += `<div class="quantum-ball ${b.color}">${b.num.toString().padStart(2, '0')}</div>`;
             }
@@ -1715,6 +1718,29 @@
         }
     }
 
+    // 計算今日開獎日期（若為禮拜日則自動順延顯示禮拜一）
+    function getValid539DrawDate() {
+        let d = new Date();
+        let dayOfWeek = d.getDay(); // 0 是禮拜日
+        if (dayOfWeek === 0) {
+            d.setDate(d.getDate() + 1); // 禮拜日順延一天為禮拜一
+        }
+        let yyyy = d.getFullYear();
+        let mm = String(d.getMonth() + 1).padStart(2, '0');
+        let dd = String(d.getDate()).padStart(2, '0');
+        return `${yyyy}-${mm}-${dd}`;
+    }
+
+    window.onload = function() {
+        document.getElementById('input-date').value = new Date().toISOString().split('T')[0];
+        taicaiMachine = new TaicaiAirMachine('airflow-cylinder');
+
+        // 更新頂部日期標籤 (禮拜日自動顯示禮拜一)
+        let drawDateStr = getValid539DrawDate();
+        document.getElementById('live-draw-date-badge').innerText = `LIVE 539 開獎日期：${drawDateStr} (週日公休自動順延)`;
+        document.getElementById('live-draw-label').innerText = drawDateStr;
+    };
+
     window.editDate = async function(id, oldDate) {
         let pwd = prompt("請輸入安全授權密碼：");
         if (pwd !== "110119110") return alert("❌ 密碼錯誤！");
@@ -1745,7 +1771,7 @@
     };
 </script>
 
-<!-- 🌟 擬真台彩氣動開獎機 (球從氣缸往右側平台導管滾動一圈) -->
+<!-- 🌟 擬真台彩氣動開獎機 (球從氣缸吸入右側管道滾動一圈 & 顯示 BALL 5) -->
 <script>
     class TaicaiAirMachine {
         constructor(chamberId) {
@@ -1823,15 +1849,15 @@
             let el = ballObj.el;
             let ballNumStr = ballObj.id.toString().padStart(2, '0');
 
-            // 1. 從氣缸內往右上方吸出，並順著右側平台導管滾動一圈
+            // 1. 球往右側管道吸入並繞行一圈滾過去
             el.style.transition = "all 1.1s cubic-bezier(0.25, 0.8, 0.25, 1)";
-            el.style.transform = `translate(80px, -60px) scale(1.2)`;
+            el.style.transform = `translate(95px, -65px) scale(1.25)";
             el.style.zIndex = "100";
 
             await new Promise(r => setTimeout(r, 1100));
             el.style.opacity = "0";
 
-            // 2. 彈出電視轉播大球特寫鏡頭 (Spotlight 放大顯示)
+            // 2. 電視轉播大球特寫鏡頭 (Spotlight 放大顯示)
             this.spotlight.innerText = ballNumStr;
             this.spotlight.classList.add('show');
 
@@ -1847,11 +1873,6 @@
     }
 
     let taicaiMachine;
-
-    window.onload = function() {
-        document.getElementById('input-date').value = new Date().toISOString().split('T')[0];
-        taicaiMachine = new TaicaiAirMachine('airflow-cylinder');
-    };
 
     async function startTaicaiRoll() {
         const btn = document.getElementById('btn-roll');
