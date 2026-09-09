@@ -656,6 +656,35 @@
         .edit-btn { background: #f1f5f9; color: #334155; }
         .edit-btn:hover { background: #e2e8f0; }
 
+        /* 新增機率卡片專屬樣式 */
+        .prob-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+        .prob-header {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            width: 30%;
+        }
+        .prob-title { font-size: 13px; font-weight: 900; color: #0f172a; }
+        .prob-count { font-size: 11px; color: #64748b; font-weight: bold; font-family: monospace;}
+        .prob-stats {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 4px;
+            width: 70%;
+        }
+        .prob-pct { font-size: 15px; font-weight: 900; color: #ef4444; font-family: monospace; }
+        .prob-cycle { font-size: 11px; color: #0284c7; font-weight: bold; background: #e0f2fe; padding: 2px 6px; border-radius: 4px; }
+
         @media (max-width: 768px) {
             :root { --ball-size: 28px; }
             body { padding: 10px 6px; }
@@ -739,9 +768,7 @@
         </button>
     </div>
 
-    <!-- 收益與倍投Modal保持原樣 -->
     <div class="modal-overlay" id="profit-modal" onclick="closeModalOnOverlay(event)">
-        <!-- Modal Code Omitted to match length, everything from the original modal code is preserved -->
         <div class="modal-content">
             <div class="modal-header">
                 <h2>💰 天天樂坐車下注・目標倍投與階梯紀律規劃表</h2>
@@ -756,7 +783,6 @@
 
             <div class="modal-body">
                 <div id="tab-content-single-target">
-                    <!-- Original single target content -->
                     <div class="calc-form-grid">
                         <div class="calc-input-group">
                             <label>🚗 第 1 期起步車數</label>
@@ -803,7 +829,6 @@
                 </div>
 
                 <div id="tab-content-four-target" style="display:none;">
-                    <!-- Original four target content -->
                     <div class="calc-form-grid">
                         <div class="calc-input-group">
                             <label>🚗 第 1 期每碼車數</label>
@@ -851,7 +876,6 @@
                 </div>
 
                 <div id="tab-content-tier-track" style="display:none;">
-                    <!-- Original tier track content -->
                     <div class="tier-sub-tabs">
                         <button class="sub-tab-btn active" id="sub-tier-single" onclick="switchTierSubMode('single')">🌟 單碼階梯 (3期一階)</button>
                         <button class="sub-tab-btn" id="sub-tier-four" onclick="switchTierSubMode('four')">🎯 4碼階梯 (2期一階)</button>
@@ -1006,43 +1030,21 @@
             </div>
         </div>
 
-        <!-- 👇 這裡是為您新增的 1800碰 / 9000碰 包牌計算與水位監控卡片 👇 -->
+        <!-- 👇 這裡是為您修改的：智能連碰機率與週期預測器 👇 -->
         <div class="tool-card">
             <h3 style="color: #059669;">
-                <span>🧮 智能連碰包牌計算機</span>
-                <span style="font-size:11px; color:#64748b; font-weight:normal;">(含 1800/9000 風控監測)</span>
+                <span>🔮 智能連碰機率與週期預測器</span>
+                <span style="font-size:11px; color:#64748b; font-weight:normal;">(超幾何分佈機率算法)</span>
             </h3>
-            <div class="calc-form-grid" style="grid-template-columns: repeat(2, 1fr); padding: 12px; gap: 8px; margin-bottom: 8px;">
-                <div class="calc-input-group">
-                    <label>🔢 選擇包牌球數 (2~39)</label>
-                    <input type="number" id="dash-combo-balls" value="22" min="2" max="39">
-                </div>
-                <div class="calc-input-group">
-                    <label>🎯 操作模式</label>
-                    <select id="dash-combo-mode" style="padding: 7px 9px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 6px; font-size: 13px; font-family: monospace; font-weight: bold; outline: none;">
-                        <option value="連碰">標準連碰</option>
-                    </select>
-                </div>
-                <div class="calc-input-group">
-                    <label>💰 二/三星單碰成本</label>
-                    <input type="text" id="dash-cost23" value="72 / 65">
-                </div>
-                <div class="calc-input-group">
-                    <label>💰 四星單碰成本</label>
-                    <input type="number" id="dash-cost4" value="58">
-                </div>
-                <button class="btn-recalc" onclick="calcDashCombos()" style="grid-column: 1 / -1; width: 100%;">⚡ 演算碰數與總成本</button>
+            
+            <div style="display:flex; gap:10px; align-items:center; background:#f8fafc; padding:10px; border-radius:10px; border:1px solid #e2e8f0; margin-bottom:12px;">
+                <label style="font-size:13px; font-weight:900; color:#334155; white-space:nowrap;">🔢 輸入包牌總球數：</label>
+                <input type="number" id="dash-combo-balls" value="22" min="2" max="39" style="padding:6px 10px; border:1.5px solid #cbd5e1; border-radius:6px; font-family:monospace; font-weight:900; outline:none; width:80px; font-size:14px;">
+                <button onclick="calcDashCombos()" style="background:linear-gradient(135deg, #d97706, #b45309); color:white; border:none; padding:8px 14px; font-size:12px; font-weight:900; border-radius:6px; cursor:pointer; flex:1;">⚡ 精算下期機率</button>
             </div>
 
-            <div class="status-grid" id="dash-combo-results" style="margin-top: 12px;">
-                <!-- JS 即時渲染運算結果在此 -->
-            </div>
-
-            <div style="font-size: 11px; color: #475569; font-weight: bold; background: #fffbeb; padding: 10px; border-radius: 8px; border: 1px solid #fde68a; line-height: 1.5; margin-top: 10px;">
-                ⚠️ <span style="color:#b45309;">風控水位監測</span>：地下系統對於高賠率玩法多有注單限制。<br>
-                • 三星防護線常設於 <strong style="color:#ef4444;">1,800 碰</strong> (約包22球)。<br>
-                • 四星防護線常設於 <strong style="color:#ef4444;">9,000 碰</strong> (約包23球)。<br>
-                <span style="color:#64748b;">超出上述安全碰數時，強烈建議採用「立柱」分散或分批拆單，避免系統退單拒收！</span>
+            <div id="dash-combo-results">
+                <!-- JS 即時渲染機率預測結果在此 -->
             </div>
         </div>
         <!-- 👆 新增結束 👆 -->
@@ -1736,10 +1738,11 @@
         document.getElementById('ft-plan-summary').innerText = `[${days}期4碼總備援本金建議：${cumCost.toLocaleString()} 元]`;
     }
 
-    // ⭐⭐ 新增：連碰與風控計算函數 ⭐⭐
-    function calculateComboC(n, r) {
-        if (n < r) return 0;
+    // ⭐⭐ 新增：超幾何分佈機率運算算法與週期預測 ⭐⭐
+    function choose(n, r) {
+        if (r < 0 || r > n) return 0;
         if (r === 0 || n === r) return 1;
+        if (r > n / 2) r = n - r;
         let res = 1;
         for (let i = 1; i <= r; i++) {
             res = res * (n - i + 1) / i;
@@ -1748,45 +1751,81 @@
     }
 
     window.calcDashCombos = function() {
-        let balls = parseInt(document.getElementById('dash-combo-balls').value) || 0;
+        let k = parseInt(document.getElementById('dash-combo-balls').value) || 0;
+        if (k < 2 || k > 39) {
+            alert("請輸入有效的包牌球數 (2~39)！");
+            return;
+        }
         
-        let cost23Str = document.getElementById('dash-cost23').value;
-        let parts = cost23Str.split('/');
-        let cost2 = parseFloat(parts[0]) || 72;
-        let cost3 = parts.length > 1 ? (parseFloat(parts[1]) || 65) : 65;
-        let cost4 = parseFloat(document.getElementById('dash-cost4').value) || 58;
+        // 算出碰數
+        let c2 = choose(k, 2);
+        let c3 = choose(k, 3);
+        let c4 = choose(k, 4);
 
-        let c2 = calculateComboC(balls, 2);
-        let c3 = calculateComboC(balls, 3);
-        let c4 = calculateComboC(balls, 4);
+        // 天天樂總可能結果 C(39, 5)
+        let totalWays = 575757;
 
-        let tot2 = c2 * cost2;
-        let tot3 = c3 * cost3;
-        let tot4 = c4 * cost4;
+        // 計算剛好命中 2~5 顆球的機率權重 (Hypergeometric distribution)
+        let hit2 = choose(k, 2) * choose(39 - k, 3);
+        let hit3 = choose(k, 3) * choose(39 - k, 2);
+        let hit4 = choose(k, 4) * choose(39 - k, 1);
+        let hit5 = choose(k, 5) * choose(39 - k, 0);
 
-        let c3Class = c3 >= 1800 ? "highlight" : "win";
-        let c4Class = c4 >= 9000 ? "highlight" : "win";
-        
-        let c3Alert = c3 >= 1800 ? `<div style="font-size:10px; color:#dc2626; margin-top:2px;">⚠️ 達/超 1800 碰</div>` : ``;
-        let c4Alert = c4 >= 9000 ? `<div style="font-size:10px; color:#dc2626; margin-top:2px;">⚠️ 達/超 9000 碰</div>` : ``;
+        // 命中率 = 該星級以上所有的可能結果加總 / 總結果數
+        let p2_plus = (hit2 + hit3 + hit4 + hit5) / totalWays;
+        let p3_plus = (hit3 + hit4 + hit5) / totalWays;
+        let p4_plus = (hit4 + hit5) / totalWays;
 
+        // 轉換為百分比 (%)
+        let pct2 = (p2_plus * 100).toFixed(1);
+        let pct3 = (p3_plus * 100).toFixed(2); // 三星取小數兩位
+        let pct4 = (p4_plus * 100).toFixed(3); // 四星取小數三位
+
+        // 週期預測 (1 / 命中率 = 平均幾期開一次)
+        let cycle2 = p2_plus > 0 ? (1 / p2_plus).toFixed(1) : "∞";
+        let cycle3 = p3_plus > 0 ? (1 / p3_plus).toFixed(1) : "∞";
+        let cycle4 = p4_plus > 0 ? (1 / p4_plus).toFixed(1) : "∞";
+
+        // 動態渲染 HTML
         let html = `
-            <div class="status-item">
-                <div class="label">二星 (取2)</div>
-                <div class="val">${c2.toLocaleString()} 碰</div>
-                <div style="font-size:11px; color:#64748b; margin-top:4px;">成本: $${tot2.toLocaleString()}</div>
+            <div class="prob-row">
+                <div class="prob-header">
+                    <span class="prob-title" style="color:#059669;">🌟 二星 (取2)</span>
+                    <span class="prob-count">${c2.toLocaleString()} 碰</span>
+                </div>
+                <div class="prob-stats">
+                    <div style="font-size:11px; color:#475569; font-weight:bold;">下一期中獎機率</div>
+                    <div class="prob-pct" style="color:#10b981;">${pct2}%</div>
+                    <div class="prob-cycle">🔄 週期：約 ${cycle2} 期 開一次</div>
+                </div>
             </div>
-            <div class="status-item" style="${c3 >= 1800 ? 'background:#fef2f2; border-color:#fca5a5;' : ''}">
-                <div class="label">三星 (取3)</div>
-                <div class="val ${c3Class}">${c3.toLocaleString()} 碰</div>
-                ${c3Alert}
-                <div style="font-size:11px; color:#64748b; margin-top:4px;">成本: $${tot3.toLocaleString()}</div>
+
+            <div class="prob-row" style="${c3 >= 1500 ? 'border-color:#fca5a5; background:#fef2f2;' : ''}">
+                <div class="prob-header">
+                    <span class="prob-title" style="color:#dc2626;">🎯 三星 (取3)</span>
+                    <span class="prob-count">${c3.toLocaleString()} 碰</span>
+                </div>
+                <div class="prob-stats">
+                    <div style="font-size:11px; color:#475569; font-weight:bold;">下一期中獎機率</div>
+                    <div class="prob-pct">${pct3}%</div>
+                    <div class="prob-cycle" style="background:#fee2e2; color:#b91c1c;">🔄 週期：約 ${cycle3} 期 開一次</div>
+                </div>
             </div>
-            <div class="status-item" style="${c4 >= 9000 ? 'background:#fef2f2; border-color:#fca5a5;' : ''}">
-                <div class="label">四星 (取4)</div>
-                <div class="val ${c4Class}">${c4.toLocaleString()} 碰</div>
-                ${c4Alert}
-                <div style="font-size:11px; color:#64748b; margin-top:4px;">成本: $${tot4.toLocaleString()}</div>
+
+            <div class="prob-row" style="${c4 >= 5000 ? 'border-color:#c4b5fd; background:#f5f3ff;' : ''}">
+                <div class="prob-header">
+                    <span class="prob-title" style="color:#7c3aed;">🏆 四星 (取4)</span>
+                    <span class="prob-count">${c4.toLocaleString()} 碰</span>
+                </div>
+                <div class="prob-stats">
+                    <div style="font-size:11px; color:#475569; font-weight:bold;">下一期中獎機率</div>
+                    <div class="prob-pct" style="color:#7c3aed;">${pct4}%</div>
+                    <div class="prob-cycle" style="background:#ede9fe; color:#6d28d9;">🔄 週期：約 ${cycle4} 期 開一次</div>
+                </div>
+            </div>
+            
+            <div style="font-size:11px; color:#475569; background:#e2e8f0; padding:8px; border-radius:6px; margin-top:10px; line-height:1.4;">
+                💡 <b>預測說明</b>：本系統採用『超幾何分佈 (Hypergeometric Distribution)』進行量子機率運算。若您包 <strong style="color:#0284c7;">${k}</strong> 顆球，明天直接中三星的真實機率為 <strong>${pct3}%</strong>，統計學上平均需要等待 <strong>${cycle3} 天</strong> 才會開出一次。
             </div>
         `;
 
@@ -2282,7 +2321,7 @@
         m1 = new PhysicsMachine('physics-container-1', mSize);
         m2 = new PhysicsMachine('physics-container-2', mSize);
         
-        // 初始化載入風控計算機結果
+        // 初始化載入機率預測計算機結果
         if(typeof calcDashCombos === 'function') calcDashCombos();
     };
 
