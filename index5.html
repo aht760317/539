@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>今彩 539 光量子 AI 科技對決擂台 (自由號碼版)</title>
+    <title>今彩 539 光量子 AI 科技對決擂台 (1800碰/9000碰 柱碰旗艦版)</title>
     <style>
         :root {
             --bg-color: #0b0f19; 
@@ -91,6 +91,7 @@
         }
         .btn-open-modal:hover { filter: brightness(1.15); transform: translateY(-1px); }
 
+        /* 彈出視窗 */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -454,6 +455,71 @@
         .cold-badge .num { color: #38bdf8; text-shadow: 0 0 8px rgba(56, 189, 248, 0.5); }
         .cold-badge .desc { color: #0284c7; }
 
+        /* 🌟 1800碰 / 9000碰 柱碰即時看板 */
+        .touch-tracker-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+        .touch-card {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.9) 100%);
+            border: 1.5px solid rgba(255, 255, 255, 0.12);
+            border-radius: 14px;
+            padding: 14px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            position: relative;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+        .touch-card::before {
+            content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4.5px; border-radius: 14px 0 0 14px;
+        }
+        .touch-card.t-1800::before { background: #f59e0b; box-shadow: 0 0 10px #f59e0b; }
+        .touch-card.t-9000::before { background: #ec4899; box-shadow: 0 0 10px #ec4899; }
+
+        .touch-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .touch-card-title { font-size: 14px; font-weight: 900; }
+        .touch-status-badge {
+            font-size: 11px;
+            font-weight: 900;
+            padding: 3px 8px;
+            border-radius: 6px;
+        }
+        .badge-alert { background: rgba(244, 63, 94, 0.2); color: #fb7185; border: 1px solid #f43f5e; }
+        .badge-ready { background: rgba(251, 191, 36, 0.2); color: #fbbf24; border: 1px solid #f59e0b; }
+        .badge-ok { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid #10b981; }
+
+        .touch-stats-row {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+            padding-bottom: 8px;
+        }
+        .touch-miss-num {
+            font-size: 28px;
+            font-weight: 900;
+            font-family: monospace;
+            color: #ffffff;
+        }
+        .touch-prob-val {
+            font-size: 18px;
+            font-weight: 900;
+            font-family: monospace;
+            color: #38bdf8;
+        }
+        .touch-sub-desc {
+            font-size: 11px;
+            color: #94a3b8;
+            line-height: 1.4;
+        }
+
         /* 推薦卡片 */
         .recom-section {
             margin-top: 16px;
@@ -760,9 +826,9 @@
         .edit-btn { background: rgba(255, 255, 255, 0.05); color: #cbd5e1; }
         .edit-btn:hover { background: rgba(255, 255, 255, 0.1); }
 
-        /* 手機端排版 */
         @media (max-width: 860px) {
             .tools-panel { grid-template-columns: 1fr; }
+            .touch-tracker-grid { grid-template-columns: 1fr; }
         }
         @media (max-width: 768px) {
             :root { --ball-size: 28px; }
@@ -861,7 +927,6 @@
             </div>
 
             <div class="modal-body">
-                <!-- 分頁 1：單碼目標倍投 -->
                 <div id="tab-content-single-target">
                     <div class="calc-form-grid">
                         <div class="calc-input-group">
@@ -908,7 +973,6 @@
                     <div class="mobile-cards-container" id="st-plan-mobile-cards"></div>
                 </div>
 
-                <!-- 分頁 2：4碼目標倍投 -->
                 <div id="tab-content-four-target" style="display:none;">
                     <div class="calc-form-grid">
                         <div class="calc-input-group">
@@ -956,7 +1020,6 @@
                     <div class="mobile-cards-container" id="ft-plan-mobile-cards"></div>
                 </div>
 
-                <!-- 分頁 3：階梯均注紀律追蹤表 -->
                 <div id="tab-content-tier-track" style="display:none;">
                     <div class="tier-sub-tabs">
                         <button class="sub-tab-btn active" id="sub-tier-single" onclick="switchTierSubMode('single')">🌟 單碼階梯 (3期一階)</button>
@@ -1034,6 +1097,53 @@
             <div class="stat-title" style="color:var(--draw-color)">🏆 目前勝率霸主</div>
             <div class="stat-value" id="pk-winner" style="color:var(--draw-color); font-size:18px;">等待開獎</div>
             <div class="stat-sub">以平均命中率判定</div>
+        </div>
+    </div>
+
+    <!-- 🌟 新增：1800碰 / 9000碰 柱碰即時看板 -->
+    <div class="touch-tracker-grid">
+        <div class="touch-card t-1800">
+            <div class="touch-card-header">
+                <div class="touch-card-title" style="color:#fbbf24;">⚡ 1800 碰 (三星柱碰・9×10×20)</div>
+                <div class="touch-status-badge badge-ready" id="t1800-badge">計算中...</div>
+            </div>
+            <div class="touch-stats-row">
+                <div>
+                    <span style="font-size:11px; color:#94a3b8;">連續未開：</span>
+                    <span class="touch-miss-num" id="t1800-miss-count">0</span>
+                    <span style="font-size:12px; color:#94a3b8;">期</span>
+                </div>
+                <div>
+                    <span style="font-size:11px; color:#94a3b8;">下期開出機率：</span>
+                    <span class="touch-prob-val" id="t1800-prob-val">0.0%</span>
+                </div>
+            </div>
+            <div class="touch-sub-desc">
+                <strong>柱位規則：</strong>第1柱(10-18) | 第2柱(20-29) | 第3柱(01-09+19+30-39)<br>
+                <strong>判定標準：</strong>當期開獎 5 碼同時跨足此 3 柱即中！
+            </div>
+        </div>
+
+        <div class="touch-card t-9000">
+            <div class="touch-card-header">
+                <div class="touch-card-title" style="color:#f472b6;">🎯 9000 碰 (四星柱碰・9×10×10×10)</div>
+                <div class="touch-status-badge badge-ready" id="t9000-badge">計算中...</div>
+            </div>
+            <div class="touch-stats-row">
+                <div>
+                    <span style="font-size:11px; color:#94a3b8;">連續未開：</span>
+                    <span class="touch-miss-num" id="t9000-miss-count">0</span>
+                    <span style="font-size:12px; color:#94a3b8;">期</span>
+                </div>
+                <div>
+                    <span style="font-size:11px; color:#94a3b8;">下期開出機率：</span>
+                    <span class="touch-prob-val" style="color:#ec4899;" id="t9000-prob-val">0.0%</span>
+                </div>
+            </div>
+            <div class="touch-sub-desc">
+                <strong>柱位規則：</strong>第1柱(01-09) | 第2柱(10-19) | 第3柱(20-29) | 第4柱(30-39)<br>
+                <strong>判定標準：</strong>當期開獎 5 碼四個區間各開出至少 1 顆即中！
+            </div>
         </div>
     </div>
 
@@ -1228,7 +1338,6 @@
         return nums;
     }
 
-    // 🌟 自由選號判定：只要有 1 個號碼以上即判定為有效預測
     function isValidPrediction(nums) {
         return nums && nums.length > 0;
     }
@@ -1392,7 +1501,6 @@
         let myNums = parseNumbers(myInput);
         let drawNums = parseNumbers(drawInput);
 
-        // 🌟 解除碼數強制限制，輸入不合規則即提示
         if (aiInput.trim() !== "" && aiNums.length === 0) return alert("🤖 AI 號碼輸入無效，請確認號碼為 1~39！");
         if (myInput.trim() !== "" && myNums.length === 0) return alert("🧑 我的號碼輸入無效，請確認號碼為 1~39！");
         if (drawInput.trim() !== "" && drawNums.length !== 5) return alert("📺 實際開獎號碼如果有填，必須剛好是 5 碼！");
@@ -1484,9 +1592,82 @@
         }
     };
 
+    // 🌟 1800碰 / 9000碰 判定邏輯
+    function isHit1800(draw) {
+        if (!draw || draw.length < 5) return false;
+        let hasCol1 = draw.some(n => n >= 10 && n <= 18);
+        let hasCol2 = draw.some(n => n >= 20 && n <= 29);
+        let hasCol3 = draw.some(n => (n >= 1 && n <= 9) || n === 19 || (n >= 30 && n <= 39));
+        return hasCol1 && hasCol2 && hasCol3;
+    }
+
+    function isHit9000(draw) {
+        if (!draw || draw.length < 5) return false;
+        let hasCol1 = draw.some(n => n >= 1 && n <= 9);
+        let hasCol2 = draw.some(n => n >= 10 && n <= 19);
+        let hasCol3 = draw.some(n => n >= 20 && n <= 29);
+        let hasCol4 = draw.some(n => n >= 30 && n <= 39);
+        return hasCol1 && hasCol2 && hasCol3 && hasCol4;
+    }
+
+    function analyzeTouchTrackers(completedDraws) {
+        if (!completedDraws || completedDraws.length === 0) return;
+
+        let miss1800 = 0;
+        for (let d = 0; d < completedDraws.length; d++) {
+            if (isHit1800(completedDraws[d].draw)) break;
+            miss1800++;
+        }
+
+        let miss9000 = 0;
+        for (let d = 0; d < completedDraws.length; d++) {
+            if (isHit9000(completedDraws[d].draw)) break;
+            miss9000++;
+        }
+
+        // 理論單期機率: 1800碰約 37.7%, 9000碰約 26.1%
+        let baseP1800 = 0.377;
+        let baseP9000 = 0.261;
+
+        // 加權泊松反彈動能機率
+        let nextProb1800 = Math.min(96.5, (1 - Math.pow(1 - baseP1800, miss1800 + 1)) * 100);
+        let nextProb9000 = Math.min(94.8, (1 - Math.pow(1 - baseP9000, miss9000 + 1)) * 100);
+
+        document.getElementById('t1800-miss-count').innerText = miss1800;
+        document.getElementById('t1800-prob-val').innerText = nextProb1800.toFixed(1) + '%';
+        let badge1800 = document.getElementById('t1800-badge');
+        if (miss1800 >= 5) {
+            badge1800.className = "touch-status-badge badge-alert";
+            badge1800.innerText = "🚨 極限反彈警戒";
+        } else if (miss1800 >= 2) {
+            badge1800.className = "touch-status-badge badge-ready";
+            badge1800.innerText = "⚡ 蓄勢開出中";
+        } else {
+            badge1800.className = "touch-status-badge badge-ok";
+            badge1800.innerText = "✅ 近期剛開出";
+        }
+
+        document.getElementById('t9000-miss-count').innerText = miss9000;
+        document.getElementById('t9000-prob-val').innerText = nextProb9000.toFixed(1) + '%';
+        let badge9000 = document.getElementById('t9000-badge');
+        if (miss9000 >= 7) {
+            badge9000.className = "touch-status-badge badge-alert";
+            badge9000.innerText = "🚨 嚴重偏離必開";
+        } else if (miss9000 >= 3) {
+            badge9000.className = "touch-status-badge badge-ready";
+            badge9000.innerText = "⚡ 進入高期望期";
+        } else {
+            badge9000.className = "touch-status-badge badge-ok";
+            badge9000.innerText = "✅ 處於常規區間";
+        }
+    }
+
     function analyzeHotColdNumbers() {
         let completedDraws = battleHistory.filter(item => !item.isPending && item.draw && item.draw.length === 5);
         if(completedDraws.length === 0) return;
+
+        // 計算柱碰指標
+        analyzeTouchTrackers(completedDraws);
 
         let latestRecord = completedDraws[0];
         let latestDrawNums = latestRecord ? latestRecord.draw : [];
@@ -1576,7 +1757,6 @@
         }).join('');
     }
 
-    // 🌟 四大模式推薦矩陣
     window.refreshRecommendationsWithSuspense = async function() {
         const container = document.getElementById('recom-container');
         container.innerHTML = `<div style="font-size:13px; color:#fbbf24; font-weight:bold; padding:15px; text-align:center;">🔮 正在演算【四大模式】三星與四星矩陣...</div>`;
@@ -1700,7 +1880,6 @@
 
             const genDrawBalls = (nums) => `<div class="num-container">` + (nums || []).map(n => `<div class="num-ball draw">${n.toString().padStart(2,'0')}</div>`).join('') + `</div>`;
 
-            // 🌟 即時動態呈現號碼顆數與命中數
             let aiColumnHtml = isValidPrediction(item.ai)
                 ? genBalls(item.ai) + (!item.isPending && hasDraw ? `<div style="font-size:11px; margin-top:3px; color:var(--ai-color); font-weight:bold;">中 ${item.aiHits} 顆 (${item.ai.length}碼)</div>` : '')
                 : `<span class="empty-label">— 待補 —</span>`;
