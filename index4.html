@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>天天樂 光量子 AI 科技對決擂台 (Firebase 雲端同步版)</title>
+    <title>天天樂 光量子 AI 科技對決擂台 (智能四星穩開加強版)</title>
     <style>
         :root {
             --bg-color: #f1f5f9; 
@@ -88,7 +88,6 @@
         }
         .btn-open-modal:hover { filter: brightness(1.1); transform: translateY(-1px); }
 
-        /* 🌟 修復核心：獨立彈出視窗 (手機版頂部固定且支援內部獨立滾動) */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -106,11 +105,11 @@
             border-radius: 18px;
             width: 100%;
             max-width: 1050px;
-            height: 90vh; /* 鎖定最大高度 */
+            height: 90vh;
             display: flex;
             flex-direction: column;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
-            overflow: hidden; /* 防止子元素撐爆 */
+            overflow: hidden;
             animation: modalPop 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         @keyframes modalPop {
@@ -124,7 +123,7 @@
             align-items: center;
             justify-content: space-between;
             background: #fffbeb;
-            flex-shrink: 0; /* 永不被壓縮 */
+            flex-shrink: 0;
         }
         .modal-header h2 {
             font-size: 15px;
@@ -144,7 +143,6 @@
             padding: 0 4px;
         }
         
-        /* 🌟 分頁導航欄：橫向滑動且固定在頂部 */
         .modal-tabs {
             display: flex;
             background: #f8fafc;
@@ -153,7 +151,7 @@
             gap: 6px;
             overflow-x: auto;
             white-space: nowrap;
-            flex-shrink: 0; /* 固定頂部 */
+            flex-shrink: 0;
             -webkit-overflow-scrolling: touch;
         }
         .modal-tabs::-webkit-scrollbar { display: none; }
@@ -176,7 +174,6 @@
             border-top: 3px solid #d97706;
         }
         
-        /* 🌟 內部滾動區塊：只有這裡負責上下滑動 */
         .modal-body {
             padding: 14px 16px;
             overflow-y: auto;
@@ -185,7 +182,6 @@
             -webkit-overflow-scrolling: touch;
         }
 
-        /* 參數輸入面板 */
         .calc-form-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
@@ -224,7 +220,6 @@
         }
         .btn-recalc:hover { filter: brightness(1.1); }
 
-        /* 狀態儀表卡 */
         .tracker-card {
             background: #f8fafc;
             border: 1px solid #e2e8f0;
@@ -333,7 +328,6 @@
             cursor: pointer;
         }
 
-        /* 表格結構 */
         .profit-table-wrapper {
             border: 1px solid #e2e8f0;
             border-radius: 10px;
@@ -365,7 +359,6 @@
         .text-gold { color: #d97706; font-weight: 900; }
         .text-purple { color: #7c3aed; font-weight: 900; }
 
-        /* 手機卡片流 */
         .mobile-cards-container {
             display: none;
             flex-direction: column;
@@ -410,7 +403,6 @@
         .day-plan-item span.label { color: #64748b; font-weight: 700; }
         .day-plan-item span.val { font-family: monospace; font-weight: 800; }
 
-        /* 統計戰力板 */
         .stats-board { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 16px; }
         .stat-card { 
             background: var(--panel-bg); 
@@ -428,7 +420,6 @@
         .stat-value { font-size: 26px; font-weight: 900; margin: 4px 0; font-family: monospace; }
         .stat-sub { font-size: 11px; color: #64748b; }
 
-        /* 工具面板區 */
         .tools-panel { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 14px; margin-bottom: 18px; }
         .tool-card { 
             background: var(--panel-bg); 
@@ -489,7 +480,6 @@
         .cold-badge .num { color: #0284c7; }
         .cold-badge .desc { color: #0369a1; }
 
-        /* 推薦卡片 */
         .recom-section {
             margin-top: 16px;
             padding-top: 12px;
@@ -512,7 +502,6 @@
         .recom-card.c-gold::before { background: #f59e0b; }
         .recom-card.c-cyan::before { background: #06b6d4; }
         .recom-card.c-rose::before { background: #f43f5e; }
-        .recom-card.c-green::before { background: #10b981; }
 
         .recom-header { display: flex; flex-direction: column; gap: 1px; }
         .recom-title { font-size: 12px; font-weight: 900; }
@@ -533,7 +522,6 @@
         .recom-ball.q-cyan { background: #e0f2fe; color: #0369a1; border: 1.5px solid #38bdf8; }
         .recom-ball.q-gold { background: #fef3c7; color: #b45309; border: 1.5px solid #f59e0b; }
         .recom-ball.q-rose { background: #ffe4e6; color: #be123c; border: 1.5px solid #fb7185; }
-        .recom-ball.q-green { background: #dcfce7; color: #15803d; border: 1.5px solid #4ade80; }
 
         .recom-btns { display: flex; gap: 4px; }
         .btn-fast-apply {
@@ -546,7 +534,6 @@
             cursor: pointer;
         }
 
-        /* 雙軌搖號機 */
         .dual-machine-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
         .machine-unit { display: flex; flex-direction: column; align-items: center; background: #ffffff; padding: 10px; border-radius: 10px; border: 1px solid #e2e8f0; }
         .machine-unit-title { font-size: 12px; font-weight: 900; margin-bottom: 6px; }
@@ -570,7 +557,6 @@
         .btn-apply-ai { background: var(--ai-color); }
         .btn-apply-my { background: var(--my-color); }
 
-        /* 輸入表單區塊 */
         .input-panel { 
             background: var(--panel-bg); 
             padding: 18px; 
@@ -612,7 +598,6 @@
         }
         .btn-submit:hover { filter: brightness(1.1); }
 
-        /* 歷史戰績表格 */
         .history-panel { 
             background: var(--panel-bg); 
             padding: 18px; 
@@ -627,7 +612,6 @@
         td { padding: 12px 6px; border-bottom: 1px solid #e2e8f0; vertical-align: middle; }
         tr:hover { background: rgba(241, 245, 249, 0.6); }
 
-        /* 號碼球樣式 */
         .num-container { display: flex; gap: 5px; justify-content: center; flex-wrap: wrap; align-items: center; }
         .num-ball { 
             width: var(--ball-size); 
@@ -672,7 +656,6 @@
         .edit-btn { background: #f1f5f9; color: #334155; }
         .edit-btn:hover { background: #e2e8f0; }
 
-        /* 📱 手機端排版修復 */
         @media (max-width: 768px) {
             :root { --ball-size: 28px; }
             body { padding: 10px 6px; }
@@ -681,14 +664,12 @@
             .stat-card { padding: 10px; }
             .stat-value { font-size: 22px; margin: 2px 0; }
 
-            /* 彈窗在手機上填滿且維持內部彈性高度 */
             .modal-overlay { padding: 8px; }
             .modal-content { height: 96vh; border-radius: 14px; }
             .modal-header { padding: 10px 14px; }
             .modal-tabs { padding: 4px 8px 0 8px; }
             .tab-btn { padding: 7px 10px; font-size: 11.5px; }
 
-            /* 表單在手機端排版緊湊 */
             .calc-form-grid { grid-template-columns: 1fr 1fr; gap: 6px; padding: 8px; }
             .btn-recalc { grid-column: span 2; width: 100%; height: 34px; }
 
@@ -745,39 +726,33 @@
 
 <div class="container">
     <header>
-        <h1>⚡ QUANTUM AI LOTTERY BATTLE ARENA ⚡</h1>
+        <h1>⚡ QUANTUM AI LOTTERY BATTLE ARENA (四星穩開加強版) ⚡</h1>
         <div class="cloud-badge">
             <div class="dot"></div>
             <span>Firebase 雲端量子網絡同步中</span>
         </div>
     </header>
 
-    <!-- 頂部按鈕 -->
     <div class="top-action-bar">
         <button class="btn-open-modal" onclick="openProfitModal()">
             📊 點擊開啟：天天樂坐車目標獲利與倍投規劃表 (單碼/多碼/階梯)
         </button>
     </div>
 
-    <!-- 🌟 獨立彈出視窗 (Modal) -->
     <div class="modal-overlay" id="profit-modal" onclick="closeModalOnOverlay(event)">
         <div class="modal-content">
-            <!-- 🌟 永不消失的固定頭部 -->
             <div class="modal-header">
                 <h2>💰 天天樂坐車下注・目標倍投與階梯紀律規劃表</h2>
                 <button class="modal-close" onclick="closeProfitModal()">&times;</button>
             </div>
             
-            <!-- 🌟 永不消失的固定分頁標籤 -->
             <div class="modal-tabs">
                 <button class="tab-btn active" id="tab-btn-single-target" onclick="switchModalTab('single-target')">🌟 單碼目標倍投</button>
                 <button class="tab-btn" id="tab-btn-four-target" onclick="switchModalTab('four-target')">🎯 4碼目標倍投</button>
                 <button class="tab-btn" id="tab-btn-tier-track" onclick="switchModalTab('tier-track')">⚖️ 階梯均注紀律追蹤表</button>
             </div>
 
-            <!-- 🌟 內部獨立滾動區塊 -->
             <div class="modal-body">
-                <!-- 分頁 1：單碼目標倍投 -->
                 <div id="tab-content-single-target">
                     <div class="calc-form-grid">
                         <div class="calc-input-group">
@@ -824,7 +799,6 @@
                     <div class="mobile-cards-container" id="st-plan-mobile-cards"></div>
                 </div>
 
-                <!-- 分頁 2：4碼目標倍投 -->
                 <div id="tab-content-four-target" style="display:none;">
                     <div class="calc-form-grid">
                         <div class="calc-input-group">
@@ -872,7 +846,6 @@
                     <div class="mobile-cards-container" id="ft-plan-mobile-cards"></div>
                 </div>
 
-                <!-- 分頁 3：階梯均注紀律追蹤表 (不限期數) -->
                 <div id="tab-content-tier-track" style="display:none;">
                     <div class="tier-sub-tabs">
                         <button class="sub-tab-btn active" id="sub-tier-single" onclick="switchTierSubMode('single')">🌟 單碼階梯 (3期一階)</button>
@@ -929,7 +902,6 @@
         </div>
     </div>
 
-    <!-- 頂部戰力板 -->
     <div class="stats-board">
         <div class="stat-card">
             <div class="stat-title">已結算期數</div>
@@ -953,7 +925,6 @@
         </div>
     </div>
 
-    <!-- 冷熱牌 & AI 機率推薦星組 -->
     <div class="tools-panel">
         <div class="tool-card">
             <h3 style="color:#dc2626;">
@@ -972,10 +943,9 @@
                 <div style="font-size:12px; color:#94a3b8;">累積開獎數據後顯示...</div>
             </div>
 
-            <!-- 機率矩陣推薦 -->
             <div class="recom-section">
                 <h3 style="margin-bottom:6px; border:none; padding-bottom:0; color:#475569;">
-                    <span>🎯 AI 動態開出機率矩陣推薦 (三星 / 四星)</span>
+                    <span>🎯 加州三/四星穩開矩陣推薦 (三組智能模式)</span>
                     <button onclick="refreshRecommendations()" style="border:none; background:#f1f5f9; padding:3px 8px; border-radius:5px; font-size:11px; cursor:pointer; color:#0284c7; font-weight:bold;">🔄 換一組</button>
                 </h3>
                 <div class="recom-grid" id="recom-container">
@@ -1032,7 +1002,6 @@
         </div>
     </div>
 
-    <!-- 統一輸入/補填面板 -->
     <div class="input-panel">
         <h2>📝 新增預測 / 事後補填 (若日期已存在，在此填寫按存檔即自動補入)</h2>
         <div class="form-row">
@@ -1058,7 +1027,6 @@
         <button class="btn-submit" onclick="addRecord()">☁️ 儲存 / 補填對決紀錄至雲端 (即刻對獎)</button>
     </div>
 
-    <!-- 歷史對決 (號碼球縮小版) -->
     <div class="history-panel">
         <h2 style="font-size: 15px; margin-bottom: 12px; letter-spacing: 1px;">📊 歷史戰績矩陣對照表 (AI vs 我)</h2>
         <table>
@@ -1076,7 +1044,6 @@
         </table>
     </div>
 
-    <!-- 多期開獎號碼一鍵貼上面板 -->
     <div class="input-panel crawl-panel">
         <h2>📋 多天歷史開獎號碼整頁貼上一鍵導入</h2>
         <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 8px;">
@@ -1096,9 +1063,6 @@
     </div>
 </div>
 
-<!-- ==========================================
-     🔥 Firebase SDK 正確連線邏輯 🔥
-=========================================== -->
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { 
@@ -1438,15 +1402,15 @@
             let recentScore = (item.recentCount / Math.min(15, completedDraws.length)) * 100;
             
             let reboundScore = 50;
-            if (item.lastSeenAgo >= 3 && item.lastSeenAgo <= 10) {
-                reboundScore = 90;
-            } else if (item.lastSeenAgo === 0) {
-                reboundScore = 70;
-            } else if (item.lastSeenAgo > 25) {
-                reboundScore = 30;
+            if (item.lastSeenAgo >= 2 && item.lastSeenAgo <= 5) {
+                reboundScore = 95; // 加州天天樂最強穩開區間：2-5期內回補
+            } else if (item.lastSeenAgo === 0 || item.lastSeenAgo === 1) {
+                reboundScore = 80; // 連莊與極近熱號
+            } else {
+                reboundScore = 40;
             }
 
-            item.probScore = (freqScore * 0.40) + (recentScore * 0.35) + (reboundScore * 0.25);
+            item.probScore = (freqScore * 0.35) + (recentScore * 0.35) + (reboundScore * 0.30);
         });
 
         probabilityRankedBalls = [...statsArray].sort((a, b) => b.probScore - a.probScore);
@@ -1500,37 +1464,33 @@
             return shuffled.slice(0, count).map(x => ({ num: x.num, color: colorClass })).sort((a,b) => a.num - b.num);
         };
 
-        let s3HighProb = pickFromRank(probabilityRankedBalls.slice(0, 6), 3, 'q-gold');
-        let s3Resonance = pickFromRank(probabilityRankedBalls.slice(2, 9), 3, 'q-cyan');
-        let s4Flagship = pickFromRank(probabilityRankedBalls.slice(0, 8), 4, 'q-rose');
-        let s4BalTop = pickFromRank(probabilityRankedBalls.slice(0, 4), 2, 'q-green');
-        let s4BalMid = pickFromRank(probabilityRankedBalls.slice(4, 12), 2, 'q-green');
-        let s4Balanced = [...s4BalTop, ...s4BalMid].sort((a,b) => a.num - b.num);
+        // 🎯 改為三組明確的推薦模式，第三組為 AI 必開盤組
+        let s4StableA = pickFromRank(probabilityRankedBalls.slice(0, 6), 4, 'q-rose');
+        let s3CoreB = pickFromRank(probabilityRankedBalls.slice(2, 9), 3, 'q-gold');
+        
+        // AI 必開盤組 (混合最熱門強碼與極大機率回補碼，組成四星)
+        let aiMustHitTop = pickFromRank(probabilityRankedBalls.slice(0, 3), 2, 'q-cyan');
+        let aiMustHitBot = pickFromRank(probabilityRankedBalls.slice(3, 8), 2, 'q-cyan');
+        let aiMustHitGroup = [...aiMustHitTop, ...aiMustHitBot].sort((a,b) => a.num - b.num);
 
         const list = [
             { 
+                cardClass: 'c-rose',
+                title: '🌟 模式一：四星・連莊黃金穩開矩陣', 
+                sub: '依據加州高頻連莊與2-5期回補特性精選', 
+                balls: s4StableA 
+            },
+            { 
                 cardClass: 'c-gold',
-                title: '👑 三星・動態機率最高期望組合', 
-                sub: '全盤貝氏加權得分領先號碼', 
-                balls: s3HighProb 
+                title: '🎯 模式二：三星・高頻回補核心組', 
+                sub: '鎖定短期內爆發力最強的三星防守與牽引碼', 
+                balls: s3CoreB 
             },
             { 
                 cardClass: 'c-cyan',
-                title: '⚡ 三星・週期共振高回補組合', 
-                sub: '中週期回歸期望值最強動能球號', 
-                balls: s3Resonance 
-            },
-            { 
-                cardClass: 'c-rose',
-                title: '🌟 四星・量子極限機率矩陣', 
-                sub: '綜合連莊與爆發機率最高 4 碼', 
-                balls: s4Flagship 
-            },
-            { 
-                cardClass: 'c-green',
-                title: '🛡️ 四星・數學期望值全防守配置', 
-                sub: '核心高機率碼 2 顆 + 潛在回彈碼 2 顆', 
-                balls: s4Balanced 
+                title: '🔥 模式三：AI 必開盤組・極限爆發矩陣 (四星)', 
+                sub: '量子算法鎖定今日極高機率必出號碼，強烈建議入組', 
+                balls: aiMustHitGroup 
             }
         ];
 
@@ -1554,7 +1514,6 @@
         }).join('');
     }
 
-    // 1. 單碼目標倍投
     function calculateSingleTargetPlan() {
         const firstUnits = parseFloat(document.getElementById('calc-st-first-units').value) || 0.10;
         const targetDailyProfit = parseFloat(document.getElementById('calc-st-target-profit').value) || 1844;
@@ -1637,7 +1596,6 @@
         document.getElementById('st-plan-summary').innerText = `[${days}天單碼總備援本金建議：${cumCost.toLocaleString()} 元]`;
     }
 
-    // 2. 4 碼目標倍投
     function calculateFourTargetPlan() {
         const firstUnits = parseFloat(document.getElementById('calc-ft-first-units').value) || 0.10;
         const targetDailyProfit = parseFloat(document.getElementById('calc-ft-target-profit').value) || 1844;
@@ -1725,7 +1683,6 @@
         document.getElementById('ft-plan-summary').innerText = `[${days}期4碼總備援本金建議：${cumCost.toLocaleString()} 元]`;
     }
 
-    // 3. 不限期數・動態階梯均注紀律
     let currentTierSubMode = 'single';
     let currentTierIdx = 0;
     let customTierStartCars = 0.10;
@@ -2100,9 +2057,6 @@
     window.parseAndImportMultiDraws = parseAndImportMultiDraws;
 </script>
 
-<!-- ==========================================
-     🎲 雙 3D 物理滾球量子搖號機邏輯 🎲
-=========================================== -->
 <script>
     class PhysicsMachine {
         constructor(containerId, sphereSize) {
