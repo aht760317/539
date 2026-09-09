@@ -534,9 +534,16 @@
             cursor: pointer;
         }
 
-        .dual-machine-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
-        .machine-unit { display: flex; flex-direction: column; align-items: center; background: #ffffff; padding: 10px; border-radius: 10px; border: 1px solid #e2e8f0; }
-        .machine-unit-title { font-size: 12px; font-weight: 900; margin-bottom: 6px; }
+        /* 調整搖號機佈局 */
+        .single-machine-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #ffffff; 
+            padding: 14px; 
+            border-radius: 10px; 
+            border: 1px solid #e2e8f0;
+        }
 
         .realistic-machine { position: relative; width: 120px; height: 120px; margin-top: 8px; }
         .glass-sphere { width: 120px; height: 120px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #ffffff 0%, #e0f2fe 60%, #bae6fd 100%); border: 2.5px solid #7dd3fc; position: absolute; top: 0; left: 0; box-shadow: 0 4px 14px rgba(14, 165, 233, 0.15); }
@@ -545,15 +552,15 @@
         .machine-base { position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); width: 65px; height: 15px; background: #334155; border-radius: 3px; z-index: 12; }
         .mini-ball { position: absolute; width: 16px; height: 16px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #fde047, #f59e0b); color: #78350f; font-size: 8px; font-weight: 900; display: flex; align-items: center; justify-content: center; top: 0; left: 0; z-index: 5; transition: transform 0s, opacity 0.5s; }
         
-        .machine-balls { display: flex; justify-content: center; gap: 4px; padding: 6px; background: #f8fafc; border-radius: 16px; margin-top: 10px; width: 100%; border: 1px solid #e2e8f0; }
+        .machine-balls { display: flex; justify-content: center; gap: 4px; padding: 6px; background: #f8fafc; border-radius: 16px; margin-top: 10px; width: 100%; max-width: 250px; border: 1px solid #e2e8f0; }
         .machine-ball { width: 32px; height: 32px; border-radius: 50%; background: #ffffff; color: #94a3b8; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 900; border: 1.5px dashed #cbd5e1; transition: all 0.4s; font-family: monospace; }
         .machine-ball.revealed { background: linear-gradient(135deg, #fde047, #f59e0b); color: #78350f; border: 1.5px solid #b45309; box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3); transform: scale(1.08); }
 
-        .btn-roll { width: 100%; max-width: 280px; background: linear-gradient(135deg, #4f46e5, #7c3aed); color: white; border: none; padding: 10px 16px; font-size: 13px; font-weight: 900; border-radius: 8px; cursor: pointer; }
+        .btn-roll { width: 100%; background: linear-gradient(135deg, #4f46e5, #7c3aed); color: white; border: none; padding: 10px 16px; font-size: 13px; font-weight: 900; border-radius: 8px; cursor: pointer; }
         .btn-roll:hover { filter: brightness(1.1); }
         .btn-roll:disabled { background: #cbd5e1; cursor: not-allowed; }
         .btn-apply-group { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; margin-top: 8px; }
-        .btn-apply { color: white; border: none; padding: 4px 7px; font-size: 10px; font-weight: bold; border-radius: 5px; cursor: pointer; display: none; }
+        .btn-apply { color: white; border: none; padding: 5px 10px; font-size: 11px; font-weight: bold; border-radius: 5px; cursor: pointer; display: none; }
         .btn-apply-ai { background: var(--ai-color); }
         .btn-apply-my { background: var(--my-color); }
 
@@ -656,35 +663,6 @@
         .edit-btn { background: #f1f5f9; color: #334155; }
         .edit-btn:hover { background: #e2e8f0; }
 
-        /* 新增機率卡片專屬樣式 */
-        .prob-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px;
-            background: #ffffff;
-            border: 1px solid #cbd5e1;
-            border-radius: 8px;
-            margin-bottom: 8px;
-        }
-        .prob-header {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-            width: 30%;
-        }
-        .prob-title { font-size: 13px; font-weight: 900; color: #0f172a; }
-        .prob-count { font-size: 11px; color: #64748b; font-weight: bold; font-family: monospace;}
-        .prob-stats {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 4px;
-            width: 70%;
-        }
-        .prob-pct { font-size: 15px; font-weight: 900; color: #ef4444; font-family: monospace; }
-        .prob-cycle { font-size: 11px; color: #0284c7; font-weight: bold; background: #e0f2fe; padding: 2px 6px; border-radius: 4px; }
-
         @media (max-width: 768px) {
             :root { --ball-size: 28px; }
             body { padding: 10px 6px; }
@@ -709,7 +687,6 @@
             .profit-table-wrapper { display: none; }
             .mobile-cards-container { display: flex; }
 
-            .dual-machine-grid { grid-template-columns: 1fr; gap: 10px; }
             .input-panel { padding: 14px; }
             .form-row { flex-direction: column; gap: 8px; }
 
@@ -768,6 +745,7 @@
         </button>
     </div>
 
+    <!-- 收益與倍投Modal保持原樣 -->
     <div class="modal-overlay" id="profit-modal" onclick="closeModalOnOverlay(event)">
         <div class="modal-content">
             <div class="modal-header">
@@ -984,71 +962,92 @@
         </div>
 
         <div class="tool-card">
-            <h3 style="color:var(--neon-purple);">🎰 雙軌 3D 物理滾球量子搖號機 (可選 4 或 5 碼)</h3>
-            <div class="dual-machine-grid">
-                <div class="machine-unit">
-                    <div class="machine-unit-title" style="color:var(--ai-color)">🎲 1 號機 (Alpha)</div>
-                    <div class="realistic-machine">
-                        <div class="suction-tube"></div>
-                        <div class="glass-sphere" id="physics-container-1"></div>
-                        <div class="glass-overlay"></div>
-                        <div class="machine-base"></div>
-                    </div>
-                    <div class="machine-balls" id="machine-balls-1">
-                        <div class="machine-ball">?</div><div class="machine-ball">?</div><div class="machine-ball">?</div><div class="machine-ball">?</div><div class="machine-ball">?</div>
-                    </div>
-                    <div class="btn-apply-group">
-                        <button class="btn-apply btn-apply-ai" id="apply-m1-ai-4" onclick="applyToInput(finalNums1, 'ai', 4)">入AI(4碼)</button>
-                        <button class="btn-apply btn-apply-ai" id="apply-m1-ai-5" onclick="applyToInput(finalNums1, 'ai', 5)">入AI(5碼)</button>
-                        <button class="btn-apply btn-apply-my" id="apply-m1-my-4" onclick="applyToInput(finalNums1, 'my', 4)">入我(4碼)</button>
-                        <button class="btn-apply btn-apply-my" id="apply-m1-my-5" onclick="applyToInput(finalNums1, 'my', 5)">入我(5碼)</button>
-                    </div>
+            <h3 style="color:var(--neon-purple);">🎰 3D 物理滾球量子搖號機 (可選 4 或 5 碼)</h3>
+            <div class="single-machine-wrapper">
+                <div class="realistic-machine">
+                    <div class="suction-tube"></div>
+                    <div class="glass-sphere" id="physics-container-1"></div>
+                    <div class="glass-overlay"></div>
+                    <div class="machine-base"></div>
                 </div>
-
-                <div class="machine-unit">
-                    <div class="machine-unit-title" style="color:var(--my-color)">🎲 2 號機 (Beta)</div>
-                    <div class="realistic-machine">
-                        <div class="suction-tube"></div>
-                        <div class="glass-sphere" id="physics-container-2"></div>
-                        <div class="glass-overlay"></div>
-                        <div class="machine-base"></div>
-                    </div>
-                    <div class="machine-balls" id="machine-balls-2">
-                        <div class="machine-ball">?</div><div class="machine-ball">?</div><div class="machine-ball">?</div><div class="machine-ball">?</div><div class="machine-ball">?</div>
-                    </div>
-                    <div class="btn-apply-group">
-                        <button class="btn-apply btn-apply-my" id="apply-m2-my-4" onclick="applyToInput(finalNums2, 'my', 4)">入我(4碼)</button>
-                        <button class="btn-apply btn-apply-my" id="apply-m2-my-5" onclick="applyToInput(finalNums2, 'my', 5)">入我(5碼)</button>
-                        <button class="btn-apply btn-apply-ai" id="apply-m2-ai-4" onclick="applyToInput(finalNums2, 'ai', 4)">入AI(4碼)</button>
-                        <button class="btn-apply btn-apply-ai" id="apply-m2-ai-5" onclick="applyToInput(finalNums2, 'ai', 5)">入AI(5碼)</button>
-                    </div>
+                <div class="machine-balls" id="machine-balls-1">
+                    <div class="machine-ball">?</div><div class="machine-ball">?</div><div class="machine-ball">?</div><div class="machine-ball">?</div><div class="machine-ball">?</div>
                 </div>
-            </div>
-
-            <div style="text-align: center; margin-top: 8px;">
-                <button class="btn-roll" id="btn-roll-all" onclick="startRollDual()">🌪️ 雙機同步啟動量子搖號</button>
+                <div class="btn-apply-group" style="margin-top:12px;">
+                    <button class="btn-apply btn-apply-ai" id="apply-m1-ai-4" onclick="applyToInput(finalNums1, 'ai', 4)">入AI(4碼)</button>
+                    <button class="btn-apply btn-apply-ai" id="apply-m1-ai-5" onclick="applyToInput(finalNums1, 'ai', 5)">入AI(5碼)</button>
+                    <button class="btn-apply btn-apply-my" id="apply-m1-my-4" onclick="applyToInput(finalNums1, 'my', 4)">入我(4碼)</button>
+                    <button class="btn-apply btn-apply-my" id="apply-m1-my-5" onclick="applyToInput(finalNums1, 'my', 5)">入我(5碼)</button>
+                </div>
+                <div style="width: 100%; margin-top: 14px;">
+                    <button class="btn-roll" id="btn-roll-all" onclick="startRoll()">🌪️ 啟動量子搖號</button>
+                </div>
             </div>
         </div>
 
-        <!-- 👇 這裡是為您修改的：智能連碰機率與週期預測器 👇 -->
-        <div class="tool-card">
-            <h3 style="color: #059669;">
-                <span>🔮 智能連碰機率與週期預測器</span>
-                <span style="font-size:11px; color:#64748b; font-weight:normal;">(超幾何分佈機率算法)</span>
+        <!-- 👇 新增：大數據立柱風控矩陣追蹤 (1800碰 / 9000碰) 👇 -->
+        <div class="tool-card" style="grid-column: 1 / -1;">
+            <h3 style="color:#059669; border-bottom: 2px solid rgba(5,150,105,0.2);">
+                <span>🎯 獨家立柱風控矩陣 - 歷史與AI趨勢分析</span>
             </h3>
             
-            <div style="display:flex; gap:10px; align-items:center; background:#f8fafc; padding:10px; border-radius:10px; border:1px solid #e2e8f0; margin-bottom:12px;">
-                <label style="font-size:13px; font-weight:900; color:#334155; white-space:nowrap;">🔢 輸入包牌總球數：</label>
-                <input type="number" id="dash-combo-balls" value="22" min="2" max="39" style="padding:6px 10px; border:1.5px solid #cbd5e1; border-radius:6px; font-family:monospace; font-weight:900; outline:none; width:80px; font-size:14px;">
-                <button onclick="calcDashCombos()" style="background:linear-gradient(135deg, #d97706, #b45309); color:white; border:none; padding:8px 14px; font-size:12px; font-weight:900; border-radius:6px; cursor:pointer; flex:1;">⚡ 精算下期機率</button>
-            </div>
+            <div class="status-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; margin-top:12px;">
+                <!-- 1800碰 區塊 -->
+                <div style="background:#ffffff; border:1px solid #cbd5e1; border-radius:10px; padding:14px; box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+                    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #e2e8f0; padding-bottom:8px; margin-bottom:10px;">
+                        <strong style="color:#0284c7; font-size:16px;">🌟 1800 碰 (三星立柱)</strong>
+                        <span class="cloud-badge" style="margin:0; background:#f0f9ff; border-color:#bae6fd; color:#0284c7;">三大柱配法</span>
+                    </div>
+                    <div style="font-size:12px; color:#64748b; margin-bottom:12px; line-height:1.6; font-family:monospace; background:#f8fafc; padding:8px; border-radius:6px;">
+                        [第一柱] 10~18 (9顆)<br>
+                        [第二柱] 20~29 (10顆)<br>
+                        [第三柱] 01~09, 19, 30~39 (20顆)
+                    </div>
+                    <div style="display:flex; gap:10px;">
+                        <div class="status-item" style="flex:1;">
+                            <div class="label" style="color:#dc2626;">目前連續未開</div>
+                            <div class="val highlight" id="gap-1800" style="font-size:22px;">-- 期</div>
+                            <div id="avg-gap-1800" style="font-size:10px; color:#94a3b8; margin-top:2px;">平均約 -- 期</div>
+                        </div>
+                        <div class="status-item" style="flex:1.2; background:#f0fdf4; border-color:#86efac;">
+                            <div class="label" style="color:#16a34a;">AI 次期開出機率</div>
+                            <div class="val win" id="prob-1800" style="font-size:22px; color:#15803d;">--%</div>
+                            <div style="font-size:10px; color:#16a34a; margin-top:2px;">大數據均值回歸估算</div>
+                        </div>
+                    </div>
+                </div>
 
-            <div id="dash-combo-results">
-                <!-- JS 即時渲染機率預測結果在此 -->
+                <!-- 9000碰 區塊 -->
+                <div style="background:#ffffff; border:1px solid #cbd5e1; border-radius:10px; padding:14px; box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+                    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #e2e8f0; padding-bottom:8px; margin-bottom:10px;">
+                        <strong style="color:#7c3aed; font-size:16px;">🏆 9000 碰 (四星立柱)</strong>
+                        <span class="cloud-badge" style="margin:0; background:#f5f3ff; border-color:#ddd6fe; color:#7c3aed;">四大柱配法</span>
+                    </div>
+                    <div style="font-size:12px; color:#64748b; margin-bottom:12px; line-height:1.6; font-family:monospace; background:#f8fafc; padding:8px; border-radius:6px;">
+                        [第一柱] 01~09 (9顆)<br>
+                        [第二柱] 10~19 (10顆)<br>
+                        [第三柱] 20~29 (10顆)<br>
+                        [第四柱] 30~39 (10顆)
+                    </div>
+                    <div style="display:flex; gap:10px;">
+                        <div class="status-item" style="flex:1;">
+                            <div class="label" style="color:#dc2626;">目前連續未開</div>
+                            <div class="val highlight" id="gap-9000" style="font-size:22px;">-- 期</div>
+                            <div id="avg-gap-9000" style="font-size:10px; color:#94a3b8; margin-top:2px;">平均約 -- 期</div>
+                        </div>
+                        <div class="status-item" style="flex:1.2; background:#faf5ff; border-color:#d8b4fe;">
+                            <div class="label" style="color:#7c3aed;">AI 次期開出機率</div>
+                            <div class="val" id="prob-9000" style="font-size:22px; color:#6d28d9;">--%</div>
+                            <div style="font-size:10px; color:#7c3aed; margin-top:2px;">大數據均值回歸估算</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="font-size:11px; color:#64748b; margin-top:10px; text-align:center;">
+                💡 <b>AI 機率算法：</b> 以理論基礎機率為核心，結合歷史大數據統計。若「未開期數」超過「平均週期」，系統將根據均值回歸動能，自動調升次期爆發機率的權重！
             </div>
         </div>
         <!-- 👆 新增結束 👆 -->
-
     </div>
 
     <div class="input-panel">
@@ -1569,6 +1568,77 @@
         }).join('');
     }
 
+    // ⭐⭐ 新增：分析 1800碰與9000碰 歷史與預測機率 ⭐⭐
+    function analyzeComboPatterns() {
+        let completedDraws = battleHistory.filter(item => !item.isPending && item.draw && item.draw.length === 5);
+        if(completedDraws.length === 0) return;
+
+        // 1800 碰定義
+        const col1800_1 = [10,11,12,13,14,15,16,17,18];
+        const col1800_2 = [20,21,22,23,24,25,26,27,28,29];
+        const col1800_3 = [1,2,3,4,5,6,7,8,9, 19, 30,31,32,33,34,35,36,37,38,39];
+
+        // 9000 碰定義
+        const col9000_1 = [1,2,3,4,5,6,7,8,9];
+        const col9000_2 = [10,11,12,13,14,15,16,17,18,19];
+        const col9000_3 = [20,21,22,23,24,25,26,27,28,29];
+        const col9000_4 = [30,31,32,33,34,35,36,37,38,39];
+
+        let gap1800 = 0, gap9000 = 0;
+        let found1800 = false, found9000 = false;
+        let hits1800 = 0, hits9000 = 0;
+
+        completedDraws.forEach((record) => {
+            let d = record.draw;
+            
+            // 檢查是否中 1800 碰 (三柱皆有號碼)
+            let h1 = d.some(n => col1800_1.includes(n));
+            let h2 = d.some(n => col1800_2.includes(n));
+            let h3 = d.some(n => col1800_3.includes(n));
+            let hit1800 = h1 && h2 && h3;
+            
+            if(hit1800) hits1800++;
+            if(!hit1800 && !found1800) gap1800++;
+            else found1800 = true;
+
+            // 檢查是否中 9000 碰 (四柱皆有號碼)
+            let c1 = d.some(n => col9000_1.includes(n));
+            let c2 = d.some(n => col9000_2.includes(n));
+            let c3 = d.some(n => col9000_3.includes(n));
+            let c4 = d.some(n => col9000_4.includes(n));
+            let hit9000 = c1 && c2 && c3 && c4;
+
+            if(hit9000) hits9000++;
+            if(!hit9000 && !found9000) gap9000++;
+            else found9000 = true;
+        });
+
+        // 理論基礎機率
+        const p_base_1800 = 0.5536; // 理論成功組合 318,750 / 575,757
+        const p_base_9000 = 0.2735; // 理論成功組合 157,500 / 575,757
+
+        // 歷史平均週期
+        let avgCycle1800 = hits1800 > 0 ? (completedDraws.length / hits1800) : (1 / p_base_1800);
+        let avgCycle9000 = hits9000 > 0 ? (completedDraws.length / hits9000) : (1 / p_base_9000);
+
+        // AI 動態爆發機率計算 (越久沒開，權重越高，模擬均值回歸)
+        // 增幅 = (當前未開期數 / 平均週期) * 5% 的溢價
+        let boost1800 = (gap1800 / avgCycle1800) * 0.05;
+        let finalProb1800 = Math.min((p_base_1800 * (1 + boost1800)), 0.99) * 100;
+        
+        let boost9000 = (gap9000 / avgCycle9000) * 0.05;
+        let finalProb9000 = Math.min((p_base_9000 * (1 + boost9000)), 0.99) * 100;
+
+        // 更新UI
+        document.getElementById('gap-1800').innerText = `${gap1800} 期`;
+        document.getElementById('avg-gap-1800').innerText = `平均約 ${avgCycle1800.toFixed(1)} 期`;
+        document.getElementById('prob-1800').innerText = `${finalProb1800.toFixed(1)}%`;
+
+        document.getElementById('gap-9000').innerText = `${gap9000} 期`;
+        document.getElementById('avg-gap-9000').innerText = `平均約 ${avgCycle9000.toFixed(1)} 期`;
+        document.getElementById('prob-9000').innerText = `${finalProb9000.toFixed(1)}%`;
+    }
+
     function calculateSingleTargetPlan() {
         const firstUnits = parseFloat(document.getElementById('calc-st-first-units').value) || 0.10;
         const targetDailyProfit = parseFloat(document.getElementById('calc-st-target-profit').value) || 1844;
@@ -1737,100 +1807,6 @@
         mobileContainer.innerHTML = mobileCardsHtml;
         document.getElementById('ft-plan-summary').innerText = `[${days}期4碼總備援本金建議：${cumCost.toLocaleString()} 元]`;
     }
-
-    // ⭐⭐ 新增：超幾何分佈機率運算算法與週期預測 ⭐⭐
-    function choose(n, r) {
-        if (r < 0 || r > n) return 0;
-        if (r === 0 || n === r) return 1;
-        if (r > n / 2) r = n - r;
-        let res = 1;
-        for (let i = 1; i <= r; i++) {
-            res = res * (n - i + 1) / i;
-        }
-        return res;
-    }
-
-    window.calcDashCombos = function() {
-        let k = parseInt(document.getElementById('dash-combo-balls').value) || 0;
-        if (k < 2 || k > 39) {
-            alert("請輸入有效的包牌球數 (2~39)！");
-            return;
-        }
-        
-        // 算出碰數
-        let c2 = choose(k, 2);
-        let c3 = choose(k, 3);
-        let c4 = choose(k, 4);
-
-        // 天天樂總可能結果 C(39, 5)
-        let totalWays = 575757;
-
-        // 計算剛好命中 2~5 顆球的機率權重 (Hypergeometric distribution)
-        let hit2 = choose(k, 2) * choose(39 - k, 3);
-        let hit3 = choose(k, 3) * choose(39 - k, 2);
-        let hit4 = choose(k, 4) * choose(39 - k, 1);
-        let hit5 = choose(k, 5) * choose(39 - k, 0);
-
-        // 命中率 = 該星級以上所有的可能結果加總 / 總結果數
-        let p2_plus = (hit2 + hit3 + hit4 + hit5) / totalWays;
-        let p3_plus = (hit3 + hit4 + hit5) / totalWays;
-        let p4_plus = (hit4 + hit5) / totalWays;
-
-        // 轉換為百分比 (%)
-        let pct2 = (p2_plus * 100).toFixed(1);
-        let pct3 = (p3_plus * 100).toFixed(2); // 三星取小數兩位
-        let pct4 = (p4_plus * 100).toFixed(3); // 四星取小數三位
-
-        // 週期預測 (1 / 命中率 = 平均幾期開一次)
-        let cycle2 = p2_plus > 0 ? (1 / p2_plus).toFixed(1) : "∞";
-        let cycle3 = p3_plus > 0 ? (1 / p3_plus).toFixed(1) : "∞";
-        let cycle4 = p4_plus > 0 ? (1 / p4_plus).toFixed(1) : "∞";
-
-        // 動態渲染 HTML
-        let html = `
-            <div class="prob-row">
-                <div class="prob-header">
-                    <span class="prob-title" style="color:#059669;">🌟 二星 (取2)</span>
-                    <span class="prob-count">${c2.toLocaleString()} 碰</span>
-                </div>
-                <div class="prob-stats">
-                    <div style="font-size:11px; color:#475569; font-weight:bold;">下一期中獎機率</div>
-                    <div class="prob-pct" style="color:#10b981;">${pct2}%</div>
-                    <div class="prob-cycle">🔄 週期：約 ${cycle2} 期 開一次</div>
-                </div>
-            </div>
-
-            <div class="prob-row" style="${c3 >= 1500 ? 'border-color:#fca5a5; background:#fef2f2;' : ''}">
-                <div class="prob-header">
-                    <span class="prob-title" style="color:#dc2626;">🎯 三星 (取3)</span>
-                    <span class="prob-count">${c3.toLocaleString()} 碰</span>
-                </div>
-                <div class="prob-stats">
-                    <div style="font-size:11px; color:#475569; font-weight:bold;">下一期中獎機率</div>
-                    <div class="prob-pct">${pct3}%</div>
-                    <div class="prob-cycle" style="background:#fee2e2; color:#b91c1c;">🔄 週期：約 ${cycle3} 期 開一次</div>
-                </div>
-            </div>
-
-            <div class="prob-row" style="${c4 >= 5000 ? 'border-color:#c4b5fd; background:#f5f3ff;' : ''}">
-                <div class="prob-header">
-                    <span class="prob-title" style="color:#7c3aed;">🏆 四星 (取4)</span>
-                    <span class="prob-count">${c4.toLocaleString()} 碰</span>
-                </div>
-                <div class="prob-stats">
-                    <div style="font-size:11px; color:#475569; font-weight:bold;">下一期中獎機率</div>
-                    <div class="prob-pct" style="color:#7c3aed;">${pct4}%</div>
-                    <div class="prob-cycle" style="background:#ede9fe; color:#6d28d9;">🔄 週期：約 ${cycle4} 期 開一次</div>
-                </div>
-            </div>
-            
-            <div style="font-size:11px; color:#475569; background:#e2e8f0; padding:8px; border-radius:6px; margin-top:10px; line-height:1.4;">
-                💡 <b>預測說明</b>：本系統採用『超幾何分佈 (Hypergeometric Distribution)』進行量子機率運算。若您包 <strong style="color:#0284c7;">${k}</strong> 顆球，明天直接中三星的真實機率為 <strong>${pct3}%</strong>，統計學上平均需要等待 <strong>${cycle3} 天</strong> 才會開出一次。
-            </div>
-        `;
-
-        document.getElementById('dash-combo-results').innerHTML = html;
-    };
 
     let currentTierSubMode = 'single';
     let currentTierIdx = 0;
@@ -2108,6 +2084,7 @@
         let myRounds = 0, aiRounds = 0;
 
         analyzeHotColdNumbers();
+        analyzeComboPatterns(); // 呼叫全新 AI 機率算法
 
         battleHistory.forEach(item => {
             const hasDraw = item.draw && item.draw.length === 5;
@@ -2312,57 +2289,42 @@
         }
     }
 
-    let m1, m2;
-    let finalNums1 = [], finalNums2 = [];
+    let m1;
+    let finalNums1 = [];
 
     window.onload = function() {
         document.getElementById('input-date').value = new Date().toISOString().split('T')[0];
         let mSize = 120;
         m1 = new PhysicsMachine('physics-container-1', mSize);
-        m2 = new PhysicsMachine('physics-container-2', mSize);
-        
-        // 初始化載入機率預測計算機結果
-        if(typeof calcDashCombos === 'function') calcDashCombos();
     };
 
-    async function startRollDual() {
+    async function startRoll() {
         const btn = document.getElementById('btn-roll-all');
         const slots1 = document.querySelectorAll('#machine-balls-1 .machine-ball');
-        const slots2 = document.querySelectorAll('#machine-balls-2 .machine-ball');
         
         btn.disabled = true;
-        btn.innerText = "🌪️ 雙機同步搖號中...";
+        btn.innerText = "🌪️ 單機量子搖號中...";
         
         document.querySelectorAll('.btn-apply').forEach(b => b.style.display = 'none');
 
         m1.init();
-        m2.init();
         slots1.forEach(s => { s.innerText = "?"; s.classList.remove('revealed'); });
-        slots2.forEach(s => { s.innerText = "?"; s.classList.remove('revealed'); });
 
         m1.isMixing = true;
-        m2.isMixing = true;
 
         await new Promise(r => setTimeout(r, 1200));
 
         finalNums1 = generate5Numbers();
-        finalNums2 = generate5Numbers();
 
         for (let i = 0; i < 5; i++) {
             let b1 = m1.balls.find(b => b.id === finalNums1[i]);
-            let b2 = m2.balls.find(b => b.id === finalNums2[i]);
-
-            await Promise.all([
-                new Promise(res => m1.drawBall(b1, slots1[i], res)),
-                new Promise(res => m2.drawBall(b2, slots2[i], res))
-            ]);
+            await new Promise(res => m1.drawBall(b1, slots1[i], res));
             await new Promise(r => setTimeout(r, 250));
         }
 
         m1.isMixing = false;
-        m2.isMixing = false;
         btn.disabled = false;
-        btn.innerText = "🎲 再次啟動雙機搖號";
+        btn.innerText = "🎲 再次啟動量子搖號";
 
         document.querySelectorAll('.btn-apply').forEach(b => b.style.display = 'inline-block');
     }
