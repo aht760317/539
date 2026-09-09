@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>今彩 539 光量子 AI 科技對決擂台 (終極數學期望值旗艦版)</title>
+    <title>今彩 539 光量子 AI 科技對決擂台 (終極機率期望值版)</title>
     <style>
         :root {
             --bg-color: #0b0f19; 
@@ -653,10 +653,6 @@
             .calc-form-grid { grid-template-columns: 1fr 1fr; gap: 6px; padding: 8px; }
             .btn-recalc { grid-column: span 2; width: 100%; height: 34px; }
 
-            .plan-config-bar { padding: 8px 10px; gap: 6px; }
-            .plan-config-bar input { width: 70px; }
-            .btn-config-calc { width: 100%; margin-top: 4px; }
-
             .profit-table-wrapper { display: none; }
             .mobile-cards-container { display: flex; }
 
@@ -755,10 +751,10 @@
                             <button class="act-btn btn-reset" onclick="resetTierGame()">重置循環</button>
                         </div>
                     </div>
-                    <div class="plan-config-bar">
-                        <label>🚗 起始車數：</label><input type="number" id="cfg-tier-cars" value="1" min="0.01" max="10" step="0.05">
-                        <label style="margin-left:8px;">📅 總規劃期數：</label><input type="number" id="cfg-tier-total-days" value="15" min="3" max="60" step="1">
-                        <button class="btn-config-calc" onclick="applyDynamicTierConfig()">⚡ 重新生成不限期表格</button>
+                    <div class="calc-form-grid" style="grid-template-columns: 1fr 1fr; background: transparent; border:none; padding:0;">
+                        <div class="calc-input-group"><label>🚗 起始車數：</label><input type="number" id="cfg-tier-cars" value="1" min="0.01" max="10" step="0.05"></div>
+                        <div class="calc-input-group"><label>📅 總規劃期數：</label><input type="number" id="cfg-tier-total-days" value="15" min="3" max="60" step="1"></div>
+                        <button class="btn-config-calc" style="grid-column: span 2;" onclick="applyDynamicTierConfig()">⚡ 重新生成不限期表格</button>
                     </div>
                     <div class="profit-table-wrapper"><table class="profit-table"><thead><tr><th>天數</th><th>階梯</th><th>下注車數</th><th>當期成本</th><th>累計總成本</th><th>中獎彩金</th><th>結算淨利 (保證賺錢)</th></tr></thead><tbody id="tier-table-body"></tbody></table></div>
                     <div class="mobile-cards-container" id="tier-mobile-cards-container"></div>
@@ -791,16 +787,7 @@
         </div>
     </div>
 
-    <!-- 🌟 1800碰 / 9000碰 柱碰即時期望值看板 (包含退水與極限反彈機率) -->
-    <div class="plan-config-bar" style="border-color:#ec4899; box-shadow: 0 0 10px rgba(236,72,153,0.2);">
-        <label style="color:#f472b6;">⚡ 柱碰成本與賠率設定：</label>
-        <label>單碰原價:</label><input type="number" id="touch-price" value="10" title="每碰定價金額">
-        <label>退水折扣(%):</label><input type="number" id="touch-discount" value="50" title="例如輸入 50 代表打五折">
-        <label>三星單碰彩金:</label><input type="number" id="touch-prize3" value="8500">
-        <label>四星單碰彩金:</label><input type="number" id="touch-prize4" value="80000">
-        <button class="btn-config-calc" style="background:linear-gradient(135deg, #ec4899, #be185d);" onclick="analyzeHotColdNumbers()">重新精算期望值</button>
-    </div>
-
+    <!-- 🌟 1800碰 / 9000碰 柱碰即時看板 -->
     <div class="touch-tracker-grid">
         <!-- 1800 碰專區 -->
         <div class="touch-card t-1800">
@@ -825,13 +812,13 @@
             </div>
             <div style="background:rgba(0,0,0,0.2); border-radius:6px; padding:8px; margin-top:6px; font-size:11px; color:#cbd5e1;">
                 <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-                    <span style="color:#94a3b8;">實際總成本：</span><span id="t1800-real-cost" style="font-weight:900; color:#ffffff;">9,000 元</span>
+                    <span style="color:#94a3b8;">實際總成本：</span><span id="t1800-real-cost" style="font-weight:900; color:#ffffff;">0 元</span>
                 </div>
                 <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-                    <span style="color:#94a3b8;">平均長期期望回報 (1.97碰)：</span><span id="t1800-expected-return" style="font-weight:900;">16,745 元</span>
+                    <span style="color:#94a3b8;">平均長期期望回報 (1.97碰)：</span><span id="t1800-expected-return" style="font-weight:900;">0 元</span>
                 </div>
                 <div style="display:flex; justify-content:space-between; border-top:1px dashed rgba(255,255,255,0.15); padding-top:4px;">
-                    <span style="color:#94a3b8;">💡 單期數學期望值 (EV)：</span><span id="t1800-ev" style="font-size:14px; font-weight:900;">+7,745</span>
+                    <span style="color:#94a3b8;">💡 單期數學期望值 (EV)：</span><span id="t1800-ev" style="font-size:14px; font-weight:900;">0</span>
                 </div>
             </div>
         </div>
@@ -859,13 +846,13 @@
             </div>
             <div style="background:rgba(0,0,0,0.2); border-radius:6px; padding:8px; margin-top:6px; font-size:11px; color:#cbd5e1;">
                 <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-                    <span style="color:#94a3b8;">實際總成本：</span><span id="t9000-real-cost" style="font-weight:900; color:#ffffff;">45,000 元</span>
+                    <span style="color:#94a3b8;">實際總成本：</span><span id="t9000-real-cost" style="font-weight:900; color:#ffffff;">0 元</span>
                 </div>
                 <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-                    <span style="color:#94a3b8;">🎯 開出時實際淨賺：</span><span id="t9000-net-hit" style="color:#34d399; font-weight:900;">+115,000</span>
+                    <span style="color:#94a3b8;">🎯 開出時實際淨賺：</span><span id="t9000-net-hit" style="color:#34d399; font-weight:900;">0</span>
                 </div>
                 <div style="display:flex; justify-content:space-between; border-top:1px dashed rgba(255,255,255,0.15); padding-top:4px;">
-                    <span style="color:#94a3b8;">💡 單期數學期望值 (EV)：</span><span id="t9000-ev" style="font-size:14px; font-weight:900;">-1,224</span>
+                    <span style="color:#94a3b8;">💡 單期數學期望值 (EV)：</span><span id="t9000-ev" style="font-size:14px; font-weight:900;">0</span>
                 </div>
             </div>
         </div>
@@ -952,7 +939,7 @@
         </div>
     </div>
 
-    <!-- 🌟 新增預測 / 事後補填面板 (自由碼數提示) -->
+    <!-- 🌟 新增預測 / 事後補填面板 -->
     <div class="input-panel">
         <h2>📝 539 新增預測 / 事後補填 (若日期已存在，在此填寫按存檔即自動補入)</h2>
         <div class="form-row">
@@ -1288,12 +1275,12 @@
         return hasCol1 && hasCol2 && hasCol3 && hasCol4;
     }
 
-    // 更新 1800/9000 期望值經濟學
+    // 核心隱藏設定 (不顯示於畫面上)
     function updateTouchEconomics(miss1800, miss9000) {
-        let price = parseFloat(document.getElementById('touch-price').value) || 10;
-        let discount = parseFloat(document.getElementById('touch-discount').value) || 50;
-        let p3 = parseFloat(document.getElementById('touch-prize3').value) || 8500;
-        let p4 = parseFloat(document.getElementById('touch-prize4').value) || 80000;
+        let price = 10;
+        let discount = 50;
+        let p3 = 8500;
+        let p4 = 80000;
 
         let realCostPerTouch = price * (1 - (discount / 100));
 
@@ -1301,7 +1288,7 @@
         let cost1800 = 1800 * realCostPerTouch;
         let expReturn1800 = 1.97 * p3;
         let ev1800 = expReturn1800 - cost1800;
-        document.getElementById('t1800-real-cost').innerText = cost1800.toLocaleString();
+        document.getElementById('t1800-real-cost').innerText = cost1800.toLocaleString() + ' 元';
         document.getElementById('t1800-expected-return').innerText = Math.round(expReturn1800).toLocaleString() + ' 元';
         document.getElementById('t1800-ev').innerText = (ev1800 > 0 ? '+' : '') + Math.round(ev1800).toLocaleString();
         document.getElementById('t1800-ev').style.color = ev1800 > 0 ? '#34d399' : '#f43f5e';
@@ -1311,7 +1298,7 @@
         let hitReturn9000 = p4 * 2;
         let netHit9000 = hitReturn9000 - cost9000;
         let ev9000 = (hitReturn9000 * 0.27355) - cost9000;
-        document.getElementById('t9000-real-cost').innerText = cost9000.toLocaleString();
+        document.getElementById('t9000-real-cost').innerText = cost9000.toLocaleString() + ' 元';
         document.getElementById('t9000-net-hit').innerText = '+' + netHit9000.toLocaleString();
         document.getElementById('t9000-ev').innerText = (ev9000 > 0 ? '+' : '') + Math.round(ev9000).toLocaleString();
         document.getElementById('t9000-ev').style.color = ev9000 > 0 ? '#34d399' : '#f43f5e';
