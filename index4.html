@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>天天樂 光量子 AI 科技對決擂台 (智能四星穩開加強版)</title>
+    <title>天天樂 光量子 AI 科技對決擂台 (智能三星四星雙軌矩陣版)</title>
     <style>
         :root {
             --bg-color: #f1f5f9; 
@@ -726,7 +726,7 @@
 
 <div class="container">
     <header>
-        <h1>⚡ QUANTUM AI LOTTERY BATTLE ARENA (四星穩開加強版) ⚡</h1>
+        <h1>⚡ QUANTUM AI LOTTERY BATTLE ARENA (智能三星四星雙軌版) ⚡</h1>
         <div class="cloud-badge">
             <div class="dot"></div>
             <span>Firebase 雲端量子網絡同步中</span>
@@ -945,8 +945,8 @@
 
             <div class="recom-section">
                 <h3 style="margin-bottom:6px; border:none; padding-bottom:0; color:#475569;">
-                    <span>🎯 加州三/四星穩開矩陣推薦 (三組智能模式)</span>
-                    <button onclick="refreshRecommendations()" style="border:none; background:#f1f5f9; padding:3px 8px; border-radius:5px; font-size:11px; cursor:pointer; color:#0284c7; font-weight:bold;">🔄 換一組</button>
+                    <span>🎯 加州三大模式三星 / 四星同步推薦矩陣</span>
+                    <button onclick="refreshRecommendations()" style="border:none; background:#0284c7; color:white; padding:4px 10px; border-radius:5px; font-size:11px; cursor:pointer; font-weight:bold;">🔄 換一組</button>
                 </h3>
                 <div class="recom-grid" id="recom-container">
                     <div style="font-size:12px; color:#94a3b8;">累積足夠開獎資料後生成...</div>
@@ -1043,7 +1043,6 @@
             <tbody id="history-tbody"></tbody>
         </table>
         
-        <!-- 🔽 顯示更多按鈕 -->
         <div id="load-more-container" style="text-align: center; margin-top: 15px; display: none;">
             <button onclick="loadMoreHistory()" style="background: linear-gradient(135deg, #475569, #1e293b); color: white; border: none; padding: 10px 24px; font-size: 13px; font-weight: 900; border-radius: 8px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
                 🔽 顯示更多 (載入前 30 天)
@@ -1099,7 +1098,7 @@
 
     let battleHistory = [];
     let probabilityRankedBalls = [];
-    let displayLimit = 10; // 🎯 新增：預設顯示筆數
+    let displayLimit = 10;
 
     onSnapshot(lotteryCol, (snapshot) => {
         battleHistory = [];
@@ -1133,7 +1132,7 @@
     }
 
     function isValidPrediction(nums) {
-        return nums && (nums.length === 4 || nums.length === 5);
+        return nums && (nums.length === 3 || nums.length === 4 || nums.length === 5);
     }
 
     function calculateResult(aiNums, myNums, drawNums) {
@@ -1283,8 +1282,8 @@
         let myNums = parseNumbers(myInput);
         let drawNums = parseNumbers(drawInput);
 
-        if (aiInput.trim() !== "" && !isValidPrediction(aiNums)) return alert("🤖 AI 號碼如果有填，必須是 4 碼或 5 碼！");
-        if (myInput.trim() !== "" && !isValidPrediction(myNums)) return alert("🧑 我的號碼如果有填，必須是 4 碼或 5 碼！");
+        if (aiInput.trim() !== "" && !isValidPrediction(aiNums)) return alert("🤖 AI 號碼如果有填，必須是 3、4 或 5 碼！");
+        if (myInput.trim() !== "" && !isValidPrediction(myNums)) return alert("🧑 我的號碼如果有填，必須是 3、4 或 5 碼！");
         if (drawInput.trim() !== "" && drawNums.length !== 5) return alert("📺 實際開獎號碼如果有填，必須剛好是 5 碼！");
 
         let existingRecord = battleHistory.find(r => r.date === date);
@@ -1463,45 +1462,85 @@
     }
 
     function renderRecommendations() {
-        if (!probabilityRankedBalls || probabilityRankedBalls.length < 12) return;
-
         const container = document.getElementById('recom-container');
-        
-        const pickFromRank = (pool, count, colorClass) => {
-            let shuffled = [...pool].sort(() => 0.5 - Math.random());
-            return shuffled.slice(0, count).map(x => ({ num: x.num, color: colorClass })).sort((a,b) => a.num - b.num);
+        if (!container) return;
+
+        let pool = (probabilityRankedBalls && probabilityRankedBalls.length >= 15)
+            ? probabilityRankedBalls.map(x => x.num)
+            : Array.from({length: 39}, (_, i) => i + 1);
+
+        const getRandomPicks = (sourceArray, count) => {
+            let shuffled = [...sourceArray].sort(() => 0.5 - Math.random());
+            let picked = [];
+            for (let n of shuffled) {
+                if (!picked.includes(n)) picked.push(n);
+                if (picked.length === count) break;
+            }
+            return picked.sort((a, b) => a - b);
         };
 
-        let s4StableA = pickFromRank(probabilityRankedBalls.slice(0, 6), 4, 'q-rose');
-        let s3CoreB = pickFromRank(probabilityRankedBalls.slice(2, 9), 3, 'q-gold');
-        
-        let aiMustHitTop = pickFromRank(probabilityRankedBalls.slice(0, 3), 2, 'q-cyan');
-        let aiMustHitBot = pickFromRank(probabilityRankedBalls.slice(3, 8), 2, 'q-cyan');
-        let aiMustHitGroup = [...aiMustHitTop, ...aiMustHitBot].sort((a,b) => a.num - b.num);
+        // 1. 美國天天樂搖球機模式 (完全動態隨機物理碰撞)
+        let m1_3 = getRandomPicks(Array.from({length: 39}, (_, i) => i + 1), 3);
+        let m1_4 = getRandomPicks(Array.from({length: 39}, (_, i) => i + 1), 4);
+
+        // 2. 歷史紀錄出牌模式 (加州連莊 + 2-5期回補版路動能)
+        let m2_pool = pool.slice(0, 16);
+        let m2_3 = getRandomPicks(m2_pool, 3);
+        let m2_4 = getRandomPicks(m2_pool, 4);
+
+        // 3. 尋找AI必開牌模式 (量子高期望值權重前排核心)
+        let m3_top = pool.slice(0, 5);
+        let m3_mid = pool.slice(5, 12);
+        let m3_3 = [...getRandomPicks(m3_top, 2), ...getRandomPicks(m3_mid, 1)].sort((a, b) => a - b);
+        let m3_4 = [...getRandomPicks(m3_top, 2), ...getRandomPicks(m3_mid, 2)].sort((a, b) => a - b);
 
         const list = [
-            { 
-                cardClass: 'c-rose',
-                title: '🌟 模式一：四星・連莊黃金穩開矩陣', 
-                sub: '依據加州高頻連莊與2-5期回補特性精選', 
-                balls: s4StableA 
-            },
-            { 
+            {
                 cardClass: 'c-gold',
-                title: '🎯 模式二：三星・高頻回補核心組', 
-                sub: '鎖定短期內爆發力最強的三星防守與牽引碼', 
-                balls: s3CoreB 
+                colorType: 'q-gold',
+                title: '🎰 1. 美國天天樂搖球機・三星',
+                sub: '模擬 3D 物理滾球機軌跡・隨機動能碰撞',
+                nums: m1_3
             },
-            { 
+            {
+                cardClass: 'c-gold',
+                colorType: 'q-gold',
+                title: '🎰 1. 美國天天樂搖球機・四星',
+                sub: '四象限動態落點覆蓋・避開人為盲區',
+                nums: m1_4
+            },
+            {
+                cardClass: 'c-rose',
+                colorType: 'q-rose',
+                title: '📊 2. 歷史紀錄出牌模式・三星',
+                sub: '依據加州高頻連動、隔期斜聯回補特徵',
+                nums: m2_3
+            },
+            {
+                cardClass: 'c-rose',
+                colorType: 'q-rose',
+                title: '📊 2. 歷史紀錄出牌模式・四星',
+                sub: '同尾數共振版路 + 拖牌收尾矩陣',
+                nums: m2_4
+            },
+            {
                 cardClass: 'c-cyan',
-                title: '🔥 模式三：AI 必開盤組・極限爆發矩陣 (四星)', 
-                sub: '量子算法鎖定今日極高機率必出號碼，強烈建議入組', 
-                balls: aiMustHitGroup 
+                colorType: 'q-cyan',
+                title: '🔥 3. 尋找AI必開牌模式・三星',
+                sub: '量子算法鎖定極凍反彈與爆發臨界點',
+                nums: m3_3
+            },
+            {
+                cardClass: 'c-cyan',
+                colorType: 'q-cyan',
+                title: '🔥 3. 尋找AI必開牌模式・四星',
+                sub: '全盤貝氏期望值權重最高之主力攻擊陣列',
+                nums: m3_4
             }
         ];
 
         container.innerHTML = list.map((item) => {
-            const rawNums = item.balls.map(b => b.num.toString().padStart(2, '0')).join(', ');
+            const rawNums = item.nums.map(n => n.toString().padStart(2, '0')).join(', ');
             return `
                 <div class="recom-card ${item.cardClass}">
                     <div class="recom-header">
@@ -1509,7 +1548,7 @@
                         <div class="recom-sub">${item.sub}</div>
                     </div>
                     <div class="recom-balls">
-                        ${item.balls.map(b => `<div class="recom-ball ${b.color}">${b.num.toString().padStart(2, '0')}</div>`).join('')}
+                        ${item.nums.map(n => `<div class="recom-ball ${item.colorType}">${n.toString().padStart(2, '0')}</div>`).join('')}
                     </div>
                     <div class="recom-btns">
                         <button class="btn-fast-apply" style="background:var(--ai-color);" onclick="applyRecomNums('${rawNums}', 'ai')">入 AI</button>
@@ -1520,12 +1559,457 @@
         }).join('');
     }
 
-    // 🎯 新增：載入更多歷史紀錄的函數
+    function calculateSingleTargetPlan() {
+        const firstUnits = parseFloat(document.getElementById('calc-st-first-units').value) || 0.10;
+        const targetDailyProfit = parseFloat(document.getElementById('calc-st-target-profit').value) || 1844;
+        const days = parseInt(document.getElementById('calc-st-days').value, 10) || 15;
+        const costPerUnit = parseFloat(document.getElementById('calc-st-cost').value) || 2755;
+        const prizePerUnit = parseFloat(document.getElementById('calc-st-prize').value) || 21200;
+
+        const tbody = document.getElementById('st-plan-tbody');
+        const mobileContainer = document.getElementById('st-plan-mobile-cards');
+        tbody.innerHTML = '';
+        mobileContainer.innerHTML = '';
+
+        let cumCost = 0;
+        let rowsHtml = '';
+        let mobileCardsHtml = '';
+        let netWinPerFullUnit = prizePerUnit - costPerUnit;
+
+        for (let day = 1; day <= days; day++) {
+            let targetCumProfit = targetDailyProfit * day;
+            let units = 0;
+
+            if (day === 1) {
+                units = firstUnits;
+            } else {
+                units = (cumCost + targetCumProfit) / netWinPerFullUnit;
+                units = Math.ceil(units * 100) / 100;
+            }
+
+            let currentCost = Math.round(units * costPerUnit);
+            cumCost += currentCost;
+            let currentPrize = Math.round(units * prizePerUnit);
+            let finalNetProfit = currentPrize - cumCost;
+
+            rowsHtml += `
+                <tr>
+                    <td><strong>第 ${day} 天</strong></td>
+                    <td class="text-green">+${targetCumProfit.toLocaleString()} 元</td>
+                    <td class="text-gold">${units.toFixed(2)} 車</td>
+                    <td>${currentCost.toLocaleString()} 元</td>
+                    <td style="color:#b91c1c;">${cumCost.toLocaleString()} 元</td>
+                    <td>${currentPrize.toLocaleString()} 元</td>
+                    <td class="text-green">+${finalNetProfit.toLocaleString()} 元</td>
+                </tr>
+            `;
+
+            mobileCardsHtml += `
+                <div class="day-plan-card">
+                    <div class="day-plan-card-header">
+                        <span class="day-plan-tag">📅 第 ${day} 天</span>
+                        <span class="day-plan-target">目標：+${targetCumProfit.toLocaleString()} 元</span>
+                    </div>
+                    <div class="day-plan-grid">
+                        <div class="day-plan-item">
+                            <span class="label">🚗 下注車數</span>
+                            <span class="val text-gold">${units.toFixed(2)} 車</span>
+                        </div>
+                        <div class="day-plan-item">
+                            <span class="label">💵 當期成本</span>
+                            <span class="val">${currentCost.toLocaleString()} 元</span>
+                        </div>
+                        <div class="day-plan-item">
+                            <span class="label">📉 累計總投入</span>
+                            <span class="val" style="color:#b91c1c;">${cumCost.toLocaleString()} 元</span>
+                        </div>
+                        <div class="day-plan-item">
+                            <span class="label">🏆 中獎彩金</span>
+                            <span class="val">${currentPrize.toLocaleString()} 元</span>
+                        </div>
+                    </div>
+                    <div style="border-top:1px dashed #e2e8f0; padding-top:4px; display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-size:11px; color:#475569; font-weight:bold;">中獎結算淨利</span>
+                        <span class="text-green" style="font-size:13px; font-weight:900;">+${finalNetProfit.toLocaleString()} 元</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        tbody.innerHTML = rowsHtml;
+        mobileContainer.innerHTML = mobileCardsHtml;
+        document.getElementById('st-plan-summary').innerText = `[${days}天單碼總備援本金建議：${cumCost.toLocaleString()} 元]`;
+    }
+
+    function calculateFourTargetPlan() {
+        const firstUnits = parseFloat(document.getElementById('calc-ft-first-units').value) || 0.10;
+        const targetDailyProfit = parseFloat(document.getElementById('calc-ft-target-profit').value) || 1844;
+        const days = parseInt(document.getElementById('calc-ft-days').value, 10) || 6;
+        const costPerUnit = parseFloat(document.getElementById('calc-ft-cost').value) || 2755;
+        const prizePerUnit = parseFloat(document.getElementById('calc-ft-prize').value) || 21200;
+
+        const tbody = document.getElementById('ft-plan-tbody');
+        const mobileContainer = document.getElementById('ft-plan-mobile-cards');
+        tbody.innerHTML = '';
+        mobileContainer.innerHTML = '';
+
+        let cumCost = 0;
+        let rowsHtml = '';
+        let mobileCardsHtml = '';
+        let netWinIfHitOne = prizePerUnit - (4 * costPerUnit);
+
+        for (let day = 1; day <= days; day++) {
+            let targetCumProfit = targetDailyProfit * day;
+            let units = 0;
+
+            if (day === 1) {
+                units = firstUnits;
+            } else {
+                units = (cumCost + targetCumProfit) / netWinIfHitOne;
+                units = Math.ceil(units * 100) / 100;
+            }
+
+            let currentRoundCost = Math.round(units * 4 * costPerUnit);
+            cumCost += currentRoundCost;
+            
+            let prizeIfHitOne = Math.round(units * prizePerUnit);
+            let netIfHitOne = prizeIfHitOne - cumCost;
+
+            let prizeIfHitTwo = Math.round(units * prizePerUnit * 2);
+            let netIfHitTwo = prizeIfHitTwo - cumCost;
+
+            rowsHtml += `
+                <tr>
+                    <td><strong>第 ${day} 期</strong></td>
+                    <td class="text-green">+${targetCumProfit.toLocaleString()} 元</td>
+                    <td class="text-gold" style="font-size:13px;">${units.toFixed(2)} 車/碼</td>
+                    <td>${currentRoundCost.toLocaleString()} 元</td>
+                    <td style="color:#b91c1c;">${cumCost.toLocaleString()} 元</td>
+                    <td>${prizeIfHitOne.toLocaleString()} 元</td>
+                    <td class="text-green">+${netIfHitOne.toLocaleString()} 元</td>
+                    <td class="text-purple">+${netIfHitTwo.toLocaleString()} 元</td>
+                </tr>
+            `;
+
+            mobileCardsHtml += `
+                <div class="day-plan-card">
+                    <div class="day-plan-card-header">
+                        <span class="day-plan-tag">🎱 第 ${day} 期 (4碼)</span>
+                        <span class="day-plan-target">目標：+${targetCumProfit.toLocaleString()} 元</span>
+                    </div>
+                    <div class="day-plan-grid">
+                        <div class="day-plan-item">
+                            <span class="label">🚗 每碼車數</span>
+                            <span class="val text-gold">${units.toFixed(2)} 車/碼</span>
+                        </div>
+                        <div class="day-plan-item">
+                            <span class="label">💵 當期4碼成本</span>
+                            <span class="val">${currentRoundCost.toLocaleString()} 元</span>
+                        </div>
+                        <div class="day-plan-item">
+                            <span class="label">📉 累計總投入</span>
+                            <span class="val" style="color:#b91c1c;">${cumCost.toLocaleString()} 元</span>
+                        </div>
+                        <div class="day-plan-item">
+                            <span class="label">保底淨利(中1碼)</span>
+                            <span class="val text-green">+${netIfHitOne.toLocaleString()} 元</span>
+                        </div>
+                    </div>
+                    <div style="border-top:1px dashed #e2e8f0; padding-top:4px; display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-size:11px; color:#7c3aed; font-weight:bold;">⚡ 若中2碼(雙停暴利)</span>
+                        <span class="text-purple" style="font-size:12px; font-weight:900;">+${netIfHitTwo.toLocaleString()} 元</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        tbody.innerHTML = rowsHtml;
+        mobileContainer.innerHTML = mobileCardsHtml;
+        document.getElementById('ft-plan-summary').innerText = `[${days}期4碼總備援本金建議：${cumCost.toLocaleString()} 元]`;
+    }
+
+    let currentTierSubMode = 'single';
+    let currentTierIdx = 0;
+    let customTierStartCars = 0.10;
+    let customTierTotalDays = 15;
+
+    function getChineseTierName(idx) {
+        const cNums = ["一", "二", "三", "四", "五", "六", "七", "八", "九", "十", "十一", "十二", "十三", "十四", "十五", "十六", "十七", "十八", "十九", "二十"];
+        return `第${cNums[idx] || (idx + 1)}階`;
+    }
+
+    function buildDynamicSingleTier(startCars, totalDays) {
+        const costPerCar = 2755;
+        const prizePerCar = 21200;
+        let plan = [];
+        let cumCost = 0;
+        let tierStep = 3;
+        let totalTiers = Math.ceil(totalDays / tierStep);
+
+        for (let t = 0; t < totalTiers; t++) {
+            let cars = 0;
+            if (t === 0) {
+                cars = startCars;
+            } else {
+                cars = (cumCost + 1000) / (prizePerCar - (tierStep * costPerCar));
+                cars = Math.ceil(cars * 100) / 100;
+                if (cars <= plan[plan.length - 1].cars) {
+                    cars = plan[plan.length - 1].cars + 0.05;
+                }
+            }
+
+            for (let d = 1; d <= tierStep; d++) {
+                let dayNum = t * tierStep + d;
+                if (dayNum > totalDays) break;
+
+                let curCost = Math.round(cars * costPerCar);
+                cumCost += curCost;
+                let prize = Math.round(cars * prizePerCar);
+                let profit = prize - cumCost;
+
+                plan.push({
+                    day: dayNum,
+                    tier: getChineseTierName(t),
+                    cars: cars,
+                    cost: curCost,
+                    total: cumCost,
+                    prize: prize,
+                    profit: profit
+                });
+            }
+        }
+        return plan;
+    }
+
+    function buildDynamicFourTier(startCars, totalDays) {
+        const singleCost = 2755;
+        const roundFourCost = singleCost * 4;
+        const prizePerCar = 21200;
+        let plan = [];
+        let cumCost = 0;
+        let tierStep = 2;
+        let totalTiers = Math.ceil(totalDays / tierStep);
+
+        for (let t = 0; t < totalTiers; t++) {
+            let cars = 0;
+            if (t === 0) {
+                cars = startCars;
+            } else {
+                cars = (cumCost + 1200) / (prizePerCar - roundFourCost);
+                cars = Math.ceil(cars * 100) / 100;
+                if (cars <= plan[plan.length - 1].cars) {
+                    cars = Math.ceil(plan[plan.length - 1].cars * 2.2 * 100) / 100;
+                }
+            }
+
+            for (let d = 1; d <= tierStep; d++) {
+                let dayNum = t * tierStep + d;
+                if (dayNum > totalDays) break;
+
+                let curCost = Math.round(cars * roundFourCost);
+                cumCost += curCost;
+                let prize = Math.round(cars * prizePerCar);
+                let profit = prize - cumCost;
+
+                if (profit < 0) {
+                    let neededCars = (cumCost - curCost + 500) / (prizePerCar - roundFourCost);
+                    cars = Math.ceil(neededCars * 100) / 100;
+                    cumCost = cumCost - curCost + Math.round(cars * roundFourCost);
+                    curCost = Math.round(cars * roundFourCost);
+                    prize = Math.round(cars * prizePerCar);
+                    profit = prize - cumCost;
+                }
+
+                plan.push({
+                    day: dayNum,
+                    tier: getChineseTierName(t),
+                    cars: cars,
+                    cost: curCost,
+                    total: cumCost,
+                    prize: prize,
+                    profit: profit
+                });
+            }
+        }
+        return plan;
+    }
+
+    function getDynamicTierPlan() {
+        return currentTierSubMode === 'single'
+            ? buildDynamicSingleTier(customTierStartCars, customTierTotalDays)
+            : buildDynamicFourTier(customTierStartCars, customTierTotalDays);
+    }
+
+    function switchTierSubMode(mode) {
+        currentTierSubMode = mode;
+        currentTierIdx = 0;
+        document.getElementById('sub-tier-single').classList.toggle('active', mode === 'single');
+        document.getElementById('sub-tier-four').classList.toggle('active', mode === 'four');
+
+        document.getElementById('tracker-mode-name').innerText = mode === 'single' 
+            ? '單碼階梯均注 (3期一階) 當前執行狀態' 
+            : '4碼階梯均注 (2期一階・保證賺錢) 當前執行狀態';
+        renderTierTracker();
+    }
+
+    function applyDynamicTierConfig() {
+        let carsVal = parseFloat(document.getElementById('cfg-tier-cars').value);
+        let daysVal = parseInt(document.getElementById('cfg-tier-total-days').value, 10);
+
+        if (isNaN(carsVal) || carsVal <= 0) return alert("請輸入有效的起始車數！");
+        if (isNaN(daysVal) || daysVal < 2) return alert("規劃期數至少需要 2 期以上！");
+
+        customTierStartCars = carsVal;
+        customTierTotalDays = daysVal;
+        currentTierIdx = 0;
+        renderTierTracker();
+        alert(`✅ 已動態生成共 ${customTierTotalDays} 期的階梯均注計畫表！`);
+    }
+
+    function renderTierTracker() {
+        const plan = getDynamicTierPlan();
+        if (currentTierIdx >= plan.length) currentTierIdx = 0;
+        const cur = plan[currentTierIdx];
+
+        document.getElementById('disp-day').innerText = `第 ${cur.day} 期`;
+        document.getElementById('disp-tier').innerText = cur.tier;
+        document.getElementById('disp-cars').innerText = currentTierSubMode === 'single' 
+            ? `${cur.cars.toFixed(2)} 車` 
+            : `各 ${cur.cars.toFixed(2)} 車 (共 ${(cur.cars * 4).toFixed(2)} 車)`;
+        document.getElementById('disp-cost').innerText = `${cur.cost.toLocaleString()} 元`;
+        document.getElementById('disp-total-cost').innerText = `${cur.total.toLocaleString()} 元`;
+        
+        const profitEl = document.getElementById('disp-win-profit');
+        profitEl.innerText = `${cur.profit > 0 ? '+' : ''}${cur.profit.toLocaleString()} 元`;
+        profitEl.className = cur.profit >= 0 ? 'val win' : 'val highlight';
+
+        document.getElementById('tracker-stoploss-tip').innerText = `總共 ${plan.length} 期`;
+
+        const tbody = document.getElementById('tier-table-body');
+        tbody.innerHTML = '';
+        plan.forEach((row, idx) => {
+            const tr = document.createElement('tr');
+            if (idx === currentTierIdx) tr.className = 'active-row';
+            tr.innerHTML = `
+                <td>第 ${row.day} 期</td>
+                <td>${row.tier}</td>
+                <td>${row.cars.toFixed(2)} 車</td>
+                <td>${row.cost.toLocaleString()} 元</td>
+                <td style="color:#b91c1c;">${row.total.toLocaleString()} 元</td>
+                <td>${row.prize.toLocaleString()} 元</td>
+                <td style="color:${row.profit >= 0 ? '#16a34a' : '#dc2626'}">${row.profit > 0 ? '+' : ''}${row.profit.toLocaleString()} 元</td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        const mobileContainer = document.getElementById('tier-mobile-cards-container');
+        mobileContainer.innerHTML = '';
+        plan.forEach((row, idx) => {
+            const isAct = idx === currentTierIdx;
+            const card = document.createElement('div');
+            card.className = `day-plan-card ${isAct ? 'current-active' : ''}`;
+            card.innerHTML = `
+                <div class="day-plan-card-header">
+                    <span class="day-plan-tag">${isAct ? '👉 ' : ''}第 ${row.day} 期 ${isAct ? '(進行中)' : ''}</span>
+                    <span class="day-plan-tier">${row.tier}</span>
+                </div>
+                <div class="day-plan-grid">
+                    <div class="day-plan-item">
+                        <span class="label">🚗 ${currentTierSubMode === 'single' ? '下注車數' : '每碼車數'}</span>
+                        <span class="val text-gold">${row.cars.toFixed(2)} 車</span>
+                    </div>
+                    <div class="day-plan-item">
+                        <span class="label">💵 當期成本</span>
+                        <span class="val">${row.cost.toLocaleString()} 元</span>
+                    </div>
+                    <div class="day-plan-item">
+                        <span class="label">📉 累計總投入</span>
+                        <span class="val" style="color:#b91c1c;">${row.total.toLocaleString()} 元</span>
+                    </div>
+                    <div class="day-plan-item">
+                        <span class="label">🏆 中獎彩金</span>
+                        <span class="val">${row.prize.toLocaleString()} 元</span>
+                    </div>
+                </div>
+                <div style="border-top:1px dashed #e2e8f0; padding-top:4px; display:flex; justify-content:space-between; align-items:center;">
+                    <span style="font-size:11px; color:#475569; font-weight:bold;">中獎實得淨利</span>
+                    <span class="${row.profit >= 0 ? 'text-green' : 'text-gold'}" style="font-size:13px; font-weight:900;">+${row.profit.toLocaleString()} 元</span>
+                </div>
+            `;
+            mobileContainer.appendChild(card);
+        });
+    }
+
+    function recordTierResult(won) {
+        const plan = getDynamicTierPlan();
+        if (won) {
+            alert(`🎉 恭喜過關！淨獲利 ${plan[currentTierIdx].profit.toLocaleString()} 元！自動回歸第 1 期重啟循環。`);
+            currentTierIdx = 0;
+        } else {
+            if (currentTierIdx < plan.length - 1) {
+                currentTierIdx++;
+            } else {
+                alert(`⚠️ 已達設定的最後一期 (${plan.length}期)！請嚴守紀律立即重置。`);
+                currentTierIdx = 0;
+            }
+        }
+        renderTierTracker();
+    }
+
+    function resetTierGame() {
+        currentTierIdx = 0;
+        renderTierTracker();
+    }
+
+    function openProfitModal() {
+        document.getElementById('profit-modal').style.display = 'flex';
+        calculateSingleTargetPlan();
+        calculateFourTargetPlan();
+        renderTierTracker();
+    }
+    function closeProfitModal() {
+        document.getElementById('profit-modal').style.display = 'none';
+    }
+    function closeModalOnOverlay(e) {
+        if (e.target.id === 'profit-modal') closeProfitModal();
+    }
+
+    function switchModalTab(tabKey) {
+        const tabs = ['single-target', 'four-target', 'tier-track'];
+        tabs.forEach(t => {
+            document.getElementById(`tab-btn-${t}`).classList.toggle('active', t === tabKey);
+            document.getElementById(`tab-content-${t}`).style.display = (t === tabKey) ? 'block' : 'none';
+        });
+    }
+
     function loadMoreHistory() {
-        displayLimit += 30; // 每次多載入 30 筆
+        displayLimit += 30;
         renderAll();
     }
+
+    function refreshRecommendations() {
+        renderRecommendations();
+    }
+
+    window.openProfitModal = openProfitModal;
+    window.closeProfitModal = closeProfitModal;
+    window.closeModalOnOverlay = closeModalOnOverlay;
+    window.switchModalTab = switchModalTab;
+    window.switchTierSubMode = switchTierSubMode;
+    window.applyDynamicTierConfig = applyDynamicTierConfig;
+    window.recordTierResult = recordTierResult;
+    window.resetTierGame = resetTierGame;
+    window.calculateSingleTargetPlan = calculateSingleTargetPlan;
+    window.calculateFourTargetPlan = calculateFourTargetPlan;
     window.loadMoreHistory = loadMoreHistory;
+    window.refreshRecommendations = refreshRecommendations;
+
+    window.applyRecomNums = function(numsStr, targetKey) {
+        let targetMap = { ai: 'ai-nums', my: 'my-nums' };
+        let nameMap = { ai: 'AI', my: '我的' };
+        document.getElementById(targetMap[targetKey]).value = numsStr;
+        alert(`✅ 已將推薦號碼 [ ${numsStr} ] 帶入【${nameMap[targetKey]}】！`);
+    };
 
     function renderAll() {
         const tbody = document.getElementById('history-tbody');
@@ -1535,7 +2019,6 @@
         let totalAiHits = 0, totalMyHits = 0;
         let myRounds = 0, aiRounds = 0;
 
-        // 分析與統計：依然針對「所有」紀錄計算，不受顯示筆數影響
         analyzeHotColdNumbers();
 
         battleHistory.forEach(item => {
@@ -1553,7 +2036,6 @@
             }
         });
 
-        // 🎯 畫面渲染：僅針對前 displayLimit 筆進行渲染
         let visibleRecords = battleHistory.slice(0, displayLimit);
         
         visibleRecords.forEach(item => {
@@ -1602,7 +2084,6 @@
             tbody.innerHTML = `<tr><td colspan="6" style="padding: 20px; color: #94a3b8; font-weight:bold;">目前尚無對決紀錄，可滑至最下方貼上多期天天樂號碼！</td></tr>`;
         }
 
-        // 🎯 判斷是否顯示「載入更多」按鈕
         const loadMoreBtn = document.getElementById('load-more-container');
         if (battleHistory.length > displayLimit) {
             loadMoreBtn.style.display = 'block';
@@ -1610,7 +2091,6 @@
             loadMoreBtn.style.display = 'none';
         }
 
-        // 更新戰力板
         document.getElementById('total-rounds').innerText = totalRounds;
         document.getElementById('ai-hits').innerText = totalAiHits;
         document.getElementById('my-hits').innerText = totalMyHits;
