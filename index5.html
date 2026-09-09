@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>今彩 539 光量子 AI 科技對決擂台 (1800碰/9000碰 專業期望值版)</title>
+    <title>今彩 539 光量子 AI 科技對決擂台 (終極數學期望值旗艦版)</title>
     <style>
         :root {
             --bg-color: #0b0f19; 
@@ -436,23 +436,9 @@
             border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
             padding-bottom: 8px;
         }
-        .touch-miss-num {
-            font-size: 28px;
-            font-weight: 900;
-            font-family: monospace;
-            color: #ffffff;
-        }
-        .touch-prob-val {
-            font-size: 18px;
-            font-weight: 900;
-            font-family: monospace;
-            color: #38bdf8;
-        }
-        .touch-sub-desc {
-            font-size: 11px;
-            color: #94a3b8;
-            line-height: 1.4;
-        }
+        .touch-miss-num { font-size: 28px; font-weight: 900; font-family: monospace; color: #ffffff; }
+        .touch-prob-val { font-size: 18px; font-weight: 900; font-family: monospace; color: #38bdf8; }
+        .touch-sub-desc { font-size: 11px; color: #94a3b8; line-height: 1.4; }
 
         /* 工具面板區 */
         .tools-panel { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 14px; margin-bottom: 18px; }
@@ -475,70 +461,34 @@
             font-weight: 900;
         }
         
-        .badge-list { 
-            display: grid; 
-            grid-template-columns: repeat(4, 1fr); 
-            gap: 8px; 
-        }
+        .badge-list { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
         .info-badge { 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            background: rgba(15, 23, 42, 0.9); 
-            padding: 6px 4px; 
-            border-radius: 10px; 
-            width: 100%;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            position: relative;
-            box-shadow: inset 0 0 8px rgba(0,0,0,0.5);
+            display: flex; flex-direction: column; align-items: center; background: rgba(15, 23, 42, 0.9); 
+            padding: 6px 4px; border-radius: 10px; width: 100%; border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative; box-shadow: inset 0 0 8px rgba(0,0,0,0.5);
         }
         .info-badge .num { font-size: 16px; font-weight: 900; font-family: monospace; }
         .info-badge .desc { font-size: 9.5px; margin-top: 2px; font-weight: bold; text-align: center; }
 
-        .info-badge.hit-today {
-            border-color: #f43f5e;
-            box-shadow: 0 0 12px rgba(244, 63, 94, 0.5);
-        }
+        .info-badge.hit-today { border-color: #f43f5e; box-shadow: 0 0 12px rgba(244, 63, 94, 0.5); }
         .info-badge.hit-today::after {
-            content: '開';
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background: #f43f5e;
-            color: white;
-            font-size: 8px;
-            font-weight: 900;
-            padding: 0 4px;
-            border-radius: 6px;
+            content: '開'; position: absolute; top: -5px; right: -5px; background: #f43f5e; color: white;
+            font-size: 8px; font-weight: 900; padding: 0 4px; border-radius: 6px;
         }
-
         .hot-badge { border-color: rgba(244, 63, 94, 0.35); }
         .hot-badge .num { color: #fb7185; text-shadow: 0 0 8px rgba(251, 113, 133, 0.5); }
         .hot-badge .desc { color: #f43f5e; }
-
         .cold-badge { border-color: rgba(56, 189, 248, 0.35); }
         .cold-badge .num { color: #38bdf8; text-shadow: 0 0 8px rgba(56, 189, 248, 0.5); }
         .cold-badge .desc { color: #0284c7; }
 
         /* 推薦卡片 */
-        .recom-section {
-            margin-top: 16px;
-            padding-top: 14px;
-            border-top: 1px dashed rgba(255, 255, 255, 0.15);
-        }
+        .recom-section { margin-top: 16px; padding-top: 14px; border-top: 1px dashed rgba(255, 255, 255, 0.15); }
         .recom-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 10px; }
         .recom-card {
-            background: rgba(30, 41, 59, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 12px;
-            padding: 12px 14px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 10px;
-            position: relative;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            background: rgba(30, 41, 59, 0.5); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px;
+            padding: 12px 14px; display: flex; align-items: center; justify-content: space-between;
+            flex-wrap: wrap; gap: 10px; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
         .recom-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; border-radius: 12px 0 0 12px; }
         .recom-card.c-gold::before { background: #fbbf24; box-shadow: 0 0 8px #fbbf24; }
@@ -549,23 +499,13 @@
         .recom-header { display: flex; flex-direction: column; gap: 2px; }
         .recom-title { font-size: 13px; font-weight: 900; }
         .recom-sub { font-size: 10.5px; color: #94a3b8; }
-        
         .recom-balls { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
         
         .quantum-ball {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            font-weight: 900;
-            font-family: monospace;
-            position: relative;
+            width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 14px; font-weight: 900; font-family: monospace; position: relative;
             background: radial-gradient(circle at 35% 30%, #1e293b 0%, #090d16 100%);
-            border: 1.5px solid;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.6), inset 0 2px 4px rgba(255,255,255,0.25);
+            border: 1.5px solid; box-shadow: 0 4px 10px rgba(0,0,0,0.6), inset 0 2px 4px rgba(255,255,255,0.25);
             transition: all 0.25s;
         }
         .quantum-ball.q-cyan { border-color: #38bdf8; color: #7dd3fc; text-shadow: 0 0 8px #0284c7; box-shadow: 0 0 10px rgba(56, 189, 248, 0.35); }
@@ -574,252 +514,118 @@
         .quantum-ball.q-purple { border-color: #c084fc; color: #e9d5ff; text-shadow: 0 0 8px #7c3aed; box-shadow: 0 0 10px rgba(168, 85, 247, 0.35); }
 
         .recom-btns { display: flex; gap: 4px; }
-        .btn-fast-apply {
-            border: none;
-            color: white;
-            font-size: 10px;
-            font-weight: 900;
-            padding: 4px 8px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
+        .btn-fast-apply { border: none; color: white; font-size: 10px; font-weight: 900; padding: 4px 8px; border-radius: 5px; cursor: pointer; }
 
         /* 擬真台彩氣動開獎機 */
         .taicai-machine-wrapper {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
             background: radial-gradient(circle at 50% 50%, rgba(30, 41, 59, 0.7) 0%, rgba(11, 15, 25, 0.98) 100%);
-            padding: 22px 16px;
-            border-radius: 18px;
-            border: 1.5px solid rgba(251, 191, 36, 0.35);
-            box-shadow: inset 0 0 30px rgba(0,0,0,0.85);
-            position: relative;
-            overflow: hidden;
+            padding: 22px 16px; border-radius: 18px; border: 1.5px solid rgba(251, 191, 36, 0.35);
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.85); position: relative; overflow: hidden;
         }
-
         .taicai-studio {
-            display: flex;
-            align-items: flex-end;
-            gap: 16px;
-            margin: 14px 0 18px;
-            background: rgba(0, 0, 0, 0.5);
-            padding: 16px 20px;
-            border-radius: 14px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            position: relative;
+            display: flex; align-items: flex-end; gap: 16px; margin: 14px 0 18px;
+            background: rgba(0, 0, 0, 0.5); padding: 16px 20px; border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.1); position: relative;
         }
-
         .cylinder-chamber {
-            position: relative;
-            width: 120px;
-            height: 190px;
+            position: relative; width: 120px; height: 190px;
             background: radial-gradient(circle at 40% 30%, rgba(255, 255, 255, 0.15) 0%, rgba(56, 189, 248, 0.06) 50%, rgba(15, 23, 42, 0.8) 100%);
-            border: 3px solid rgba(56, 189, 248, 0.7);
-            border-top: 3.5px solid rgba(255, 255, 255, 0.95);
-            border-radius: 14px 14px 6px 6px;
-            box-shadow: 0 0 25px rgba(56, 189, 248, 0.35), inset 0 0 20px rgba(56, 189, 248, 0.2);
-            overflow: visible;
+            border: 3px solid rgba(56, 189, 248, 0.7); border-top: 3.5px solid rgba(255, 255, 255, 0.95);
+            border-radius: 14px 14px 6px 6px; box-shadow: 0 0 25px rgba(56, 189, 248, 0.35), inset 0 0 20px rgba(56, 189, 248, 0.2); overflow: visible;
         }
         .cylinder-base {
             position: absolute; bottom: 0; left: 0; right: 0; height: 14px;
-            background: linear-gradient(90deg, #b45309, #fbbf24, #b45309);
-            border-radius: 0 0 4px 4px;
+            background: linear-gradient(90deg, #b45309, #fbbf24, #b45309); border-radius: 0 0 4px 4px;
         }
-
         .power-box {
-            position: relative;
-            width: 155px;
-            height: 150px;
-            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-            border: 2px solid #475569;
-            border-radius: 10px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.6);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            overflow: visible;
+            position: relative; width: 155px; height: 150px; background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border: 2px solid #475569; border-radius: 10px; box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+            display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: visible;
         }
         .power-box-screen {
             width: 100px; height: 38px; background: #000000; border: 1.5px solid #334155; border-radius: 6px;
-            display: flex; align-items: center; justify-content: center;
-            color: #fbbf24; font-family: monospace; font-size: 14px; font-weight: 900;
-            box-shadow: inset 0 0 8px rgba(251, 191, 36, 0.5);
-            letter-spacing: 1px;
-            margin-top: 6px;
+            display: flex; align-items: center; justify-content: center; color: #fbbf24; font-family: monospace; font-size: 14px; font-weight: 900;
+            box-shadow: inset 0 0 8px rgba(251, 191, 36, 0.5); letter-spacing: 1px; margin-top: 6px;
         }
-        
         .rolling-platform-right {
-            position: absolute;
-            top: 25px; right: -45px;
-            width: 145px; height: 20px;
-            background: linear-gradient(90deg, #334155, #94a3b8, #475569, #334155);
-            border: 2px solid #cbd5e1;
-            border-radius: 10px;
-            z-index: 25;
-            box-shadow: 0 0 15px rgba(56,189,248,0.6);
+            position: absolute; top: 25px; right: -45px; width: 145px; height: 20px; background: linear-gradient(90deg, #334155, #94a3b8, #475569, #334155);
+            border: 2px solid #cbd5e1; border-radius: 10px; z-index: 25; box-shadow: 0 0 15px rgba(56,189,248,0.6);
         }
-
         .airflow-ball {
-            position: absolute;
-            width: 18px; height: 18px; border-radius: 50%;
-            background: radial-gradient(circle at 35% 30%, #fde047 0%, #d97706 100%);
-            color: #78350f; font-size: 8px; font-weight: 900;
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 0 8px rgba(251, 191, 36, 0.9);
-            transition: transform 0.05s linear;
+            position: absolute; width: 18px; height: 18px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fde047 0%, #d97706 100%);
+            color: #78350f; font-size: 8px; font-weight: 900; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 0 8px rgba(251, 191, 36, 0.9); transition: transform 0.05s linear;
         }
-
         .ball-spotlight-overlay {
-            position: absolute;
-            top: 15px; left: 50%; transform: translateX(-50%) scale(0);
-            width: 85px; height: 85px;
+            position: absolute; top: 15px; left: 50%; transform: translateX(-50%) scale(0); width: 85px; height: 85px;
             background: radial-gradient(circle, rgba(251,191,36,0.95) 0%, rgba(180,83,9,0.9) 70%, rgba(15,23,42,0.95) 100%);
-            border: 3.5px solid #fef08a;
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 0 35px rgba(251,191,36,0.8), inset 0 0 18px rgba(255,255,255,0.7);
-            z-index: 100;
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            font-size: 34px; font-weight: 900; color: #ffffff; font-family: monospace;
-            text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+            border: 3.5px solid #fef08a; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 0 35px rgba(251,191,36,0.8), inset 0 0 18px rgba(255,255,255,0.7); z-index: 100;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); font-size: 34px; font-weight: 900; color: #ffffff; font-family: monospace; text-shadow: 0 2px 8px rgba(0,0,0,0.8);
         }
-        .ball-spotlight-overlay.show {
-            transform: translateX(-50%) scale(1);
-        }
-
+        .ball-spotlight-overlay.show { transform: translateX(-50%) scale(1); }
         .machine-balls { 
-            display: flex; justify-content: center; gap: 8px; padding: 12px; 
-            background: rgba(15, 23, 42, 0.8); 
-            border-radius: 20px; margin-top: 10px; width: 100%; max-width: 360px; 
-            border: 1px solid rgba(255, 255, 255, 0.15); 
+            display: flex; justify-content: center; gap: 8px; padding: 12px; background: rgba(15, 23, 42, 0.8); 
+            border-radius: 20px; margin-top: 10px; width: 100%; max-width: 360px; border: 1px solid rgba(255, 255, 255, 0.15); 
         }
         .machine-ball { 
-            width: 44px; height: 44px; border-radius: 50%; 
-            background: rgba(30, 41, 59, 0.6); 
-            color: #64748b; display: flex; align-items: center; justify-content: center; 
-            font-size: 18px; font-weight: 900; 
+            width: 44px; height: 44px; border-radius: 50%; background: rgba(30, 41, 59, 0.6); color: #64748b; 
+            display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 900; 
             border: 1.5px dashed #475569; transition: all 0.4s; font-family: monospace; 
         }
         .machine-ball.revealed { 
-            background: radial-gradient(circle at 35% 30%, #fbbf24 0%, #b45309 100%); 
-            color: #ffffff; border: 2px solid #fde047; 
-            box-shadow: 0 0 20px rgba(251, 191, 36, 0.6); 
-            transform: scale(1.1); 
+            background: radial-gradient(circle at 35% 30%, #fbbf24 0%, #b45309 100%); color: #ffffff; border: 2px solid #fde047; 
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.6); transform: scale(1.1); 
         }
-
         .btn-roll { 
-            width: 100%; max-width: 360px; 
-            background: linear-gradient(135deg, #0284c7, #7c3aed); 
-            color: white; border: none; padding: 14px 22px; 
-            font-size: 15px; font-weight: 900; border-radius: 12px; cursor: pointer; 
-            box-shadow: 0 4px 20px rgba(2, 132, 199, 0.4);
-            transition: 0.2s;
-            margin-top: 12px;
+            width: 100%; max-width: 360px; background: linear-gradient(135deg, #0284c7, #7c3aed); 
+            color: white; border: none; padding: 14px 22px; font-size: 15px; font-weight: 900; border-radius: 12px; cursor: pointer; 
+            box-shadow: 0 4px 20px rgba(2, 132, 199, 0.4); transition: 0.2s; margin-top: 12px;
         }
         .btn-roll:hover { filter: brightness(1.15); transform: translateY(-1px); }
         .btn-roll:disabled { background: #334155; cursor: not-allowed; box-shadow: none; }
 
         /* 輸入表單區塊 */
         .input-panel { 
-            background: var(--panel-bg); 
-            padding: 18px; 
-            border-radius: 16px; 
-            border: 1px solid var(--panel-border); 
-            margin-bottom: 18px; 
-            backdrop-filter: blur(14px);
+            background: var(--panel-bg); padding: 18px; border-radius: 16px; border: 1px solid var(--panel-border); margin-bottom: 18px; backdrop-filter: blur(14px);
         }
         .input-panel h2 { margin-bottom: 12px; font-size: 15px; color: var(--text-main); border-left: 4px solid var(--draw-color); padding-left: 10px; font-weight: 900; }
         .crawl-panel h2 { border-left-color: var(--neon-purple); }
-
         .form-row { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 12px; }
         .form-group { flex: 1; min-width: 170px; display: flex; flex-direction: column; gap: 4px; }
         .form-group label { font-size: 11px; font-weight: 800; color: #94a3b8; }
         .form-group input { 
-            padding: 9px 12px; 
-            background: #1e293b; 
-            border: 1.5px solid #334155; 
-            color: #f8fafc; 
-            border-radius: 8px; 
-            font-size: 14px; 
-            outline: none; 
-            font-family: monospace;
-            font-weight: 600;
+            padding: 9px 12px; background: #1e293b; border: 1.5px solid #334155; color: #f8fafc; border-radius: 8px; font-size: 14px; outline: none; font-family: monospace; font-weight: 600;
         }
         .form-group input:focus { border-color: var(--ai-color); box-shadow: 0 0 10px rgba(56, 189, 248, 0.3); }
-        
         .btn-submit { 
-            width: 100%; 
-            background: linear-gradient(135deg, #0284c7, #2563eb); 
-            color: white; 
-            border: none; 
-            padding: 13px; 
-            font-size: 14px; 
-            font-weight: 900; 
-            border-radius: 10px; 
-            cursor: pointer; 
-            margin-top: 4px; 
-            box-shadow: 0 4px 15px rgba(2, 132, 199, 0.3);
+            width: 100%; background: linear-gradient(135deg, #0284c7, #2563eb); color: white; border: none; padding: 13px; font-size: 14px; font-weight: 900; border-radius: 10px; cursor: pointer; margin-top: 4px; box-shadow: 0 4px 15px rgba(2, 132, 199, 0.3);
         }
         .btn-submit:hover { filter: brightness(1.15); }
 
         /* 歷史戰績表格 */
         .history-panel { 
-            background: var(--panel-bg); 
-            padding: 18px; 
-            border-radius: 16px; 
-            border: 1px solid var(--panel-border); 
-            margin-bottom: 18px; 
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-            backdrop-filter: blur(14px);
+            background: var(--panel-bg); padding: 18px; border-radius: 16px; border: 1px solid var(--panel-border); margin-bottom: 18px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); backdrop-filter: blur(14px);
         }
         table { width: 100%; border-collapse: collapse; text-align: center; }
         th { background: rgba(30, 41, 59, 0.7); padding: 12px 6px; border-bottom: 2px solid rgba(255, 255, 255, 0.1); font-weight: 900; font-size: 13px; color: #94a3b8; }
         td { padding: 12px 6px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); vertical-align: middle; }
         tr:hover { background: rgba(255, 255, 255, 0.02); }
 
-        /* 號碼球樣式 */
         .num-container { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; align-items: center; }
         .num-ball { 
-            width: var(--ball-size); 
-            height: var(--ball-size); 
-            border-radius: 50%; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            font-size: 15px; 
-            font-weight: 900; 
-            background: radial-gradient(circle at 35% 30%, #1e293b 0%, #090d16 100%); 
-            color: #f8fafc; 
-            font-family: monospace; 
-            border: 1.5px solid #475569; 
-            box-shadow: 0 3px 8px rgba(0,0,0,0.5), inset 0 2px 4px rgba(255,255,255,0.15);
-            transition: transform 0.2s;
+            width: var(--ball-size); height: var(--ball-size); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 900; 
+            background: radial-gradient(circle at 35% 30%, #1e293b 0%, #090d16 100%); color: #f8fafc; font-family: monospace; border: 1.5px solid #475569; box-shadow: 0 3px 8px rgba(0,0,0,0.5), inset 0 2px 4px rgba(255,255,255,0.15); transition: transform 0.2s;
         }
-        .num-ball.hit { 
-            background: radial-gradient(circle at 35% 30%, #fb7185 0%, #be123c 100%); 
-            color: #ffffff; 
-            box-shadow: 0 0 15px rgba(251, 113, 133, 0.6); 
-            transform: scale(1.12); 
-            border-color: #fda4af; 
-        }
-        .num-ball.draw { 
-            background: radial-gradient(circle at 35% 30%, #fde047 0%, #b45309 100%); 
-            color: #ffffff; 
-            border-color: #fef08a; 
-            box-shadow: 0 0 12px rgba(245, 158, 11, 0.5); 
-        }
-
+        .num-ball.hit { background: radial-gradient(circle at 35% 30%, #fb7185 0%, #be123c 100%); color: #ffffff; box-shadow: 0 0 15px rgba(251, 113, 133, 0.6); transform: scale(1.12); border-color: #fda4af; }
+        .num-ball.draw { background: radial-gradient(circle at 35% 30%, #fde047 0%, #b45309 100%); color: #ffffff; border-color: #fef08a; box-shadow: 0 0 12px rgba(245, 158, 11, 0.5); }
         .empty-label { color: #64748b; font-size: 12px; letter-spacing: 1px; font-family: monospace; font-weight: bold; }
-
         .winner-badge { padding: 4px 10px; border-radius: 16px; font-size: 11px; font-weight: 900; display: inline-block; font-family: monospace; }
         .badge-ai { background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid #38bdf8; box-shadow: 0 0 8px rgba(56, 189, 248, 0.2); }
         .badge-my { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid #34d399; box-shadow: 0 0 8px rgba(16, 185, 129, 0.2); }
         .badge-tie { background: rgba(148, 163, 184, 0.15); color: #94a3b8; border: 1px solid #64748b; }
         .badge-pending { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid #f59e0b; } 
-        
         .action-btn { padding: 5px 9px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: bold; margin: 2px; border: 1px solid #475569; }
         .delete-btn { background: rgba(244, 63, 94, 0.15); color: #fb7185; border-color: rgba(244, 63, 94, 0.3); }
         .delete-btn:hover { background: rgba(244, 63, 94, 0.25); }
@@ -848,7 +654,7 @@
             .btn-recalc { grid-column: span 2; width: 100%; height: 34px; }
 
             .plan-config-bar { padding: 8px 10px; gap: 6px; }
-            .plan-config-bar input { width: 75px; }
+            .plan-config-bar input { width: 70px; }
             .btn-config-calc { width: 100%; margin-top: 4px; }
 
             .profit-table-wrapper { display: none; }
@@ -860,36 +666,11 @@
             .history-panel { padding: 12px; }
             table, thead, tbody, th, td, tr { display: block; }
             thead tr { position: absolute; top: -9999px; left: -9999px; }
-            tr { 
-                background: #1e293b; 
-                border: 1px solid rgba(255, 255, 255, 0.08); 
-                border-radius: 10px; 
-                margin-bottom: 10px; 
-                padding: 10px; 
-                box-shadow: 0 2px 8px rgba(0,0,0,0.3); 
-            }
-            td { 
-                border: none; 
-                padding: 5px 0; 
-                display: flex; 
-                align-items: center; 
-                justify-content: space-between; 
-                border-bottom: 1px dashed rgba(255, 255, 255, 0.05); 
-            }
+            tr { background: #1e293b; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; margin-bottom: 10px; padding: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+            td { border: none; padding: 5px 0; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px dashed rgba(255, 255, 255, 0.05); }
             td:last-child { border-bottom: none; padding-top: 8px; justify-content: flex-end; gap: 4px; }
-            td::before { 
-                content: attr(data-label); 
-                font-weight: 900; 
-                font-size: 11px; 
-                color: #94a3b8; 
-                text-align: left; 
-                min-width: 65px; 
-            }
-            .num-ball { 
-                width: var(--ball-size); 
-                height: var(--ball-size); 
-                font-size: 12px; 
-            }
+            td::before { content: attr(data-label); font-weight: 900; font-size: 11px; color: #94a3b8; text-align: left; min-width: 65px; }
+            .num-ball { width: var(--ball-size); height: var(--ball-size); font-size: 12px; }
             .recom-card { flex-direction: column; align-items: flex-start; }
         }
     </style>
@@ -905,7 +686,6 @@
         </div>
     </header>
 
-    <!-- 頂部開啟倍投試算按鈕 -->
     <div class="top-action-bar">
         <button class="btn-open-modal" onclick="openProfitModal()">
             📊 點擊開啟：539 坐車目標獲利與倍投規劃表 (單碼/多碼/階梯)
@@ -919,121 +699,48 @@
                 <h2>💰 539 坐車下注・目標倍投與階梯紀律規劃表</h2>
                 <button class="modal-close" onclick="closeProfitModal()">&times;</button>
             </div>
-            
             <div class="modal-tabs">
                 <button class="tab-btn active" id="tab-btn-single-target" onclick="switchModalTab('single-target')">🌟 單碼目標倍投</button>
                 <button class="tab-btn" id="tab-btn-four-target" onclick="switchModalTab('four-target')">🎯 4碼目標倍投</button>
                 <button class="tab-btn" id="tab-btn-tier-track" onclick="switchModalTab('tier-track')">⚖️ 階梯均注紀律追蹤表</button>
             </div>
-
             <div class="modal-body">
-                <!-- 分頁 1：單碼目標倍投 -->
+                <!-- 分頁 1 -->
                 <div id="tab-content-single-target">
                     <div class="calc-form-grid">
-                        <div class="calc-input-group">
-                            <label>🚗 第 1 期起步車數</label>
-                            <input type="number" id="calc-st-first-units" value="1" min="0.01" max="10" step="0.05">
-                        </div>
-                        <div class="calc-input-group">
-                            <label>🎯 每日目標淨利 (增量)</label>
-                            <input type="number" id="calc-st-target-profit" value="18440" min="100" max="1000000" step="50">
-                        </div>
-                        <div class="calc-input-group">
-                            <label>📅 規劃天數 (期數)</label>
-                            <input type="number" id="calc-st-days" value="15" min="1" max="60" step="1">
-                        </div>
-                        <div class="calc-input-group">
-                            <label>💵 每全車成本</label>
-                            <input type="number" id="calc-st-cost" value="2755" min="1" max="50000" step="1">
-                        </div>
-                        <div class="calc-input-group">
-                            <label>🏆 每全車彩金</label>
-                            <input type="number" id="calc-st-prize" value="21200" min="1000" max="100000" step="100">
-                        </div>
+                        <div class="calc-input-group"><label>🚗 第 1 期起步車數</label><input type="number" id="calc-st-first-units" value="1" min="0.01" max="10" step="0.05"></div>
+                        <div class="calc-input-group"><label>🎯 每日目標淨利 (增量)</label><input type="number" id="calc-st-target-profit" value="18440" min="100" max="1000000" step="50"></div>
+                        <div class="calc-input-group"><label>📅 規劃天數 (期數)</label><input type="number" id="calc-st-days" value="15" min="1" max="60" step="1"></div>
+                        <div class="calc-input-group"><label>💵 每全車成本</label><input type="number" id="calc-st-cost" value="2755" min="1" max="50000" step="1"></div>
+                        <div class="calc-input-group"><label>🏆 每全車彩金</label><input type="number" id="calc-st-prize" value="21200" min="1000" max="100000" step="100"></div>
                         <button class="btn-recalc" onclick="calculateSingleTargetPlan()">⚡ 演算單碼倍投</button>
                     </div>
-
                     <div style="font-size:12px; font-weight:bold; color:#fbbf24; margin-bottom:8px;" id="st-plan-summary"></div>
-
-                    <div class="profit-table-wrapper">
-                        <table class="profit-table">
-                            <thead>
-                                <tr>
-                                    <th>天數</th>
-                                    <th>目標累計淨利</th>
-                                    <th>下注車數</th>
-                                    <th>當期成本</th>
-                                    <th>累計總投入</th>
-                                    <th>中獎彩金</th>
-                                    <th>結算淨利</th>
-                                </tr>
-                            </thead>
-                            <tbody id="st-plan-tbody"></tbody>
-                        </table>
-                    </div>
+                    <div class="profit-table-wrapper"><table class="profit-table"><thead><tr><th>天數</th><th>目標累計淨利</th><th>下注車數</th><th>當期成本</th><th>累計總投入</th><th>中獎彩金</th><th>結算淨利</th></tr></thead><tbody id="st-plan-tbody"></tbody></table></div>
                     <div class="mobile-cards-container" id="st-plan-mobile-cards"></div>
                 </div>
-
-                <!-- 分頁 2：4碼目標倍投 -->
+                <!-- 分頁 2 -->
                 <div id="tab-content-four-target" style="display:none;">
                     <div class="calc-form-grid">
-                        <div class="calc-input-group">
-                            <label>🚗 第 1 期每碼車數</label>
-                            <input type="number" id="calc-ft-first-units" value="1" min="0.01" max="10" step="0.05">
-                        </div>
-                        <div class="calc-input-group">
-                            <label>🎯 每期期望淨利 (增量)</label>
-                            <input type="number" id="calc-ft-target-profit" value="18440" min="100" max="1000000" step="50">
-                        </div>
-                        <div class="calc-input-group">
-                            <label>📅 規劃天數 (期數)</label>
-                            <input type="number" id="calc-ft-days" value="6" min="1" max="20" step="1">
-                        </div>
-                        <div class="calc-input-group">
-                            <label>💵 單碼成本 (全車)</label>
-                            <input type="number" id="calc-ft-cost" value="2755" min="1" max="50000" step="1">
-                        </div>
-                        <div class="calc-input-group">
-                            <label>🏆 單碼彩金</label>
-                            <input type="number" id="calc-ft-prize" value="21200" min="1000" max="100000" step="100">
-                        </div>
+                        <div class="calc-input-group"><label>🚗 第 1 期每碼車數</label><input type="number" id="calc-ft-first-units" value="1" min="0.01" max="10" step="0.05"></div>
+                        <div class="calc-input-group"><label>🎯 每期期望淨利 (增量)</label><input type="number" id="calc-ft-target-profit" value="18440" min="100" max="1000000" step="50"></div>
+                        <div class="calc-input-group"><label>📅 規劃天數 (期數)</label><input type="number" id="calc-ft-days" value="6" min="1" max="20" step="1"></div>
+                        <div class="calc-input-group"><label>💵 單碼成本 (全車)</label><input type="number" id="calc-ft-cost" value="2755" min="1" max="50000" step="1"></div>
+                        <div class="calc-input-group"><label>🏆 單碼彩金</label><input type="number" id="calc-ft-prize" value="21200" min="1000" max="100000" step="100"></div>
                         <button class="btn-recalc" onclick="calculateFourTargetPlan()">⚡ 演算4碼倍投</button>
                     </div>
-
                     <div style="font-size:12px; font-weight:bold; color:#fbbf24; margin-bottom:8px;" id="ft-plan-summary"></div>
-
-                    <div class="profit-table-wrapper">
-                        <table class="profit-table">
-                            <thead>
-                                <tr>
-                                    <th>期數</th>
-                                    <th>目標累計淨利</th>
-                                    <th>每碼下注車數</th>
-                                    <th>當期總成本 (4碼)</th>
-                                    <th>累計總投入</th>
-                                    <th>中 1 碼彩金</th>
-                                    <th>保底結算淨利</th>
-                                    <th>若中 2 碼 (雙停暴利)</th>
-                                </tr>
-                            </thead>
-                            <tbody id="ft-plan-tbody"></tbody>
-                        </table>
-                    </div>
+                    <div class="profit-table-wrapper"><table class="profit-table"><thead><tr><th>期數</th><th>目標累計淨利</th><th>每碼下注車數</th><th>當期總成本 (4碼)</th><th>累計總投入</th><th>中 1 碼彩金</th><th>保底結算淨利</th><th>若中 2 碼 (雙停暴利)</th></tr></thead><tbody id="ft-plan-tbody"></tbody></table></div>
                     <div class="mobile-cards-container" id="ft-plan-mobile-cards"></div>
                 </div>
-
-                <!-- 分頁 3：階梯均注紀律追蹤表 -->
+                <!-- 分頁 3 -->
                 <div id="tab-content-tier-track" style="display:none;">
                     <div class="tier-sub-tabs">
                         <button class="sub-tab-btn active" id="sub-tier-single" onclick="switchTierSubMode('single')">🌟 單碼階梯 (3期一階)</button>
                         <button class="sub-tab-btn" id="sub-tier-four" onclick="switchTierSubMode('four')">🎯 4碼階梯 (2期一階)</button>
                     </div>
-
                     <div class="tracker-card">
-                        <div class="tracker-title">
-                            <span id="tracker-mode-name">單碼階梯均注 (3期一階) 當前執行狀態</span>
-                            <span id="tracker-stoploss-tip" style="color:#fb7185; font-size:11px;">執行進度</span>
-                        </div>
+                        <div class="tracker-title"><span id="tracker-mode-name">單碼階梯均注 (3期一階) 當前執行狀態</span><span id="tracker-stoploss-tip" style="color:#fb7185; font-size:11px;">執行進度</span></div>
                         <div class="status-grid">
                             <div class="status-item"><div class="label">當前期數</div><div class="val" id="disp-day">第 1 期</div></div>
                             <div class="status-item"><div class="label">當前階梯</div><div class="val" id="disp-tier" style="color:var(--neon-purple);">第一階</div></div>
@@ -1048,31 +755,12 @@
                             <button class="act-btn btn-reset" onclick="resetTierGame()">重置循環</button>
                         </div>
                     </div>
-
                     <div class="plan-config-bar">
-                        <label>🚗 起始車數：</label>
-                        <input type="number" id="cfg-tier-cars" value="1" min="0.01" max="10" step="0.05">
-                        <label style="margin-left:8px;">📅 總規劃期數：</label>
-                        <input type="number" id="cfg-tier-total-days" value="15" min="3" max="60" step="1">
+                        <label>🚗 起始車數：</label><input type="number" id="cfg-tier-cars" value="1" min="0.01" max="10" step="0.05">
+                        <label style="margin-left:8px;">📅 總規劃期數：</label><input type="number" id="cfg-tier-total-days" value="15" min="3" max="60" step="1">
                         <button class="btn-config-calc" onclick="applyDynamicTierConfig()">⚡ 重新生成不限期表格</button>
                     </div>
-
-                    <div class="profit-table-wrapper">
-                        <table class="profit-table">
-                            <thead>
-                                <tr>
-                                    <th>天數</th>
-                                    <th>階梯</th>
-                                    <th>下注車數</th>
-                                    <th>當期成本</th>
-                                    <th>累計總成本</th>
-                                    <th>中獎彩金</th>
-                                    <th>結算淨利 (保證賺錢)</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tier-table-body"></tbody>
-                        </table>
-                    </div>
+                    <div class="profit-table-wrapper"><table class="profit-table"><thead><tr><th>天數</th><th>階梯</th><th>下注車數</th><th>當期成本</th><th>累計總成本</th><th>中獎彩金</th><th>結算淨利 (保證賺錢)</th></tr></thead><tbody id="tier-table-body"></tbody></table></div>
                     <div class="mobile-cards-container" id="tier-mobile-cards-container"></div>
                 </div>
             </div>
@@ -1103,7 +791,16 @@
         </div>
     </div>
 
-    <!-- 🌟 新增：1800碰 / 9000碰 柱碰即時看板 -->
+    <!-- 🌟 1800碰 / 9000碰 柱碰即時期望值看板 (包含退水與極限反彈機率) -->
+    <div class="plan-config-bar" style="border-color:#ec4899; box-shadow: 0 0 10px rgba(236,72,153,0.2);">
+        <label style="color:#f472b6;">⚡ 柱碰成本與賠率設定：</label>
+        <label>單碰原價:</label><input type="number" id="touch-price" value="10" title="每碰定價金額">
+        <label>退水折扣(%):</label><input type="number" id="touch-discount" value="50" title="例如輸入 50 代表打五折">
+        <label>三星單碰彩金:</label><input type="number" id="touch-prize3" value="8500">
+        <label>四星單碰彩金:</label><input type="number" id="touch-prize4" value="80000">
+        <button class="btn-config-calc" style="background:linear-gradient(135deg, #ec4899, #be185d);" onclick="analyzeHotColdNumbers()">重新精算期望值</button>
+    </div>
+
     <div class="touch-tracker-grid">
         <!-- 1800 碰專區 -->
         <div class="touch-card t-1800">
@@ -1117,24 +814,24 @@
                     <span class="touch-miss-num" id="t1800-miss-count">0</span>
                     <span style="font-size:12px; color:#94a3b8;">期</span>
                 </div>
-                <div>
-                    <span style="font-size:11px; color:#94a3b8;">總合開出機率：</span>
-                    <span class="touch-prob-val" id="t1800-prob-val">55.3%</span>
+                <div style="text-align:right;">
+                    <span style="font-size:11px; color:#94a3b8;">下一期極限反彈機率：</span><br>
+                    <span class="touch-prob-val" id="t1800-prob-val">0.0%</span>
                 </div>
             </div>
             <div class="touch-sub-desc">
                 <strong>柱位規則：</strong>第1柱(10-18) | 第2柱(20-29) | 第3柱(01-09+19+30-39)<br>
-                <strong>判定標準：</strong>開獎 5 碼跨足 3 柱 (總合機率: 55.36%)
+                <strong>機率分析：</strong>精準中 3 碰 24.5% / 中 4 碰 30.9%
             </div>
             <div style="background:rgba(0,0,0,0.2); border-radius:6px; padding:8px; margin-top:6px; font-size:11px; color:#cbd5e1;">
                 <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-                    <span>🎯 精準中 3 碰機率：</span><span style="color:#34d399; font-weight:900;">24.49%</span>
+                    <span style="color:#94a3b8;">實際總成本：</span><span id="t1800-real-cost" style="font-weight:900; color:#ffffff;">9,000 元</span>
                 </div>
                 <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-                    <span>🎯 精準中 4 碰機率：</span><span style="color:#c084fc; font-weight:900;">30.87%</span>
+                    <span style="color:#94a3b8;">平均長期期望回報 (1.97碰)：</span><span id="t1800-expected-return" style="font-weight:900;">16,745 元</span>
                 </div>
                 <div style="display:flex; justify-content:space-between; border-top:1px dashed rgba(255,255,255,0.15); padding-top:4px;">
-                    <span style="color:#94a3b8;">💡 單期數學期望值：</span><span style="color:#fbbf24; font-weight:900;">平均拿回 1.97 碰</span>
+                    <span style="color:#94a3b8;">💡 單期數學期望值 (EV)：</span><span id="t1800-ev" style="font-size:14px; font-weight:900;">+7,745</span>
                 </div>
             </div>
         </div>
@@ -1151,21 +848,24 @@
                     <span class="touch-miss-num" id="t9000-miss-count">0</span>
                     <span style="font-size:12px; color:#94a3b8;">期</span>
                 </div>
-                <div>
-                    <span style="font-size:11px; color:#94a3b8;">單期客觀機率：</span>
-                    <span class="touch-prob-val" style="color:#ec4899;" id="t9000-prob-val">27.3%</span>
+                <div style="text-align:right;">
+                    <span style="font-size:11px; color:#94a3b8;">下一期極限反彈機率：</span><br>
+                    <span class="touch-prob-val" style="color:#ec4899;" id="t9000-prob-val">0.0%</span>
                 </div>
             </div>
             <div class="touch-sub-desc">
                 <strong>柱位規則：</strong>第1柱(01-09) | 第2柱(10-19) | 第3柱(20-29) | 第4柱(30-39)<br>
-                <strong>判定標準：</strong>當期開獎 5 碼四個區間各開出至少 1 顆即中！
+                <strong>機率分析：</strong>單期開出機率 27.36% (只要中就是雙停 2 碰)
             </div>
             <div style="background:rgba(0,0,0,0.2); border-radius:6px; padding:8px; margin-top:6px; font-size:11px; color:#cbd5e1;">
                 <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-                    <span>🎯 單期總命中機率：</span><span style="color:#34d399; font-weight:900;">27.36%</span>
+                    <span style="color:#94a3b8;">實際總成本：</span><span id="t9000-real-cost" style="font-weight:900; color:#ffffff;">45,000 元</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                    <span style="color:#94a3b8;">🎯 開出時實際淨賺：</span><span id="t9000-net-hit" style="color:#34d399; font-weight:900;">+115,000</span>
                 </div>
                 <div style="display:flex; justify-content:space-between; border-top:1px dashed rgba(255,255,255,0.15); padding-top:4px;">
-                    <span style="color:#94a3b8;">💡 玩家投資策略：</span><span style="color:#ec4899; font-weight:900;">主打以小搏大、賠率爆發</span>
+                    <span style="color:#94a3b8;">💡 單期數學期望值 (EV)：</span><span id="t9000-ev" style="font-size:14px; font-weight:900;">-1,224</span>
                 </div>
             </div>
         </div>
@@ -1245,7 +945,6 @@
             <tbody id="history-tbody"></tbody>
         </table>
         
-        <!-- 🔽 顯示更多按鈕 -->
         <div id="load-more-container" style="text-align: center; margin-top: 15px; display: none;">
             <button onclick="loadMoreHistory()" style="background: linear-gradient(135deg, #1e293b, #0f172a); border: 1px solid #475569; color: #fbbf24; padding: 10px 24px; font-size: 13px; font-weight: 900; border-radius: 8px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.4);">
                 🔽 顯示更多 (每次載入 30 天)
@@ -1362,7 +1061,6 @@
         return nums;
     }
 
-    // 🌟 自由選號判定：只要有 1 個號碼以上即判定為有效預測
     function isValidPrediction(nums) {
         return nums && nums.length > 0;
     }
@@ -1389,14 +1087,12 @@
                 else winner = "平手";
             }
         }
-
         return { aiHits, myHits, winner };
     }
 
     function extractMultiDrawsFromText(rawText) {
         const lines = rawText.split('\n');
         let results = [];
-
         for (let i = 0; i < lines.length; i++) {
             let line = lines[i].trim();
             if (!line) continue;
@@ -1413,7 +1109,6 @@
                     parts[0] = (parseInt(parts[0], 10) + 1911).toString();
                     dStr = parts.join('-');
                 }
-
                 let afterDatePart = line.substring(line.indexOf(dateMatch[0]) + dateMatch[0].length);
                 let nums = afterDatePart.match(/\b(0?[1-9]|[1-3][0-9])\b/g);
 
@@ -1428,12 +1123,8 @@
                 }
             }
         }
-
         let uniqueMap = new Map();
-        results.forEach(r => {
-            if (!uniqueMap.has(r.date)) uniqueMap.set(r.date, r);
-        });
-
+        results.forEach(r => { if (!uniqueMap.has(r.date)) uniqueMap.set(r.date, r); });
         return Array.from(uniqueMap.values());
     }
 
@@ -1464,7 +1155,6 @@
 
                 chunk.forEach((item, idx) => {
                     const targetRecord = battleHistory.find(r => r.date === item.date);
-
                     if (targetRecord) {
                         const isDrawChanged = !targetRecord.draw || targetRecord.draw.join(',') !== item.draw.join(',');
                         if (targetRecord.isPending || isDrawChanged) {
@@ -1485,23 +1175,14 @@
                         const res = calculateResult([], [], item.draw);
 
                         batch.set(docRef, {
-                            id: newId,
-                            date: item.date,
-                            ai: [],
-                            my: [],
-                            draw: item.draw,
-                            aiHits: 0,
-                            myHits: 0,
-                            winner: res.winner,
-                            isPending: false
+                            id: newId, date: item.date, ai: [], my: [], draw: item.draw,
+                            aiHits: 0, myHits: 0, winner: res.winner, isPending: false
                         });
                         createdCount++;
                     }
                 });
-
                 await batch.commit();
             }
-
             statusEl.innerText = `🎉 成功解析並匯入 ${drawList.length} 天 539 紀錄！`;
             alert(`🎉 批次匯入成功！\n• 成功解析天數：${drawList.length} 期\n• 自動建立新開獎：${createdCount} 期\n• 自動更新現有開獎：${updatedCount} 期`);
             document.getElementById('sc888-paste-area').value = "";
@@ -1526,7 +1207,6 @@
         let myNums = parseNumbers(myInput);
         let drawNums = parseNumbers(drawInput);
 
-        // 🌟 解除碼數強制限制，輸入不合規則即提示
         if (aiInput.trim() !== "" && aiNums.length === 0) return alert("🤖 AI 號碼輸入無效，請確認號碼為 1~39！");
         if (myInput.trim() !== "" && myNums.length === 0) return alert("🧑 我的號碼輸入無效，請確認號碼為 1~39！");
         if (drawInput.trim() !== "" && drawNums.length !== 5) return alert("📺 實際開獎號碼如果有填，必須剛好是 5 碼！");
@@ -1543,43 +1223,25 @@
 
             try {
                 await updateDoc(doc(db, "539_battle_history", existingRecord.id.toString()), {
-                    ai: finalAi,
-                    my: finalMy,
-                    draw: finalDraw,
-                    aiHits: res.aiHits,
-                    myHits: res.myHits,
-                    winner: isPending ? "等待開獎" : res.winner,
-                    isPending: isPending
+                    ai: finalAi, my: finalMy, draw: finalDraw, aiHits: res.aiHits, myHits: res.myHits,
+                    winner: isPending ? "等待開獎" : res.winner, isPending: isPending
                 });
                 alert(`✅ 成功為 ${date} 補填/更新預測號碼！`);
                 clearInputs();
-            } catch (e) {
-                alert("雲端更新失敗：" + e.message);
-            }
+            } catch (e) { alert("雲端更新失敗：" + e.message); }
         } else {
             let isPending = drawNums.length === 0;
             let res = calculateResult(aiNums, myNums, drawNums);
-
             let recordId = Date.now().toString();
             let record = { 
-                id: recordId, 
-                date: date, 
-                ai: aiNums, 
-                my: myNums, 
-                draw: drawNums, 
-                aiHits: res.aiHits, 
-                myHits: res.myHits, 
-                winner: isPending ? "等待開獎" : res.winner, 
-                isPending: isPending 
+                id: recordId, date: date, ai: aiNums, my: myNums, draw: drawNums, 
+                aiHits: res.aiHits, myHits: res.myHits, winner: isPending ? "等待開獎" : res.winner, isPending: isPending 
             };
-
             try {
                 await setDoc(doc(db, "539_battle_history", recordId), record);
                 alert(`✅ 成功為 ${date} 建立全新 539 預測對決紀錄！`);
                 clearInputs();
-            } catch (e) {
-                alert("雲端儲存失敗：" + e.message);
-            }
+            } catch (e) { alert("雲端儲存失敗：" + e.message); }
         }
     };
 
@@ -1592,29 +1254,19 @@
     window.editDate = async function(id, oldDate) {
         let pwd = prompt("請輸入安全授權密碼：");
         if (pwd !== "110119110") return alert("❌ 密碼錯誤！");
-
         let newDate = prompt("請輸入修正後的日期 (格式：YYYY-MM-DD)", oldDate);
         if (newDate && newDate.trim() !== "") {
-            try {
-                await updateDoc(doc(db, "539_battle_history", id.toString()), {
-                    date: newDate.trim()
-                });
-            } catch (e) {
-                alert("改期失敗：" + e.message);
-            }
+            try { await updateDoc(doc(db, "539_battle_history", id.toString()), { date: newDate.trim() }); } 
+            catch (e) { alert("改期失敗：" + e.message); }
         }
     };
 
     window.deleteRecord = async function(id) {
         let pwd = prompt("請輸入安全授權密碼：");
         if (pwd !== "110119110") return alert("❌ 密碼錯誤！");
-
         if (confirm("確定刪除這筆紀錄？")) {
-            try {
-                await deleteDoc(doc(db, "539_battle_history", id.toString()));
-            } catch (e) {
-                alert("刪除失敗：" + e.message);
-            }
+            try { await deleteDoc(doc(db, "539_battle_history", id.toString())); } 
+            catch (e) { alert("刪除失敗：" + e.message); }
         }
     };
 
@@ -1636,6 +1288,35 @@
         return hasCol1 && hasCol2 && hasCol3 && hasCol4;
     }
 
+    // 更新 1800/9000 期望值經濟學
+    function updateTouchEconomics(miss1800, miss9000) {
+        let price = parseFloat(document.getElementById('touch-price').value) || 10;
+        let discount = parseFloat(document.getElementById('touch-discount').value) || 50;
+        let p3 = parseFloat(document.getElementById('touch-prize3').value) || 8500;
+        let p4 = parseFloat(document.getElementById('touch-prize4').value) || 80000;
+
+        let realCostPerTouch = price * (1 - (discount / 100));
+
+        // 1800 碰
+        let cost1800 = 1800 * realCostPerTouch;
+        let expReturn1800 = 1.97 * p3;
+        let ev1800 = expReturn1800 - cost1800;
+        document.getElementById('t1800-real-cost').innerText = cost1800.toLocaleString();
+        document.getElementById('t1800-expected-return').innerText = Math.round(expReturn1800).toLocaleString() + ' 元';
+        document.getElementById('t1800-ev').innerText = (ev1800 > 0 ? '+' : '') + Math.round(ev1800).toLocaleString();
+        document.getElementById('t1800-ev').style.color = ev1800 > 0 ? '#34d399' : '#f43f5e';
+
+        // 9000 碰
+        let cost9000 = 9000 * realCostPerTouch;
+        let hitReturn9000 = p4 * 2;
+        let netHit9000 = hitReturn9000 - cost9000;
+        let ev9000 = (hitReturn9000 * 0.27355) - cost9000;
+        document.getElementById('t9000-real-cost').innerText = cost9000.toLocaleString();
+        document.getElementById('t9000-net-hit').innerText = '+' + netHit9000.toLocaleString();
+        document.getElementById('t9000-ev').innerText = (ev9000 > 0 ? '+' : '') + Math.round(ev9000).toLocaleString();
+        document.getElementById('t9000-ev').style.color = ev9000 > 0 ? '#34d399' : '#f43f5e';
+    }
+
     function analyzeTouchTrackers(completedDraws) {
         if (!completedDraws || completedDraws.length === 0) return;
 
@@ -1651,38 +1332,41 @@
             miss9000++;
         }
 
+        // 🎯 幾何分佈：極限反彈機率演算
+        let baseP1800 = 0.5536;
+        let baseP9000 = 0.2736;
+        let nextProb1800 = (1 - Math.pow(1 - baseP1800, miss1800 + 1)) * 100;
+        let nextProb9000 = (1 - Math.pow(1 - baseP9000, miss9000 + 1)) * 100;
+
         document.getElementById('t1800-miss-count').innerText = miss1800;
+        document.getElementById('t1800-prob-val').innerText = nextProb1800.toFixed(2) + '%';
         let badge1800 = document.getElementById('t1800-badge');
-        if (miss1800 >= 5) {
-            badge1800.className = "touch-status-badge badge-alert";
-            badge1800.innerText = "🚨 極限反彈警戒";
-        } else if (miss1800 >= 2) {
-            badge1800.className = "touch-status-badge badge-ready";
-            badge1800.innerText = "⚡ 蓄勢開出中";
+        if (nextProb1800 > 95) {
+            badge1800.className = "touch-status-badge badge-alert"; badge1800.innerText = "🚨 極限警戒必出";
+        } else if (nextProb1800 > 80) {
+            badge1800.className = "touch-status-badge badge-ready"; badge1800.innerText = "⚡ 蓄勢開出中";
         } else {
-            badge1800.className = "touch-status-badge badge-ok";
-            badge1800.innerText = "✅ 近期剛開出";
+            badge1800.className = "touch-status-badge badge-ok"; badge1800.innerText = "✅ 安全常規區間";
         }
 
         document.getElementById('t9000-miss-count').innerText = miss9000;
+        document.getElementById('t9000-prob-val').innerText = nextProb9000.toFixed(2) + '%';
         let badge9000 = document.getElementById('t9000-badge');
-        if (miss9000 >= 7) {
-            badge9000.className = "touch-status-badge badge-alert";
-            badge9000.innerText = "🚨 嚴重偏離必開";
-        } else if (miss9000 >= 3) {
-            badge9000.className = "touch-status-badge badge-ready";
-            badge9000.innerText = "⚡ 進入高期望期";
+        if (nextProb9000 > 85) {
+            badge9000.className = "touch-status-badge badge-alert"; badge9000.innerText = "🚨 嚴重偏離必開";
+        } else if (nextProb9000 > 70) {
+            badge9000.className = "touch-status-badge badge-ready"; badge9000.innerText = "⚡ 進入高期望期";
         } else {
-            badge9000.className = "touch-status-badge badge-ok";
-            badge9000.innerText = "✅ 處於常規區間";
+            badge9000.className = "touch-status-badge badge-ok"; badge9000.innerText = "✅ 安全常規區間";
         }
+
+        updateTouchEconomics(miss1800, miss9000);
     }
 
-    function analyzeHotColdNumbers() {
+    window.analyzeHotColdNumbers = function() {
         let completedDraws = battleHistory.filter(item => !item.isPending && item.draw && item.draw.length === 5);
         if(completedDraws.length === 0) return;
 
-        // 計算柱碰指標
         analyzeTouchTrackers(completedDraws);
 
         let latestRecord = completedDraws[0];
@@ -1697,40 +1381,23 @@
             let streak = 0;
             let found = false;
             for (let d = 0; d < completedDraws.length; d++) {
-                if (completedDraws[d].draw.includes(i)) {
-                    found = true;
-                    streak = d;
-                    break;
-                }
+                if (completedDraws[d].draw.includes(i)) { found = true; streak = d; break; }
             }
             numStats[i].missingStreak = found ? streak : completedDraws.length;
         }
 
         let max50 = Math.min(50, completedDraws.length);
-        for (let d = 0; d < max50; d++) {
-            completedDraws[d].draw.forEach(n => {
-                numStats[n].recent50Count++;
-            });
-        }
+        for (let d = 0; d < max50; d++) { completedDraws[d].draw.forEach(n => { numStats[n].recent50Count++; }); }
 
-        completedDraws.forEach(record => {
-            record.draw.forEach(n => {
-                numStats[n].totalCount++;
-            });
-        });
+        completedDraws.forEach(record => { record.draw.forEach(n => { numStats[n].totalCount++; }); });
 
         let statsArray = Object.values(numStats);
-
         statsArray.forEach(item => {
             let freqScore = (item.recent50Count / max50) * 100;
             let reboundScore = 50;
-            if (item.missingStreak >= 5 && item.missingStreak <= 12) {
-                reboundScore = 95;
-            } else if (item.missingStreak === 0) {
-                reboundScore = 75;
-            } else if (item.missingStreak > 20) {
-                reboundScore = 35;
-            }
+            if (item.missingStreak >= 5 && item.missingStreak <= 12) reboundScore = 95;
+            else if (item.missingStreak === 0) reboundScore = 75;
+            else if (item.missingStreak > 20) reboundScore = 35;
             item.probScore = (freqScore * 0.65) + (reboundScore * 0.35);
         });
 
@@ -1754,24 +1421,14 @@
 
         document.getElementById('hot-numbers').innerHTML = hotNumbers.map(item => {
             let isHitToday = latestDrawNums.includes(item.num) ? 'hit-today' : '';
-            return `
-                <div class="info-badge hot-badge ${isHitToday}">
-                    <span class="num">${item.num.toString().padStart(2, '0')}</span>
-                    <span class="desc">開 ${item.recent50Count} 次</span>
-                </div>
-            `;
+            return `<div class="info-badge hot-badge ${isHitToday}"><span class="num">${item.num.toString().padStart(2, '0')}</span><span class="desc">開 ${item.recent50Count} 次</span></div>`;
         }).join('');
 
         document.getElementById('cold-numbers').innerHTML = coldNumbers.map(item => {
             let isHitToday = latestDrawNums.includes(item.num) ? 'hit-today' : '';
-            return `
-                <div class="info-badge cold-badge ${isHitToday}">
-                    <span class="num">${item.num.toString().padStart(2, '0')}</span>
-                    <span class="desc">${item.missingStreak === 0 ? '今日開出' : '漏 '+item.missingStreak+' 期'}</span>
-                </div>
-            `;
+            return `<div class="info-badge cold-badge ${isHitToday}"><span class="num">${item.num.toString().padStart(2, '0')}</span><span class="desc">${item.missingStreak === 0 ? '今日開出' : '漏 '+item.missingStreak+' 期'}</span></div>`;
         }).join('');
-    }
+    };
 
     window.refreshRecommendationsWithSuspense = async function() {
         const container = document.getElementById('recom-container');
@@ -1779,36 +1436,24 @@
 
         await new Promise(r => setTimeout(r, 600));
 
-        let pool = (probabilityRankedBalls && probabilityRankedBalls.length >= 15)
-            ? probabilityRankedBalls.map(x => x.num)
-            : Array.from({length: 39}, (_, i) => i + 1);
+        let pool = (probabilityRankedBalls && probabilityRankedBalls.length >= 15) ? probabilityRankedBalls.map(x => x.num) : Array.from({length: 39}, (_, i) => i + 1);
 
         const getRandomPicks = (sourceArray, count) => {
-            let shuffled = [...sourceArray].sort(() => 0.5 - Math.random());
             let picked = [];
-            for (let n of shuffled) {
-                if (!picked.includes(n)) picked.push(n);
-                if (picked.length === count) break;
-            }
+            let shuffled = [...sourceArray].sort(() => 0.5 - Math.random());
+            for (let n of shuffled) { if (!picked.includes(n)) picked.push(n); if (picked.length === count) break; }
             return picked.sort((a, b) => a - b);
         };
 
-        // 1. 搖球機物理模式 (物理隨機碰撞)
         let m1_3 = getRandomPicks(Array.from({length: 39}, (_, i) => i + 1), 3);
         let m1_4 = getRandomPicks(Array.from({length: 39}, (_, i) => i + 1), 4);
-
-        // 2. 歷史紀錄出牌模式 (連動與回補走勢)
         let m2_pool = pool.slice(0, 16);
         let m2_3 = getRandomPicks(m2_pool, 3);
         let m2_4 = getRandomPicks(m2_pool, 4);
-
-        // 3. 尋找AI必開牌模式 (最高期望值主力陣列)
         let m3_top = pool.slice(0, 5);
         let m3_mid = pool.slice(5, 12);
         let m3_3 = [...getRandomPicks(m3_top, 2), ...getRandomPicks(m3_mid, 1)].sort((a, b) => a - b);
         let m3_4 = [...getRandomPicks(m3_top, 2), ...getRandomPicks(m3_mid, 2)].sort((a, b) => a - b);
-
-        // 4. AI必開牌加強組 (極限回補 + 防守爆發矩陣)
         let m4_pool1 = pool.slice(1, 7);
         let m4_pool2 = pool.slice(6, 15);
         let m4_3 = [...getRandomPicks(m4_pool1, 2), ...getRandomPicks(m4_pool2, 1)].sort((a, b) => a - b);
@@ -1844,8 +1489,7 @@
         for (let idx = 0; idx < list.length; idx++) {
             await new Promise(r => setTimeout(r, 120));
             let ballsContainer = document.getElementById(`recom-balls-${idx}`);
-            let targetBalls = list[idx].nums;
-            ballsContainer.innerHTML = targetBalls.map(n => `<div class="quantum-ball ${list[idx].colorType}">${n.toString().padStart(2, '0')}</div>`).join('');
+            ballsContainer.innerHTML = list[idx].nums.map(n => `<div class="quantum-ball ${list[idx].colorType}">${n.toString().padStart(2, '0')}</div>`).join('');
         }
     };
 
@@ -1856,45 +1500,34 @@
         alert(`✅ 已將推薦號碼 [ ${numsStr} ] 帶入【${nameMap[targetKey]}】！`);
     };
 
-    function loadMoreHistory() {
+    window.loadMoreHistory = function() {
         displayLimit += 30;
         renderAll();
-    }
-    window.loadMoreHistory = loadMoreHistory;
+    };
 
     function renderAll() {
         const tbody = document.getElementById('history-tbody');
         tbody.innerHTML = '';
 
-        let totalRounds = 0;
-        let totalAiHits = 0, totalMyHits = 0;
-        let myRounds = 0, aiRounds = 0;
+        let totalRounds = 0, totalAiHits = 0, totalMyHits = 0, myRounds = 0, aiRounds = 0;
 
         analyzeHotColdNumbers();
 
-        // 戰力板統計計算全量數據
         battleHistory.forEach(item => {
             const hasDraw = item.draw && item.draw.length === 5;
             if (!item.isPending && hasDraw) {
                 totalRounds++;
-                if (isValidPrediction(item.ai)) {
-                    aiRounds++;
-                    totalAiHits += item.aiHits || 0;
-                }
-                if (isValidPrediction(item.my)) {
-                    myRounds++;
-                    totalMyHits += item.myHits || 0;
-                }
+                if (isValidPrediction(item.ai)) { aiRounds++; totalAiHits += item.aiHits || 0; }
+                if (isValidPrediction(item.my)) { myRounds++; totalMyHits += item.myHits || 0; }
             }
         });
 
-        // 🎯 列表渲染：切片取前 displayLimit 筆
         let visibleRecords = battleHistory.slice(0, displayLimit);
 
         visibleRecords.forEach(item => {
             const hasDraw = item.draw && item.draw.length === 5;
-
             const tr = document.createElement('tr');
+            
             const genBalls = (nums) => `<div class="num-container">` + (nums || []).map(n => {
                 let isHit = (!item.isPending && hasDraw && item.draw.includes(n)) ? 'hit' : '';
                 return `<div class="num-ball ${isHit}">${n.toString().padStart(2,'0')}</div>`;
@@ -1902,7 +1535,6 @@
 
             const genDrawBalls = (nums) => `<div class="num-container">` + (nums || []).map(n => `<div class="num-ball draw">${n.toString().padStart(2,'0')}</div>`).join('') + `</div>`;
 
-            // 🌟 即時動態呈現號碼顆數與命中數
             let aiColumnHtml = isValidPrediction(item.ai)
                 ? genBalls(item.ai) + (!item.isPending && hasDraw ? `<div style="font-size:11px; margin-top:3px; color:var(--ai-color); font-weight:bold;">中 ${item.aiHits} 顆 (${item.ai.length}碼)</div>` : '')
                 : `<span class="empty-label">— 待補 —</span>`;
@@ -1937,13 +1569,8 @@
             tbody.innerHTML = `<tr><td colspan="6" style="padding: 20px; color: #64748b; font-weight:bold;">目前尚無對決紀錄，可滑至最下方貼上多期 539 號碼！</td></tr>`;
         }
 
-        // 🎯 判斷是否顯示「顯示更多」按鈕
         const loadMoreBtn = document.getElementById('load-more-container');
-        if (battleHistory.length > displayLimit) {
-            loadMoreBtn.style.display = 'block';
-        } else {
-            loadMoreBtn.style.display = 'none';
-        }
+        loadMoreBtn.style.display = (battleHistory.length > displayLimit) ? 'block' : 'none';
 
         document.getElementById('total-rounds').innerText = totalRounds;
         document.getElementById('ai-hits').innerText = totalAiHits;
@@ -1958,17 +1585,13 @@
 
         let pkEl = document.getElementById('pk-winner');
         if (totalRounds === 0 || (aiAvg === 0 && myAvg === 0)) {
-            pkEl.innerText = "等待開獎";
-            pkEl.style.color = "var(--draw-color)";
+            pkEl.innerText = "等待開獎"; pkEl.style.color = "var(--draw-color)";
         } else if (aiAvg > myAvg) {
-            pkEl.innerText = "🤖 AI 領先";
-            pkEl.style.color = "var(--ai-color)";
+            pkEl.innerText = "🤖 AI 領先"; pkEl.style.color = "var(--ai-color)";
         } else if (myAvg > aiAvg) {
-            pkEl.innerText = "🧑 人類(我)領先";
-            pkEl.style.color = "var(--my-color)";
+            pkEl.innerText = "🧑 人類(我)領先"; pkEl.style.color = "var(--my-color)";
         } else {
-            pkEl.innerText = "平分秋色";
-            pkEl.style.color = "var(--draw-color)";
+            pkEl.innerText = "平分秋色"; pkEl.style.color = "var(--draw-color)";
         }
     }
 
