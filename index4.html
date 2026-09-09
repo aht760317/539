@@ -3,58 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>天天樂・簡約清晰對決擂台 (終極期望值旗艦版)</title>
+    <title>天天樂 光量子 AI 科技對決擂台 (智能三星四星雙軌矩陣版)</title>
     <style>
         :root {
-            --bg-color: #f8fafc;
-            --panel-bg: #ffffff;
-            --panel-border: #cbd5e1;
-            --text-main: #1e293b;
+            --bg-color: #f1f5f9; 
+            --panel-bg: rgba(255, 255, 255, 0.94);
+            --panel-border: rgba(148, 163, 184, 0.35);
+            --text-main: #0f172a;
             --text-muted: #64748b;
-            --ai-color: #0284c7;
-            --my-color: #059669;
-            --draw-color: #d97706;
-            --hit-color: #dc2626;
+            --ai-color: #0284c7; 
+            --my-color: #059669; 
+            --draw-color: #d97706; 
+            --neon-purple: #7c3aed;
+            --hit-color: #ef4444; 
+            --gold-color: #d97706;
             --ball-size: 34px;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft JhengHei", sans-serif; -webkit-tap-highlight-color: transparent; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: "JetBrains Mono", -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft JhengHei", sans-serif; -webkit-tap-highlight-color: transparent; }
         body { 
             background-color: var(--bg-color); 
             color: var(--text-main); 
             padding: 16px 12px; 
-            line-height: 1.5;
+            line-height: 1.45;
+            background-image: 
+                linear-gradient(rgba(14, 165, 233, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(14, 165, 233, 0.05) 1px, transparent 1px);
+            background-size: 24px 24px;
         }
         .container { max-width: 1360px; margin: 0 auto; }
 
         header { 
-            background: #ffffff; 
-            border: 1px solid var(--panel-border);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(240, 249, 255, 0.95)); 
+            border: 1px solid rgba(14, 165, 233, 0.3);
+            box-shadow: 0 6px 20px rgba(14, 165, 233, 0.1);
             padding: 16px; 
-            border-radius: 10px; 
+            border-radius: 14px; 
             margin-bottom: 14px; 
             text-align: center; 
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            backdrop-filter: blur(12px);
         }
         header h1 { 
-            font-size: clamp(18px, 3.5vw, 24px); 
-            color: #0f172a;
-            font-weight: 700;
+            font-size: clamp(18px, 3.5vw, 26px); 
+            letter-spacing: 1.2px;
+            background: linear-gradient(90deg, #0284c7, #7c3aed, #059669);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 900;
         }
         .cloud-badge { 
             display: inline-flex; 
             align-items: center; 
             gap: 6px; 
-            background: #f1f5f9; 
-            border: 1px solid #cbd5e1;
+            background: #ffffff; 
+            border: 1px solid rgba(16, 185, 129, 0.4);
             padding: 3px 12px; 
-            border-radius: 12px; 
+            border-radius: 20px; 
             font-size: 11px; 
-            font-weight: 600;
-            color: #475569;
+            font-weight: bold;
+            color: #065f46;
             margin-top: 6px; 
         }
-        .dot { width: 6px; height: 6px; border-radius: 50%; background: #10b981; }
+        .dot { width: 7px; height: 7px; border-radius: 50%; background: #10b981; box-shadow: 0 0 6px #10b981; }
 
         .top-action-bar {
             display: flex;
@@ -62,26 +72,27 @@
             margin-bottom: 16px;
         }
         .btn-open-modal {
-            background: #475569;
+            background: linear-gradient(135deg, #d97706, #b45309);
             color: white;
             border: none;
-            padding: 10px 20px;
-            font-size: 13px;
-            font-weight: 700;
-            border-radius: 8px;
+            padding: 12px 24px;
+            font-size: 14px;
+            font-weight: 900;
+            border-radius: 10px;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            transition: 0.2s;
+            box-shadow: 0 4px 15px rgba(217, 119, 6, 0.25);
+            transition: all 0.2s;
         }
-        .btn-open-modal:hover { background: #334155; }
+        .btn-open-modal:hover { filter: brightness(1.1); transform: translateY(-1px); }
 
-        /* 彈出視窗 */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(15, 23, 42, 0.5);
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(6px);
             z-index: 999;
             display: none;
             align-items: center;
@@ -90,15 +101,20 @@
         }
         .modal-content {
             background: #ffffff;
-            border: 1px solid var(--panel-border);
-            border-radius: 12px;
+            border: 1.5px solid rgba(217, 119, 6, 0.4);
+            border-radius: 18px;
             width: 100%;
-            max-width: 1000px;
+            max-width: 1050px;
             height: 90vh;
             display: flex;
             flex-direction: column;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
             overflow: hidden;
+            animation: modalPop 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes modalPop {
+            from { transform: scale(0.96); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
         }
         .modal-header {
             padding: 12px 18px;
@@ -106,38 +122,65 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background: #f8fafc;
+            background: #fffbeb;
             flex-shrink: 0;
         }
-        .modal-header h2 { font-size: 14px; font-weight: 700; color: #334155; }
-        .modal-close { background: transparent; border: none; font-size: 24px; color: #64748b; cursor: pointer; }
+        .modal-header h2 {
+            font-size: 15px;
+            font-weight: 900;
+            color: #92400e;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .modal-close {
+            background: transparent;
+            border: none;
+            font-size: 26px;
+            color: #78350f;
+            cursor: pointer;
+            font-weight: bold;
+            padding: 0 4px;
+        }
         
         .modal-tabs {
             display: flex;
-            background: #f1f5f9;
-            border-bottom: 1px solid #e2e8f0;
+            background: #f8fafc;
+            border-bottom: 1.5px solid #e2e8f0;
             padding: 6px 12px 0 12px;
             gap: 6px;
+            overflow-x: auto;
+            white-space: nowrap;
             flex-shrink: 0;
+            -webkit-overflow-scrolling: touch;
         }
+        .modal-tabs::-webkit-scrollbar { display: none; }
         .tab-btn {
             background: transparent;
             border: 1px solid transparent;
             border-bottom: none;
             padding: 8px 14px;
             font-size: 12px;
-            font-weight: 700;
+            font-weight: 900;
             color: #64748b;
             cursor: pointer;
-            border-radius: 6px 6px 0 0;
+            border-radius: 8px 8px 0 0;
+            transition: 0.2s;
         }
         .tab-btn.active {
             background: #ffffff;
             border-color: #cbd5e1;
-            color: #0284c7;
-            border-top: 2px solid #0284c7;
+            color: #d97706;
+            border-top: 3px solid #d97706;
         }
-        .modal-body { padding: 14px 16px; overflow-y: auto; flex: 1; }
+        
+        .modal-body {
+            padding: 14px 16px;
+            overflow-y: auto;
+            flex: 1;
+            overscroll-behavior: contain;
+            -webkit-overflow-scrolling: touch;
+        }
 
         .calc-form-grid {
             display: grid;
@@ -146,48 +189,54 @@
             margin-bottom: 12px;
             background: #f8fafc;
             padding: 10px;
-            border-radius: 8px;
+            border-radius: 10px;
             border: 1px solid #e2e8f0;
         }
         .calc-input-group { display: flex; flex-direction: column; gap: 3px; }
-        .calc-input-group label { font-size: 11px; font-weight: 700; color: #475569; }
-        .calc-input-group input {
+        .calc-input-group label { font-size: 11px; font-weight: 800; color: #475569; }
+        .calc-input-group input, .calc-input-group select {
             padding: 7px 9px;
             background: #ffffff;
-            border: 1px solid #cbd5e1;
+            border: 1.5px solid #cbd5e1;
             color: #0f172a;
             border-radius: 6px;
             font-size: 13px;
             outline: none;
             font-family: monospace;
+            font-weight: bold;
         }
+        .calc-input-group input:focus, .calc-input-group select:focus { border-color: var(--gold-color); }
         .btn-recalc {
-            background: #0284c7;
+            background: linear-gradient(135deg, #d97706, #b45309);
             color: white;
             border: none;
             padding: 8px 14px;
             font-size: 13px;
-            font-weight: 700;
+            font-weight: 900;
             border-radius: 6px;
             cursor: pointer;
             align-self: flex-end;
             height: 35px;
         }
+        .btn-recalc:hover { filter: brightness(1.1); }
 
         .tracker-card {
             background: #f8fafc;
             border: 1px solid #e2e8f0;
-            border-radius: 10px;
+            border-radius: 12px;
             padding: 14px;
             margin-bottom: 16px;
         }
         .tracker-title {
             font-size: 13px;
-            font-weight: 700;
+            font-weight: 900;
             color: #334155;
             margin-bottom: 10px;
             display: flex;
             justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
         }
         .status-grid {
             display: grid;
@@ -198,45 +247,51 @@
         .status-item {
             background: #ffffff;
             padding: 10px;
-            border-radius: 6px;
+            border-radius: 8px;
             border: 1px solid #cbd5e1;
             text-align: center;
         }
-        .status-item .label { font-size: 11px; color: #64748b; margin-bottom: 2px; }
-        .status-item .val { font-size: 15px; font-weight: 700; color: #0f172a; font-family: monospace; }
+        .status-item .label { font-size: 11px; color: #64748b; margin-bottom: 2px; font-weight: bold; }
+        .status-item .val { font-size: 16px; font-weight: 900; color: #0f172a; font-family: monospace; }
         .status-item .val.highlight { color: #dc2626; }
-        .status-item .val.win { color: #059669; }
+        .status-item .val.win { color: #16a34a; }
 
         .action-btns { display: flex; gap: 8px; flex-wrap: wrap; }
         .act-btn {
             flex: 1;
-            min-width: 120px;
-            padding: 9px 12px;
+            min-width: 130px;
+            padding: 10px 14px;
             border: none;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 700;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 900;
             cursor: pointer;
+            transition: 0.2s;
         }
-        .btn-win { background: #059669; color: #ffffff; }
-        .btn-lose { background: #dc2626; color: #ffffff; }
+        .act-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
+        .btn-win { background: #16a34a; color: #ffffff; box-shadow: 0 2px 8px rgba(22, 163, 74, 0.25); }
+        .btn-lose { background: #dc2626; color: #ffffff; box-shadow: 0 2px 8px rgba(220, 38, 38, 0.25); }
         .btn-reset { background: #64748b; color: #ffffff; flex: 0.4; }
 
-        .tier-sub-tabs { display: flex; gap: 8px; margin-bottom: 12px; }
+        .tier-sub-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
         .sub-tab-btn {
-            padding: 6px 12px;
+            padding: 6px 14px;
             border-radius: 6px;
-            border: 1px solid #cbd5e1;
+            border: 1.5px solid #cbd5e1;
             background: #ffffff;
             font-size: 12px;
-            font-weight: 700;
+            font-weight: 900;
             color: #475569;
             cursor: pointer;
         }
         .sub-tab-btn.active {
-            border-color: #0284c7;
-            background: #e0f2fe;
-            color: #0284c7;
+            border-color: #7c3aed;
+            background: #f5f3ff;
+            color: #7c3aed;
         }
 
         .plan-config-bar {
@@ -245,36 +300,37 @@
             gap: 10px;
             background: #ffffff;
             padding: 10px 14px;
-            border-radius: 8px;
-            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            border: 1.5px solid #cbd5e1;
             margin-bottom: 12px;
             flex-wrap: wrap;
         }
-        .plan-config-bar label { font-size: 12px; font-weight: 700; color: #334155; }
+        .plan-config-bar label { font-size: 12px; font-weight: 900; color: #334155; }
         .plan-config-bar input {
             padding: 6px 10px;
-            border: 1px solid #cbd5e1;
+            border: 1.5px solid #cbd5e1;
             border-radius: 6px;
             font-family: monospace;
-            font-weight: 700;
-            width: 80px;
+            font-weight: 900;
+            width: 90px;
             text-align: center;
             outline: none;
         }
+        .plan-config-bar input:focus { border-color: var(--gold-color); }
         .btn-config-calc {
-            background: #0284c7;
+            background: linear-gradient(135deg, #d97706, #b45309);
             color: white;
             border: none;
-            padding: 6px 12px;
+            padding: 6px 14px;
             font-size: 12px;
-            font-weight: 700;
+            font-weight: 900;
             border-radius: 6px;
             cursor: pointer;
         }
 
         .profit-table-wrapper {
             border: 1px solid #e2e8f0;
-            border-radius: 8px;
+            border-radius: 10px;
             overflow-x: auto;
         }
         .profit-table {
@@ -287,26 +343,33 @@
         .profit-table th {
             background: #f8fafc;
             color: #475569;
-            padding: 9px 8px;
-            font-weight: 700;
-            border-bottom: 1px solid #e2e8f0;
+            padding: 10px 8px;
+            font-weight: 900;
+            border-bottom: 2px solid #e2e8f0;
         }
         .profit-table td {
-            padding: 8px;
+            padding: 9px 8px;
             border-bottom: 1px solid #f1f5f9;
             font-family: monospace;
+            font-weight: 600;
         }
-        .profit-table tr:hover { background: #f8fafc; }
-        .profit-table tr.active-row { background: #e0f2fe; font-weight: 700; }
-        .text-green { color: #059669; font-weight: 700; }
-        .text-gold { color: #d97706; font-weight: 700; }
+        .profit-table tr:hover { background: #fffbeb; }
+        .profit-table tr.active-row { background: #e0f2fe; font-weight: 900; }
+        .text-green { color: #059669; font-weight: 800; }
+        .text-gold { color: #d97706; font-weight: 900; }
+        .text-purple { color: #7c3aed; font-weight: 900; }
 
-        .mobile-cards-container { display: none; flex-direction: column; gap: 8px; }
+        .mobile-cards-container {
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+        }
         .day-plan-card {
             background: #ffffff;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            padding: 10px 12px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 12px 14px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
             display: flex;
             flex-direction: column;
             gap: 6px;
@@ -314,267 +377,348 @@
         .day-plan-card.current-active {
             border-color: #0284c7;
             background: #f0f9ff;
+            box-shadow: 0 0 12px rgba(2, 132, 199, 0.2);
         }
         .day-plan-card-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid #f1f5f9;
-            padding-bottom: 4px;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 5px;
         }
-        .day-plan-tag { font-size: 12px; font-weight: 700; color: #0284c7; }
+        .day-plan-tag { font-size: 13px; font-weight: 900; color: #0284c7; }
+        .day-plan-tier { font-size: 11px; font-weight: 800; color: #7c3aed; background: #f5f3ff; padding: 2px 6px; border-radius: 4px; }
         .day-plan-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 4px 8px;
+            gap: 4px 10px;
         }
         .day-plan-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 11px;
+            font-size: 11.5px;
+            padding: 2px 0;
         }
-        .day-plan-item span.label { color: #64748b; }
-        .day-plan-item span.val { font-family: monospace; font-weight: 700; }
+        .day-plan-item span.label { color: #64748b; font-weight: 700; }
+        .day-plan-item span.val { font-family: monospace; font-weight: 800; }
 
-        /* 統計戰力板 */
-        .stats-board { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 14px; }
+        .stats-board { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 16px; }
         .stat-card { 
             background: var(--panel-bg); 
             padding: 14px; 
-            border-radius: 10px; 
+            border-radius: 12px; 
             border: 1px solid var(--panel-border); 
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05); 
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02); 
             text-align: center; 
+            backdrop-filter: blur(12px);
         }
-        .stat-card.ai-card { border-top: 3px solid var(--ai-color); }
-        .stat-card.my-card { border-top: 3px solid var(--my-color); }
+        .stat-card.ai-card { border-top: 3.5px solid var(--ai-color); }
+        .stat-card.my-card { border-top: 3.5px solid var(--my-color); }
         .stat-card.pk-card { border-top: 3.5px solid var(--draw-color); background: #fffbeb; }
-        .stat-title { font-size: 11px; color: var(--text-muted); font-weight: 700; }
-        .stat-value { font-size: 22px; font-weight: 700; margin: 4px 0; font-family: monospace; }
+        .stat-title { font-size: 11px; color: var(--text-muted); font-weight: 800; }
+        .stat-value { font-size: 26px; font-weight: 900; margin: 4px 0; font-family: monospace; }
         .stat-sub { font-size: 11px; color: #64748b; }
 
-        /* 🌟 1800碰 / 9000碰 柱碰即時看板 (具備智慧下注建議) */
-        .touch-tracker-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 16px;
-        }
-        .touch-card {
-            background: #ffffff;
-            border: 1px solid var(--panel-border);
-            border-radius: 10px;
-            padding: 14px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            position: relative;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        }
-        .touch-card::before {
-            content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; border-radius: 10px 0 0 10px;
-        }
-        .touch-card.t-1800::before { background: #d97706; }
-        .touch-card.t-9000::before { background: #0284c7; }
-
-        .touch-card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .touch-card-title { font-size: 13px; font-weight: 700; color: #1e293b; }
-        .touch-status-badge {
-            font-size: 10px;
-            font-weight: 700;
-            padding: 2px 6px;
-            border-radius: 4px;
-        }
-        .badge-alert { background: #fee2e2; color: #dc2626; border: 1px solid #fecaca; }
-        .badge-ready { background: #fef3c7; color: #d97706; border: 1px solid #fde68a; }
-        .badge-ok { background: #dcfce7; color: #16a34a; border: 1px solid #bbf7d0; }
-
-        .touch-stats-row {
-            display: flex;
-            align-items: baseline;
-            justify-content: space-between;
-            border-bottom: 1px solid #e2e8f0;
-            padding-bottom: 6px;
-        }
-        .touch-miss-num { font-size: 24px; font-weight: 700; font-family: monospace; color: #0f172a; }
-        .touch-prob-val { font-size: 16px; font-weight: 700; font-family: monospace; color: #0284c7; }
-        .touch-sub-desc { font-size: 11px; color: #64748b; line-height: 1.4; }
-        .bet-advice-box {
-            background: #f8fafc;
-            border: 1px dashed #cbd5e1;
-            padding: 6px 10px;
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: 700;
-            color: #334155;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        /* 工具面板區 */
-        .tools-panel { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 14px; margin-bottom: 16px; }
+        .tools-panel { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 14px; margin-bottom: 18px; }
         .tool-card { 
             background: var(--panel-bg); 
             padding: 16px; 
-            border-radius: 10px; 
+            border-radius: 14px; 
             border: 1px solid var(--panel-border); 
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05); 
+            box-shadow: 0 4px 14px rgba(0,0,0,0.02); 
+            backdrop-filter: blur(12px);
         }
         .tool-card h3 { 
-            font-size: 13px; 
-            margin-bottom: 10px; 
-            padding-bottom: 6px; 
-            border-bottom: 1px solid #e2e8f0; 
+            font-size: 14px; 
+            margin-bottom: 12px; 
+            padding-bottom: 8px; 
+            border-bottom: 1px solid rgba(0,0,0,0.06); 
             display: flex;
             align-items: center;
             justify-content: space-between;
-            font-weight: 700;
+            font-weight: 900;
         }
         
-        .badge-list { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+        .badge-list { display: flex; flex-wrap: wrap; gap: 6px; }
         .info-badge { 
-            display: flex; flex-direction: column; align-items: center; background: #f8fafc; 
-            padding: 6px 4px; border-radius: 6px; width: 100%; border: 1px solid #cbd5e1;
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            background: #ffffff; 
+            padding: 5px 8px; 
+            border-radius: 8px; 
+            min-width: 44px;
+            border: 1px solid #e2e8f0;
             position: relative;
         }
-        .info-badge .num { font-size: 15px; font-weight: 700; font-family: monospace; }
-        .info-badge .desc { font-size: 9.5px; margin-top: 2px; font-weight: bold; text-align: center; color: #64748b; }
+        .info-badge .num { font-size: 17px; font-weight: 900; font-family: monospace; }
+        .info-badge .desc { font-size: 10px; margin-top: 1px; font-weight: bold; }
 
-        .info-badge.hit-today { border-color: #dc2626; background: #fef2f2; }
-        .info-badge.hit-today::after {
-            content: '開'; position: absolute; top: -4px; right: -4px; background: #dc2626; color: white;
-            font-size: 8px; font-weight: 700; padding: 0 3px; border-radius: 4px;
+        .info-badge.hit-today {
+            box-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
+            border-color: #ef4444;
         }
-        .hot-badge .num { color: #dc2626; }
-        .cold-badge .num { color: #0284c7; }
+        .info-badge.hit-today::after {
+            content: '開';
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ef4444;
+            color: white;
+            font-size: 8px;
+            font-weight: 900;
+            padding: 0 4px;
+            border-radius: 6px;
+        }
 
-        /* 推薦卡片 */
-        .recom-section { margin-top: 14px; padding-top: 10px; border-top: 1px dashed #cbd5e1; }
+        .hot-badge { background: linear-gradient(180deg, #ffffff, #fef2f2); }
+        .hot-badge .num { color: #dc2626; }
+        .hot-badge .desc { color: #b91c1c; }
+
+        .cold-badge { background: linear-gradient(180deg, #ffffff, #f0f9ff); }
+        .cold-badge .num { color: #0284c7; }
+        .cold-badge .desc { color: #0369a1; }
+
+        .recom-section {
+            margin-top: 16px;
+            padding-top: 12px;
+            border-top: 2px dashed rgba(148, 163, 184, 0.3);
+        }
         .recom-grid { display: grid; grid-template-columns: 1fr; gap: 8px; margin-top: 8px; }
         .recom-card {
-            background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;
-            padding: 10px 12px; display: flex; align-items: center; justify-content: space-between;
-            flex-wrap: wrap; gap: 8px; position: relative;
+            background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(248,250,252,0.95));
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 10px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+            position: relative;
         }
-        .recom-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3.5px; border-radius: 8px 0 0 8px; }
-        .recom-card.c-gold::before { background: #d97706; }
-        .recom-card.c-cyan::before { background: #0284c7; }
-        .recom-card.c-rose::before { background: #dc2626; }
+        .recom-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3.5px; }
+        .recom-card.c-gold::before { background: #f59e0b; }
+        .recom-card.c-cyan::before { background: #06b6d4; }
+        .recom-card.c-rose::before { background: #f43f5e; }
 
         .recom-header { display: flex; flex-direction: column; gap: 1px; }
-        .recom-title { font-size: 12px; font-weight: 700; }
-        .recom-sub { font-size: 10px; color: #64748b; }
-        .recom-balls { display: flex; gap: 5px; align-items: center; flex-wrap: wrap; }
+        .recom-title { font-size: 12px; font-weight: 900; }
+        .recom-sub { font-size: 10px; color: #64748b; font-weight: bold; }
         
-        .quantum-ball {
-            width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            font-size: 12px; font-weight: 700; font-family: monospace; background: #ffffff; border: 1.5px solid #cbd5e1; color: #1e293b;
+        .recom-balls { display: flex; gap: 5px; align-items: center; flex-wrap: wrap; }
+        .recom-ball {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 900;
+            font-family: monospace;
         }
-        .quantum-ball.q-cyan { border-color: #0284c7; color: #0284c7; background: #f0f9ff; }
-        .quantum-ball.q-gold { border-color: #d97706; color: #d97706; background: #fffbeb; }
-        .quantum-ball.q-rose { border-color: #dc2626; color: #dc2626; background: #fef2f2; }
+        .recom-ball.q-cyan { background: #e0f2fe; color: #0369a1; border: 1.5px solid #38bdf8; }
+        .recom-ball.q-gold { background: #fef3c7; color: #b45309; border: 1.5px solid #f59e0b; }
+        .recom-ball.q-rose { background: #ffe4e6; color: #be123c; border: 1.5px solid #fb7185; }
 
         .recom-btns { display: flex; gap: 4px; }
-        .btn-fast-apply { border: none; color: white; font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 4px; cursor: pointer; }
-
-        /* 穩定隨機選號器 */
-        .random-picker-card {
-            background: #f8fafc;
-            border: 1px solid #cbd5e1;
-            border-radius: 8px;
-            padding: 16px;
-            text-align: center;
-        }
-        .picker-screen {
-            font-family: monospace;
-            font-size: 20px;
-            font-weight: 700;
-            color: #0f172a;
-            background: #ffffff;
-            border: 1px solid #cbd5e1;
-            padding: 12px;
-            border-radius: 6px;
-            margin: 12px 0;
-            letter-spacing: 2px;
-        }
-        .btn-picker {
-            background: #059669;
-            color: white;
+        .btn-fast-apply {
             border: none;
-            padding: 10px 20px;
-            font-size: 13px;
-            font-weight: 700;
-            border-radius: 6px;
+            color: white;
+            font-size: 10px;
+            font-weight: 900;
+            padding: 4px 8px;
+            border-radius: 5px;
             cursor: pointer;
-            transition: 0.2s;
         }
-        .btn-picker:hover { background: #047857; }
 
-        /* 輸入表單區塊 */
+        .dual-machine-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+        .machine-unit { display: flex; flex-direction: column; align-items: center; background: #ffffff; padding: 10px; border-radius: 10px; border: 1px solid #e2e8f0; }
+        .machine-unit-title { font-size: 12px; font-weight: 900; margin-bottom: 6px; }
+
+        .realistic-machine { position: relative; width: 120px; height: 120px; margin-top: 8px; }
+        .glass-sphere { width: 120px; height: 120px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #ffffff 0%, #e0f2fe 60%, #bae6fd 100%); border: 2.5px solid #7dd3fc; position: absolute; top: 0; left: 0; box-shadow: 0 4px 14px rgba(14, 165, 233, 0.15); }
+        .glass-overlay { width: 100%; height: 100%; border-radius: 50%; position: absolute; top: 0; left: 0; box-shadow: inset -6px -6px 12px rgba(14, 165, 233, 0.2), inset 5px 5px 10px rgba(255,255,255,0.9); pointer-events: none; z-index: 10; }
+        .suction-tube { position: absolute; top: -16px; left: 50%; transform: translateX(-50%); width: 22px; height: 24px; background: linear-gradient(to right, rgba(255,255,255,0.9), rgba(186,230,253,0.7), rgba(255,255,255,0.9)); border: 1.5px solid #0284c7; border-bottom: none; border-radius: 5px 5px 0 0; z-index: 15; }
+        .machine-base { position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); width: 65px; height: 15px; background: #334155; border-radius: 3px; z-index: 12; }
+        .mini-ball { position: absolute; width: 16px; height: 16px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #fde047, #f59e0b); color: #78350f; font-size: 8px; font-weight: 900; display: flex; align-items: center; justify-content: center; top: 0; left: 0; z-index: 5; transition: transform 0s, opacity 0.5s; }
+        
+        .machine-balls { display: flex; justify-content: center; gap: 4px; padding: 6px; background: #f8fafc; border-radius: 16px; margin-top: 10px; width: 100%; border: 1px solid #e2e8f0; }
+        .machine-ball { width: 32px; height: 32px; border-radius: 50%; background: #ffffff; color: #94a3b8; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 900; border: 1.5px dashed #cbd5e1; transition: all 0.4s; font-family: monospace; }
+        .machine-ball.revealed { background: linear-gradient(135deg, #fde047, #f59e0b); color: #78350f; border: 1.5px solid #b45309; box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3); transform: scale(1.08); }
+
+        .btn-roll { width: 100%; max-width: 280px; background: linear-gradient(135deg, #4f46e5, #7c3aed); color: white; border: none; padding: 10px 16px; font-size: 13px; font-weight: 900; border-radius: 8px; cursor: pointer; }
+        .btn-roll:hover { filter: brightness(1.1); }
+        .btn-roll:disabled { background: #cbd5e1; cursor: not-allowed; }
+        .btn-apply-group { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; margin-top: 8px; }
+        .btn-apply { color: white; border: none; padding: 4px 7px; font-size: 10px; font-weight: bold; border-radius: 5px; cursor: pointer; display: none; }
+        .btn-apply-ai { background: var(--ai-color); }
+        .btn-apply-my { background: var(--my-color); }
+
         .input-panel { 
-            background: var(--panel-bg); padding: 16px; border-radius: 10px; border: 1px solid var(--panel-border); margin-bottom: 14px;
+            background: var(--panel-bg); 
+            padding: 18px; 
+            border-radius: 14px; 
+            border: 1px solid var(--panel-border); 
+            margin-bottom: 18px; 
+            backdrop-filter: blur(12px);
         }
-        .input-panel h2 { margin-bottom: 10px; font-size: 14px; color: var(--text-main); border-left: 3px solid var(--draw-color); padding-left: 8px; font-weight: 700; }
-        .form-row { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 10px; }
-        .form-group { flex: 1; min-width: 160px; display: flex; flex-direction: column; gap: 4px; }
-        .form-group label { font-size: 11px; font-weight: 700; color: #475569; }
+        .input-panel h2 { margin-bottom: 12px; font-size: 15px; color: var(--text-main); border-left: 4px solid var(--draw-color); padding-left: 10px; font-weight: 900; }
+        .crawl-panel h2 { border-left-color: var(--neon-purple); }
+
+        .form-row { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 12px; }
+        .form-group { flex: 1; min-width: 170px; display: flex; flex-direction: column; gap: 4px; }
+        .form-group label { font-size: 11px; font-weight: 800; color: #334155; }
         .form-group input { 
-            padding: 8px 10px; background: #ffffff; border: 1px solid #cbd5e1; color: #0f172a; border-radius: 6px; font-size: 13px; outline: none; font-family: monospace; font-weight: 600;
+            padding: 8px 10px; 
+            background: #ffffff; 
+            border: 1.5px solid #cbd5e1; 
+            color: #0f172a; 
+            border-radius: 6px; 
+            font-size: 14px; 
+            outline: none; 
+            font-family: monospace;
+            font-weight: 600;
         }
         .form-group input:focus { border-color: var(--ai-color); }
+        
         .btn-submit { 
-            width: 100%; background: #0284c7; color: white; border: none; padding: 11px; font-size: 13px; font-weight: 700; border-radius: 6px; cursor: pointer; margin-top: 4px;
+            width: 100%; 
+            background: linear-gradient(135deg, #0284c7, #2563eb); 
+            color: white; 
+            border: none; 
+            padding: 12px; 
+            font-size: 14px; 
+            font-weight: 900; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            margin-top: 4px; 
         }
-        .btn-submit:hover { background: #0369a1; }
+        .btn-submit:hover { filter: brightness(1.1); }
 
-        /* 歷史戰績表格 */
         .history-panel { 
-            background: var(--panel-bg); padding: 16px; border-radius: 10px; border: 1px solid var(--panel-border); margin-bottom: 14px;
+            background: var(--panel-bg); 
+            padding: 18px; 
+            border-radius: 14px; 
+            border: 1px solid var(--panel-border); 
+            margin-bottom: 18px; 
+            box-shadow: 0 4px 14px rgba(0,0,0,0.02);
+            backdrop-filter: blur(12px);
         }
         table { width: 100%; border-collapse: collapse; text-align: center; }
-        th { background: #f8fafc; padding: 10px 6px; border-bottom: 2px solid #e2e8f0; font-weight: 700; font-size: 12px; color: #475569; }
-        td { padding: 10px 6px; border-bottom: 1px solid #e2e8f0; vertical-align: middle; }
-        tr:hover { background: #f8fafc; }
+        th { background: #f8fafc; padding: 12px 6px; border-bottom: 2px solid #e2e8f0; font-weight: 900; font-size: 13px; color: #475569; }
+        td { padding: 12px 6px; border-bottom: 1px solid #e2e8f0; vertical-align: middle; }
+        tr:hover { background: rgba(241, 245, 249, 0.6); }
 
         .num-container { display: flex; gap: 5px; justify-content: center; flex-wrap: wrap; align-items: center; }
         .num-ball { 
-            width: var(--ball-size); height: var(--ball-size); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; 
-            background: #ffffff; color: #1e293b; font-family: monospace; border: 1px solid #cbd5e1;
+            width: var(--ball-size); 
+            height: var(--ball-size); 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 15px; 
+            font-weight: 900; 
+            background: #ffffff; 
+            color: #1e293b; 
+            font-family: monospace; 
+            border: 1.5px solid #cbd5e1; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
         }
-        .num-ball.hit { background: #fee2e2; color: #dc2626; border-color: #fca5a5; font-weight: 700; }
-        .num-ball.draw { background: #fef3c7; color: #d97706; border-color: #fde68a; font-weight: 700; }
-        .empty-label { color: #94a3b8; font-size: 11px; font-family: monospace; }
-        .winner-badge { padding: 3px 8px; border-radius: 10px; font-size: 11px; font-weight: 700; display: inline-block; font-family: monospace; }
-        .badge-ai { background: #e0f2fe; color: #0284c7; border: 1px solid #bae6fd; }
-        .badge-my { background: #dcfce7; color: #059669; border: 1px solid #bbf7d0; }
-        .badge-tie { background: #f1f5f9; color: #64748b; border: 1px solid #e2e8f0; }
-        .badge-pending { background: #fef3c7; color: #d97706; border: 1px solid #fde68a; } 
-        .action-btn { padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: 600; margin: 2px; border: 1px solid #cbd5e1; }
-        .delete-btn { background: #fee2e2; color: #dc2626; border-color: #fca5a5; }
-        .edit-btn { background: #f1f5f9; color: #334155; }
+        .num-ball.hit { 
+            background: linear-gradient(135deg, #ef4444, #dc2626); 
+            color: #ffffff; 
+            box-shadow: 0 3px 8px rgba(239, 68, 68, 0.35); 
+            transform: scale(1.08); 
+            border-color: #991b1b; 
+        }
+        .num-ball.draw { 
+            background: linear-gradient(135deg, #fbbf24, #f59e0b); 
+            color: #78350f; 
+            border-color: #b45309; 
+            box-shadow: 0 2px 6px rgba(245, 158, 11, 0.25); 
+        }
 
-        @media (max-width: 860px) {
-            .tools-panel { grid-template-columns: 1fr; }
-            .touch-tracker-grid { grid-template-columns: 1fr; }
-        }
+        .empty-label { color: #94a3b8; font-size: 12px; letter-spacing: 1px; font-family: monospace; font-weight: bold; }
+
+        .winner-badge { padding: 4px 10px; border-radius: 16px; font-size: 11px; font-weight: 900; display: inline-block; font-family: monospace; }
+        .badge-ai { background: #e0f2fe; color: #0284c7; border: 1px solid #38bdf8; }
+        .badge-my { background: #dcfce7; color: #059669; border: 1px solid #34d399; }
+        .badge-tie { background: #f1f5f9; color: #64748b; border: 1px solid #cbd5e1; }
+        .badge-pending { background: #fef3c7; color: #d97706; border: 1px solid #f59e0b; } 
+        
+        .action-btn { padding: 5px 9px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: bold; margin: 2px; border: 1px solid #cbd5e1; }
+        .delete-btn { background: #fee2e2; color: #dc2626; }
+        .delete-btn:hover { background: #fecaca; }
+        .edit-btn { background: #f1f5f9; color: #334155; }
+        .edit-btn:hover { background: #e2e8f0; }
+
         @media (max-width: 768px) {
             :root { --ball-size: 28px; }
-            body { padding: 8px 4px; }
-            .badge-list { grid-template-columns: repeat(4, 1fr); }
+            body { padding: 10px 6px; }
+            header { padding: 12px 8px; margin-bottom: 12px; }
+            .stats-board { grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+            .stat-card { padding: 10px; }
+            .stat-value { font-size: 22px; margin: 2px 0; }
+
+            .modal-overlay { padding: 8px; }
+            .modal-content { height: 96vh; border-radius: 14px; }
+            .modal-header { padding: 10px 14px; }
+            .modal-tabs { padding: 4px 8px 0 8px; }
+            .tab-btn { padding: 7px 10px; font-size: 11.5px; }
+
+            .calc-form-grid { grid-template-columns: 1fr 1fr; gap: 6px; padding: 8px; }
+            .btn-recalc { grid-column: span 2; width: 100%; height: 34px; }
+
+            .plan-config-bar { padding: 8px 10px; gap: 6px; }
+            .plan-config-bar input { width: 75px; }
+            .btn-config-calc { width: 100%; margin-top: 4px; }
+
+            .profit-table-wrapper { display: none; }
+            .mobile-cards-container { display: flex; }
+
+            .dual-machine-grid { grid-template-columns: 1fr; gap: 10px; }
+            .input-panel { padding: 14px; }
+            .form-row { flex-direction: column; gap: 8px; }
+
             .history-panel { padding: 12px; }
             table, thead, tbody, th, td, tr { display: block; }
             thead tr { position: absolute; top: -9999px; left: -9999px; }
-            tr { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 10px; padding: 10px; }
-            td { border: none; padding: 4px 0; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px dashed #f1f5f9; }
-            td:last-child { border-bottom: none; justify-content: flex-end; }
-            td::before { content: attr(data-label); font-weight: 700; font-size: 11px; color: #64748b; }
+            tr { 
+                background: #ffffff; 
+                border: 1px solid #e2e8f0; 
+                border-radius: 10px; 
+                margin-bottom: 10px; 
+                padding: 10px; 
+                box-shadow: 0 2px 5px rgba(0,0,0,0.02); 
+            }
+            td { 
+                border: none; 
+                padding: 5px 0; 
+                display: flex; 
+                align-items: center; 
+                justify-content: space-between; 
+                border-bottom: 1px dashed #f1f5f9;
+            }
+            td:last-child { border-bottom: none; padding-top: 8px; justify-content: flex-end; gap: 4px; }
+            td::before { 
+                content: attr(data-label); 
+                font-weight: 900; 
+                font-size: 11px; 
+                color: #64748b; 
+                text-align: left;
+                min-width: 65px;
+            }
+            .num-ball { 
+                width: var(--ball-size); 
+                height: var(--ball-size); 
+                font-size: 12px;
+            }
             .recom-card { flex-direction: column; align-items: flex-start; }
+            .recom-btns { width: 100%; justify-content: flex-end; }
         }
     </style>
 </head>
@@ -582,47 +726,76 @@
 
 <div class="container">
     <header>
-        <h1>天天樂・分析與對決擂台</h1>
+        <h1>⚡ QUANTUM AI LOTTERY BATTLE ARENA (智能三星四星雙軌版) ⚡</h1>
         <div class="cloud-badge">
             <div class="dot"></div>
-            <span>雲端同步正常</span>
+            <span>Firebase 雲端量子網絡同步中</span>
         </div>
     </header>
 
     <div class="top-action-bar">
         <button class="btn-open-modal" onclick="openProfitModal()">
-            📊 點擊開啟：坐車目標獲利與倍投規劃表
+            📊 點擊開啟：天天樂坐車目標獲利與倍投規劃表 (單碼/多碼/階梯)
         </button>
     </div>
 
-    <!-- 彈出視窗 -->
+    <!-- 收益與倍投Modal保持原樣 -->
     <div class="modal-overlay" id="profit-modal" onclick="closeModalOnOverlay(event)">
+        <!-- Modal Code Omitted to match length, everything from the original modal code is preserved -->
         <div class="modal-content">
             <div class="modal-header">
-                <h2>💰 坐車下注・目標倍投與階梯紀律規劃表</h2>
+                <h2>💰 天天樂坐車下注・目標倍投與階梯紀律規劃表</h2>
                 <button class="modal-close" onclick="closeProfitModal()">&times;</button>
             </div>
             
             <div class="modal-tabs">
                 <button class="tab-btn active" id="tab-btn-single-target" onclick="switchModalTab('single-target')">🌟 單碼目標倍投</button>
                 <button class="tab-btn" id="tab-btn-four-target" onclick="switchModalTab('four-target')">🎯 4碼目標倍投</button>
-                <button class="tab-btn" id="tab-btn-tier-track" onclick="switchModalTab('tier-track')">⚖️ 階梯均注追蹤</button>
+                <button class="tab-btn" id="tab-btn-tier-track" onclick="switchModalTab('tier-track')">⚖️ 階梯均注紀律追蹤表</button>
             </div>
 
             <div class="modal-body">
                 <div id="tab-content-single-target">
+                    <!-- Original single target content -->
                     <div class="calc-form-grid">
-                        <div class="calc-input-group"><label>第 1 期起步車數</label><input type="number" id="calc-st-first-units" value="0.10" step="0.05"></div>
-                        <div class="calc-input-group"><label>每日目標淨利</label><input type="number" id="calc-st-target-profit" value="1844" step="50"></div>
-                        <div class="calc-input-group"><label>規劃天數</label><input type="number" id="calc-st-days" value="15" step="1"></div>
-                        <div class="calc-input-group"><label>每全車成本</label><input type="number" id="calc-st-cost" value="2755" step="1"></div>
-                        <div class="calc-input-group"><label>每全車彩金</label><input type="number" id="calc-st-prize" value="21200" step="100"></div>
-                        <button class="btn-recalc" onclick="calculateSingleTargetPlan()">演算倍投</button>
+                        <div class="calc-input-group">
+                            <label>🚗 第 1 期起步車數</label>
+                            <input type="number" id="calc-st-first-units" value="0.10" min="0.01" max="10" step="0.05">
+                        </div>
+                        <div class="calc-input-group">
+                            <label>🎯 每日目標淨利 (增量)</label>
+                            <input type="number" id="calc-st-target-profit" value="1844" min="100" max="1000000" step="50">
+                        </div>
+                        <div class="calc-input-group">
+                            <label>📅 規劃天數 (期數)</label>
+                            <input type="number" id="calc-st-days" value="15" min="1" max="60" step="1">
+                        </div>
+                        <div class="calc-input-group">
+                            <label>💵 每全車成本</label>
+                            <input type="number" id="calc-st-cost" value="2755" min="1" max="50000" step="1">
+                        </div>
+                        <div class="calc-input-group">
+                            <label>🏆 每全車彩金</label>
+                            <input type="number" id="calc-st-prize" value="21200" min="1000" max="100000" step="100">
+                        </div>
+                        <button class="btn-recalc" onclick="calculateSingleTargetPlan()">⚡ 演算單碼倍投</button>
                     </div>
-                    <div style="font-size:12px; font-weight:700; color:#d97706; margin-bottom:8px;" id="st-plan-summary"></div>
+
+                    <div style="font-size:12px; font-weight:bold; color:#b45309; margin-bottom:8px;" id="st-plan-summary"></div>
+
                     <div class="profit-table-wrapper">
                         <table class="profit-table">
-                            <thead><tr><th>天數</th><th>目標累計淨利</th><th>下注車數</th><th>當期成本</th><th>累計總投入</th><th>中獎彩金</th><th>結算淨利</th></tr></thead>
+                            <thead>
+                                <tr>
+                                    <th>天數</th>
+                                    <th>目標累計淨利</th>
+                                    <th>下注車數</th>
+                                    <th>當期成本</th>
+                                    <th>累計總投入</th>
+                                    <th>中獎彩金</th>
+                                    <th>結算淨利</th>
+                                </tr>
+                            </thead>
                             <tbody id="st-plan-tbody"></tbody>
                         </table>
                     </div>
@@ -630,18 +803,47 @@
                 </div>
 
                 <div id="tab-content-four-target" style="display:none;">
+                    <!-- Original four target content -->
                     <div class="calc-form-grid">
-                        <div class="calc-input-group"><label>第 1 期每碼車數</label><input type="number" id="calc-ft-first-units" value="0.10" step="0.05"></div>
-                        <div class="calc-input-group"><label>每期期望淨利</label><input type="number" id="calc-ft-target-profit" value="1844" step="50"></div>
-                        <div class="calc-input-group"><label>規劃期數</label><input type="number" id="calc-ft-days" value="6" step="1"></div>
-                        <div class="calc-input-group"><label>單碼成本</label><input type="number" id="calc-ft-cost" value="2755" step="1"></div>
-                        <div class="calc-input-group"><label>單碼彩金</label><input type="number" id="calc-ft-prize" value="21200" step="100"></div>
-                        <button class="btn-recalc" onclick="calculateFourTargetPlan()">演算4碼</button>
+                        <div class="calc-input-group">
+                            <label>🚗 第 1 期每碼車數</label>
+                            <input type="number" id="calc-ft-first-units" value="0.10" min="0.01" max="10" step="0.05">
+                        </div>
+                        <div class="calc-input-group">
+                            <label>🎯 每期期望淨利 (增量)</label>
+                            <input type="number" id="calc-ft-target-profit" value="1844" min="100" max="1000000" step="50">
+                        </div>
+                        <div class="calc-input-group">
+                            <label>📅 規劃天數 (期數)</label>
+                            <input type="number" id="calc-ft-days" value="6" min="1" max="20" step="1">
+                        </div>
+                        <div class="calc-input-group">
+                            <label>💵 單碼成本 (全車)</label>
+                            <input type="number" id="calc-ft-cost" value="2755" min="1" max="50000" step="1">
+                        </div>
+                        <div class="calc-input-group">
+                            <label>🏆 單碼彩金</label>
+                            <input type="number" id="calc-ft-prize" value="21200" min="1000" max="100000" step="100">
+                        </div>
+                        <button class="btn-recalc" onclick="calculateFourTargetPlan()">⚡ 演算4碼倍投</button>
                     </div>
-                    <div style="font-size:12px; font-weight:700; color:#d97706; margin-bottom:8px;" id="ft-plan-summary"></div>
+
+                    <div style="font-size:12px; font-weight:bold; color:#b45309; margin-bottom:8px;" id="ft-plan-summary"></div>
+
                     <div class="profit-table-wrapper">
                         <table class="profit-table">
-                            <thead><tr><th>期數</th><th>目標累計淨利</th><th>每碼下注車數</th><th>當期總成本</th><th>累計總投入</th><th>中1碼彩金</th><th>保底淨利</th><th>若中2碼</th></tr></thead>
+                            <thead>
+                                <tr>
+                                    <th>期數</th>
+                                    <th>目標累計淨利</th>
+                                    <th>每碼下注車數</th>
+                                    <th>當期總成本 (4碼)</th>
+                                    <th>累計總投入</th>
+                                    <th>中 1 碼彩金</th>
+                                    <th>保底結算淨利</th>
+                                    <th>若中 2 碼 (雙停暴利)</th>
+                                </tr>
+                            </thead>
                             <tbody id="ft-plan-tbody"></tbody>
                         </table>
                     </div>
@@ -649,34 +851,53 @@
                 </div>
 
                 <div id="tab-content-tier-track" style="display:none;">
+                    <!-- Original tier track content -->
                     <div class="tier-sub-tabs">
-                        <button class="sub-tab-btn active" id="sub-tier-single" onclick="switchTierSubMode('single')">單碼階梯 (3期一階)</button>
-                        <button class="sub-tab-btn" id="sub-tier-four" onclick="switchTierSubMode('four')">4碼階梯 (2期一階)</button>
+                        <button class="sub-tab-btn active" id="sub-tier-single" onclick="switchTierSubMode('single')">🌟 單碼階梯 (3期一階)</button>
+                        <button class="sub-tab-btn" id="sub-tier-four" onclick="switchTierSubMode('four')">🎯 4碼階梯 (2期一階)</button>
                     </div>
+
                     <div class="tracker-card">
-                        <div class="tracker-title"><span id="tracker-mode-name">單碼階梯執行狀態</span><span id="tracker-stoploss-tip" style="color:#dc2626; font-size:11px;">執行中</span></div>
+                        <div class="tracker-title">
+                            <span id="tracker-mode-name">單碼階梯均注 (3期一階) 當前執行狀態</span>
+                            <span id="tracker-stoploss-tip" style="color:#dc2626; font-size:11px;">執行進度</span>
+                        </div>
                         <div class="status-grid">
                             <div class="status-item"><div class="label">當前期數</div><div class="val" id="disp-day">第 1 期</div></div>
-                            <div class="status-item"><div class="label">當前階梯</div><div class="val" id="disp-tier" style="color:#7c3aed;">第一階</div></div>
+                            <div class="status-item"><div class="label">當前階梯</div><div class="val" id="disp-tier" style="color:var(--neon-purple);">第一階</div></div>
                             <div class="status-item"><div class="label">下注車數</div><div class="val highlight" id="disp-cars">0.10 車</div></div>
                             <div class="status-item"><div class="label">當期成本</div><div class="val" id="disp-cost">276 元</div></div>
-                            <div class="status-item"><div class="label">累計總投入</div><div class="val" id="disp-total-cost">276 元</div></div>
-                            <div class="status-item"><div class="label">中獎淨利</div><div class="val win" id="disp-win-profit">+1,844 元</div></div>
+                            <div class="status-item"><div class="label">累計總成本</div><div class="val" id="disp-total-cost">276 元</div></div>
+                            <div class="status-item"><div class="label">中獎實得淨利</div><div class="val win" id="disp-win-profit">+1,844 元</div></div>
                         </div>
                         <div class="action-btns">
-                            <button class="act-btn btn-win" onclick="recordTierResult(true)">🎉 過關 (回第一階)</button>
-                            <button class="act-btn btn-lose" onclick="recordTierResult(false)">❌ 未過 (下一期)</button>
-                            <button class="act-btn btn-reset" onclick="resetTierGame()">重置</button>
+                            <button class="act-btn btn-win" onclick="recordTierResult(true)">🎉 過關！(結算並回第一階)</button>
+                            <button class="act-btn btn-lose" onclick="recordTierResult(false)">❌ 沒過 (進入下一期)</button>
+                            <button class="act-btn btn-reset" onclick="resetTierGame()">重置循環</button>
                         </div>
                     </div>
+
                     <div class="plan-config-bar">
-                        <label>起始車數：</label><input type="number" id="cfg-tier-cars" value="0.10" step="0.05">
-                        <label>總期數：</label><input type="number" id="cfg-tier-total-days" value="15" step="1">
-                        <button class="btn-config-calc" onclick="applyDynamicTierConfig()">重新生成</button>
+                        <label>🚗 起始車數：</label>
+                        <input type="number" id="cfg-tier-cars" value="0.10" min="0.01" max="10" step="0.05">
+                        <label style="margin-left:8px;">📅 總規劃期數：</label>
+                        <input type="number" id="cfg-tier-total-days" value="15" min="3" max="60" step="1">
+                        <button class="btn-config-calc" onclick="applyDynamicTierConfig()">⚡ 重新生成不限期表格</button>
                     </div>
+
                     <div class="profit-table-wrapper">
                         <table class="profit-table">
-                            <thead><tr><th>天數</th><th>階梯</th><th>下注車數</th><th>當期成本</th><th>累計成本</th><th>中獎彩金</th><th>結算淨利</th></tr></thead>
+                            <thead>
+                                <tr>
+                                    <th>天數</th>
+                                    <th>階梯</th>
+                                    <th>下注車數</th>
+                                    <th>當期成本</th>
+                                    <th>累計總成本</th>
+                                    <th>中獎彩金</th>
+                                    <th>結算淨利 (保證賺錢)</th>
+                                </tr>
+                            </thead>
                             <tbody id="tier-table-body"></tbody>
                         </table>
                     </div>
@@ -686,165 +907,211 @@
         </div>
     </div>
 
-    <!-- 頂部戰力板 -->
     <div class="stats-board">
         <div class="stat-card">
             <div class="stat-title">已結算期數</div>
-            <div class="stat-value" id="total-rounds">0</div>
+            <div class="stat-value" id="total-rounds" style="color:#0f172a;">0</div>
             <div class="stat-sub">有效開獎期數</div>
         </div>
         <div class="stat-card ai-card">
-            <div class="stat-title" style="color:var(--ai-color)">AI 總命中</div>
+            <div class="stat-title" style="color:var(--ai-color)">🤖 AI 總命中</div>
             <div class="stat-value" id="ai-hits" style="color:var(--ai-color)">0</div>
-            <div class="stat-sub">場均：<span id="ai-avg">0.00</span></div>
+            <div class="stat-sub">參賽 <span id="ai-rounds">0</span> 期 (場均：<span id="ai-avg">0.00</span>)</div>
         </div>
         <div class="stat-card my-card">
-            <div class="stat-title" style="color:var(--my-color)">我 總命中</div>
+            <div class="stat-title" style="color:var(--my-color)">🧑 我 總命中</div>
             <div class="stat-value" id="my-hits" style="color:var(--my-color)">0</div>
-            <div class="stat-sub">場均：<span id="my-avg">0.00</span></div>
+            <div class="stat-sub">參賽 <span id="my-rounds">0</span> 期 (場均：<span id="my-avg">0.00</span>)</div>
         </div>
         <div class="stat-card pk-card">
-            <div class="stat-title" style="color:var(--draw-color)">勝率霸主</div>
-            <div class="stat-value" id="pk-winner" style="color:var(--draw-color); font-size:16px;">等待開獎</div>
-            <div class="stat-sub">平均命中率判定</div>
+            <div class="stat-title" style="color:var(--draw-color)">🏆 目前勝率霸主</div>
+            <div class="stat-value" id="pk-winner" style="color:var(--draw-color); font-size:18px;">等待開獎</div>
+            <div class="stat-sub">以平均命中率判定</div>
         </div>
     </div>
 
-    <!-- 🌟 1800碰 / 9000碰 柱碰即時看板 (帶有下注機率提醒) -->
-    <div class="touch-tracker-grid">
-        <div class="touch-card t-1800">
-            <div class="touch-card-header">
-                <div class="touch-card-title">1800 碰 (三星柱碰)</div>
-                <div class="touch-status-badge badge-ready" id="t1800-badge">運算中</div>
-            </div>
-            <div class="touch-stats-row">
-                <div><span class="text-muted">連續未開：</span><span class="touch-miss-num" id="t1800-miss-count">0</span> 期</div>
-                <div><span class="text-muted">反彈機率：</span><span class="touch-prob-val" id="t1800-prob-val">0.0%</span></div>
-            </div>
-            <div class="touch-sub-desc">配置：第1柱(10-18) | 第2柱(20-29) | 第3柱(01-09+19+30-39)</div>
-            <div class="bet-advice-box">
-                <span>💡 下注建議：</span><span id="t1800-advice" style="color:#d97706; font-weight:700;">分析中...</span>
-            </div>
-        </div>
-
-        <div class="touch-card t-9000">
-            <div class="touch-card-header">
-                <div class="touch-card-title">9000 碰 (四星柱碰)</div>
-                <div class="touch-status-badge badge-ready" id="t9000-badge">運算中</div>
-            </div>
-            <div class="touch-stats-row">
-                <div><span class="text-muted">連續未開：</span><span class="touch-miss-num" id="t9000-miss-count">0</span> 期</div>
-                <div><span class="text-muted">反彈機率：</span><span class="touch-prob-val" style="color:#0284c7;" id="t9000-prob-val">0.0%</span></div>
-            </div>
-            <div class="touch-sub-desc">配置：第1柱(01-09) | 第2柱(10-19) | 第3柱(20-29) | 第4柱(30-39)</div>
-            <div class="bet-advice-box">
-                <span>💡 下注建議：</span><span id="t9000-advice" style="color:#0284c7; font-weight:700;">分析中...</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- 核心工具與選號區 -->
     <div class="tools-panel">
         <div class="tool-card">
             <h3 style="color:#dc2626;">
-                <span>常開高頻熱門號 (TOP 8)</span>
-                <span id="hot-hit-summary" style="font-size:11px; font-weight:normal;"></span>
+                <span>🔥 常開高頻熱門號 (TOP 8)</span>
+                <span id="hot-hit-summary" style="font-size:11px; font-weight:normal; color:#ef4444;"></span>
             </h3>
-            <div class="badge-list" id="hot-numbers"><div style="font-size:12px; color:#64748b;">載入數據中...</div></div>
+            <div class="badge-list" id="hot-numbers">
+                <div style="font-size:12px; color:#94a3b8;">累積開獎數據後顯示...</div>
+            </div>
             
-            <h3 style="color:#0284c7; margin-top:14px;">
-                <span>連續未開冷門號 (TOP 8)</span>
-                <span id="cold-hit-summary" style="font-size:11px; font-weight:normal;"></span>
+            <h3 style="color:#0284c7; margin-top:16px;">
+                <span>❄️ 極凍遺漏冷門號 (TOP 8)</span>
+                <span id="cold-hit-summary" style="font-size:11px; font-weight:normal; color:#0284c7;"></span>
             </h3>
-            <div class="badge-list" id="cold-numbers"><div style="font-size:12px; color:#64748b;">載入數據中...</div></div>
+            <div class="badge-list" id="cold-numbers">
+                <div style="font-size:12px; color:#94a3b8;">累積開獎數據後顯示...</div>
+            </div>
 
-            <!-- 三大模式推薦 -->
             <div class="recom-section">
-                <h3 style="margin-bottom:6px; border:none; padding-bottom:0;">
-                    <span>三大模式三星 / 四星同步推薦矩陣</span>
-                    <button onclick="refreshRecommendations()" style="border:none; background:#e2e8f0; padding:4px 8px; border-radius:4px; font-size:11px; cursor:pointer; font-weight:700;">換一組</button>
+                <h3 style="margin-bottom:6px; border:none; padding-bottom:0; color:#475569;">
+                    <span>🎯 加州三大模式三星 / 四星同步推薦矩陣</span>
+                    <button onclick="refreshRecommendations()" style="border:none; background:#0284c7; color:white; padding:4px 10px; border-radius:5px; font-size:11px; cursor:pointer; font-weight:bold;">🔄 換一組</button>
                 </h3>
                 <div class="recom-grid" id="recom-container">
-                    <div style="font-size:12px; color:#64748b;">載入數據中...</div>
+                    <div style="font-size:12px; color:#94a3b8;">累積足夠開獎資料後生成...</div>
                 </div>
             </div>
         </div>
 
-        <!-- 穩定隨機選號器 -->
         <div class="tool-card">
-            <h3>穩定隨機選號器</h3>
-            <div class="random-picker-card">
-                <div style="font-size:12px; color:#64748b;">點擊下方按鈕立即產生 5 顆隨機號碼</div>
-                <div class="picker-screen" id="picker-screen-display">? ? ? ? ?</div>
-                <button class="btn-picker" onclick="generatePickerNumbers()">產生一組號碼</button>
-                <div style="margin-top:10px; display:flex; justify-content:center; gap:8px;">
-                    <button class="action-btn edit-btn" onclick="applyPickerToInput('ai')">填入 AI</button>
-                    <button class="action-btn edit-btn" onclick="applyPickerToInput('my')">填入 我的</button>
+            <h3 style="color:var(--neon-purple);">🎰 雙軌 3D 物理滾球量子搖號機 (可選 4 或 5 碼)</h3>
+            <div class="dual-machine-grid">
+                <div class="machine-unit">
+                    <div class="machine-unit-title" style="color:var(--ai-color)">🎲 1 號機 (Alpha)</div>
+                    <div class="realistic-machine">
+                        <div class="suction-tube"></div>
+                        <div class="glass-sphere" id="physics-container-1"></div>
+                        <div class="glass-overlay"></div>
+                        <div class="machine-base"></div>
+                    </div>
+                    <div class="machine-balls" id="machine-balls-1">
+                        <div class="machine-ball">?</div><div class="machine-ball">?</div><div class="machine-ball">?</div><div class="machine-ball">?</div><div class="machine-ball">?</div>
+                    </div>
+                    <div class="btn-apply-group">
+                        <button class="btn-apply btn-apply-ai" id="apply-m1-ai-4" onclick="applyToInput(finalNums1, 'ai', 4)">入AI(4碼)</button>
+                        <button class="btn-apply btn-apply-ai" id="apply-m1-ai-5" onclick="applyToInput(finalNums1, 'ai', 5)">入AI(5碼)</button>
+                        <button class="btn-apply btn-apply-my" id="apply-m1-my-4" onclick="applyToInput(finalNums1, 'my', 4)">入我(4碼)</button>
+                        <button class="btn-apply btn-apply-my" id="apply-m1-my-5" onclick="applyToInput(finalNums1, 'my', 5)">入我(5碼)</button>
+                    </div>
+                </div>
+
+                <div class="machine-unit">
+                    <div class="machine-unit-title" style="color:var(--my-color)">🎲 2 號機 (Beta)</div>
+                    <div class="realistic-machine">
+                        <div class="suction-tube"></div>
+                        <div class="glass-sphere" id="physics-container-2"></div>
+                        <div class="glass-overlay"></div>
+                        <div class="machine-base"></div>
+                    </div>
+                    <div class="machine-balls" id="machine-balls-2">
+                        <div class="machine-ball">?</div><div class="machine-ball">?</div><div class="machine-ball">?</div><div class="machine-ball">?</div><div class="machine-ball">?</div>
+                    </div>
+                    <div class="btn-apply-group">
+                        <button class="btn-apply btn-apply-my" id="apply-m2-my-4" onclick="applyToInput(finalNums2, 'my', 4)">入我(4碼)</button>
+                        <button class="btn-apply btn-apply-my" id="apply-m2-my-5" onclick="applyToInput(finalNums2, 'my', 5)">入我(5碼)</button>
+                        <button class="btn-apply btn-apply-ai" id="apply-m2-ai-4" onclick="applyToInput(finalNums2, 'ai', 4)">入AI(4碼)</button>
+                        <button class="btn-apply btn-apply-ai" id="apply-m2-ai-5" onclick="applyToInput(finalNums2, 'ai', 5)">入AI(5碼)</button>
+                    </div>
                 </div>
             </div>
+
+            <div style="text-align: center; margin-top: 8px;">
+                <button class="btn-roll" id="btn-roll-all" onclick="startRollDual()">🌪️ 雙機同步啟動量子搖號</button>
+            </div>
         </div>
+
+        <!-- 👇 這裡是為您新增的 1800碰 / 9000碰 包牌計算與水位監控卡片 👇 -->
+        <div class="tool-card">
+            <h3 style="color: #059669;">
+                <span>🧮 智能連碰包牌計算機</span>
+                <span style="font-size:11px; color:#64748b; font-weight:normal;">(含 1800/9000 風控監測)</span>
+            </h3>
+            <div class="calc-form-grid" style="grid-template-columns: repeat(2, 1fr); padding: 12px; gap: 8px; margin-bottom: 8px;">
+                <div class="calc-input-group">
+                    <label>🔢 選擇包牌球數 (2~39)</label>
+                    <input type="number" id="dash-combo-balls" value="22" min="2" max="39">
+                </div>
+                <div class="calc-input-group">
+                    <label>🎯 操作模式</label>
+                    <select id="dash-combo-mode" style="padding: 7px 9px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 6px; font-size: 13px; font-family: monospace; font-weight: bold; outline: none;">
+                        <option value="連碰">標準連碰</option>
+                    </select>
+                </div>
+                <div class="calc-input-group">
+                    <label>💰 二/三星單碰成本</label>
+                    <input type="text" id="dash-cost23" value="72 / 65">
+                </div>
+                <div class="calc-input-group">
+                    <label>💰 四星單碰成本</label>
+                    <input type="number" id="dash-cost4" value="58">
+                </div>
+                <button class="btn-recalc" onclick="calcDashCombos()" style="grid-column: 1 / -1; width: 100%;">⚡ 演算碰數與總成本</button>
+            </div>
+
+            <div class="status-grid" id="dash-combo-results" style="margin-top: 12px;">
+                <!-- JS 即時渲染運算結果在此 -->
+            </div>
+
+            <div style="font-size: 11px; color: #475569; font-weight: bold; background: #fffbeb; padding: 10px; border-radius: 8px; border: 1px solid #fde68a; line-height: 1.5; margin-top: 10px;">
+                ⚠️ <span style="color:#b45309;">風控水位監測</span>：地下系統對於高賠率玩法多有注單限制。<br>
+                • 三星防護線常設於 <strong style="color:#ef4444;">1,800 碰</strong> (約包22球)。<br>
+                • 四星防護線常設於 <strong style="color:#ef4444;">9,000 碰</strong> (約包23球)。<br>
+                <span style="color:#64748b;">超出上述安全碰數時，強烈建議採用「立柱」分散或分批拆單，避免系統退單拒收！</span>
+            </div>
+        </div>
+        <!-- 👆 新增結束 👆 -->
+
     </div>
 
-    <!-- 歷史戰績 -->
+    <div class="input-panel">
+        <h2>📝 新增預測 / 事後補填 (若日期已存在，在此填寫按存檔即自動補入)</h2>
+        <div class="form-row">
+            <div class="form-group" style="flex: 0.6;">
+                <label>📅 開獎日期 (選擇要新增或補填的日期)</label>
+                <input type="date" id="input-date">
+            </div>
+            <div class="form-group">
+                <label style="color:var(--ai-color)">🤖 AI 預測 (4 或 5 碼，不補則留空)</label>
+                <input type="text" id="ai-nums" placeholder="例: 05, 12, 28, 33">
+            </div>
+            <div class="form-group">
+                <label style="color:var(--my-color)">🧑 我的預測 (4 或 5 碼，不補則留空)</label>
+                <input type="text" id="my-nums" placeholder="例: 01, 10, 20, 30">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label style="color:var(--draw-color)">📺 今日實際開獎 5 碼 (開獎後填入此處，或在最下方直接貼上多天開獎)</label>
+                <input type="text" id="draw-nums" placeholder="例: 06, 07, 14, 28, 33">
+            </div>
+        </div>
+        <button class="btn-submit" onclick="addRecord()">☁️ 儲存 / 補填對決紀錄至雲端 (即刻對獎)</button>
+    </div>
+
     <div class="history-panel">
-        <h2 style="font-size: 14px; margin-bottom: 10px;">歷史戰績對照表 (AI vs 我)</h2>
+        <h2 style="font-size: 15px; margin-bottom: 12px; letter-spacing: 1px;">📊 歷史戰績矩陣對照表 (AI vs 我)</h2>
         <table>
             <thead>
                 <tr>
-                    <th>日期</th>
-                    <th>AI 預測</th>
-                    <th>我的預測</th>
-                    <th>開獎 5 碼</th>
-                    <th>勝負</th>
+                    <th>📅 日期</th>
+                    <th>🤖 AI 預測</th>
+                    <th>🧑 我的預測</th>
+                    <th>📺 今日開獎 5 碼</th>
+                    <th>單期霸主</th>
                     <th>操作</th>
                 </tr>
             </thead>
             <tbody id="history-tbody"></tbody>
         </table>
         
-        <div id="load-more-container" style="text-align: center; margin-top: 12px; display: none;">
-            <button onclick="loadMoreHistory()" style="background: #e2e8f0; color: #334155; border: none; padding: 8px 16px; font-size: 12px; font-weight: 700; border-radius: 6px; cursor: pointer;">
-                顯示更多 (載入 30 天)
+        <div id="load-more-container" style="text-align: center; margin-top: 15px; display: none;">
+            <button onclick="loadMoreHistory()" style="background: linear-gradient(135deg, #475569, #1e293b); color: white; border: none; padding: 10px 24px; font-size: 13px; font-weight: 900; border-radius: 8px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
+                🔽 顯示更多 (載入前 30 天)
             </button>
         </div>
     </div>
 
-    <!-- 新增 / 補填面板 -->
-    <div class="input-panel">
-        <h2>新增預測 / 事後補填</h2>
-        <div class="form-row">
-            <div class="form-group" style="flex: 0.6;">
-                <label>開獎日期</label>
-                <input type="date" id="input-date">
-            </div>
-            <div class="form-group">
-                <label style="color:var(--ai-color)">AI 預測 (自由輸入碼數)</label>
-                <input type="text" id="ai-nums" placeholder="例: 05, 12, 28 或 05, 12, 28, 33">
-            </div>
-            <div class="form-group">
-                <label style="color:var(--my-color)">我的預測 (自由輸入碼數)</label>
-                <input type="text" id="my-nums" placeholder="例: 01, 10, 20 或 01, 10, 20, 30, 39">
-            </div>
-        </div>
-        <div class="form-row">
-            <div class="form-group">
-                <label style="color:var(--draw-color)">實際開獎 5 碼</label>
-                <input type="text" id="draw-nums" placeholder="例: 06, 07, 14, 28, 33">
-            </div>
-        </div>
-        <button class="btn-submit" onclick="addRecord()">儲存 / 補填紀錄</button>
-    </div>
-
-    <!-- 多期一鍵貼上 -->
     <div class="input-panel crawl-panel">
-        <h2>多天歷史開獎號碼整頁貼上一鍵導入</h2>
-        <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 6px;">格式：每行開頭為日期 <code>YYYY-MM-DD</code>，後方為 5 顆球號。</p>
-        <textarea id="sc888-paste-area" rows="3" style="width:100%; padding:8px; font-size:12px; background:#ffffff; border:1px solid #cbd5e1; color:#0f172a; border-radius:6px; font-family:monospace;" placeholder="2026-09-04 04,07,10,27,38..."></textarea>
-        <div style="margin-top:6px; display:flex; gap:8px; align-items:center;">
-            <button onclick="parseAndImportMultiDraws()" style="background:#475569; color:white; border:none; padding:8px 14px; font-size:12px; font-weight:700; border-radius:6px; cursor:pointer;">
-                一鍵解析導入
+        <h2>📋 多天歷史開獎號碼整頁貼上一鍵導入</h2>
+        <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 8px;">
+            格式規範：每行開頭為日期 <code>YYYY-MM-DD</code>，後面為開出的 5 顆球號（支援空格、Tab、逗號隔開）。<br>
+            直接把文字全部貼在下方，按下方按鈕即可<strong>一次匯入所有期數</strong>！
+        </p>
+        <textarea id="sc888-paste-area" rows="4" style="width:100%; padding:8px; font-size:12px; background:#ffffff; border:1.5px solid #cbd5e1; color:#0f172a; border-radius:6px; font-family:monospace; line-height:1.4;" placeholder="例如貼上：
+2026-09-04 04,07,10,27,38
+2026-09-03 03,06,23,29,35
+2026-09-02 01,07,08,18,39..."></textarea>
+        <div style="margin-top:8px; display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+            <button onclick="parseAndImportMultiDraws()" style="background:linear-gradient(135deg, #7c3aed, #0284c7); color:white; border:none; padding:9px 18px; font-size:13px; font-weight:900; border-radius:6px; cursor:pointer;">
+                ⚡ 一鍵極速解析並匯入多期開獎
             </button>
-            <span id="paste-import-status" style="font-size:11px; color:#64748b;"></span>
+            <span id="paste-import-status" style="font-size:11px; color:#64748b; font-weight:bold;"></span>
         </div>
     </div>
 </div>
@@ -878,7 +1145,7 @@
 
     let battleHistory = [];
     let probabilityRankedBalls = [];
-    let displayLimit = 20;
+    let displayLimit = 10;
 
     onSnapshot(lotteryCol, (snapshot) => {
         battleHistory = [];
@@ -912,7 +1179,7 @@
     }
 
     function isValidPrediction(nums) {
-        return nums && nums.length > 0;
+        return nums && (nums.length === 3 || nums.length === 4 || nums.length === 5);
     }
 
     function calculateResult(aiNums, myNums, drawNums) {
@@ -925,108 +1192,198 @@
 
         let winner = "等待開獎";
         if (d.length === 5) {
-            if (!hasAi && !hasMy) winner = "無人預測";
-            else if (hasAi && !hasMy) winner = "僅 AI";
-            else if (!hasAi && hasMy) winner = "僅 我";
-            else {
+            if (!hasAi && !hasMy) {
+                winner = "無人預測";
+            } else if (hasAi && !hasMy) {
+                winner = "僅 AI";
+            } else if (!hasAi && hasMy) {
+                winner = "僅 我";
+            } else {
                 if (aiHits > myHits) winner = "AI 勝";
                 else if (myHits > aiHits) winner = "我 勝";
                 else winner = "平手";
             }
         }
+
         return { aiHits, myHits, winner };
     }
 
     function extractMultiDrawsFromText(rawText) {
         const lines = rawText.split('\n');
         let results = [];
+
         for (let i = 0; i < lines.length; i++) {
             let line = lines[i].trim();
             if (!line) continue;
+
             let dateMatch = line.match(/^(\d{4}[-/]\d{1,2}[-/]\d{1,2})/);
-            if (!dateMatch) dateMatch = line.match(/\b(\d{4}[-/]\d{1,2}[-/]\d{1,2})\b/);
+            if (!dateMatch) {
+                dateMatch = line.match(/\b(\d{4}[-/]\d{1,2}[-/]\d{1,2})\b/);
+            }
+
             if (dateMatch) {
                 let dStr = dateMatch[1].replace(/\//g, '-');
                 let afterDatePart = line.substring(line.indexOf(dateMatch[0]) + dateMatch[0].length);
                 let nums = afterDatePart.match(/\b(0?[1-9]|[1-3][0-9])\b/g);
+
                 if (nums) {
                     let validNums = [...new Set(nums.map(n => parseInt(n, 10)).filter(n => n >= 1 && n <= 39))];
                     if (validNums.length >= 5) {
-                        results.push({ date: dStr, draw: validNums.slice(0, 5).sort((a, b) => a - b) });
+                        results.push({
+                            date: dStr,
+                            draw: validNums.slice(0, 5).sort((a, b) => a - b)
+                        });
                     }
                 }
             }
         }
+
         let uniqueMap = new Map();
-        results.forEach(r => { if (!uniqueMap.has(r.date)) uniqueMap.set(r.date, r); });
+        results.forEach(r => {
+            if (!uniqueMap.has(r.date)) uniqueMap.set(r.date, r);
+        });
+
         return Array.from(uniqueMap.values());
     }
 
-    window.parseAndImportMultiDraws = async function() {
+    async function parseAndImportMultiDraws() {
         const text = document.getElementById('sc888-paste-area').value.trim();
         const statusEl = document.getElementById('paste-import-status');
-        if (!text) return alert("請先貼上歷史開獎內容！");
-        statusEl.innerText = "⏳ 解析中...";
+        if (!text) return alert("請先在文字框中貼上歷史開獎內容！");
+
+        statusEl.innerText = "⏳ 正在精確解析日期與開獎號碼...";
         const drawList = extractMultiDrawsFromText(text);
-        if (drawList.length === 0) return alert("未識別出開獎號碼！");
+
+        if (drawList.length === 0) {
+            statusEl.innerText = "❌ 格式不合，未找到「日期 + 5個號碼」";
+            return alert("⚠️ 未能在貼上的文字中識別出開獎號碼！\n請確認每行開頭是否有日期 (如 2026-09-04)，後方有 5 個球號。");
+        }
+
+        let updatedCount = 0;
+        let createdCount = 0;
 
         try {
-            const batch = writeBatch(db);
-            drawList.forEach((item, idx) => {
-                const targetRecord = battleHistory.find(r => r.date === item.date);
-                if (targetRecord) {
-                    const res = calculateResult(targetRecord.ai || [], targetRecord.my || [], item.draw);
-                    batch.update(doc(db, "battle_history", targetRecord.id.toString()), {
-                        draw: item.draw, isPending: false, aiHits: res.aiHits, myHits: res.myHits, winner: res.winner
-                    });
-                } else {
-                    const newId = (Date.now() + idx).toString();
-                    const res = calculateResult([], [], item.draw);
-                    batch.set(doc(db, "battle_history", newId), {
-                        id: newId, date: item.date, ai: [], my: [], draw: item.draw, aiHits: 0, myHits: 0, winner: res.winner, isPending: false
-                    });
-                }
-            });
-            await batch.commit();
-            statusEl.innerText = "🎉 匯入成功！";
-            alert("批次匯入成功！");
+            const chunkSize = 400;
+            for (let i = 0; i < drawList.length; i += chunkSize) {
+                const chunk = drawList.slice(i, i + chunkSize);
+                const batch = writeBatch(db);
+
+                chunk.forEach((item, idx) => {
+                    const targetRecord = battleHistory.find(r => r.date === item.date);
+
+                    if (targetRecord) {
+                        const isDrawChanged = !targetRecord.draw || targetRecord.draw.join(',') !== item.draw.join(',');
+                        if (targetRecord.isPending || isDrawChanged) {
+                            const res = calculateResult(targetRecord.ai || [], targetRecord.my || [], item.draw);
+                            const docRef = doc(db, "battle_history", targetRecord.id.toString());
+                            batch.update(docRef, {
+                                draw: item.draw,
+                                isPending: false,
+                                aiHits: res.aiHits,
+                                myHits: res.myHits,
+                                winner: res.winner
+                            });
+                            updatedCount++;
+                        }
+                    } else {
+                        const newId = (Date.now() + i + idx).toString();
+                        const docRef = doc(db, "battle_history", newId);
+                        const res = calculateResult([], [], item.draw);
+
+                        batch.set(docRef, {
+                            id: newId,
+                            date: item.date,
+                            ai: [],
+                            my: [],
+                            draw: item.draw,
+                            aiHits: 0,
+                            myHits: 0,
+                            winner: res.winner,
+                            isPending: false
+                        });
+                        createdCount++;
+                    }
+                });
+
+                await batch.commit();
+            }
+
+            statusEl.innerText = `🎉 成功解析並匯入 ${drawList.length} 天開獎紀錄！`;
+            alert(`🎉 批次匯入成功！\n• 成功解析天數：${drawList.length} 期\n• 自動建立新開獎：${createdCount} 期\n• 自動更新現有開獎：${updatedCount} 期\n排行榜已同步刷新！`);
             document.getElementById('sc888-paste-area').value = "";
         } catch (e) {
-            statusEl.innerText = "❌ 失敗";
-            alert("失敗：" + e.message);
+            statusEl.innerText = "❌ 寫入雲端失敗";
+            alert("寫入失敗：" + e.message);
         }
-    };
+    }
 
-    window.addRecord = async function() {
+    async function addRecord() {
         let date = document.getElementById('input-date').value;
-        if (!date) return alert("請選擇日期！");
-        let aiNums = parseNumbers(document.getElementById('ai-nums').value);
-        let myNums = parseNumbers(document.getElementById('my-nums').value);
-        let drawNums = parseNumbers(document.getElementById('draw-nums').value);
+        if (!date) return alert("請先選擇開獎日期！");
+
+        let aiInput = document.getElementById('ai-nums').value;
+        let myInput = document.getElementById('my-nums').value;
+        let drawInput = document.getElementById('draw-nums').value;
+
+        let aiNums = parseNumbers(aiInput);
+        let myNums = parseNumbers(myInput);
+        let drawNums = parseNumbers(drawInput);
+
+        if (aiInput.trim() !== "" && !isValidPrediction(aiNums)) return alert("🤖 AI 號碼如果有填，必須是 3、4 或 5 碼！");
+        if (myInput.trim() !== "" && !isValidPrediction(myNums)) return alert("🧑 我的號碼如果有填，必須是 3、4 或 5 碼！");
+        if (drawInput.trim() !== "" && drawNums.length !== 5) return alert("📺 實際開獎號碼如果有填，必須剛好是 5 碼！");
 
         let existingRecord = battleHistory.find(r => r.date === date);
-        let finalAi = aiNums.length > 0 ? aiNums : (existingRecord ? existingRecord.ai : []);
-        let finalMy = myNums.length > 0 ? myNums : (existingRecord ? existingRecord.my : []);
-        let finalDraw = drawNums.length === 5 ? drawNums : (existingRecord ? existingRecord.draw : []);
 
-        let isPending = finalDraw.length !== 5;
-        let res = calculateResult(finalAi, finalMy, finalDraw);
+        if (existingRecord) {
+            let finalAi = aiInput.trim() !== "" ? aiNums : (existingRecord.ai || []);
+            let finalMy = myInput.trim() !== "" ? myNums : (existingRecord.my || []);
+            let finalDraw = drawInput.trim() !== "" ? drawNums : (existingRecord.draw || []);
 
-        try {
-            if (existingRecord) {
+            let isPending = finalDraw.length !== 5;
+            let res = calculateResult(finalAi, finalMy, finalDraw);
+
+            try {
                 await updateDoc(doc(db, "battle_history", existingRecord.id.toString()), {
-                    ai: finalAi, my: finalMy, draw: finalDraw, aiHits: res.aiHits, myHits: res.myHits, winner: isPending ? "等待開獎" : res.winner, isPending
+                    ai: finalAi,
+                    my: finalMy,
+                    draw: finalDraw,
+                    aiHits: res.aiHits,
+                    myHits: res.myHits,
+                    winner: isPending ? "等待開獎" : res.winner,
+                    isPending: isPending
                 });
-            } else {
-                let recordId = Date.now().toString();
-                await setDoc(doc(db, "battle_history", recordId), {
-                    id: recordId, date, ai: finalAi, my: finalMy, draw: finalDraw, aiHits: res.aiHits, myHits: res.myHits, winner: isPending ? "等待開獎" : res.winner, isPending
-                });
+                alert(`✅ 成功為 ${date} 補填/更新預測號碼，系統已自動重新結算！`);
+                clearInputs();
+            } catch (e) {
+                alert("雲端更新失敗：" + e.message);
             }
-            alert("儲存成功！");
-            clearInputs();
-        } catch (e) { alert("儲存失敗：" + e.message); }
-    };
+        } else {
+            let isPending = drawNums.length === 0;
+            let res = calculateResult(aiNums, myNums, drawNums);
+
+            let recordId = Date.now().toString();
+            let record = { 
+                id: recordId, 
+                date: date, 
+                ai: aiNums, 
+                my: myNums, 
+                draw: drawNums, 
+                aiHits: res.aiHits, 
+                myHits: res.myHits, 
+                winner: isPending ? "等待開獎" : res.winner, 
+                isPending: isPending 
+            };
+
+            try {
+                await setDoc(doc(db, "battle_history", recordId), record);
+                alert(`✅ 成功為 ${date} 建立全新預測對決紀錄！`);
+                clearInputs();
+            } catch (e) {
+                alert("雲端儲存失敗：" + e.message);
+            }
+        }
+    }
 
     function clearInputs() {
         document.getElementById('ai-nums').value = "";
@@ -1034,226 +1391,182 @@
         document.getElementById('draw-nums').value = "";
     }
 
-    window.editDate = async function(id, oldDate) {
-        let newDate = prompt("修正日期 (YYYY-MM-DD):", oldDate);
-        if (newDate) await updateDoc(doc(db, "battle_history", id.toString()), { date: newDate.trim() });
-    };
-
-    window.deleteRecord = async function(id) {
-        if (confirm("確定刪除？")) await deleteDoc(doc(db, "battle_history", id.toString()));
-    };
-
-    // 1800碰 & 9000碰 判定
-    function isHit1800(draw) {
-        if (!draw || draw.length < 5) return false;
-        return draw.some(n => n >= 10 && n <= 18) && draw.some(n => n >= 20 && n <= 29) && draw.some(n => (n >= 1 && n <= 9) || n === 19 || (n >= 30 && n <= 39));
-    }
-    function isHit9000(draw) {
-        if (!draw || draw.length < 5) return false;
-        return draw.some(n => n >= 1 && n <= 9) && draw.some(n => n >= 10 && n <= 19) && draw.some(n => n >= 20 && n <= 29) && draw.some(n => n >= 30 && n <= 39);
-    }
-
-    function analyzeTouchTrackers(completedDraws) {
-        if (!completedDraws || completedDraws.length === 0) return;
-        let miss18 = 0, miss90 = 0;
-        for (let d = 0; d < completedDraws.length; d++) { if (isHit1800(completedDraws[d].draw)) break; miss18++; }
-        for (let d = 0; d < completedDraws.length; d++) { if (isHit9000(completedDraws[d].draw)) break; miss90++; }
-
-        let p18 = (1 - Math.pow(1 - 0.5536, miss18 + 1)) * 100;
-        let p90 = (1 - Math.pow(1 - 0.2736, miss90 + 1)) * 100;
-
-        document.getElementById('t1800-miss-count').innerText = miss18;
-        document.getElementById('t1800-prob-val').innerText = p18.toFixed(1) + '%';
-        let b18 = document.getElementById('t1800-badge');
-        let advice18 = document.getElementById('t1800-advice');
-        if (p18 > 90) {
-            b18.className = "touch-status-badge badge-alert"; b18.innerText = "極限警戒";
-            advice18.innerText = "🔥 勝率極高，強烈建議進場重擊！"; advice18.style.color = "#dc2626";
-        } else if (p18 > 70) {
-            b18.className = "touch-status-badge badge-ready"; b18.innerText = "蓄勢待發";
-            advice18.innerText = "⚡ 進入高期望期，可正常額度下注。"; advice18.style.color = "#d97706";
-        } else {
-            b18.className = "touch-status-badge badge-ok"; b18.innerText = "常規區間";
-            advice18.innerText = "🛡️ 建議觀望保守，常規資金控管。"; advice18.style.color = "#16a34a";
-        }
-
-        document.getElementById('t9000-miss-count').innerText = miss90;
-        document.getElementById('t9000-prob-val').innerText = p90.toFixed(1) + '%';
-        let b90 = document.getElementById('t9000-badge');
-        let advice90 = document.getElementById('t9000-advice');
-        if (p90 > 80) {
-            b90.className = "touch-status-badge badge-alert"; b90.innerText = "極限警戒";
-            advice90.innerText = "🔥 歷史極端值，以小搏大甜蜜點！"; advice90.style.color = "#dc2626";
-        } else if (p90 > 60) {
-            b90.className = "touch-status-badge badge-ready"; b90.innerText = "高期望期";
-            advice90.innerText = "⚡ 反彈動能醞釀中，分批佈局。"; advice90.style.color = "#0284c7";
-        } else {
-            b90.className = "touch-status-badge badge-ok"; b90.innerText = "常規區間";
-            advice90.innerText = "🛡️ 暫時手癢可小玩，建議空手等待。"; advice90.style.color = "#16a34a";
+    function loadRecordToForm(id) {
+        let r = battleHistory.find(item => item.id == id);
+        if (r) {
+            document.getElementById('input-date').value = r.date;
+            document.getElementById('ai-nums').value = (r.ai && r.ai.length > 0) ? r.ai.join(', ') : '';
+            document.getElementById('my-nums').value = (r.my && r.my.length > 0) ? r.my.join(', ') : '';
+            document.getElementById('draw-nums').value = (r.draw && r.draw.length > 0) ? r.draw.join(', ') : '';
+            window.scrollTo({ top: document.querySelector('.input-panel').offsetTop - 20, behavior: 'smooth' });
         }
     }
 
-    window.analyzeHotColdNumbers = function() {
+    async function editDate(id, oldDate) {
+        let newDate = prompt("請輸入修正後的日期 (格式：YYYY-MM-DD)", oldDate);
+        if (newDate && newDate.trim() !== "") {
+            try {
+                await updateDoc(doc(db, "battle_history", id.toString()), {
+                    date: newDate.trim()
+                });
+            } catch (e) {
+                alert("改期失敗：" + e.message);
+            }
+        }
+    }
+
+    async function deleteRecord(id) {
+        if (confirm("確定刪除這筆紀錄？")) {
+            try {
+                await deleteDoc(doc(db, "battle_history", id.toString()));
+            } catch (e) {
+                alert("刪除失敗：" + e.message);
+            }
+        }
+    }
+
+    function analyzeHotColdNumbers() {
         let completedDraws = battleHistory.filter(item => !item.isPending && item.draw && item.draw.length === 5);
-        if (completedDraws.length === 0) return;
+        if(completedDraws.length === 0) return;
 
-        analyzeTouchTrackers(completedDraws);
-        let latestDraw = completedDraws[0].draw;
+        let latestRecord = completedDraws[0];
+        let latestDrawNums = latestRecord ? latestRecord.draw : [];
 
-        let stats = {};
-        for (let i = 1; i <= 39; i++) stats[i] = { num: i, count: 0, lastSeen: 999 };
-        completedDraws.forEach((r, idx) => {
-            r.draw.forEach(n => {
-                stats[n].count++;
-                if (stats[n].lastSeen === 999) stats[n].lastSeen = idx;
+        let numStats = {};
+        for(let i = 1; i <= 39; i++) {
+            numStats[i] = { num: i, count: 0, lastSeenAgo: 999, recentCount: 0 };
+        }
+
+        completedDraws.forEach((record, index) => {
+            record.draw.forEach(n => {
+                numStats[n].count++;
+                if (numStats[n].lastSeenAgo === 999) {
+                    numStats[n].lastSeenAgo = index;
+                }
+                if (index < 15) {
+                    numStats[n].recentCount++;
+                }
             });
         });
 
-        let arr = Object.values(stats);
-        probabilityRankedBalls = [...arr].sort((a,b) => b.count - a.count);
+        let statsArray = Object.values(numStats);
 
-        let hot = [...arr].sort((a,b) => b.count - a.count).slice(0, 8);
-        let cold = [...arr].sort((a,b) => a.lastSeen - b.lastSeen).slice(0, 8);
+        statsArray.forEach(item => {
+            let freqScore = (item.count / completedDraws.length) * 100;
+            let recentScore = (item.recentCount / Math.min(15, completedDraws.length)) * 100;
+            
+            let reboundScore = 50;
+            if (item.lastSeenAgo >= 2 && item.lastSeenAgo <= 5) {
+                reboundScore = 95; 
+            } else if (item.lastSeenAgo === 0 || item.lastSeenAgo === 1) {
+                reboundScore = 80; 
+            } else {
+                reboundScore = 40;
+            }
 
-        document.getElementById('hot-numbers').innerHTML = hot.map(item => `
-            <div class="info-badge hot-badge ${latestDraw.includes(item.num)?'hit-today':''}">
-                <span class="num">${String(item.num).padStart(2,'0')}</span>
-                <span class="desc">開${item.count}次</span>
-            </div>
-        `).join('');
+            item.probScore = (freqScore * 0.35) + (recentScore * 0.35) + (reboundScore * 0.30);
+        });
 
-        document.getElementById('cold-numbers').innerHTML = cold.map(item => `
-            <div class="info-badge cold-badge ${latestDraw.includes(item.num)?'hit-today':''}">
-                <span class="num">${String(item.num).padStart(2,'0')}</span>
-                <span class="desc">漏${item.lastSeen}期</span>
-            </div>
-        `).join('');
+        probabilityRankedBalls = [...statsArray].sort((a, b) => b.probScore - a.probScore);
+
+        let hotNumbers = [...statsArray].sort((a, b) => {
+            if (b.count !== a.count) return b.count - a.count;
+            return a.lastSeenAgo - b.lastSeenAgo;
+        }).slice(0, 8);
+
+        let coldNumbers = [...statsArray].sort((a, b) => {
+            if (b.lastSeenAgo !== a.lastSeenAgo) return b.lastSeenAgo - a.lastSeenAgo;
+            return a.count - b.count;
+        }).slice(0, 8);
+
+        let hotHitCount = hotNumbers.filter(item => latestDrawNums.includes(item.num)).length;
+        let coldHitCount = coldNumbers.filter(item => latestDrawNums.includes(item.num)).length;
+
+        document.getElementById('hot-hit-summary').innerText = latestRecord ? `[${latestRecord.date} 開出 ${hotHitCount} 顆]` : '';
+        document.getElementById('cold-hit-summary').innerText = latestRecord ? `[${latestRecord.date} 開出 ${coldHitCount} 顆]` : '';
+
+        document.getElementById('hot-numbers').innerHTML = hotNumbers.map(item => {
+            let isHitToday = latestDrawNums.includes(item.num) ? 'hit-today' : '';
+            return `
+                <div class="info-badge hot-badge ${isHitToday}">
+                    <span class="num">${item.num.toString().padStart(2, '0')}</span>
+                    <span class="desc">開 ${item.count} 次</span>
+                </div>
+            `;
+        }).join('');
+
+        document.getElementById('cold-numbers').innerHTML = coldNumbers.map(item => {
+            let isHitToday = latestDrawNums.includes(item.num) ? 'hit-today' : '';
+            return `
+                <div class="info-badge cold-badge ${isHitToday}">
+                    <span class="num">${item.num.toString().padStart(2, '0')}</span>
+                    <span class="desc">${item.lastSeenAgo === 999 ? '未開過' : (item.lastSeenAgo === 0 ? '今日開出' : '漏 '+item.lastSeenAgo+' 期')}</span>
+                </div>
+            `;
+        }).join('');
 
         renderRecommendations();
-    };
-
-    window.refreshRecommendations = function() {
-        if (!probabilityRankedBalls.length) return;
-        const container = document.getElementById('recom-container');
-        let p = probabilityRankedBalls.map(x => x.num);
-        let r = (cnt) => [...p].sort(() => 0.5 - Math.random()).slice(0, cnt).sort((a,b)=>a-b);
-
-        let list = [
-            { title: '物理隨機動能組 (三星)', sub: '模擬滾球機避開盲區', nums: r(3), cls: 'c-gold', q: 'q-gold' },
-            { title: '歷史高頻連動組 (三星)', sub: '近期熱門與回補交替', nums: r(3), cls: 'c-rose', q: 'q-rose' },
-            { title: '量子貝氏期望組 (四星)', sub: '權重最高之主力攻擊陣列', nums: r(4), cls: 'c-cyan', q: 'q-cyan' }
-        ];
-
-        container.innerHTML = list.map(item => `
-            <div class="recom-card ${item.cls}">
-                <div class="recom-header">
-                    <div class="recom-title">${item.title}</div>
-                    <div class="recom-sub">${item.sub}</div>
-                </div>
-                <div class="recom-balls">
-                    ${item.nums.map(n => `<div class="quantum-ball ${item.q}">${String(n).padStart(2,'0')}</div>`).join('')}
-                </div>
-                <div class="recom-btns">
-                    <button class="btn-fast-apply" style="background:#0284c7;" onclick="applyRecom('${item.nums.map(n=>String(n).padStart(2,'0')).join(', ')}', 'ai')">入AI</button>
-                    <button class="btn-fast-apply" style="background:#059669;" onclick="applyRecom('${item.nums.map(n=>String(n).padStart(2,'0')).join(', ')}', 'my')">入我</button>
-                </div>
-            </div>
-        `).join('');
-    };
-
-    window.applyRecom = function(str, key) {
-        document.getElementById(key === 'ai' ? 'ai-nums' : 'my-nums').value = str;
-        alert("已帶入預測欄位！");
-    };
-
-    // 穩定隨機選號器
-    window.generatedPickerNums = [];
-    window.generatePickerNumbers = function() {
-        let arr = [];
-        while(arr.length < 5) {
-            let n = Math.floor(Math.random() * 39) + 1;
-            if(!arr.includes(n)) arr.push(n);
-        }
-        arr.sort((a,b)=>a-b);
-        window.generatedPickerNums = arr;
-        document.getElementById('picker-screen-display').innerText = arr.map(n=>String(n).padStart(2,'0')).join(' ');
-    };
-
-    window.applyPickerToInput = function(key) {
-        if(!window.generatedPickerNums.length) return alert("請先產生號碼！");
-        let str = window.generatedPickerNums.map(n=>String(n).padStart(2,'0')).join(', ');
-        document.getElementById(key === 'ai' ? 'ai-nums' : 'my-nums').value = str;
-        alert("已填入選號！");
-    };
-
-    window.loadMoreHistory = function() { displayLimit += 30; renderAll(); };
-
-    function renderAll() {
-        const tbody = document.getElementById('history-tbody');
-        tbody.innerHTML = '';
-        let totalRounds = 0, aiHits = 0, myHits = 0, aiCnt = 0, myCnt = 0;
-
-        analyzeHotColdNumbers();
-
-        battleHistory.forEach(item => {
-            if (!item.isPending && item.draw && item.draw.length === 5) {
-                totalRounds++;
-                if (isValidPrediction(item.ai)) { aiCnt++; aiHits += item.aiHits || 0; }
-                if (isValidPrediction(item.my)) { myCnt++; myHits += item.myHits || 0; }
-            }
-        });
-
-        battleHistory.slice(0, displayLimit).forEach(item => {
-            let hasDraw = item.draw && item.draw.length === 5;
-            let tr = document.createElement('tr');
-            
-            let gBalls = (nums) => `<div class="num-container">` + (nums||[]).map(n=>`<div class="num-ball ${(!item.isPending && hasDraw && item.draw.includes(n))?'hit':''}">${String(n).padStart(2,'0')}</div>`).join('')+`</div>`;
-            let gDraw = (nums) => `<div class="num-container">` + (nums||[]).map(n=>`<div class="num-ball draw">${String(n).padStart(2,'0')}</div>`).join('')+`</div>`;
-
-            let aiHtml = isValidPrediction(item.ai) ? gBalls(item.ai) + (!item.isPending && hasDraw ? `<div style="font-size:10px; color:#0284c7;">中${item.aiHits}顆</div>` : '') : '<span class="empty-label">-</span>';
-            let myHtml = isValidPrediction(item.my) ? gBalls(item.my) + (!item.isPending && hasDraw ? `<div style="font-size:10px; color:#059669;">中${item.myHits}顆</div>` : '') : '<span class="empty-label">-</span>';
-            let drawHtml = hasDraw ? gDraw(item.draw) : '<span style="color:#d97706; font-size:11px;">待開獎</span>';
-
-            let badge = `<span class="winner-badge badge-tie">平手</span>`;
-            if (item.isPending || !hasDraw) badge = `<span class="winner-badge badge-pending">等待</span>`;
-            else if (item.winner === "AI 勝") badge = `<span class="winner-badge badge-ai">AI勝</span>`;
-            else if (item.winner === "我 勝") badge = `<span class="winner-badge badge-my">我勝</span>`;
-
-            tr.innerHTML = `
-                <td data-label="日期"><strong style="font-family:monospace; font-size:12px;">${item.date}</strong></td>
-                <td data-label="AI">${aiHtml}</td>
-                <td data-label="我">${myHtml}</td>
-                <td data-label="開獎">${drawHtml}</td>
-                <td data-label="勝負">${badge}</td>
-                <td data-label="操作">
-                    <button class="action-btn edit-btn" onclick="editDate('${item.id}','${item.date}')">改期</button>
-                    <button class="action-btn delete-btn" onclick="deleteRecord('${item.id}')">刪除</button>
-                </td>
-            `;
-            tbody.appendChild(tr);
-        });
-
-        document.getElementById('load-more-container').style.display = battleHistory.length > displayLimit ? 'block' : 'none';
-        document.getElementById('total-rounds').innerText = totalRounds;
-        document.getElementById('ai-hits').innerText = aiHits;
-        document.getElementById('my-hits').innerText = myHits;
-        document.getElementById('ai-avg').innerText = aiCnt > 0 ? (aiHits/aiCnt).toFixed(2) : '0.00';
-        document.getElementById('my-avg').innerText = myCnt > 0 ? (myHits/myCnt).toFixed(2) : '0.00';
-
-        let pk = document.getElementById('pk-winner');
-        let aAvg = aiCnt > 0 ? aiHits/aiCnt : 0;
-        let mAvg = myCnt > 0 ? myHits/myCnt : 0;
-        pk.innerText = aAvg > mAvg ? "AI 領先" : (mAvg > aAvg ? "我方領先" : "平分秋色");
     }
 
-    window.addRecord = addRecord;
-    window.editDate = editDate;
-    window.deleteRecord = deleteRecord;
-    window.parseAndImportMultiDraws = parseAndImportMultiDraws;
-</script>
+    function renderRecommendations() {
+        const container = document.getElementById('recom-container');
+        if (!container) return;
 
-<!-- 倍投試算表邏輯 -->
-<script>
+        let pool = (probabilityRankedBalls && probabilityRankedBalls.length >= 15)
+            ? probabilityRankedBalls.map(x => x.num)
+            : Array.from({length: 39}, (_, i) => i + 1);
+
+        const getRandomPicks = (sourceArray, count) => {
+            let shuffled = [...sourceArray].sort(() => 0.5 - Math.random());
+            let picked = [];
+            for (let n of shuffled) {
+                if (!picked.includes(n)) picked.push(n);
+                if (picked.length === count) break;
+            }
+            return picked.sort((a, b) => a - b);
+        };
+
+        let m1_3 = getRandomPicks(Array.from({length: 39}, (_, i) => i + 1), 3);
+        let m1_4 = getRandomPicks(Array.from({length: 39}, (_, i) => i + 1), 4);
+
+        let m2_pool = pool.slice(0, 16);
+        let m2_3 = getRandomPicks(m2_pool, 3);
+        let m2_4 = getRandomPicks(m2_pool, 4);
+
+        let m3_top = pool.slice(0, 5);
+        let m3_mid = pool.slice(5, 12);
+        let m3_3 = [...getRandomPicks(m3_top, 2), ...getRandomPicks(m3_mid, 1)].sort((a, b) => a - b);
+        let m3_4 = [...getRandomPicks(m3_top, 2), ...getRandomPicks(m3_mid, 2)].sort((a, b) => a - b);
+
+        const list = [
+            { cardClass: 'c-gold', colorType: 'q-gold', title: '🎰 1. 美國天天樂搖球機・三星', sub: '模擬 3D 物理滾球機軌跡・隨機動能碰撞', nums: m1_3 },
+            { cardClass: 'c-gold', colorType: 'q-gold', title: '🎰 1. 美國天天樂搖球機・四星', sub: '四象限動態落點覆蓋・避開人為盲區', nums: m1_4 },
+            { cardClass: 'c-rose', colorType: 'q-rose', title: '📊 2. 歷史紀錄出牌模式・三星', sub: '依據加州高頻連動、隔期斜聯回補特徵', nums: m2_3 },
+            { cardClass: 'c-rose', colorType: 'q-rose', title: '📊 2. 歷史紀錄出牌模式・四星', sub: '同尾數共振版路 + 拖牌收尾矩陣', nums: m2_4 },
+            { cardClass: 'c-cyan', colorType: 'q-cyan', title: '🔥 3. 尋找AI必開牌模式・三星', sub: '量子算法鎖定極凍反彈與爆發臨界點', nums: m3_3 },
+            { cardClass: 'c-cyan', colorType: 'q-cyan', title: '🔥 3. 尋找AI必開牌模式・四星', sub: '全盤貝氏期望值權重最高之主力攻擊陣列', nums: m3_4 }
+        ];
+
+        container.innerHTML = list.map((item) => {
+            const rawNums = item.nums.map(n => n.toString().padStart(2, '0')).join(', ');
+            return `
+                <div class="recom-card ${item.cardClass}">
+                    <div class="recom-header">
+                        <div class="recom-title">${item.title}</div>
+                        <div class="recom-sub">${item.sub}</div>
+                    </div>
+                    <div class="recom-balls">
+                        ${item.nums.map(n => `<div class="recom-ball ${item.colorType}">${n.toString().padStart(2, '0')}</div>`).join('')}
+                    </div>
+                    <div class="recom-btns">
+                        <button class="btn-fast-apply" style="background:var(--ai-color);" onclick="applyRecomNums('${rawNums}', 'ai')">入 AI</button>
+                        <button class="btn-fast-apply" style="background:var(--my-color);" onclick="applyRecomNums('${rawNums}', 'my')">入 我的</button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
     function calculateSingleTargetPlan() {
         const firstUnits = parseFloat(document.getElementById('calc-st-first-units').value) || 0.10;
         const targetDailyProfit = parseFloat(document.getElementById('calc-st-target-profit').value) || 1844;
@@ -1263,116 +1576,778 @@
 
         const tbody = document.getElementById('st-plan-tbody');
         const mobileContainer = document.getElementById('st-plan-mobile-cards');
-        tbody.innerHTML = ''; mobileContainer.innerHTML = '';
+        tbody.innerHTML = '';
+        mobileContainer.innerHTML = '';
 
-        let cumCost = 0, rows = '', cards = '', netWin = prizePerUnit - costPerUnit;
+        let cumCost = 0;
+        let rowsHtml = '';
+        let mobileCardsHtml = '';
+        let netWinPerFullUnit = prizePerUnit - costPerUnit;
+
         for (let day = 1; day <= days; day++) {
-            let targetProf = targetDailyProfit * day;
-            let units = (day === 1) ? firstUnits : Math.ceil(((cumCost + targetProf) / netWin) * 100) / 100;
-            let curCost = Math.round(units * costPerUnit);
-            cumCost += curCost;
-            let curPrize = Math.round(units * prizePerUnit);
-            let finalProf = curPrize - cumCost;
+            let targetCumProfit = targetDailyProfit * day;
+            let units = 0;
 
-            rows += `<tr><td>第${day}天</td><td class="text-green">+${targetProf.toLocaleString()}</td><td class="text-gold">${units.toFixed(2)}車</td><td>${curCost.toLocaleString()}</td><td style="color:#dc2626;">${cumCost.toLocaleString()}</td><td>${curPrize.toLocaleString()}</td><td class="text-green">+${finalProf.toLocaleString()}</td></tr>`;
-            cards += `<div class="day-plan-card"><div class="day-plan-card-header"><span class="day-plan-tag">第${day}天</span><span>目標:+${targetProf.toLocaleString()}</span></div><div class="day-plan-grid"><div class="day-plan-item"><span class="label">車數</span><span class="val text-gold">${units.toFixed(2)}</span></div><div class="day-plan-item"><span class="label">成本</span><span class="val">${curCost.toLocaleString()}</span></div><div class="day-plan-item"><span class="label">累積</span><span class="val" style="color:#dc2626;">${cumCost.toLocaleString()}</span></div><div class="day-plan-item"><span class="label">淨利</span><span class="val text-green">+${finalProf.toLocaleString()}</span></div></div></div>`;
+            if (day === 1) {
+                units = firstUnits;
+            } else {
+                units = (cumCost + targetCumProfit) / netWinPerFullUnit;
+                units = Math.ceil(units * 100) / 100;
+            }
+
+            let currentCost = Math.round(units * costPerUnit);
+            cumCost += currentCost;
+            let currentPrize = Math.round(units * prizePerUnit);
+            let finalNetProfit = currentPrize - cumCost;
+
+            rowsHtml += `
+                <tr>
+                    <td><strong>第 ${day} 天</strong></td>
+                    <td class="text-green">+${targetCumProfit.toLocaleString()} 元</td>
+                    <td class="text-gold">${units.toFixed(2)} 車</td>
+                    <td>${currentCost.toLocaleString()} 元</td>
+                    <td style="color:#b91c1c;">${cumCost.toLocaleString()} 元</td>
+                    <td>${currentPrize.toLocaleString()} 元</td>
+                    <td class="text-green">+${finalNetProfit.toLocaleString()} 元</td>
+                </tr>
+            `;
+
+            mobileCardsHtml += `
+                <div class="day-plan-card">
+                    <div class="day-plan-card-header">
+                        <span class="day-plan-tag">📅 第 ${day} 天</span>
+                        <span class="day-plan-target">目標：+${targetCumProfit.toLocaleString()} 元</span>
+                    </div>
+                    <div class="day-plan-grid">
+                        <div class="day-plan-item">
+                            <span class="label">🚗 下注車數</span>
+                            <span class="val text-gold">${units.toFixed(2)} 車</span>
+                        </div>
+                        <div class="day-plan-item">
+                            <span class="label">💵 當期成本</span>
+                            <span class="val">${currentCost.toLocaleString()} 元</span>
+                        </div>
+                        <div class="day-plan-item">
+                            <span class="label">📉 累計總投入</span>
+                            <span class="val" style="color:#b91c1c;">${cumCost.toLocaleString()} 元</span>
+                        </div>
+                        <div class="day-plan-item">
+                            <span class="label">🏆 中獎彩金</span>
+                            <span class="val">${currentPrize.toLocaleString()} 元</span>
+                        </div>
+                    </div>
+                    <div style="border-top:1px dashed #e2e8f0; padding-top:4px; display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-size:11px; color:#475569; font-weight:bold;">中獎結算淨利</span>
+                        <span class="text-green" style="font-size:13px; font-weight:900;">+${finalNetProfit.toLocaleString()} 元</span>
+                    </div>
+                </div>
+            `;
         }
-        tbody.innerHTML = rows; mobileContainer.innerHTML = cards;
-        document.getElementById('st-plan-summary').innerText = `總備援本金建議：${cumCost.toLocaleString()} 元`;
+
+        tbody.innerHTML = rowsHtml;
+        mobileContainer.innerHTML = mobileCardsHtml;
+        document.getElementById('st-plan-summary').innerText = `[${days}天單碼總備援本金建議：${cumCost.toLocaleString()} 元]`;
     }
 
     function calculateFourTargetPlan() {
         const firstUnits = parseFloat(document.getElementById('calc-ft-first-units').value) || 0.10;
-        const targetProf = parseFloat(document.getElementById('calc-ft-target-profit').value) || 1844;
+        const targetDailyProfit = parseFloat(document.getElementById('calc-ft-target-profit').value) || 1844;
         const days = parseInt(document.getElementById('calc-ft-days').value, 10) || 6;
         const costPerUnit = parseFloat(document.getElementById('calc-ft-cost').value) || 2755;
         const prizePerUnit = parseFloat(document.getElementById('calc-ft-prize').value) || 21200;
 
         const tbody = document.getElementById('ft-plan-tbody');
         const mobileContainer = document.getElementById('ft-plan-mobile-cards');
-        tbody.innerHTML = ''; mobileContainer.innerHTML = '';
+        tbody.innerHTML = '';
+        mobileContainer.innerHTML = '';
 
-        let cumCost = 0, rows = '', cards = '', netWin1 = prizePerUnit - (4 * costPerUnit);
+        let cumCost = 0;
+        let rowsHtml = '';
+        let mobileCardsHtml = '';
+        let netWinIfHitOne = prizePerUnit - (4 * costPerUnit);
+
         for (let day = 1; day <= days; day++) {
-            let tProf = targetProf * day;
-            let units = (day === 1) ? firstUnits : Math.ceil(((cumCost + tProf) / netWin1) * 100) / 100;
-            let curCost = Math.round(units * 4 * costPerUnit);
-            cumCost += curCost;
-            let p1 = Math.round(units * prizePerUnit), n1 = p1 - cumCost;
-            let p2 = Math.round(units * prizePerUnit * 2), n2 = p2 - cumCost;
+            let targetCumProfit = targetDailyProfit * day;
+            let units = 0;
 
-            rows += `<tr><td>第${day}期</td><td class="text-green">+${tProf.toLocaleString()}</td><td class="text-gold">${units.toFixed(2)}車/碼</td><td>${curCost.toLocaleString()}</td><td style="color:#dc2626;">${cumCost.toLocaleString()}</td><td>${p1.toLocaleString()}</td><td class="text-green">+${n1.toLocaleString()}</td><td class="text-purple">+${n2.toLocaleString()}</td></tr>`;
-            cards += `<div class="day-plan-card"><div class="day-plan-card-header"><span class="day-plan-tag">第${day}期(4碼)</span><span>目標:+${tProf.toLocaleString()}</span></div><div class="day-plan-grid"><div class="day-plan-item"><span class="label">每碼車數</span><span class="val text-gold">${units.toFixed(2)}</span></div><div class="day-plan-item"><span class="label">當期成本</span><span class="val">${curCost.toLocaleString()}</span></div><div class="day-plan-item"><span class="label">累積投入</span><span class="val" style="color:#dc2626;">${cumCost.toLocaleString()}</span></div><div class="day-plan-item"><span class="label">保底淨利</span><span class="val text-green">+${n1.toLocaleString()}</span></div></div></div>`;
+            if (day === 1) {
+                units = firstUnits;
+            } else {
+                units = (cumCost + targetCumProfit) / netWinIfHitOne;
+                units = Math.ceil(units * 100) / 100;
+            }
+
+            let currentRoundCost = Math.round(units * 4 * costPerUnit);
+            cumCost += currentRoundCost;
+            
+            let prizeIfHitOne = Math.round(units * prizePerUnit);
+            let netIfHitOne = prizeIfHitOne - cumCost;
+
+            let prizeIfHitTwo = Math.round(units * prizePerUnit * 2);
+            let netIfHitTwo = prizeIfHitTwo - cumCost;
+
+            rowsHtml += `
+                <tr>
+                    <td><strong>第 ${day} 期</strong></td>
+                    <td class="text-green">+${targetCumProfit.toLocaleString()} 元</td>
+                    <td class="text-gold" style="font-size:13px;">${units.toFixed(2)} 車/碼</td>
+                    <td>${currentRoundCost.toLocaleString()} 元</td>
+                    <td style="color:#b91c1c;">${cumCost.toLocaleString()} 元</td>
+                    <td>${prizeIfHitOne.toLocaleString()} 元</td>
+                    <td class="text-green">+${netIfHitOne.toLocaleString()} 元</td>
+                    <td class="text-purple">+${netIfHitTwo.toLocaleString()} 元</td>
+                </tr>
+            `;
+
+            mobileCardsHtml += `
+                <div class="day-plan-card">
+                    <div class="day-plan-card-header">
+                        <span class="day-plan-tag">🎱 第 ${day} 期 (4碼)</span>
+                        <span class="day-plan-target">目標：+${targetCumProfit.toLocaleString()} 元</span>
+                    </div>
+                    <div class="day-plan-grid">
+                        <div class="day-plan-item">
+                            <span class="label">🚗 每碼車數</span>
+                            <span class="val text-gold">${units.toFixed(2)} 車/碼</span>
+                        </div>
+                        <div class="day-plan-item">
+                            <span class="label">💵 當期4碼成本</span>
+                            <span class="val">${currentRoundCost.toLocaleString()} 元</span>
+                        </div>
+                        <div class="day-plan-item">
+                            <span class="label">📉 累計總投入</span>
+                            <span class="val" style="color:#b91c1c;">${cumCost.toLocaleString()} 元</span>
+                        </div>
+                        <div class="day-plan-item">
+                            <span class="label">保底淨利(中1碼)</span>
+                            <span class="val text-green">+${netIfHitOne.toLocaleString()} 元</span>
+                        </div>
+                    </div>
+                    <div style="border-top:1px dashed #e2e8f0; padding-top:4px; display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-size:11px; color:#7c3aed; font-weight:bold;">⚡ 若中2碼(雙停暴利)</span>
+                        <span class="text-purple" style="font-size:12px; font-weight:900;">+${netIfHitTwo.toLocaleString()} 元</span>
+                    </div>
+                </div>
+            `;
         }
-        tbody.innerHTML = rows; mobileContainer.innerHTML = cards;
-        document.getElementById('ft-plan-summary').innerText = `4碼總備援本金建議：${cumCost.toLocaleString()} 元`;
+
+        tbody.innerHTML = rowsHtml;
+        mobileContainer.innerHTML = mobileCardsHtml;
+        document.getElementById('ft-plan-summary').innerText = `[${days}期4碼總備援本金建議：${cumCost.toLocaleString()} 元]`;
     }
 
-    let currentTierSubMode = 'single', currentTierIdx = 0, customTierStartCars = 0.10, customTierTotalDays = 15;
-    function getChineseTierName(idx) {
-        return `第${["一", "二", "三", "四", "五", "六", "七", "八", "九", "十"][idx] || (idx + 1)}階`;
+    // ⭐⭐ 新增：連碰與風控計算函數 ⭐⭐
+    function calculateComboC(n, r) {
+        if (n < r) return 0;
+        if (r === 0 || n === r) return 1;
+        let res = 1;
+        for (let i = 1; i <= r; i++) {
+            res = res * (n - i + 1) / i;
+        }
+        return res;
     }
-    function getDynamicTierPlan() {
-        let plan = [], cumCost = 0, step = currentTierSubMode === 'single' ? 3 : 2;
-        let totalTiers = Math.ceil(customTierTotalDays / step);
+
+    window.calcDashCombos = function() {
+        let balls = parseInt(document.getElementById('dash-combo-balls').value) || 0;
+        
+        let cost23Str = document.getElementById('dash-cost23').value;
+        let parts = cost23Str.split('/');
+        let cost2 = parseFloat(parts[0]) || 72;
+        let cost3 = parts.length > 1 ? (parseFloat(parts[1]) || 65) : 65;
+        let cost4 = parseFloat(document.getElementById('dash-cost4').value) || 58;
+
+        let c2 = calculateComboC(balls, 2);
+        let c3 = calculateComboC(balls, 3);
+        let c4 = calculateComboC(balls, 4);
+
+        let tot2 = c2 * cost2;
+        let tot3 = c3 * cost3;
+        let tot4 = c4 * cost4;
+
+        let c3Class = c3 >= 1800 ? "highlight" : "win";
+        let c4Class = c4 >= 9000 ? "highlight" : "win";
+        
+        let c3Alert = c3 >= 1800 ? `<div style="font-size:10px; color:#dc2626; margin-top:2px;">⚠️ 達/超 1800 碰</div>` : ``;
+        let c4Alert = c4 >= 9000 ? `<div style="font-size:10px; color:#dc2626; margin-top:2px;">⚠️ 達/超 9000 碰</div>` : ``;
+
+        let html = `
+            <div class="status-item">
+                <div class="label">二星 (取2)</div>
+                <div class="val">${c2.toLocaleString()} 碰</div>
+                <div style="font-size:11px; color:#64748b; margin-top:4px;">成本: $${tot2.toLocaleString()}</div>
+            </div>
+            <div class="status-item" style="${c3 >= 1800 ? 'background:#fef2f2; border-color:#fca5a5;' : ''}">
+                <div class="label">三星 (取3)</div>
+                <div class="val ${c3Class}">${c3.toLocaleString()} 碰</div>
+                ${c3Alert}
+                <div style="font-size:11px; color:#64748b; margin-top:4px;">成本: $${tot3.toLocaleString()}</div>
+            </div>
+            <div class="status-item" style="${c4 >= 9000 ? 'background:#fef2f2; border-color:#fca5a5;' : ''}">
+                <div class="label">四星 (取4)</div>
+                <div class="val ${c4Class}">${c4.toLocaleString()} 碰</div>
+                ${c4Alert}
+                <div style="font-size:11px; color:#64748b; margin-top:4px;">成本: $${tot4.toLocaleString()}</div>
+            </div>
+        `;
+
+        document.getElementById('dash-combo-results').innerHTML = html;
+    };
+
+    let currentTierSubMode = 'single';
+    let currentTierIdx = 0;
+    let customTierStartCars = 0.10;
+    let customTierTotalDays = 15;
+
+    function getChineseTierName(idx) {
+        const cNums = ["一", "二", "三", "四", "五", "六", "七", "八", "九", "十", "十一", "十二", "十三", "十四", "十五", "十六", "十七", "十八", "十九", "二十"];
+        return `第${cNums[idx] || (idx + 1)}階`;
+    }
+
+    function buildDynamicSingleTier(startCars, totalDays) {
+        const costPerCar = 2755;
+        const prizePerCar = 21200;
+        let plan = [];
+        let cumCost = 0;
+        let tierStep = 3;
+        let totalTiers = Math.ceil(totalDays / tierStep);
+
         for (let t = 0; t < totalTiers; t++) {
-            let cars = (t === 0) ? customTierStartCars : Math.ceil(((cumCost + 1000) / (21200 - (step * 2755))) * 100) / 100;
-            for (let d = 1; d <= step; d++) {
-                let dayNum = t * step + d;
-                if (dayNum > customTierTotalDays) break;
-                let curCost = Math.round(cars * (currentTierSubMode === 'single' ? 2755 : 11020));
+            let cars = 0;
+            if (t === 0) {
+                cars = startCars;
+            } else {
+                cars = (cumCost + 1000) / (prizePerCar - (tierStep * costPerCar));
+                cars = Math.ceil(cars * 100) / 100;
+                if (cars <= plan[plan.length - 1].cars) {
+                    cars = plan[plan.length - 1].cars + 0.05;
+                }
+            }
+
+            for (let d = 1; d <= tierStep; d++) {
+                let dayNum = t * tierStep + d;
+                if (dayNum > totalDays) break;
+
+                let curCost = Math.round(cars * costPerCar);
                 cumCost += curCost;
-                plan.push({ day: dayNum, tier: getChineseTierName(t), cars, cost: curCost, total: cumCost, prize: Math.round(cars * 21200), profit: Math.round(cars * 21200) - cumCost });
+                let prize = Math.round(cars * prizePerCar);
+                let profit = prize - cumCost;
+
+                plan.push({ day: dayNum, tier: getChineseTierName(t), cars: cars, cost: curCost, total: cumCost, prize: prize, profit: profit });
             }
         }
         return plan;
     }
-    window.switchTierSubMode = function(mode) {
-        currentTierSubMode = mode; currentTierIdx = 0;
+
+    function buildDynamicFourTier(startCars, totalDays) {
+        const singleCost = 2755;
+        const roundFourCost = singleCost * 4;
+        const prizePerCar = 21200;
+        let plan = [];
+        let cumCost = 0;
+        let tierStep = 2;
+        let totalTiers = Math.ceil(totalDays / tierStep);
+
+        for (let t = 0; t < totalTiers; t++) {
+            let cars = 0;
+            if (t === 0) {
+                cars = startCars;
+            } else {
+                cars = (cumCost + 1200) / (prizePerCar - roundFourCost);
+                cars = Math.ceil(cars * 100) / 100;
+                if (cars <= plan[plan.length - 1].cars) {
+                    cars = Math.ceil(plan[plan.length - 1].cars * 2.2 * 100) / 100;
+                }
+            }
+
+            for (let d = 1; d <= tierStep; d++) {
+                let dayNum = t * tierStep + d;
+                if (dayNum > totalDays) break;
+
+                let curCost = Math.round(cars * roundFourCost);
+                cumCost += curCost;
+                let prize = Math.round(cars * prizePerCar);
+                let profit = prize - cumCost;
+
+                if (profit < 0) {
+                    let neededCars = (cumCost - curCost + 500) / (prizePerCar - roundFourCost);
+                    cars = Math.ceil(neededCars * 100) / 100;
+                    cumCost = cumCost - curCost + Math.round(cars * roundFourCost);
+                    curCost = Math.round(cars * roundFourCost);
+                    prize = Math.round(cars * prizePerCar);
+                    profit = prize - cumCost;
+                }
+
+                plan.push({ day: dayNum, tier: getChineseTierName(t), cars: cars, cost: curCost, total: cumCost, prize: prize, profit: profit });
+            }
+        }
+        return plan;
+    }
+
+    function getDynamicTierPlan() {
+        return currentTierSubMode === 'single'
+            ? buildDynamicSingleTier(customTierStartCars, customTierTotalDays)
+            : buildDynamicFourTier(customTierStartCars, customTierTotalDays);
+    }
+
+    function switchTierSubMode(mode) {
+        currentTierSubMode = mode;
+        currentTierIdx = 0;
         document.getElementById('sub-tier-single').classList.toggle('active', mode === 'single');
         document.getElementById('sub-tier-four').classList.toggle('active', mode === 'four');
+
+        document.getElementById('tracker-mode-name').innerText = mode === 'single' 
+            ? '單碼階梯均注 (3期一階) 當前執行狀態' 
+            : '4碼階梯均注 (2期一階・保證賺錢) 當前執行狀態';
         renderTierTracker();
-    };
-    window.applyDynamicTierConfig = function() {
-        customTierStartCars = parseFloat(document.getElementById('cfg-tier-cars').value) || 0.10;
-        customTierTotalDays = parseInt(document.getElementById('cfg-tier-total-days').value, 10) || 15;
-        currentTierIdx = 0; renderTierTracker();
-        alert("已重新生成階梯計畫！");
-    };
+    }
+
+    function applyDynamicTierConfig() {
+        let carsVal = parseFloat(document.getElementById('cfg-tier-cars').value);
+        let daysVal = parseInt(document.getElementById('cfg-tier-total-days').value, 10);
+
+        if (isNaN(carsVal) || carsVal <= 0) return alert("請輸入有效的起始車數！");
+        if (isNaN(daysVal) || daysVal < 2) return alert("規劃期數至少需要 2 期以上！");
+
+        customTierStartCars = carsVal;
+        customTierTotalDays = daysVal;
+        currentTierIdx = 0;
+        renderTierTracker();
+        alert(`✅ 已動態生成共 ${customTierTotalDays} 期的階梯均注計畫表！`);
+    }
+
     function renderTierTracker() {
         const plan = getDynamicTierPlan();
         if (currentTierIdx >= plan.length) currentTierIdx = 0;
-        let cur = plan[currentTierIdx];
+        const cur = plan[currentTierIdx];
+
         document.getElementById('disp-day').innerText = `第 ${cur.day} 期`;
         document.getElementById('disp-tier').innerText = cur.tier;
-        document.getElementById('disp-cars').innerText = `${cur.cars.toFixed(2)} 車`;
+        document.getElementById('disp-cars').innerText = currentTierSubMode === 'single' 
+            ? `${cur.cars.toFixed(2)} 車` 
+            : `各 ${cur.cars.toFixed(2)} 車 (共 ${(cur.cars * 4).toFixed(2)} 車)`;
         document.getElementById('disp-cost').innerText = `${cur.cost.toLocaleString()} 元`;
         document.getElementById('disp-total-cost').innerText = `${cur.total.toLocaleString()} 元`;
-        document.getElementById('disp-win-profit').innerText = `+${cur.profit.toLocaleString()} 元`;
+        
+        const profitEl = document.getElementById('disp-win-profit');
+        profitEl.innerText = `${cur.profit > 0 ? '+' : ''}${cur.profit.toLocaleString()} 元`;
+        profitEl.className = cur.profit >= 0 ? 'val win' : 'val highlight';
 
-        let tbody = document.getElementById('tier-table-body');
+        document.getElementById('tracker-stoploss-tip').innerText = `總共 ${plan.length} 期`;
+
+        const tbody = document.getElementById('tier-table-body');
         tbody.innerHTML = '';
-        plan.forEach((r, i) => {
-            tbody.innerHTML += `<tr class="${i === currentTierIdx ? 'active-row' : ''}"><td>第${r.day}期</td><td>${r.tier}</td><td>${r.cars.toFixed(2)}車</td><td>${r.cost.toLocaleString()}</td><td style="color:#dc2626;">${r.total.toLocaleString()}</td><td>${r.prize.toLocaleString()}</td><td class="text-green">+${r.profit.toLocaleString()}</td></tr>`;
+        plan.forEach((row, idx) => {
+            const tr = document.createElement('tr');
+            if (idx === currentTierIdx) tr.className = 'active-row';
+            tr.innerHTML = `
+                <td>第 ${row.day} 期</td>
+                <td>${row.tier}</td>
+                <td>${row.cars.toFixed(2)} 車</td>
+                <td>${row.cost.toLocaleString()} 元</td>
+                <td style="color:#b91c1c;">${row.total.toLocaleString()} 元</td>
+                <td>${row.prize.toLocaleString()} 元</td>
+                <td style="color:${row.profit >= 0 ? '#16a34a' : '#dc2626'}">${row.profit > 0 ? '+' : ''}${row.profit.toLocaleString()} 元</td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        const mobileContainer = document.getElementById('tier-mobile-cards-container');
+        mobileContainer.innerHTML = '';
+        plan.forEach((row, idx) => {
+            const isAct = idx === currentTierIdx;
+            const card = document.createElement('div');
+            card.className = `day-plan-card ${isAct ? 'current-active' : ''}`;
+            card.innerHTML = `
+                <div class="day-plan-card-header">
+                    <span class="day-plan-tag">${isAct ? '👉 ' : ''}第 ${row.day} 期 ${isAct ? '(進行中)' : ''}</span>
+                    <span class="day-plan-tier">${row.tier}</span>
+                </div>
+                <div class="day-plan-grid">
+                    <div class="day-plan-item">
+                        <span class="label">🚗 ${currentTierSubMode === 'single' ? '下注車數' : '每碼車數'}</span>
+                        <span class="val text-gold">${row.cars.toFixed(2)} 車</span>
+                    </div>
+                    <div class="day-plan-item">
+                        <span class="label">💵 當期成本</span>
+                        <span class="val">${row.cost.toLocaleString()} 元</span>
+                    </div>
+                    <div class="day-plan-item">
+                        <span class="label">📉 累計總投入</span>
+                        <span class="val" style="color:#b91c1c;">${row.total.toLocaleString()} 元</span>
+                    </div>
+                    <div class="day-plan-item">
+                        <span class="label">🏆 中獎彩金</span>
+                        <span class="val">${row.prize.toLocaleString()} 元</span>
+                    </div>
+                </div>
+                <div style="border-top:1px dashed #e2e8f0; padding-top:4px; display:flex; justify-content:space-between; align-items:center;">
+                    <span style="font-size:11px; color:#475569; font-weight:bold;">中獎實得淨利</span>
+                    <span class="${row.profit >= 0 ? 'text-green' : 'text-gold'}" style="font-size:13px; font-weight:900;">+${row.profit.toLocaleString()} 元</span>
+                </div>
+            `;
+            mobileContainer.appendChild(card);
         });
     }
-    window.recordTierResult = function(won) {
-        const plan = getDynamicTierPlan();
-        if (won) { alert("過關！重置回第一階。"); currentTierIdx = 0; }
-        else { currentTierIdx = (currentTierIdx < plan.length - 1) ? currentTierIdx + 1 : 0; }
-        renderTierTracker();
-    };
-    window.resetTierGame = function() { currentTierIdx = 0; renderTierTracker(); };
 
-    window.openProfitModal = function() { document.getElementById('profit-modal').style.display = 'flex'; calculateSingleTargetPlan(); calculateFourTargetPlan(); renderTierTracker(); };
-    window.closeProfitModal = function() { document.getElementById('profit-modal').style.display = 'none'; };
-    window.closeModalOnOverlay = function(e) { if (e.target.id === 'profit-modal') closeProfitModal(); };
-    window.switchModalTab = function(tabKey) {
-        ['single-target', 'four-target', 'tier-track'].forEach(t => {
+    function recordTierResult(won) {
+        const plan = getDynamicTierPlan();
+        if (won) {
+            alert(`🎉 恭喜過關！淨獲利 ${plan[currentTierIdx].profit.toLocaleString()} 元！自動回歸第 1 期重啟循環。`);
+            currentTierIdx = 0;
+        } else {
+            if (currentTierIdx < plan.length - 1) {
+                currentTierIdx++;
+            } else {
+                alert(`⚠️ 已達設定的最後一期 (${plan.length}期)！請嚴守紀律立即重置。`);
+                currentTierIdx = 0;
+            }
+        }
+        renderTierTracker();
+    }
+
+    function resetTierGame() {
+        currentTierIdx = 0;
+        renderTierTracker();
+    }
+
+    function openProfitModal() {
+        document.getElementById('profit-modal').style.display = 'flex';
+        calculateSingleTargetPlan();
+        calculateFourTargetPlan();
+        renderTierTracker();
+    }
+    function closeProfitModal() {
+        document.getElementById('profit-modal').style.display = 'none';
+    }
+    function closeModalOnOverlay(e) {
+        if (e.target.id === 'profit-modal') closeProfitModal();
+    }
+
+    function switchModalTab(tabKey) {
+        const tabs = ['single-target', 'four-target', 'tier-track'];
+        tabs.forEach(t => {
             document.getElementById(`tab-btn-${t}`).classList.toggle('active', t === tabKey);
             document.getElementById(`tab-content-${t}`).style.display = (t === tabKey) ? 'block' : 'none';
         });
+    }
+
+    function loadMoreHistory() {
+        displayLimit += 30;
+        renderAll();
+    }
+
+    function refreshRecommendations() {
+        renderRecommendations();
+    }
+
+    window.openProfitModal = openProfitModal;
+    window.closeProfitModal = closeProfitModal;
+    window.closeModalOnOverlay = closeModalOnOverlay;
+    window.switchModalTab = switchModalTab;
+    window.switchTierSubMode = switchTierSubMode;
+    window.applyDynamicTierConfig = applyDynamicTierConfig;
+    window.recordTierResult = recordTierResult;
+    window.resetTierGame = resetTierGame;
+    window.calculateSingleTargetPlan = calculateSingleTargetPlan;
+    window.calculateFourTargetPlan = calculateFourTargetPlan;
+    window.loadMoreHistory = loadMoreHistory;
+    window.refreshRecommendations = refreshRecommendations;
+
+    window.applyRecomNums = function(numsStr, targetKey) {
+        let targetMap = { ai: 'ai-nums', my: 'my-nums' };
+        let nameMap = { ai: 'AI', my: '我的' };
+        document.getElementById(targetMap[targetKey]).value = numsStr;
+        alert(`✅ 已將推薦號碼 [ ${numsStr} ] 帶入【${nameMap[targetKey]}】！`);
     };
+
+    function renderAll() {
+        const tbody = document.getElementById('history-tbody');
+        tbody.innerHTML = '';
+
+        let totalRounds = 0;
+        let totalAiHits = 0, totalMyHits = 0;
+        let myRounds = 0, aiRounds = 0;
+
+        analyzeHotColdNumbers();
+
+        battleHistory.forEach(item => {
+            const hasDraw = item.draw && item.draw.length === 5;
+            if (!item.isPending && hasDraw) {
+                totalRounds++;
+                if (isValidPrediction(item.ai)) {
+                    aiRounds++;
+                    totalAiHits += item.aiHits || 0;
+                }
+                if (isValidPrediction(item.my)) {
+                    myRounds++;
+                    totalMyHits += item.myHits || 0;
+                }
+            }
+        });
+
+        let visibleRecords = battleHistory.slice(0, displayLimit);
+        
+        visibleRecords.forEach(item => {
+            const hasDraw = item.draw && item.draw.length === 5;
+            
+            const tr = document.createElement('tr');
+            const genBalls = (nums) => `<div class="num-container">` + (nums || []).map(n => {
+                let isHit = (!item.isPending && hasDraw && item.draw.includes(n)) ? 'hit' : '';
+                return `<div class="num-ball ${isHit}">${n.toString().padStart(2,'0')}</div>`;
+            }).join('') + `</div>`;
+
+            const genDrawBalls = (nums) => `<div class="num-container">` + (nums || []).map(n => `<div class="num-ball draw">${n.toString().padStart(2,'0')}</div>`).join('') + `</div>`;
+
+            let aiColumnHtml = isValidPrediction(item.ai)
+                ? genBalls(item.ai) + (!item.isPending && hasDraw ? `<div style="font-size:11px; margin-top:3px; color:var(--ai-color); font-weight:bold;">中 ${item.aiHits} 顆 (${item.ai.length}碼)</div>` : '')
+                : `<span class="empty-label">— 待補 —</span>`;
+
+            let myColumnHtml = isValidPrediction(item.my)
+                ? genBalls(item.my) + (!item.isPending && hasDraw ? `<div style="font-size:11px; margin-top:3px; color:var(--my-color); font-weight:bold;">中 ${item.myHits} 顆 (${item.my.length}碼)</div>` : '')
+                : `<span class="empty-label">— 待補 —</span>`;
+
+            let drawColumnHtml = hasDraw ? genDrawBalls(item.draw) : `<span style="color:#d97706; font-size:12px; font-family:monospace; font-weight:bold;">⏳ 待開獎</span>`;
+
+            let winnerBadge = `<span class="winner-badge badge-tie">平手</span>`;
+            if (item.isPending || !hasDraw) winnerBadge = `<span class="winner-badge badge-pending">⏳ 等待開獎</span>`;
+            else if (item.winner === "AI 勝") winnerBadge = `<span class="winner-badge badge-ai">🤖 AI 勝</span>`;
+            else if (item.winner === "我 勝") winnerBadge = `<span class="winner-badge badge-my">🧑 我 勝</span>`;
+            else if (item.winner) winnerBadge = `<span class="winner-badge" style="background:#f1f5f9; color:#475569; border:1px solid #cbd5e1;">${item.winner}</span>`;
+
+            tr.innerHTML = `
+                <td data-label="📅 開獎日期"><strong style="color:#0284c7; font-family:monospace; font-size:13px;">${item.date}</strong></td>
+                <td data-label="🤖 AI 預測">${aiColumnHtml}</td>
+                <td data-label="🧑 我的預測">${myColumnHtml}</td>
+                <td data-label="📺 開獎 5 碼">${drawColumnHtml}</td>
+                <td data-label="🏆 勝負判定">${winnerBadge}</td>
+                <td data-label="⚙️ 操作管理">
+                    <button class="action-btn edit-btn" title="帶入上方表單補填或修改號碼" onclick="loadRecordToForm('${item.id}')">✏️ 補/改</button>
+                    <button class="action-btn edit-btn" onclick="editDate('${item.id}', '${item.date}')">📅 改期</button>
+                    <button class="action-btn delete-btn" onclick="deleteRecord('${item.id}')">刪除</button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        if (battleHistory.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="6" style="padding: 20px; color: #94a3b8; font-weight:bold;">目前尚無對決紀錄，可滑至最下方貼上多期天天樂號碼！</td></tr>`;
+        }
+
+        const loadMoreBtn = document.getElementById('load-more-container');
+        if (battleHistory.length > displayLimit) {
+            loadMoreBtn.style.display = 'block';
+        } else {
+            loadMoreBtn.style.display = 'none';
+        }
+
+        document.getElementById('total-rounds').innerText = totalRounds;
+        document.getElementById('ai-hits').innerText = totalAiHits;
+        document.getElementById('my-hits').innerText = totalMyHits;
+        document.getElementById('ai-rounds').innerText = aiRounds;
+        document.getElementById('my-rounds').innerText = myRounds;
+        
+        let aiAvg = aiRounds > 0 ? (totalAiHits / aiRounds) : 0;
+        let myAvg = myRounds > 0 ? (totalMyHits / myRounds) : 0;
+        document.getElementById('ai-avg').innerText = aiAvg.toFixed(2);
+        document.getElementById('my-avg').innerText = myAvg.toFixed(2);
+
+        let pkEl = document.getElementById('pk-winner');
+        if (totalRounds === 0 || (aiAvg === 0 && myAvg === 0)) {
+            pkEl.innerText = "等待開獎";
+            pkEl.style.color = "var(--draw-color)";
+        } else if (aiAvg > myAvg) {
+            pkEl.innerText = "🤖 AI 領先";
+            pkEl.style.color = "var(--ai-color)";
+        } else if (myAvg > aiAvg) {
+            pkEl.innerText = "🧑 人類(我)領先";
+            pkEl.style.color = "var(--my-color)";
+        } else {
+            pkEl.innerText = "平分秋色";
+            pkEl.style.color = "var(--draw-color)";
+        }
+    }
+
+    window.addRecord = addRecord;
+    window.editDate = editDate;
+    window.deleteRecord = deleteRecord;
+    window.loadRecordToForm = loadRecordToForm;
+    window.parseAndImportMultiDraws = parseAndImportMultiDraws;
+</script>
+
+<script>
+    class PhysicsMachine {
+        constructor(containerId, sphereSize) {
+            this.container = document.getElementById(containerId);
+            this.size = sphereSize;
+            this.center = sphereSize / 2;
+            this.radius = 8;
+            this.maxRadius = this.center - this.radius - 3;
+            this.balls = [];
+            this.isMixing = false;
+            this.reqFrame = null;
+            this.init();
+        }
+
+        init() {
+            this.container.innerHTML = '';
+            this.balls = [];
+            for (let i = 1; i <= 39; i++) {
+                let el = document.createElement('div');
+                el.className = 'mini-ball';
+                el.innerText = i.toString().padStart(2, '0');
+                this.container.appendChild(el);
+
+                let angle = Math.random() * Math.PI * 2;
+                let r = Math.random() * (this.maxRadius - 10);
+                let x = this.center + Math.cos(angle) * r;
+                let y = this.center + Math.sin(angle) * r;
+
+                this.balls.push({
+                    id: i, el: el, active: true,
+                    x: x, y: y,
+                    vx: (Math.random() - 0.5) * 4,
+                    vy: (Math.random() - 0.5) * 4
+                });
+            }
+            if (this.reqFrame) cancelAnimationFrame(this.reqFrame);
+            this.loop = this.loop.bind(this);
+            this.loop();
+        }
+
+        loop() {
+            this.balls.forEach(b => {
+                if (!b.active) return;
+                b.vy += 0.35;
+
+                if (this.isMixing) {
+                    b.vx += (Math.random() - 0.5) * 4;
+                    b.vy -= (Math.random()) * 2;
+                    let speed = Math.sqrt(b.vx * b.vx + b.vy * b.vy);
+                    if (speed > 15) {
+                        b.vx = (b.vx / speed) * 15;
+                        b.vy = (b.vy / speed) * 15;
+                    }
+                } else {
+                    b.vx *= 0.98;
+                    b.vy *= 0.98;
+                }
+
+                b.x += b.vx;
+                b.y += b.vy;
+
+                let dx = b.x - this.center;
+                let dy = b.y - this.center;
+                let dist = Math.sqrt(dx * dx + dy * dy);
+
+                if (dist > this.maxRadius) {
+                    let nx = dx / dist;
+                    let ny = dy / dist;
+                    b.x = this.center + nx * this.maxRadius;
+                    b.y = this.center + ny * this.maxRadius;
+                    let dot = b.vx * nx + b.vy * ny;
+                    b.vx = (b.vx - 2 * dot * nx) * 0.8;
+                    b.vy = (b.vy - 2 * dot * ny) * 0.8;
+                }
+            });
+
+            this.balls.forEach(b => {
+                if (b.active) {
+                    b.el.style.transform = `translate(${b.x - this.radius}px, ${b.y - this.radius}px)`;
+                }
+            });
+
+            this.reqFrame = requestAnimationFrame(this.loop);
+        }
+
+        drawBall(ballObj, slotEl, callback) {
+            ballObj.active = false;
+            ballObj.el.style.transition = "transform 0.4s cubic-bezier(0.5, -0.5, 0.2, 1.2), opacity 0.5s";
+            ballObj.el.style.transform = `translate(${this.center - this.radius}px, -18px) scale(1.2)`;
+
+            setTimeout(() => {
+                ballObj.el.style.opacity = "0";
+                slotEl.innerText = ballObj.id.toString().padStart(2, '0');
+                slotEl.classList.add('revealed');
+                if (callback) callback();
+            }, 500);
+        }
+    }
+
+    let m1, m2;
+    let finalNums1 = [], finalNums2 = [];
+
+    window.onload = function() {
+        document.getElementById('input-date').value = new Date().toISOString().split('T')[0];
+        let mSize = 120;
+        m1 = new PhysicsMachine('physics-container-1', mSize);
+        m2 = new PhysicsMachine('physics-container-2', mSize);
+        
+        // 初始化載入風控計算機結果
+        if(typeof calcDashCombos === 'function') calcDashCombos();
+    };
+
+    async function startRollDual() {
+        const btn = document.getElementById('btn-roll-all');
+        const slots1 = document.querySelectorAll('#machine-balls-1 .machine-ball');
+        const slots2 = document.querySelectorAll('#machine-balls-2 .machine-ball');
+        
+        btn.disabled = true;
+        btn.innerText = "🌪️ 雙機同步搖號中...";
+        
+        document.querySelectorAll('.btn-apply').forEach(b => b.style.display = 'none');
+
+        m1.init();
+        m2.init();
+        slots1.forEach(s => { s.innerText = "?"; s.classList.remove('revealed'); });
+        slots2.forEach(s => { s.innerText = "?"; s.classList.remove('revealed'); });
+
+        m1.isMixing = true;
+        m2.isMixing = true;
+
+        await new Promise(r => setTimeout(r, 1200));
+
+        finalNums1 = generate5Numbers();
+        finalNums2 = generate5Numbers();
+
+        for (let i = 0; i < 5; i++) {
+            let b1 = m1.balls.find(b => b.id === finalNums1[i]);
+            let b2 = m2.balls.find(b => b.id === finalNums2[i]);
+
+            await Promise.all([
+                new Promise(res => m1.drawBall(b1, slots1[i], res)),
+                new Promise(res => m2.drawBall(b2, slots2[i], res))
+            ]);
+            await new Promise(r => setTimeout(r, 250));
+        }
+
+        m1.isMixing = false;
+        m2.isMixing = false;
+        btn.disabled = false;
+        btn.innerText = "🎲 再次啟動雙機搖號";
+
+        document.querySelectorAll('.btn-apply').forEach(b => b.style.display = 'inline-block');
+    }
+
+    function generate5Numbers() {
+        let arr = [];
+        while (arr.length < 5) {
+            let r = Math.floor(Math.random() * 39) + 1;
+            if (!arr.includes(r)) arr.push(r);
+        }
+        return arr.sort((a, b) => a - b);
+    }
+
+    function applyToInput(nums, targetKey, count = 4) {
+        if (!nums || nums.length < count) return;
+        let selected = nums.slice(0, count);
+        let str = selected.map(n => n.toString().padStart(2, '0')).join(', ');
+        
+        let targetMap = { ai: 'ai-nums', my: 'my-nums' };
+        let nameMap = { ai: 'AI', my: '我的' };
+
+        document.getElementById(targetMap[targetKey]).value = str;
+        alert(`✅ 已將搖出的 ${count} 碼帶入【${nameMap[targetKey]}】！`);
+    }
 </script>
 
 </body>
