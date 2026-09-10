@@ -6,7 +6,7 @@
     <title>天天樂 & 五三九 智慧結算與雙玩法矩陣系統</title>
     <style>
         :root {
-            --bg-color: #f8fafc; 
+            --bg-color: #f1f5f9; 
             --panel-bg: #ffffff;
             --panel-border: #e2e8f0;
             --text-main: #0f172a;
@@ -20,7 +20,7 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Microsoft JhengHei", sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background-color: var(--bg-color); color: var(--text-main); padding: 10px; line-height: 1.5; }
+        body { background-color: var(--bg-color); color: var(--text-main); padding: 8px; line-height: 1.5; }
         .container { max-width: 1200px; margin: 0 auto; }
 
         header { 
@@ -38,6 +38,7 @@
         }
         .dot { width: 6px; height: 6px; border-radius: 50%; background: #10b981; box-shadow: 0 0 4px #10b981; }
 
+        /* 選單響應式 */
         .mode-switcher { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin-bottom: 14px; }
         @media (min-width: 768px) { .mode-switcher { grid-template-columns: repeat(5, 1fr); } }
         
@@ -53,10 +54,11 @@
         .panel { background: var(--panel-bg); padding: 14px; border-radius: 12px; border: 1px solid var(--panel-border); margin-bottom: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
         .panel-title { font-size: 14px; font-weight: 900; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px; color: var(--text-main); }
 
-        .setting-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
-        @media (min-width: 768px) { .setting-grid { grid-template-columns: repeat(2, 1fr); } }
+        /* 設定區塊完美四宮格 */
+        .setting-grid { display: grid; grid-template-columns: 1fr; gap: 14px; align-items: stretch; }
+        @media (min-width: 900px) { .setting-grid { grid-template-columns: repeat(2, 1fr); } } /* 電腦版強制雙欄 */
 
-        .space-config-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; }
+        .space-config-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px; display: flex; flex-direction: column; }
         .space-config-card h4 { font-size: 13px; font-weight: 900; color: var(--purple-color); margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
         .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
         .setting-item label { display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 2px; font-weight: bold; }
@@ -66,6 +68,7 @@
         .action-bar { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
         .action-bar input { padding: 8px; border: 1.5px solid #cbd5e1; border-radius: 6px; flex: 1; min-width: 120px; font-size: 13px; font-weight: bold; }
         
+        /* 策略儀表板 */
         .strategy-dashboard { background: linear-gradient(135deg, #1e1b4b, #312e81); color: #fff; padding: 16px; border-radius: 12px; margin-bottom: 14px; box-shadow: 0 4px 12px rgba(49, 46, 129, 0.4); }
         .strategy-dashboard h3 { font-size: 15px; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 6px; }
         .dashboard-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
@@ -73,30 +76,25 @@
         .dash-card { background: rgba(255,255,255,0.1); border-radius: 8px; padding: 10px; border: 1px solid rgba(255,255,255,0.1); font-size: 12px; }
         .dash-card h4 { color: #a5b4fc; font-size: 12px; margin-bottom: 4px; }
         
-        /* 🔥 三大數學模型專屬面板設計 */
-        .ai-box { margin-top: 12px; background: #fff; border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px; }
-        .ai-box-title { font-size: 13px; font-weight: 900; color: #0f172a; margin-bottom: 10px; border-bottom: 1px solid #e2e8f0; padding-bottom: 6px; display: flex; align-items: center; gap: 4px; }
+        /* 🔥 四維數學模型面板 */
+        .ai-box { margin-top: auto; padding-top: 12px; border-top: 1px dashed #cbd5e1; flex-grow: 1; display: flex; flex-direction: column; }
+        .ai-box-title { font-size: 13px; font-weight: 900; color: #0f172a; margin-bottom: 8px; display: flex; align-items: center; gap: 4px; }
         
-        .math-model { background: #f8fafc; border-left: 3px solid #cbd5e1; padding: 8px 10px; margin-bottom: 8px; border-radius: 0 6px 6px 0; }
-        .math-model.model-a { border-left-color: #0284c7; } /* 均值回歸 (藍) */
-        .math-model.model-b { border-left-color: #d97706; } /* 馬可夫鏈 (橘) */
-        .math-model.model-c { border-left-color: #7c3aed; } /* 凱利公式 (紫) */
+        .math-model { background: #fff; border: 1px solid #e2e8f0; border-left: 4px solid #cbd5e1; padding: 8px; margin-bottom: 6px; border-radius: 4px; }
+        .math-model.model-a { border-left-color: #0284c7; } /* 藍: 均值 */
+        .math-model.model-b { border-left-color: #d97706; } /* 橘: 動能 */
+        .math-model.model-c { border-left-color: #7c3aed; } /* 紫: EV */
+        .math-model.model-d { border-left-color: #dc2626; background: #fef2f2; border-color: #fecaca; } /* 紅: 偏態預警 */
         
         .model-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
-        .model-name { font-size: 12px; font-weight: 900; color: #334155; }
-        .model-formula { font-size: 9px; color: #94a3b8; font-family: monospace; background: #e2e8f0; padding: 2px 6px; border-radius: 4px; }
-        .model-result { font-size: 11px; color: #64748b; margin-bottom: 4px; }
-        .model-advice { font-size: 12px; font-weight: 900; padding: 4px 6px; border-radius: 4px; display: inline-block; }
+        .model-name { font-size: 11px; font-weight: 900; color: #334155; }
+        .model-formula { font-size: 9px; color: #94a3b8; font-family: monospace; background: #e2e8f0; padding: 1px 4px; border-radius: 4px; }
+        .model-desc { font-size: 11px; color: #64748b; font-weight: bold; }
+        .model-desc.alert { color: #b91c1c; }
         
-        .ai-consensus { margin-top: 10px; padding: 10px; border-radius: 8px; text-align: center; border: 2px solid; }
-        .ai-consensus h5 { font-size: 14px; margin: 0 0 4px 0; font-weight: 900; }
-        .ai-consensus p { font-size: 13px; margin: 0; font-weight: bold; }
-
-        /* 通用顏色 */
-        .txt-green { color: #059669; } .bg-green-light { background: #dcfce7; color: #065f46; }
-        .txt-red { color: #dc2626; } .bg-red-light { background: #fee2e2; color: #991b1b; }
-        .txt-yellow { color: #d97706; } .bg-yellow-light { background: #fef9c3; color: #854d0e; }
-        .bg-gray-light { background: #f1f5f9; color: #475569; }
+        .ai-consensus { margin-top: auto; padding: 10px; border-radius: 8px; text-align: center; border: 2px solid; }
+        .ai-consensus h5 { font-size: 13px; margin: 0 0 4px 0; font-weight: 900; }
+        .ai-consensus p { font-size: 12px; margin: 0; font-weight: bold; line-height: 1.4; }
 
         .form-row { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
         @media (min-width: 768px) { .form-row { flex-direction: row; } }
@@ -110,14 +108,18 @@
         @media (min-width: 768px) { .stats-grid { grid-template-columns: repeat(4, 1fr); } }
         .stat-item { background: #fff; padding: 10px; border-radius: 8px; text-align: center; border: 1px solid #e2e8f0; }
         .stat-item h3 { font-size: 10px; color: #64748b; margin-bottom: 4px; }
-        .stat-item p { font-size: 16px; font-weight: 900; font-family: monospace; color: #0284c7; margin:0;}
+        .stat-item p { font-size: 15px; font-weight: 900; font-family: monospace; color: #0284c7; margin:0;}
 
         .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 8px; border: 1px solid #e2e8f0; }
-        table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 600px; }
+        table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 500px; }
         th { background: #f8fafc; padding: 8px 4px; border-bottom: 2px solid #e2e8f0; color: #475569; white-space: nowrap; }
         td { padding: 8px 4px; border-bottom: 1px solid #e2e8f0; text-align: center; vertical-align: middle; }
         
         .badge { padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 11px; }
+        .bg-green { background: #dcfce7; color: #166534; }
+        .bg-red { background: #fee2e2; color: #991b1b; }
+        .bg-yellow { background: #fef9c3; color: #854d0e; }
+
         .num-container { display: flex; gap: 3px; justify-content: center; flex-wrap: wrap; }
         .num-ball { width: var(--ball-size); height: var(--ball-size); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 900; font-family: monospace; }
         .draw-ball { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #78350f; border: 1px solid #b45309; }
@@ -136,7 +138,7 @@
         <button id="btn-tt-9000" class="mode-btn" onclick="switchSpace('tt-9000')">天天樂 9000碰</button>
         <button id="btn-539-1800" class="mode-btn" onclick="switchSpace('539-1800')">五三九 1800碰</button>
         <button id="btn-539-9000" class="mode-btn" onclick="switchSpace('539-9000')">五三九 9000碰</button>
-        <button id="btn-arena" class="mode-btn arena-btn active" onclick="switchSpace('arena')">⚔️ AI 科技擂台 (設定/分析)</button>
+        <button id="btn-arena" class="mode-btn arena-btn active" onclick="switchSpace('arena')">⚔️ AI 科技擂台 (設定/多維分析)</button>
     </div>
 
     <!-- 💡 全局戰略看板 -->
@@ -150,7 +152,7 @@
     <!-- 集中參數設定 & AI 預測 -->
     <div class="panel" id="arena-settings-panel">
         <div class="panel-title">
-            <span>⚙️ 參數設定與【三維量化交易預測】</span>
+            <span>⚙️ 參數設定與【四維量化交易預測】</span>
             <span id="lock-status" style="color:var(--danger-color); font-size:11px;">🔒 已鎖定(0000)</span>
         </div>
         
@@ -186,7 +188,7 @@
                 <input type="date" id="input-date">
             </div>
             <div class="form-group" style="flex: 2;">
-                <label>5 碼開獎號碼 (逗號或空格)</label>
+                <label>5 碼開獎號碼 (逗號/空格)</label>
                 <input type="text" id="input-balls" placeholder="例: 06 07 14 28 33">
             </div>
         </div>
@@ -266,29 +268,65 @@
         document.getElementById(`cfg-cost-${key}`).value = unitBet * spaceConfigs[key].basePuffs;
     }
 
-    // 🏆 三大維度數學模型分析引擎
+    // 🏆 四維度數學模型分析引擎
     function analyzeSpace(key) {
         let cfg = spaceConfigs[key];
-        let data = [...(spaceData[key] || [])].sort((a, b) => new Date(a.date) - new Date(b.date)); // 由舊到新排列，計算轉移矩陣用
+        let data = [...(spaceData[key] || [])].sort((a, b) => new Date(a.date) - new Date(b.date)); // 由舊到新
         
         let totalDraws = 0, wins = 0;
-        let WW = 0, WL = 0, LW = 0, LL = 0; // Markov 連續狀態計算
+        let WW = 0, WL = 0, LW = 0, LL = 0; 
         let prevWasWin = null;
         
-        // 陣列末端是最新一期
         let latestIsWin = false;
         let continuousHits = 0; 
         let losingStreak = 0;
 
+        // 追蹤「同柱三顆 (Zone Triple)」的偏態
+        let tripleWins = 0;
+        let tripleLosingStreak = 0;
+        let hitTripleBefore = false;
+
+        let reversedData = [...data].reverse(); // 由新到舊 (方便算目前連勝/連敗/偏態)
+
+        // 計算目前偏態與連勝敗
+        for (let i = 0; i < reversedData.length; i++) {
+            if (!reversedData[i].date.startsWith('2026')) break;
+            
+            let balls = reversedData[i].draw;
+            let res = cfg.type === '1800' ? check1800(balls) : check9000(balls);
+            let isWin = (cfg.type === '1800' && res.puffs >= 3) || (cfg.type === '9000' && res.pass);
+            
+            // 算勝敗連續期數
+            if (i === 0) {
+                latestIsWin = isWin;
+                if (isWin) continuousHits++; else losingStreak++;
+            } else {
+                if (latestIsWin && isWin) continuousHits++;
+                else if (!latestIsWin && !isWin) losingStreak++;
+                else { /* break continuity, but keep going for Triple check if needed */ }
+            }
+
+            // 算同柱三顆 (標準四區)
+            let q1=0, q2=0, q3=0, q4=0;
+            balls.forEach(n => { if(n<=9) q1++; else if(n<=19) q2++; else if(n<=29) q3++; else q4++; });
+            let isTriple = (q1>=3 || q2>=3 || q3>=3 || q4>=3);
+
+            if (!hitTripleBefore) {
+                if (!isTriple) tripleLosingStreak++;
+                else hitTripleBefore = true;
+            }
+        }
+
+        // 計算全年度基本數據
         data.forEach(item => {
-            if (!item.date.startsWith('2026')) return; // 只算今年
+            if (!item.date.startsWith('2026')) return;
             totalDraws++;
-            let res = cfg.type === '1800' ? check1800(item.draw) : check9000(item.draw);
+            let balls = item.draw;
+            let res = cfg.type === '1800' ? check1800(balls) : check9000(balls);
             let isWin = (cfg.type === '1800' && res.puffs >= 3) || (cfg.type === '9000' && res.pass);
             
             if (isWin) wins++;
 
-            // Markov Chain 計算
             if (prevWasWin !== null) {
                 if(prevWasWin && isWin) WW++;
                 if(prevWasWin && !isWin) WL++;
@@ -296,135 +334,103 @@
                 if(!prevWasWin && !isWin) LL++;
             }
             prevWasWin = isWin;
-            latestIsWin = isWin;
+
+            let q1=0, q2=0, q3=0, q4=0;
+            balls.forEach(n => { if(n<=9) q1++; else if(n<=19) q2++; else if(n<=29) q3++; else q4++; });
+            if (q1>=3 || q2>=3 || q3>=3 || q4>=3) tripleWins++;
         });
 
-        // 倒序計算連開或連敗
-        let reversedData = [...data].reverse();
-        for (let i = 0; i < reversedData.length; i++) {
-            if (!reversedData[i].date.startsWith('2026')) break;
-            let res = cfg.type === '1800' ? check1800(reversedData[i].draw) : check9000(reversedData[i].draw);
-            let isWin = (cfg.type === '1800' && res.puffs >= 3) || (cfg.type === '9000' && res.pass);
-            
-            if (i === 0) {
-                if (isWin) continuousHits++; else losingStreak++;
-            } else {
-                if (latestIsWin && isWin) continuousHits++;
-                else if (!latestIsWin && !isWin) losingStreak++;
-                else break;
-            }
-        }
-
-        // 基本機率
         let P_Win = totalDraws > 0 ? (wins / totalDraws) : (cfg.type === '1800' ? 0.15 : 0.25);
-        
-        // 模型 A: 拉普拉斯與均值回歸 (Laplace Smoothing & Mean Reversion)
-        let modelA_Prob = Math.min(P_Win + (losingStreak * 0.12), 0.99);
+        let modelA_Prob = Math.min(P_Win + (losingStreak * 0.10), 0.99);
 
-        // 模型 B: 馬可夫鏈 (Markov Chain Transition)
         let P_Win_Given_Win = (WW + WL > 0) ? (WW / (WW + WL)) : 0;
         let P_Win_Given_Lose = (LW + LL > 0) ? (LW / (LW + LL)) : 0;
         let modelB_Prob = latestIsWin ? P_Win_Given_Win : P_Win_Given_Lose;
 
-        // 模型 C: 凱利公式期望值 (Kelly EV)
         let costPerRound = cfg.totalCost * (1 - cfg.rebate / 100);
         let minPrize = cfg.type === '1800' ? 3 * cfg.unitPrize * cfg.unitBet : 2 * cfg.unitPrize * cfg.unitBet;
-        // 使用馬可夫動態機率來算 EV 最準
         let EV = (modelB_Prob * minPrize) - ((1 - modelB_Prob) * costPerRound);
-        
         let maxFlat = Math.floor(minPrize / costPerRound);
+
+        // 模型 D 數據
+        let P_Triple = totalDraws > 0 ? (tripleWins / totalDraws) : 0.08;
+        let tripleNextProb = Math.min(P_Triple + (tripleLosingStreak * 0.05), 0.99); // 連續沒出偏態，機率上升
 
         return { 
             cfg, totalDraws, latestIsWin, continuousHits, losingStreak, 
-            modelA_Prob, P_Win_Given_Win, P_Win_Given_Lose, EV, maxFlat, costPerRound, minPrize 
+            modelA_Prob, P_Win_Given_Win, P_Win_Given_Lose, EV, maxFlat, costPerRound, minPrize,
+            tripleLosingStreak, tripleNextProb
         };
     }
 
-    // 建立三維預測 HTML 面板
     function getPredictionHtml(analysis) {
-        let { cfg, totalDraws, latestIsWin, continuousHits, losingStreak, modelA_Prob, P_Win_Given_Win, P_Win_Given_Lose, EV, maxFlat, costPerRound, minPrize } = analysis;
+        let { cfg, totalDraws, latestIsWin, continuousHits, losingStreak, modelA_Prob, P_Win_Given_Win, P_Win_Given_Lose, EV, maxFlat, costPerRound, minPrize, tripleLosingStreak, tripleNextProb } = analysis;
         
-        if (totalDraws < 5) {
-            return `<div class="ai-box" style="text-align:center; color:#94a3b8;">⏳ 歷史數據不足，請匯入開獎紀錄</div>`;
-        }
+        if (totalDraws < 5) return `<div class="ai-box" style="text-align:center; color:#94a3b8; padding:20px;">⏳ 歷史數據不足，請先匯入開獎紀錄</div>`;
 
-        // --- 模型 A 邏輯 (均值回歸) ---
-        let adviceA = "";
-        let colorA = "";
-        if (losingStreak >= maxFlat) {
-            let requiredMulti = Math.max(Math.ceil((losingStreak * costPerRound) / (minPrize - costPerRound)), 2);
-            adviceA = `極端漏值！建議 ${requiredMulti} 倍保本倍投`; colorA = "bg-red-light";
-        } else if (losingStreak >= 2) {
-            adviceA = `回歸拉力強大，建議 1 倍平推狙擊`; colorA = "bg-green-light";
+        // 模型 A
+        let adviceA = losingStreak >= maxFlat ? `漏值極端，建議倍投攔截` : (losingStreak >= 2 ? `均值拉力足夠，建議平推` : `均值重置中`);
+        
+        // 模型 B
+        let adviceB = latestIsWin ? `連莊機率 ${(P_Win_Given_Win*100).toFixed(0)}%，可試探` : `冷盤轉移期`;
+
+        // 模型 C
+        let adviceC = EV > 0 ? `EV正數 (+${EV.toFixed(0)})，准許投資` : `EV負數 (${EV.toFixed(0)})，莊家優勢`;
+
+        // 模型 D (偏態同柱三顆預警)
+        let alertD = false;
+        let adviceD = "";
+        if (tripleNextProb > 0.3) {
+            alertD = true;
+            adviceD = `⚠️ 極端同柱三顆機率高達 ${(tripleNextProb*100).toFixed(0)}%！極易發生斷柱！`;
         } else {
-            adviceA = `無漏值優勢，不建議追漏`; colorA = "bg-gray-light";
+            adviceD = `偏態機率低，球數分布預期平均`;
         }
 
-        // --- 模型 B 邏輯 (馬可夫動能) ---
-        let adviceB = "";
-        let colorB = "";
-        if (latestIsWin) {
-            if (P_Win_Given_Win > 0.25) {
-                adviceB = `連莊動能強 (${(P_Win_Given_Win*100).toFixed(0)}%)，可 0.5倍 順勢追熱`; colorB = "bg-yellow-light";
-            } else {
-                adviceB = `連莊機率過低，熱度已散，建議觀望`; colorB = "bg-gray-light";
-            }
-        } else {
-            adviceB = `處於冷盤轉移期，等待信號`; colorB = "bg-gray-light";
-        }
-
-        // --- 模型 C 邏輯 (凱利期望值) ---
-        let adviceC = "";
-        let colorC = "";
-        if (EV > 0) {
-            adviceC = `EV為正 (+${EV.toFixed(0)})，符合數學獲利邊界，准許進場`; colorC = "bg-green-light";
-        } else {
-            adviceC = `EV為負 (${EV.toFixed(0)})，莊家佔優，嚴禁下注`; colorC = "bg-red-light";
-        }
-
-        // --- 🤖 AI 綜合決策共識 ---
+        // --- 🎯 綜合最終決策 ---
         let consensusTitle = "";
         let consensusDesc = "";
         let consensusColor = "";
 
-        if (EV > 0 && losingStreak >= 2) {
+        if (alertD && cfg.type === '9000') {
+            // 9000碰最怕斷柱
+            consensusTitle = "🚨 致命警戒：斷柱型偏態逼近！";
+            consensusDesc = `模型 D 偵測到「同柱三顆」機率飆升，這在數學上 100% 保證會產生空柱！9000碰必定失敗，強烈建議【無條件空手】或轉投單碰。`;
+            consensusColor = "#991b1b; background:#fee2e2; border-color:#ef4444;";
+        } else if (EV > 0 && losingStreak >= 2) {
+            let requiredMulti = Math.max(Math.ceil((losingStreak * costPerRound) / (minPrize - costPerRound)), 1);
+            let act = requiredMulti > 1 ? `保本倍投 ${requiredMulti} 倍` : `平推 1 倍`;
             consensusTitle = "🔥 S級狙擊指令：果斷進場";
-            consensusDesc = `期望值為正且均值拉力足夠。請下注 1 倍平推（若超過容錯則啟動倍投）。`;
+            consensusDesc = `期望值為正且均值拉力強。模型建議：【${act}】。`;
             consensusColor = "#059669; background:#dcfce7; border-color:#34d399;";
         } else if (latestIsWin && P_Win_Given_Win > 0.2) {
             consensusTitle = "⚠️ B級動能指令：輕倉試探";
-            consensusDesc = `捕捉連莊動能，但期望值不高。若要玩，請嚴格縮小注碼 (如 0.5倍) 當買保險。`;
+            consensusDesc = `捕捉連莊熱度，但期望值不高。若操作建議【縮碼 0.5倍】試探。`;
             consensusColor = "#d97706; background:#fef9c3; border-color:#fcd34d;";
-        } else if (EV < 0 && losingStreak < 2) {
-            consensusTitle = "❄️ 絕對防禦指令：空手觀望";
-            consensusDesc = `目前盤勢處於莊家絕對優勢區，進場等於送錢，請鎖死本金等待時機！`;
-            consensusColor = "#dc2626; background:#fee2e2; border-color:#fca5a5;";
         } else {
-             consensusTitle = "👀 觀察指令：耐心等待";
-             consensusDesc = `數學模型出現分歧，未達必勝條件，現金為王。`;
+             consensusTitle = "❄️ 絕對防禦指令：空手觀望";
+             consensusDesc = `盤勢處於莊家絕對收割期，進場等於送錢，請鎖死本金！`;
              consensusColor = "#475569; background:#f1f5f9; border-color:#cbd5e1;";
         }
 
         return `
             <div class="ai-box">
-                <div class="ai-box-title">🧠 三維量化交易演算引擎</div>
+                <div class="ai-box-title">🧠 四維量化交易演算引擎</div>
                 
                 <div class="math-model model-a">
                     <div class="model-header">
-                        <span class="model-name">A. 均值回歸 (Laplace Smoothing)</span>
+                        <span class="model-name">A. 均值回歸 (Laplace)</span>
                         <span class="model-formula">P=(W+1)/(N+2)</span>
                     </div>
-                    <div class="model-result">狀態：連未開 ${losingStreak} 期</div>
-                    <div class="model-advice ${colorA}">${adviceA}</div>
+                    <div class="model-desc">連漏 ${losingStreak} 期 👉 ${adviceA}</div>
                 </div>
 
                 <div class="math-model model-b">
                     <div class="model-header">
-                        <span class="model-name">B. 馬可夫鏈 (Markov Chain)</span>
-                        <span class="model-formula">P(S_t|S_t-1)</span>
+                        <span class="model-name">B. 馬可夫鏈 (Markov)</span>
+                        <span class="model-formula">P(S_t|S_{t-1})</span>
                     </div>
-                    <div class="model-result">狀態：${latestIsWin ? '上一期開出' : '上一期未開'}</div>
-                    <div class="model-advice ${colorB}">${adviceB}</div>
+                    <div class="model-desc">上期狀態: ${latestIsWin?'開出':'未開'} 👉 ${adviceB}</div>
                 </div>
 
                 <div class="math-model model-c">
@@ -432,8 +438,15 @@
                         <span class="model-name">C. 凱利期望值 (Kelly EV)</span>
                         <span class="model-formula">EV=(P*Win)-Loss</span>
                     </div>
-                    <div class="model-result">單期期望值：${EV > 0 ? '+'+EV.toFixed(1) : EV.toFixed(1)} 元</div>
-                    <div class="model-advice ${colorC}">${adviceC}</div>
+                    <div class="model-desc">單期預期利潤 👉 ${adviceC}</div>
+                </div>
+
+                <div class="math-model model-d">
+                    <div class="model-header">
+                        <span class="model-name">D. 泊松偏態 (Poisson Skew)</span>
+                        <span class="model-formula">同柱三顆預警</span>
+                    </div>
+                    <div class="model-desc ${alertD ? 'alert' : ''}">已 ${tripleLosingStreak} 期無偏態 👉 ${adviceD}</div>
                 </div>
 
                 <div class="ai-consensus" style="${consensusColor}">
@@ -486,14 +499,17 @@
             
             let status = "";
             let cssClass = "";
-            if (a.EV > 0 && a.losingStreak >= 2) {
-                status = `🎯 最佳狙擊點 (期望值為正) 👉 建議：進場平推或倍投`;
+            if (a.tripleNextProb > 0.3 && a.cfg.type === '9000') {
+                status = `🚨 致命警戒：斷柱偏態逼近 👉 絕對迴避！`;
+                cssClass = "hot";
+            } else if (a.EV > 0 && a.losingStreak >= 2) {
+                status = `🎯 最佳狙擊點 (EV>0) 👉 建議進場`;
                 cssClass = "cold";
             } else if (a.latestIsWin && a.P_Win_Given_Win > 0.2) {
-                status = `🔥 具備連莊動能 👉 建議：縮碼輕倉試探`;
+                status = `🔥 具備連莊動能 👉 輕倉試探`;
                 cssClass = "hot";
             } else {
-                status = `❄️ 莊家優勢盤整中 👉 建議：絕對空手觀望`;
+                status = `❄️ 莊家收割期 👉 空手觀望`;
             }
 
             html += `
@@ -532,7 +548,7 @@
         });
         renderSettingsPanel();
         renderDashboard();
-        alert("設定儲存成功！三維量化引擎已同步更新預測。");
+        alert("設定儲存成功！四維量化引擎已同步更新預測。");
     }
 
     onSnapshot(collection(db, "matrix_systems"), (snapshot) => {
