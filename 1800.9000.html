@@ -91,7 +91,7 @@
         .setting-item input:disabled { background: #f1f5f9; color: #64748b; }
         .setting-actions { display: flex; gap: 10px; align-items: center; margin-top: 12px; flex-wrap: wrap; border-top: 1px solid #e2e8f0; padding-top: 12px; }
 
-        .form-row { display: flex; flex-wrap: gap; gap: 12px; margin-bottom: 12px; }
+        .form-row { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 12px; }
         .form-group { flex: 1; min-width: 170px; display: flex; flex-direction: column; gap: 4px; }
         .form-group label { font-size: 11px; font-weight: 800; color: #334155; }
         .form-group input { padding: 8px 10px; background: #ffffff; border: 1.5px solid #cbd5e1; color: var(--text-main); border-radius: 6px; font-size: 14px; outline: none; font-family: monospace; font-weight: 600; }
@@ -114,7 +114,7 @@
         .badge-warning { background: #feefc3; color: #b06000; padding: 4px 8px; border-radius: 6px; font-weight: bold; }
         .badge-danger { background: #fce8e6; color: #c5221f; padding: 4px 8px; border-radius: 6px; font-weight: bold; }
         .locked-text { color: var(--danger-color); font-size: 12px; font-weight: bold; }
-        textarea { width: 100%; height: 80px; padding: 8px; box-sizing: border-box; border: 1.5px solid #cbd5e1; border-radius: 6px; font-family: monospace; font-size: 13px; margin-bottom: 8px; }
+        textarea { width: 100%; height: 90px; padding: 8px; box-sizing: border-box; border: 1.5px solid #cbd5e1; border-radius: 6px; font-family: monospace; font-size: 13px; margin-bottom: 8px; }
 
         .num-container { display: flex; gap: 5px; justify-content: center; flex-wrap: wrap; align-items: center; }
         .num-ball { width: var(--ball-size); height: var(--ball-size); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 900; background: #ffffff; color: #1e293b; font-family: monospace; border: 1.5px solid #cbd5e1; box-shadow: 0 2px 4px rgba(0,0,0,0.04); }
@@ -175,9 +175,11 @@
     <!-- 批量匯入面板 -->
     <div class="batch-panel" id="batch-input-panel">
         <h3>📋 多天歷史開獎號碼整頁貼上一鍵導入</h3>
-        <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 6px;">格式範例 (每行一筆)：<code>2026-09-10 07 09 12 15 27</code> 或使用逗號</div>
-        <textarea id="batch-text" placeholder="請直接將多行歷史資料貼在這邊..."></textarea>
-        <button class="btn-action" onclick="batchImport()">⚡ 一鍵極速解析並匯入多期</button>
+        <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 6px;">
+            支援多種格式 (每行一筆)：<code>2026-09-10 07 09 12 15 27</code> 或逗號分隔 <code>2026/09/10, 07, 09, 12, 15, 27</code>
+        </div>
+        <textarea id="batch-text" placeholder="請直接將多行歷史資料貼在這邊...&#10;2026-09-09 03, 11, 22, 31, 38&#10;2026-09-10 07 09 12 15 27"></textarea>
+        <button class="btn-action" onclick="batchImport()">⚡ 一鍵智慧解析並批次匯入多期</button>
     </div>
 
     <!-- 統計看板 -->
@@ -486,6 +488,7 @@
         }
     }
 
+    // 升級版：智慧型多行批次匯入解析器
     window.batchImport = async function() {
         let text = document.getElementById('batch-text').value.trim();
         if (!text) return alert("請先貼上歷史開獎內容！");
@@ -495,26 +498,45 @@
         let count = 0;
 
         lines.forEach(line => {
-            let match = line.match(/^(\d{4}[-/]\d{1,2}[-/]\d{1,2})/);
-            if (match) {
-                let date = match[1].replace(/\//g, '-');
-                let nums = line.match(/\b(0?[1-9]|[1-3][0-9])\b/g);
-                if (nums && nums.length >= 5) {
-                    let draw = nums.slice(0, 5).map(n => parseInt(n, 10)).sort((a,b)=>a-b);
-                    let recordId = `${currentSpace}_${date}`;
-                    let docRef = doc(db, "matrix_systems", recordId);
-                    batch.set(docRef, { id: recordId, space: currentSpace, date: date, draw: draw });
-                    count++;
+            let cleanLine = line.trim();
+            if (!cleanLine) return;
+
+            // 抓出開獎日期 (支援 YYYY-MM-DD 或 YYYY/MM/DD)
+            let dateMatch = cleanLine.match(/(\d{4}[-/]\d{1,2}[-/]\d{1,2})/);
+            if (dateMatch) {
+                let date = dateMatch[1].replace(/\//g, '-');
+                
+                // 抓出整行中所有的數字，並過濾掉日期年份的殘留數字
+                let allNums = cleanLine.match(/\d+/g);
+                if (allNums) {
+                    // 若第一個數字是年份的前兩碼（例如 2026 的 20 或 2026），排除掉日期部分所佔的數字
+                    // 聰明做法：直接找出數值在 01 ~ 39 之間的號碼作為開獎號碼
+                    let validBalls = allNums
+                        .map(n => parseInt(n, 10))
+                        .filter(n => n >= 1 && n <= 39 && n !== 2026 && n !== 2025 && n !== 2024);
+
+                    // 如果剛好抓到 5 個或以上，取前 5 個並排序
+                    if (validBalls.length >= 5) {
+                        let draw = validBalls.slice(0, 5).sort((a, b) => a - b);
+                        let recordId = `${currentSpace}_${date}`;
+                        let docRef = doc(db, "matrix_systems", recordId);
+                        batch.set(docRef, { id: recordId, space: currentSpace, date: date, draw: draw });
+                        count++;
+                    }
                 }
             }
         });
 
         if (count > 0) {
-            await batch.commit();
-            alert(`🎉 成功批量匯入 ${count} 筆開獎紀錄至雲端！`);
-            document.getElementById('batch-text').value = '';
+            try {
+                await batch.commit();
+                alert(`🎉 成功批量匯入 ${count} 筆開獎紀錄至雲端！`);
+                document.getElementById('batch-text').value = '';
+            } catch(e) {
+                alert("批量寫入雲端失敗：" + e.message);
+            }
         } else {
-            alert("未能成功解析內容，請檢查格式是否為「日期 + 5個號碼」！");
+            alert("未能成功解析內容！請確認每行格式包含「日期」與「5個開獎號碼」（例如：2026-09-10 07 09 12 15 27）。");
         }
     }
 
