@@ -75,7 +75,7 @@
         .dash-card { background: rgba(255,255,255,0.1); border-radius: 8px; padding: 10px; border: 1px solid rgba(255,255,255,0.1); font-size: 12px; }
         .dash-card h4 { color: #a5b4fc; font-size: 12px; margin-bottom: 4px; }
 
-        /* 🔥 獨立的偏態雷達看板 (升級：精確顯示各柱機率) */
+        /* 偏態雷達看板 */
         .radar-panel {
             background: linear-gradient(135deg, #fef2f2, #fff1f2);
             border: 2px dashed #fca5a5;
@@ -92,24 +92,9 @@
         .radar-card h4 { color: #dc2626; font-size: 13px; font-weight: 900; margin-bottom: 6px; display:flex; justify-content:space-between; align-items:center;}
         .radar-highlight { color: #b91c1c; font-weight: 900; font-size: 14px; }
 
-        /* 各柱獨立機率 2x2 網格 */
-        .col-prob-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 6px;
-            margin: 8px 0;
-        }
-        .col-prob-item {
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 6px;
-            padding: 6px 8px;
-            font-size: 11px;
-        }
-        .col-prob-item.danger-col {
-            background: #fff1f2;
-            border-color: #fca5a5;
-        }
+        .col-prob-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 8px 0; }
+        .col-prob-item { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 6px 8px; font-size: 11px; }
+        .col-prob-item.danger-col { background: #fff1f2; border-color: #fca5a5; }
         .col-prob-item .col-title { font-weight: bold; color: #475569; margin-bottom: 2px; }
         .col-prob-item.danger-col .col-title { color: #dc2626; }
         .col-prob-item .col-val { font-weight: 900; font-size: 13px; color: #0284c7; }
@@ -123,6 +108,13 @@
         .strategy-box { margin-top: 10px; padding: 10px; border-radius: 8px; text-align: center; font-weight: 900; font-size: 13px; line-height: 1.5; }
         .strategy-box h6 { font-size:14px; margin:0 0 4px 0; }
 
+        /* 實單記帳看板 */
+        .ledger-stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 12px; }
+        @media (min-width: 768px) { .ledger-stats-grid { grid-template-columns: repeat(4, 1fr); } }
+        .ledger-stat-card { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px; text-align: center; }
+        .ledger-stat-card h4 { font-size: 11px; color: #64748b; margin-bottom: 4px; }
+        .ledger-stat-card p { font-size: 16px; font-weight: 900; font-family: monospace; margin: 0; }
+
         .form-row { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
         @media (min-width: 768px) { .form-row { flex-direction: row; } }
         .form-group label { font-size: 11px; font-weight: 800; color: #334155; margin-bottom: 2px; }
@@ -131,11 +123,12 @@
         textarea { width: 100%; height: 80px; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-family: monospace; font-size: 12px; margin-bottom: 8px; }
         .btn-main { background: linear-gradient(135deg, #0284c7, #2563eb); color: white; border: none; padding: 10px; font-size: 13px; font-weight: 900; border-radius: 8px; cursor: pointer; width: 100%; }
 
+        /* 賽道統計看板 (還原乾淨四格) */
         .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 14px; }
         @media (min-width: 768px) { .stats-grid { grid-template-columns: repeat(4, 1fr); } }
-        .stat-item { background: #fff; padding: 10px; border-radius: 8px; text-align: center; border: 1px solid #e2e8f0; }
+        .stat-item { background: #fff; padding: 12px; border-radius: 8px; text-align: center; border: 1px solid #e2e8f0; }
         .stat-item h3 { font-size: 11px; color: #64748b; margin-bottom: 4px; font-weight:bold;}
-        .stat-item p { font-size: 16px; font-weight: 900; font-family: monospace; color: #0f172a; margin:0;}
+        .stat-item p { font-size: 18px; font-weight: 900; font-family: monospace; margin:0;}
 
         .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 8px; border: 1px solid #e2e8f0; }
         table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 650px; }
@@ -168,7 +161,7 @@
         <button id="btn-arena" class="mode-btn arena-btn active" onclick="switchSpace('arena')">⚔️ AI 科技擂台 (設定/記帳)</button>
     </div>
 
-    <!-- 💡 全局戰略看板 -->
+    <!-- 💡 全局戰略看板 (僅擂台顯示) -->
     <div id="global-strategy" class="strategy-dashboard" style="display:none;">
         <h3>💡 莊家全局戰略總覽 (純機率進場決策)</h3>
         <div class="dashboard-grid" id="dashboard-content">
@@ -176,17 +169,19 @@
         </div>
     </div>
 
-    <!-- 📝 我的真實下注記帳本 -->
+    <!-- 📝 我的真實下注記帳與損益中樞 (移至擂台設定專屬) -->
     <div class="panel" id="actual-bet-panel" style="display:none;">
-        <div class="panel-title">📝 我的真實下注記帳本</div>
-        <div style="font-size:11px; color:#64748b; margin-bottom:10px; font-weight:bold;">在此輸入您每天「真實下注」的倍數。若當天觀望沒買，請輸入 0。</div>
+        <div class="panel-title">📝 我的真實下注記帳與損益中樞</div>
+        <div style="font-size:11px; color:#64748b; margin-bottom:10px; font-weight:bold;">
+            在此輸入您每天「真實下注」的倍數。若當天觀望沒買請輸入 0。實單成本與獲利將於此處獨立結算！
+        </div>
         <div class="form-row">
             <div class="form-group">
-                <label>選擇日期</label>
+                <label>選擇開獎日期</label>
                 <input type="date" id="ledger-date">
             </div>
             <div class="form-group">
-                <label>選擇空間</label>
+                <label>選擇下注空間</label>
                 <select id="ledger-space" style="color: var(--purple-color); font-weight:bold;">
                     <option value="tt-1800">📊 天天樂 1800碰</option>
                     <option value="tt-9000">🚀 天天樂 9000碰</option>
@@ -195,11 +190,19 @@
                 </select>
             </div>
             <div class="form-group">
-                <label>真實下注倍數 (0=觀望)</label>
+                <label>實際下注倍數 (0=觀望沒下)</label>
                 <input type="number" id="ledger-bet" step="0.5" value="1">
             </div>
         </div>
-        <button class="btn-main" onclick="saveLedger()" style="background: linear-gradient(135deg, #10b981, #059669);">💰 寫入真實帳本 (重算損益)</button>
+        <button class="btn-main" onclick="saveLedger()" style="background: linear-gradient(135deg, #10b981, #059669); margin-bottom:12px;">💰 記錄實單 (立即更新真實損益)</button>
+        
+        <!-- 真實損益統計面板 -->
+        <div class="ledger-stats-grid" id="ledger-summary-container">
+            <div class="ledger-stat-card"><h4>實單下注期數</h4><p id="ledger-count">0 期</p></div>
+            <div class="ledger-stat-card"><h4>真實投入成本</h4><p id="ledger-cost" style="color:#475569;">$0</p></div>
+            <div class="ledger-stat-card"><h4>真實中獎彩金</h4><p id="ledger-prize" style="color:#0284c7;">$0</p></div>
+            <div class="ledger-stat-card"><h4>真實實收淨損益</h4><p id="ledger-profit" style="color:#64748b;">$0</p></div>
+        </div>
     </div>
 
     <!-- 集中參數設定 & 三維預測 -->
@@ -213,12 +216,12 @@
         
         <div class="action-bar">
             <input type="password" id="input-pwd" placeholder="密碼 0000">
-            <button class="btn-main" onclick="unlockSettings()" style="flex:1; background:#64748b;">解鎖</button>
+            <button class="btn-main" onclick="unlockSettings()" style="flex:1; background:#64748b;">解鎖修改</button>
             <button class="btn-main" id="btn-save" onclick="saveSettings()" style="display: none; flex:2; background:#0284c7;">💾 儲存並更新高數預測</button>
         </div>
     </div>
 
-    <!-- 🚨 獨立偏態雷達：移至批次匯入正上方，精算各柱機率 -->
+    <!-- 🚨 獨立偏態雷達：在批次匯入正上方 -->
     <div id="radar-panel" class="radar-panel" style="display:none;">
         <h3>🚨 極端偏態雷達 (同柱三顆斷柱預警)</h3>
         <div class="radar-grid" id="radar-content">
@@ -238,35 +241,33 @@
                 <option value="539-9000">🚀 五三九 9000碰</option>
             </select>
         </div>
-        <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 6px;">批次匯入的資料，真實下注預設為 0 (觀望)。</div>
+        <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 6px;">批次匯入之歷史紀錄，預設真實下注皆為 0 (不計入實單損益)。</div>
         <textarea id="batch-text" placeholder="格式: 2026-09-10 07 09 12 15 27"></textarea>
         <button class="btn-main" onclick="batchImport()" style="background: linear-gradient(135deg, #7c3aed, #4f46e5);">⚡ 智慧解析並匯入</button>
     </div>
 
+    <!-- 單筆開獎輸入 (各賽道顯示) -->
     <div class="panel" id="single-input-panel" style="display:none;">
-        <div class="panel-title">📝 單筆開獎與實單填寫</div>
+        <div class="panel-title">📝 單筆開獎號碼補填</div>
         <div class="form-row">
             <div class="form-group" style="flex: 1;">
-                <label>日期</label>
+                <label>開獎日期</label>
                 <input type="date" id="input-date">
             </div>
             <div class="form-group" style="flex: 2;">
-                <label>5 碼號碼 (逗號/空格)</label>
+                <label>5 碼開獎號碼 (逗號/空格)</label>
                 <input type="text" id="input-balls" placeholder="例: 06 07 14 28 33">
-            </div>
-            <div class="form-group" style="flex: 1;">
-                <label>真實下注倍數</label>
-                <input type="number" id="input-mybet" step="0.5" value="1" style="background:#ecfdf5; border-color:#a7f3d0; color:#065f46;">
             </div>
         </div>
         <button class="btn-main" onclick="addNewRecord()">☁️ 儲存並結算</button>
     </div>
 
-    <!-- 📊 真實統計看板 -->
+    <!-- 📊 賽道統計看板 (還原顯示：期數、三碰、四碰、營利) -->
     <div class="stats-grid" id="stats-container" style="display:none;"></div>
 
+    <!-- 歷史結算表 (各賽道顯示) -->
     <div class="panel" id="history-panel" style="display:none;">
-        <div class="panel-title">📊 真實損益結算表</div>
+        <div class="panel-title">📊 歷史矩陣戰績對照表</div>
         <div class="table-wrap">
             <table>
                 <thead id="table-head"></thead>
@@ -328,6 +329,7 @@
             renderSettingsPanel();
             renderDashboard();
             renderRadar();
+            renderLedgerSummary();
         } else {
             document.getElementById('batch-target-space').value = spaceKey;
             renderMain();
@@ -339,7 +341,7 @@
         document.getElementById(`cfg-cost-${key}`).value = unitBet * spaceConfigs[key].basePuffs;
     }
 
-    // --- 🚨 偏態雷達分析函式 (精算各柱三顆獨立機率) ---
+    // 🚨 偏態雷達分析函式 (精算各柱機率)
     function analyzeRadar(gameType) {
         let spaceKey = gameType + '-9000';
         let data = [...(spaceData[spaceKey] || [])].sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -349,7 +351,6 @@
         let tripleLosingStreak = 0;
         let hitTripleBefore = false;
         
-        // 追蹤各柱出現 >=3 顆的次數與各自的連漏期數
         let colHits = { q1: 0, q2: 0, q3: 0, q4: 0 };
         let colStreaks = { q1: 0, q2: 0, q3: 0, q4: 0 };
         let colFound = { q1: false, q2: false, q3: false, q4: false };
@@ -368,7 +369,6 @@
                 else hitTripleBefore = true;
             }
 
-            // 各柱獨立連漏期數
             if (!colFound.q1) { if (q1 < 3) colStreaks.q1++; else colFound.q1 = true; }
             if (!colFound.q2) { if (q2 < 3) colStreaks.q2++; else colFound.q2 = true; }
             if (!colFound.q3) { if (q3 < 3) colStreaks.q3++; else colFound.q3 = true; }
@@ -389,21 +389,16 @@
             if (q4>=3) colHits.q4++;
         });
 
-        // 理論基準 (超幾何分配): 1柱(9顆球)約7.0%, 2~4柱(10顆球)各約9.6%
         let theoBase = { q1: 0.0703, q2: 0.0956, q3: 0.0956, q4: 0.0956 };
-        
-        // 各柱獨立動態機率 = (50% 理論 + 50% 歷史經驗) + (各柱獨立連漏期數 * 0.5% 均值拉力)
         let colProbs = {};
         ['q1', 'q2', 'q3', 'q4'].forEach(k => {
             let empRate = totalDraws > 0 ? (colHits[k] / totalDraws) : theoBase[k];
             let baseRate = 0.5 * theoBase[k] + 0.5 * empRate;
-            colProbs[k] = Math.min(baseRate + (colStreaks[k] * 0.005), 0.50); // 單柱最高上限50%
+            colProbs[k] = Math.min(baseRate + (colStreaks[k] * 0.005), 0.50);
         });
 
-        // 互斥事件求和：總體爆發機率
         let tripleNextProb = Math.min(colProbs.q1 + colProbs.q2 + colProbs.q3 + colProbs.q4, 0.95);
 
-        // 找出機率最高 (最危險) 的柱位
         let maxProb = Math.max(colProbs.q1, colProbs.q2, colProbs.q3, colProbs.q4);
         let dangerCols = [];
         if (colProbs.q1 === maxProb) dangerCols.push("第1柱 (01-09)");
@@ -451,7 +446,6 @@
                         總體下期爆發機率：<span class="radar-highlight">${(r.tripleNextProb * 100).toFixed(1)}%</span>
                     </div>
 
-                    <!-- 各區獨立機率 2x2 面板 -->
                     <div class="col-prob-grid">
                         <div class="col-prob-item ${isMaxQ1 ? 'danger-col' : ''}">
                             <div class="col-title">第1柱 (01-09) ${isMaxQ1 ? '⚠️' : ''}</div>
@@ -666,6 +660,39 @@
         container.innerHTML = html;
     }
 
+    // 💰 獨立計算真實實單損益
+    function renderLedgerSummary() {
+        let totalCount = 0;
+        let totalCost = 0;
+        let totalPrize = 0;
+
+        Object.keys(spaceData).forEach(key => {
+            let cfg = spaceConfigs[key];
+            let list = spaceData[key] || [];
+            list.forEach(item => {
+                let myBet = item.myBet !== undefined ? parseFloat(item.myBet) : 0;
+                if (myBet > 0) {
+                    totalCount++;
+                    let roundCost = myBet * cfg.totalCost * (1 - cfg.rebate / 100);
+                    totalCost += roundCost;
+
+                    let res = cfg.type === '1800' ? check1800(item.draw) : check9000(item.draw);
+                    let roundPrize = res.puffs * cfg.unitPrize * myBet;
+                    totalPrize += roundPrize;
+                }
+            });
+        });
+
+        let netProfit = totalPrize - totalCost;
+        let profitColor = netProfit > 0 ? '#059669' : (netProfit < 0 ? '#dc2626' : '#64748b');
+
+        document.getElementById('ledger-count').innerText = `${totalCount} 期`;
+        document.getElementById('ledger-cost').innerText = `$${Math.round(totalCost).toLocaleString()}`;
+        document.getElementById('ledger-prize').innerText = `$${Math.round(totalPrize).toLocaleString()}`;
+        document.getElementById('ledger-profit').innerText = `${netProfit >= 0 ? '+$' : '-$'}${Math.abs(Math.round(netProfit)).toLocaleString()}`;
+        document.getElementById('ledger-profit').style.color = profitColor;
+    }
+
     window.unlockSettings = function() {
         if (document.getElementById('input-pwd').value === "0000") {
             ['tt-1800', 'tt-9000', '539-1800', '539-9000'].forEach(key => {
@@ -693,6 +720,7 @@
         renderSettingsPanel();
         renderDashboard();
         renderRadar();
+        renderLedgerSummary();
         alert("設定儲存成功！");
     }
 
@@ -713,7 +741,7 @@
                 return;
             }
             await setDoc(docRef, { myBet: myBet }, { merge: true });
-            alert(`✅ 成功寫入真實帳本！\n實際下注：${myBet} 倍`);
+            alert(`✅ 成功寫入真實帳本！\n日期：${date}\n實際下注：${myBet} 倍`);
         } catch(e) {
             alert("寫入帳本失敗：" + e.message);
         }
@@ -727,6 +755,7 @@
             renderSettingsPanel();
             renderDashboard();
             renderRadar();
+            renderLedgerSummary();
         } else {
             renderMain();
         }
@@ -745,6 +774,7 @@
         return { pass, puffs: pass?2:0, text: pass?"過關":"斷柱", q1, q2, q3, q4 };
     }
 
+    // 🏆 各賽道結算渲染 (1800碰顯示：總期數、3碰、4碰、總營利)
     function renderMain() {
         if(currentSpace === 'arena') return;
         let cfg = spaceConfigs[currentSpace];
@@ -754,101 +784,100 @@
         let thead = document.getElementById('table-head');
         tbody.innerHTML = '';
         
-        let myTotalCost = 0;
-        let myTotalRevenue = 0;
-        let passCount = 0;
+        let costPerRound = cfg.totalCost * (1 - cfg.rebate / 100) * cfg.unitBet;
+        let totalCost = data.length * costPerRound;
+        let totalRevenue = 0;
 
         if (cfg.type === '1800') {
-            thead.innerHTML = `<tr><th>日期</th><th>開獎號碼</th><th>(10-18)</th><th>(20-29)</th><th>(其他)</th><th>結果</th><th>真實下注</th><th>真實損益</th><th>操作</th></tr>`;
+            let count3 = 0;
+            let count4 = 0;
+
+            thead.innerHTML = `<tr><th>日期</th><th>開獎號碼</th><th>第一柱(10-18)</th><th>第二柱(20-29)</th><th>第三柱(其它)</th><th>結果狀態</th><th>當期彩金</th><th>操作</th></tr>`;
             data.forEach(item => {
                 let res = check1800(item.draw);
-                if (res.puffs > 0) passCount++;
+                if (res.puffs === 3) count3++;
+                if (res.puffs === 4) count4++;
 
-                let myBet = item.myBet !== undefined ? item.myBet : 0;
-                let drawCost = myBet * cfg.totalCost * (1 - cfg.rebate / 100);
-                let drawPrize = res.puffs * cfg.unitPrize * myBet;
-                let roundProfit = drawPrize - drawCost;
-
-                myTotalCost += drawCost;
-                myTotalRevenue += drawPrize;
+                let prize = res.puffs * cfg.unitPrize * cfg.unitBet;
+                totalRevenue += prize;
 
                 let badge = res.puffs>=4 ? "bg-green" : (res.puffs>0 ? "bg-yellow" : "bg-red");
                 let ballsHtml = item.draw.map(n => `<div class="num-ball draw-ball">${String(n).padStart(2,'0')}</div>`).join('');
-                
-                let profitColor = roundProfit > 0 ? '#059669' : (roundProfit < 0 ? '#dc2626' : '#94a3b8');
-                let profitText = roundProfit > 0 ? `+${roundProfit.toLocaleString()}` : roundProfit.toLocaleString();
 
                 tbody.insertAdjacentHTML('beforeend', `
                     <tr>
                         <td style="font-weight:bold;">${item.date.slice(5)}</td>
                         <td><div class="num-container">${ballsHtml}</div></td>
-                        <td>${res.p1}</td><td>${res.p2}</td><td>${res.p3}</td>
+                        <td>${res.p1} 顆</td><td>${res.p2} 顆</td><td>${res.p3} 顆</td>
                         <td><span class="badge ${badge}">${res.text}</span></td>
-                        <td style="color:#0284c7; font-weight:900;">${myBet} 倍</td>
-                        <td style="color:${profitColor}; font-weight:900;">${myBet > 0 ? profitText : '-'}</td>
+                        <td style="color:${prize>0?'#059669':'#94a3b8'}; font-weight:900;">${prize>0?'+':''}${prize.toLocaleString()} 元</td>
                         <td><button onclick="deleteRecord('${item.id}')" style="background:none; border:none; color:red; font-size:18px; cursor:pointer;">×</button></td>
                     </tr>
                 `);
             });
+
+            let netProfit = totalRevenue - totalCost;
+
+            // 1800碰乾淨看板：總期數、3碰次數、4碰次數、總營利
+            document.getElementById('stats-container').innerHTML = `
+                <div class="stat-item"><h3>總期數</h3><p>${data.length} 期</p></div>
+                <div class="stat-item"><h3>3碰 次數</h3><p style="color:#d97706;">${count3} 次</p></div>
+                <div class="stat-item"><h3>4碰 次數</h3><p style="color:#059669;">${count4} 次</p></div>
+                <div class="stat-item"><h3>總營利結算</h3><p style="color:${netProfit>=0?'#059669':'#dc2626'}">${netProfit>=0?'+$':'-$'}${Math.abs(Math.round(netProfit)).toLocaleString()}</p></div>
+            `;
+
         } else {
-            thead.innerHTML = `<tr><th>日期</th><th>開獎號碼</th><th>(1-9)</th><th>(10-19)</th><th>(20-29)</th><th>(30-39)</th><th>結果</th><th>真實下注</th><th>真實損益</th><th>操作</th></tr>`;
+            let passCount = 0;
+
+            thead.innerHTML = `<tr><th>日期</th><th>開獎號碼</th><th>第1柱(01-09)</th><th>第2柱(10-19)</th><th>第3柱(20-29)</th><th>第4柱(30-39)</th><th>結果狀態</th><th>當期彩金</th><th>操作</th></tr>`;
             data.forEach(item => {
                 let res = check9000(item.draw);
                 if (res.pass) passCount++;
 
-                let myBet = item.myBet !== undefined ? item.myBet : 0;
-                let drawCost = myBet * cfg.totalCost * (1 - cfg.rebate / 100);
-                let drawPrize = res.puffs * cfg.unitPrize * myBet;
-                let roundProfit = drawPrize - drawCost;
-
-                myTotalCost += drawCost;
-                myTotalRevenue += drawPrize;
+                let prize = res.puffs * cfg.unitPrize * cfg.unitBet;
+                totalRevenue += prize;
 
                 let badge = res.pass ? "bg-green" : "bg-red";
                 let ballsHtml = item.draw.map(n => `<div class="num-ball draw-ball">${String(n).padStart(2,'0')}</div>`).join('');
-                
-                let profitColor = roundProfit > 0 ? '#059669' : (roundProfit < 0 ? '#dc2626' : '#94a3b8');
-                let profitText = roundProfit > 0 ? `+${roundProfit.toLocaleString()}` : roundProfit.toLocaleString();
 
                 tbody.insertAdjacentHTML('beforeend', `
                     <tr>
                         <td style="font-weight:bold;">${item.date.slice(5)}</td>
                         <td><div class="num-container">${ballsHtml}</div></td>
-                        <td>${res.q1}</td><td>${res.q2}</td><td>${res.q3}</td><td>${res.q4}</td>
+                        <td>${res.q1} 顆</td><td>${res.q2} 顆</td><td>${res.q3} 顆</td><td>${res.q4} 顆</td>
                         <td><span class="badge ${badge}">${res.text}</span></td>
-                        <td style="color:#0284c7; font-weight:900;">${myBet} 倍</td>
-                        <td style="color:${profitColor}; font-weight:900;">${myBet > 0 ? profitText : '-'}</td>
+                        <td style="color:${prize>0?'#059669':'#94a3b8'}; font-weight:900;">${prize>0?'+':''}${prize.toLocaleString()} 元</td>
                         <td><button onclick="deleteRecord('${item.id}')" style="background:none; border:none; color:red; font-size:18px; cursor:pointer;">×</button></td>
                     </tr>
                 `);
             });
+
+            let failCount = data.length - passCount;
+            let netProfit = totalRevenue - totalCost;
+
+            // 9000碰看板：總期數、過關次數、未過次數、總營利
+            document.getElementById('stats-container').innerHTML = `
+                <div class="stat-item"><h3>總期數</h3><p>${data.length} 期</p></div>
+                <div class="stat-item"><h3>中獎次數 (過)</h3><p style="color:#059669;">${passCount} 次</p></div>
+                <div class="stat-item"><h3>未中次數 (斷柱)</h3><p style="color:#dc2626;">${failCount} 次</p></div>
+                <div class="stat-item"><h3>總營利結算</h3><p style="color:${netProfit>=0?'#059669':'#dc2626'}">${netProfit>=0?'+$':'-$'}${Math.abs(Math.round(netProfit)).toLocaleString()}</p></div>
+            `;
         }
-        
-        let netProfit = myTotalRevenue - myTotalCost;
-        
-        document.getElementById('stats-container').innerHTML = `
-            <div class="stat-item"><h3>總期數</h3><p>${data.length}</p></div>
-            <div class="stat-item"><h3>歷史開出次數</h3><p>${passCount}</p></div>
-            <div class="stat-item"><h3>我的真實成本</h3><p style="color:#475569;">${myTotalCost.toLocaleString()}</p></div>
-            <div class="stat-item"><h3>我的真實營利</h3><p style="color:${netProfit>=0?'#059669':'#dc2626'}">${netProfit>=0?'+':''}${netProfit.toLocaleString()}</p></div>
-        `;
     }
 
     window.addNewRecord = async function() {
         let date = document.getElementById('input-date').value;
         let ballsStr = document.getElementById('input-balls').value.trim();
-        let myBet = parseFloat(document.getElementById('input-mybet').value);
-        if(isNaN(myBet)) myBet = 0;
 
-        if(!date || !ballsStr) return alert("請輸入日期與開獎號碼！");
+        if(!date || !ballsStr) return alert("請輸入開獎日期與開獎號碼！");
         let nums = ballsStr.match(/\d+/g);
         if(!nums || nums.length !== 5) return alert("開獎號碼必須剛好 5 個數字！");
         let draw = nums.map(n=>parseInt(n)).sort((a,b)=>a-b);
 
         let id = `${currentSpace}_${date}`;
         try {
-            await setDoc(doc(db, "matrix_systems", id), { id: id, space: currentSpace, date: date, draw: draw, myBet: myBet });
-            alert(`✅ 儲存成功！真實下注已記錄為 ${myBet} 倍。`);
+            await setDoc(doc(db, "matrix_systems", id), { id: id, space: currentSpace, date: date, draw: draw });
+            alert(`✅ 儲存成功！開獎紀錄已新增。`);
             document.getElementById('input-balls').value = '';
         } catch(e) {
             alert("儲存失敗：" + e.message);
@@ -856,7 +885,7 @@
     }
 
     window.deleteRecord = async function(id) {
-        if(confirm("確定刪除此筆紀錄？")) await deleteDoc(doc(db, "matrix_systems", id));
+        if(confirm("確定刪除此筆開獎紀錄？")) await deleteDoc(doc(db, "matrix_systems", id));
     }
 
     window.batchImport = async function() {
@@ -868,13 +897,13 @@
             if(matchDate) {
                 let date = matchDate[1].replace(/\//g, '-');
                 let nums = line.substring(matchDate[0].length).match(/\b(0?[1-9]|[1-3][0-9])\b/g);
-                if(nums && nums.length >= 5) records.push({ id: `${targetSpace}_${date}`, space: targetSpace, date, draw: nums.slice(0,5).map(n=>parseInt(n)).sort((a,b)=>a-b), myBet: 0 });
+                if(nums && nums.length >= 5) records.push({ id: `${targetSpace}_${date}`, space: targetSpace, date, draw: nums.slice(0,5).map(n=>parseInt(n)).sort((a,b)=>a-b) });
             }
         });
         if(records.length === 0) return alert("沒有抓到正確的格式喔！");
         
         let targetName = spaceConfigs[targetSpace].name;
-        if (!confirm(`準備匯入 ${records.length} 筆資料至【${targetName}】（預設下注為0觀望），確定？`)) return;
+        if (!confirm(`準備匯入 ${records.length} 筆資料至【${targetName}】，確定？`)) return;
 
         try {
             const CHUNK_SIZE = 100;
