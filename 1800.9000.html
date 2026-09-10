@@ -65,7 +65,6 @@
         }
         .dot { width: 7px; height: 7px; border-radius: 50%; background: #10b981; box-shadow: 0 0 6px #10b981; }
 
-        /* 五大空間切換選單 */
         .mode-switcher { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 8px; margin-bottom: 18px; }
         .mode-btn { padding: 10px 14px; border: 2px solid #cbd5e1; background: #ffffff; color: #475569; font-size: 13px; font-weight: 900; border-radius: 10px; cursor: pointer; transition: all 0.2s; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
         .mode-btn.active { border-color: var(--primary-color); background: var(--primary-color); color: #fff; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25); }
@@ -114,7 +113,7 @@
         .badge-warning { background: #feefc3; color: #b06000; padding: 4px 8px; border-radius: 6px; font-weight: bold; }
         .badge-danger { background: #fce8e6; color: #c5221f; padding: 4px 8px; border-radius: 6px; font-weight: bold; }
         .locked-text { color: var(--danger-color); font-size: 12px; font-weight: bold; }
-        textarea { width: 100%; height: 90px; padding: 8px; box-sizing: border-box; border: 1.5px solid #cbd5e1; border-radius: 6px; font-family: monospace; font-size: 13px; margin-bottom: 8px; }
+        textarea { width: 100%; height: 110px; padding: 8px; box-sizing: border-box; border: 1.5px solid #cbd5e1; border-radius: 6px; font-family: monospace; font-size: 13px; margin-bottom: 8px; }
 
         .num-container { display: flex; gap: 5px; justify-content: center; flex-wrap: wrap; align-items: center; }
         .num-ball { width: var(--ball-size); height: var(--ball-size); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 900; background: #ffffff; color: #1e293b; font-family: monospace; border: 1.5px solid #cbd5e1; box-shadow: 0 2px 4px rgba(0,0,0,0.04); }
@@ -142,7 +141,7 @@
         <button id="btn-arena" class="mode-btn arena-btn active" onclick="switchSpace('arena')">⚔️ AI 科技對決擂台</button>
     </div>
 
-    <!-- 集中參數設定面板 (移至擂台空間) -->
+    <!-- 集中參數設定面板 (在擂台空間) -->
     <div class="settings-panel" id="arena-settings-panel">
         <h3>
             <span>⚙️ 全系統戰略中樞與各空間參數設定面板</span>
@@ -176,10 +175,10 @@
     <div class="batch-panel" id="batch-input-panel">
         <h3>📋 多天歷史開獎號碼整頁貼上一鍵導入</h3>
         <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 6px;">
-            支援多種格式 (每行一筆)：<code>2026-09-10 07 09 12 15 27</code> 或逗號分隔 <code>2026/09/10, 07, 09, 12, 15, 27</code>
+            支援日期 + 5 個開獎號碼，自動精準辨識：<code>2026-09-10 07 09 12 15 27</code>
         </div>
-        <textarea id="batch-text" placeholder="請直接將多行歷史資料貼在這邊...&#10;2026-09-09 03, 11, 22, 31, 38&#10;2026-09-10 07 09 12 15 27"></textarea>
-        <button class="btn-action" onclick="batchImport()">⚡ 一鍵智慧解析並批次匯入多期</button>
+        <textarea id="batch-text" placeholder="請直接貼上多行歷史開獎號碼..."></textarea>
+        <button class="btn-action" onclick="batchImport()">⚡ 一鍵智慧精準解析並匯入</button>
     </div>
 
     <!-- 統計看板 -->
@@ -232,7 +231,6 @@
         'arena': []
     };
 
-    // 初始化載入本地暫存設定
     Object.keys(spaceConfigs).forEach(key => {
         let savedCfg = localStorage.getItem(`cfg_${key}`);
         if (savedCfg) spaceConfigs[key] = JSON.parse(savedCfg);
@@ -319,7 +317,6 @@
         alert("所有空間參數已成功儲存並同步連動結算！");
     }
 
-    // Firebase 實時連線
     onSnapshot(collection(db, "matrix_systems"), (snapshot) => {
         Object.keys(spaceData).forEach(k => spaceData[k] = []);
         snapshot.forEach(docSnap => {
@@ -488,55 +485,61 @@
         }
     }
 
-    // 升級版：智慧型多行批次匯入解析器
+    // 🏆 徹底修正：先分離日期再抓號碼，並支援 200+ 筆大資料分批寫入
     window.batchImport = async function() {
         let text = document.getElementById('batch-text').value.trim();
         if (!text) return alert("請先貼上歷史開獎內容！");
 
         let lines = text.split('\n');
-        let batch = writeBatch(db);
-        let count = 0;
+        let records = [];
 
         lines.forEach(line => {
             let cleanLine = line.trim();
             if (!cleanLine) return;
 
-            // 抓出開獎日期 (支援 YYYY-MM-DD 或 YYYY/MM/DD)
-            let dateMatch = cleanLine.match(/(\d{4}[-/]\d{1,2}[-/]\d{1,2})/);
-            if (dateMatch) {
-                let date = dateMatch[1].replace(/\//g, '-');
+            // 1. 精準抓取行首日期 (2026-09-10 或 2026/09/10)
+            let matchDate = cleanLine.match(/^(\d{4}[-/]\d{1,2}[-/]\d{1,2})/);
+            if (matchDate) {
+                let date = matchDate[1].replace(/\//g, '-');
+                // 將日期從字串切除，只留下後面的號碼部分
+                let remaining = cleanLine.substring(matchDate[0].length);
                 
-                // 抓出整行中所有的數字，並過濾掉日期年份的殘留數字
-                let allNums = cleanLine.match(/\d+/g);
-                if (allNums) {
-                    // 若第一個數字是年份的前兩碼（例如 2026 的 20 或 2026），排除掉日期部分所佔的數字
-                    // 聰明做法：直接找出數值在 01 ~ 39 之間的號碼作為開獎號碼
-                    let validBalls = allNums
-                        .map(n => parseInt(n, 10))
-                        .filter(n => n >= 1 && n <= 39 && n !== 2026 && n !== 2025 && n !== 2024);
-
-                    // 如果剛好抓到 5 個或以上，取前 5 個並排序
-                    if (validBalls.length >= 5) {
-                        let draw = validBalls.slice(0, 5).sort((a, b) => a - b);
-                        let recordId = `${currentSpace}_${date}`;
-                        let docRef = doc(db, "matrix_systems", recordId);
-                        batch.set(docRef, { id: recordId, space: currentSpace, date: date, draw: draw });
-                        count++;
-                    }
+                // 2. 從後續剩餘字串抓取開獎號碼
+                let ballMatches = remaining.match(/\b(0?[1-9]|[1-3][0-9])\b/g);
+                if (ballMatches && ballMatches.length >= 5) {
+                    let draw = ballMatches.slice(0, 5).map(n => parseInt(n, 10)).sort((a, b) => a - b);
+                    records.push({
+                        id: `${currentSpace}_${date}`,
+                        space: currentSpace,
+                        date: date,
+                        draw: draw
+                    });
                 }
             }
         });
 
-        if (count > 0) {
-            try {
+        if (records.length === 0) {
+            return alert("未能成功解析內容！請確認每行格式為：YYYY-MM-DD 01 02 03 04 05");
+        }
+
+        try {
+            // Firestore 批次寫入上限為 500 筆，我們切每 100 筆 commit 一次，確保 100% 寫入穩定
+            const CHUNK_SIZE = 100;
+            for (let i = 0; i < records.length; i += CHUNK_SIZE) {
+                let chunk = records.slice(i, i + CHUNK_SIZE);
+                let batch = writeBatch(db);
+                chunk.forEach(rec => {
+                    let docRef = doc(db, "matrix_systems", rec.id);
+                    batch.set(docRef, rec);
+                });
                 await batch.commit();
-                alert(`🎉 成功批量匯入 ${count} 筆開獎紀錄至雲端！`);
-                document.getElementById('batch-text').value = '';
-            } catch(e) {
-                alert("批量寫入雲端失敗：" + e.message);
             }
-        } else {
-            alert("未能成功解析內容！請確認每行格式包含「日期」與「5個開獎號碼」（例如：2026-09-10 07 09 12 15 27）。");
+
+            alert(`🎉 成功解析並精確匯入 ${records.length} 筆歷史紀錄至雲端！`);
+            document.getElementById('batch-text').value = '';
+        } catch (e) {
+            console.error(e);
+            alert("寫入雲端失敗：" + e.message);
         }
     }
 
