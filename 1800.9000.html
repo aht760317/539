@@ -8,7 +8,6 @@
         .container { max-width: 1000px; margin: 0 auto; background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
         h1 { font-size: 22px; color: #1a73e8; margin-top: 0; border-bottom: 2px solid #eee; padding-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
         
-        /* 模式切換按鈕區 */
         .mode-switcher { display: flex; gap: 10px; margin-bottom: 20px; }
         .mode-btn { flex: 1; padding: 12px; border: 2px solid #1a73e8; background: #fff; color: #1a73e8; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; transition: all 0.2s; }
         .mode-btn.active { background: #1a73e8; color: #fff; }
@@ -48,21 +47,17 @@
         <span style="font-size: 13px; font-weight: normal; color: #5f6368;">(雙模式切換)</span>
     </h1>
 
-    <!-- 模式切換按鈕 -->
     <div class="mode-switcher">
         <button id="btnMode1800" class="mode-btn active" onclick="switchMode(1800)">📊 1800碰 (三星全包版)</button>
         <button id="btnMode9000" class="mode-btn" onclick="switchMode(9000)">🚀 9000碰 (四星四柱版)</button>
     </div>
 
-    <!-- 參數設定面板 -->
     <div class="settings-panel">
         <h3>
             <span id="settingsTitle">⚙️ 1800碰 參數設定面板</span>
             <span id="lockStatus" class="locked-text">🔒 狀態：已鎖定 (需密碼 0000 解鎖)</span>
         </h3>
-        <div class="setting-grid" id="settingInputs">
-            <!-- 動態切換設定欄位 -->
-        </div>
+        <div class="setting-grid" id="settingInputs"></div>
         <div class="setting-actions">
             <input type="password" id="inputPwd" placeholder="輸入密碼 0000" style="padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px; width: 130px;">
             <button onclick="unlockSettings()" style="background: #5f6368;">解鎖修改</button>
@@ -70,7 +65,6 @@
         </div>
     </div>
 
-    <!-- 新增紀錄面板 -->
     <div class="form-group">
         <label>日期：</label>
         <input type="date" id="inputDate">
@@ -79,33 +73,22 @@
         <button onclick="addNewRecord()">新增並計算</button>
     </div>
 
-    <!-- 統計看板 -->
-    <div class="stats-box" id="statsContainer">
-        <!-- 動態帶入統計看板 -->
-    </div>
+    <div class="stats-box" id="statsContainer"></div>
 
-    <!-- 列表 -->
     <div class="table-container">
         <table>
-            <thead id="tableHead">
-                <!-- 動態帶入表頭 -->
-            </thead>
-            <tbody id="resultTableBody">
-                <!-- 動態載入 -->
-            </tbody>
+            <thead id="tableHead"></thead>
+            <tbody id="resultTableBody"></tbody>
         </table>
     </div>
 </div>
 
 <script>
-    // 當前模式：1800 或 9000
     let currentMode = 1800;
 
-    // 兩套獨立設定
-    let settings1800 = { baseCost: 1800, rebatePercent: 37, prize3: 570, prize4: 570 }; // 1800主要看 3碰/4碰
-    let settings9000 = { baseCost: 9000, rebatePercent: 50, prize2Puffs: 8000 }; // 9000成本9000, 退水50%, 中獎過2碰單碰8000
+    let settings1800 = { baseCost: 1800, rebatePercent: 37, multiplier: 1 }; // multiplier 代表下注金額/倍數
+    let settings9000 = { baseCost: 9000, rebatePercent: 50, prize2Puffs: 8000 };
 
-    // 預設代入完整 253 筆資料
     const rawData = [
         "2026-09-10 07 09 12 15 27", "2026-09-09 01 09 15 37 38", "2026-09-08 04 06 15 22 25", "2026-09-07 12 13 17 28 34", "2026-09-06 06 12 14 24 32",
         "2026-09-05 08 24 26 35 39", "2026-09-04 04 07 10 27 38", "2026-09-03 03 06 23 29 35", "2026-09-02 01 07 08 18 39", "2026-09-01 09 12 28 30 37",
@@ -154,12 +137,12 @@
         "2026-02-02 06 12 19 22 25", "2026-02-01 02 14 18 20 35", "2026-01-31 09 13 18 24 28", "2026-01-30 02 04 08 17 21", "2026-01-29 05 06 13 27 32",
         "2026-01-28 01 04 22 33 39", "2026-01-27 01 02 05 07 20", "2026-01-26 01 14 19 27 37", "2026-01-25 15 18 25 33 35", "2026-01-24 11 14 15 20 36",
         "2026-01-23 06 08 11 27 28", "2026-01-22 13 14 18 26 32", "2026-01-21 07 08 13 22 28", "2026-01-20 11 19 22 27 30", "2026-01-19 16 18 19 31 37",
-        "2026-01-18 08 18 28 33 39", "2026-01-17 03 08 16 31 33", "2026-01-16 06 18 28 32 36", "2026-01-15 02 09 12 25 39", "2026-01-14 04 09 25 27 35", "2026-01-13 13 18 27 28 35", "2026-01-12 07 16 17 19 35", "2026-01-11 12 13 15 24 34", "2026-01-10 23 25 28 29 35", "2026-01-09 02 15 19 24 36",
+        "2026-01-18 08 18 28 33 39", "2026-01-17 03 08 16 31 33", "2026-01-16 06 18 28 32 36", "2026-01-15 02 09 12 25 39", "2026-01-14 04 09 25 27 35",
+        "2026-01-13 13 18 27 28 35", "2026-01-12 07 16 17 19 35", "2026-01-11 12 13 15 24 34", "2026-01-10 23 25 28 29 35", "2026-01-09 02 15 19 24 36",
         "2026-01-08 02 03 09 11 31", "2026-01-07 01 10 28 31 39", "2026-01-06 05 09 15 21 24", "2026-01-05 09 19 20 26 32", "2026-01-04 01 04 34 37 39",
         "2026-01-03 09 14 19 20 24", "2026-01-02 13 14 24 25 35", "2026-01-01 01 03 09 11 21"
     ];
 
-    // 切換模式
     function switchMode(mode) {
         currentMode = mode;
         document.getElementById("btnMode1800").classList.remove("active");
@@ -179,14 +162,13 @@
         renderTable();
     }
 
-    // 渲染設定面板欄位
     function renderSettingsPanel() {
         let container = document.getElementById("settingInputs");
         if (currentMode === 1800) {
             container.innerHTML = `
                 <div class="setting-item"><label>牌面總本金</label><input type="number" id="cfgBaseCost" value="${settings1800.baseCost}" disabled></div>
                 <div class="setting-item"><label>退水比例 (%)</label><input type="number" id="cfgRebate" value="${settings1800.rebatePercent}" disabled></div>
-                <div class="setting-item"><label>單碰三星獎金</label><input type="number" id="cfgPrize" value="${settings1800.prize3}" disabled></div>
+                <div class="setting-item"><label>下注金額/倍數 (預設1)</label><input type="number" id="cfgPrize" value="${settings1800.multiplier}" disabled></div>
             `;
         } else {
             container.innerHTML = `
@@ -195,7 +177,6 @@
                 <div class="setting-item"><label>過2碰獎金 (單碰)</label><input type="number" id="cfgPrize" value="${settings9000.prize2Puffs}" disabled></div>
             `;
         }
-        // 恢復鎖定狀態
         document.getElementById("btnSave").style.display = "none";
         document.getElementById("inputPwd").value = "";
         document.getElementById("lockStatus").innerText = "🔒 狀態：已鎖定 (需密碼 0000 解鎖)";
@@ -230,7 +211,7 @@
         if (currentMode === 1800) {
             settings1800.baseCost = bCost;
             settings1800.rebatePercent = rebate;
-            settings1800.prize3 = prize;
+            settings1800.multiplier = prize;
         } else {
             settings9000.baseCost = bCost;
             settings9000.rebatePercent = rebate;
@@ -242,7 +223,6 @@
         alert("設定已儲存並重新完成營利結算！");
     }
 
-    // 1800碰邏輯
     function check1800(balls) {
         let p1 = 0, p2 = 0, p3 = 0;
         balls.forEach(n => {
@@ -256,7 +236,6 @@
         return { type: puffs, text: `${puffs}碰`, p1, p2, p3 };
     }
 
-    // 9000碰邏輯（四柱：01-09, 10-19, 20-29, 30-39）
     function check9000(balls) {
         let q1 = 0, q2 = 0, q3 = 0, q4 = 0;
         balls.forEach(n => {
@@ -266,10 +245,7 @@
             else if (num >= 20 && num <= 29) q3++;
             else if (num >= 30 && num <= 39) q4++;
         });
-
-        // 四柱全開檢查（四柱各至少1顆）
         if (q1 > 0 && q2 > 0 && q3 > 0 && q4 > 0) {
-            // 一定是其中一柱2顆，其餘各1顆 -> 過2碰
             return { pass: true, text: "過 (過2碰)", q1, q2, q3, q4 };
         } else {
             return { pass: false, text: "未過 (斷柱)", q1, q2, q3, q4 };
@@ -305,7 +281,9 @@
 
             let totalCount = rawData.length;
             let totalCost = totalCount * costPer期;
-            let totalRevenue = (count4 * 4 * settings1800.prize3) + (count3 * 3 * settings1800.prize3);
+            
+            // 核心套用：三碰 = 3 * 570 * 金額(multiplier)；四碰 = 4 * 570 * 金額(multiplier)
+            let totalRevenue = (count4 * 4 * 570 * settings1800.multiplier) + (count3 * 3 * 570 * settings1800.multiplier);
             let netProfit = totalRevenue - totalCost;
 
             statsContainer.innerHTML = `
@@ -336,7 +314,6 @@
 
             let totalCount = rawData.length;
             let totalCost = totalCount * costPer期;
-            // 9000碰中獎固定過2碰，每次獎金 = 2 * 單碰獎金
             let totalRevenue = passCount * 2 * settings9000.prize2Puffs;
             let netProfit = totalRevenue - totalCost;
 
@@ -370,7 +347,6 @@
         document.getElementById("inputBalls").value = "";
     }
 
-    // 初始化執行
     renderSettingsPanel();
     renderTable();
 </script>
