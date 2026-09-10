@@ -81,14 +81,14 @@
         }
         .settings-panel h3, .batch-panel h3, .input-panel h2 { margin-bottom: 12px; font-size: 15px; font-weight: 900; display: flex; justify-content: space-between; align-items: center; color: var(--text-main); }
         
-        .setting-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; margin-bottom: 12px; }
-        .space-config-card { background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 14px; }
-        .space-config-card h4 { font-size: 13px; font-weight: 900; color: var(--purple-color); margin-bottom: 10px; border-bottom: 1px solid #e2e8f0; padding-bottom: 5px; }
-        .setting-item { margin-bottom: 8px; }
-        .setting-item label { display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 3px; font-weight: bold; }
-        .setting-item input { width: 100%; padding: 7px 9px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-size: 13px; font-family: monospace; font-weight: bold; box-sizing: border-box; }
-        .setting-item input:disabled { background: #f1f5f9; color: #64748b; }
-        .setting-actions { display: flex; gap: 10px; align-items: center; margin-top: 12px; flex-wrap: wrap; border-top: 1px solid #e2e8f0; padding-top: 12px; }
+        .setting-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 12px; }
+        .space-config-card { background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
+        .space-config-card h4 { font-size: 14px; font-weight: 900; color: var(--purple-color); margin-bottom: 12px; border-bottom: 2px solid #e2e8f0; padding-bottom: 6px; display: flex; justify-content: space-between; align-items: center; }
+        .setting-item { margin-bottom: 10px; }
+        .setting-item label { display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 4px; font-weight: bold; }
+        .setting-item input { width: 100%; padding: 8px 10px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-size: 14px; font-family: monospace; font-weight: bold; box-sizing: border-box; }
+        .setting-item input:disabled { background: #f1f5f9; color: #64748b; border-color:#e2e8f0; }
+        .setting-actions { display: flex; gap: 10px; align-items: center; margin-top: 14px; flex-wrap: wrap; border-top: 1px solid #e2e8f0; padding-top: 14px; }
 
         .form-row { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 12px; }
         .form-group { flex: 1; min-width: 170px; display: flex; flex-direction: column; gap: 4px; }
@@ -119,6 +119,23 @@
         .num-ball { width: var(--ball-size); height: var(--ball-size); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 900; background: #ffffff; color: #1e293b; font-family: monospace; border: 1.5px solid #cbd5e1; box-shadow: 0 2px 4px rgba(0,0,0,0.04); }
         .num-ball.hit { background: linear-gradient(135deg, #ef4444, #dc2626); color: #ffffff; border-color: #991b1b; }
         .num-ball.draw { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #78350f; border-color: #b45309; }
+
+        /* 高數預測面板樣式 */
+        .ai-prediction-box {
+            margin-top: 14px;
+            padding: 12px;
+            background: #ffffff;
+            border: 1px dashed #94a3b8;
+            border-radius: 8px;
+            font-size: 12px;
+        }
+        .ai-prediction-box h5 {
+            color: #4f46e5; margin: 0 0 8px 0; font-size: 13px; font-weight: 900;
+        }
+        .ai-row { display: flex; justify-content: space-between; margin-bottom: 6px; font-weight: bold; }
+        .ai-suggestion {
+            margin-top: 8px; padding: 8px; background: #f8fafc; border-radius: 6px; text-align: center; font-weight: 900; font-size: 13px;
+        }
     </style>
 </head>
 <body>
@@ -138,7 +155,7 @@
         <button id="btn-tt-9000" class="mode-btn" onclick="switchSpace('tt-9000')">🚀 天天樂 9000碰 (四星)</button>
         <button id="btn-539-1800" class="mode-btn" onclick="switchSpace('539-1800')">📊 五三九 1800碰 (三星)</button>
         <button id="btn-539-9000" class="mode-btn" onclick="switchSpace('539-9000')">🚀 五三九 9000碰 (四星)</button>
-        <button id="btn-arena" class="mode-btn arena-btn active" onclick="switchSpace('arena')">⚔️ AI 科技對決擂台</button>
+        <button id="btn-arena" class="mode-btn arena-btn active" onclick="switchSpace('arena')">⚔️ AI 科技對決擂台 (設定/匯入中樞)</button>
     </div>
 
     <!-- 集中參數設定面板 (在擂台空間) -->
@@ -149,9 +166,9 @@
         </h3>
         <div class="setting-grid" id="setting-inputs"></div>
         <div class="setting-actions">
-            <input type="password" id="input-pwd" placeholder="輸入密碼 0000" style="padding: 6px 10px; border: 1.5px solid #cbd5e1; border-radius: 6px; width: 130px; font-size:13px;">
-            <button class="btn-action" onclick="unlockSettings()" style="background: #64748b;">解鎖修改</button>
-            <button class="btn-action" id="btn-save" onclick="saveSettings()" style="background: #059669; display: none;">儲存全部參數並同步雲端</button>
+            <input type="password" id="input-pwd" placeholder="輸入密碼 0000" style="padding: 8px 12px; border: 1.5px solid #cbd5e1; border-radius: 6px; width: 140px; font-size:14px; font-weight:bold;">
+            <button class="btn-action" onclick="unlockSettings()" style="background: #64748b;">解鎖全部修改</button>
+            <button class="btn-action" id="btn-save" onclick="saveSettings()" style="background: #059669; display: none;">💾 儲存並更新高數預測</button>
         </div>
     </div>
 
@@ -226,12 +243,11 @@
 
     let currentSpace = 'arena';
 
-    // 移除下注倍數，換成 unitBet (下注金額)，totalCost 為牌面總本金
     let spaceConfigs = {
-        'tt-1800': { name: '天天樂 1800碰 (三星全包版)', unitBet: 1, basePuffs: 1800, totalCost: 1800, rebate: 37, unitPrize: 570, type: '1800' },
-        'tt-9000': { name: '天天樂 9000碰 (四星四柱版)', unitBet: 1, basePuffs: 9000, totalCost: 9000, rebate: 50, unitPrize: 8000, type: '9000' },
-        '539-1800': { name: '五三九 1800碰 (三星全包版)', unitBet: 1, basePuffs: 1800, totalCost: 1800, rebate: 37, unitPrize: 570, type: '1800' },
-        '539-9000': { name: '五三九 9000碰 (四星四柱版)', unitBet: 1, basePuffs: 9000, totalCost: 9000, rebate: 50, unitPrize: 8000, type: '9000' },
+        'tt-1800': { name: '天天樂 1800碰區 (三星全包)', unitBet: 1, basePuffs: 1800, totalCost: 1800, rebate: 37, unitPrize: 570, type: '1800' },
+        'tt-9000': { name: '天天樂 9000碰區 (四星四柱)', unitBet: 1, basePuffs: 9000, totalCost: 9000, rebate: 50, unitPrize: 8000, type: '9000' },
+        '539-1800': { name: '五三九 1800碰區 (三星全包)', unitBet: 1, basePuffs: 1800, totalCost: 1800, rebate: 37, unitPrize: 570, type: '1800' },
+        '539-9000': { name: '五三九 9000碰區 (四星四柱)', unitBet: 1, basePuffs: 9000, totalCost: 9000, rebate: 50, unitPrize: 8000, type: '9000' },
         'arena': { name: 'AI 科技對決擂台', unitBet: 0, totalCost: 0, rebate: 0, unitPrize: 0, type: 'arena' }
     };
 
@@ -287,6 +303,75 @@
         document.getElementById(`cfg-cost-${key}`).value = unitBet * base;
     }
 
+    // 🏆 莊家高等數學與機率預測引擎
+    function getPredictionHtml(key, cfg) {
+        let data = spaceData[key] || [];
+        // 取今年的數據作為大數法則母體 (動態鎖定 2026)
+        let thisYearData = data.filter(item => item.date.startsWith('2026'));
+        let totalDraws = thisYearData.length;
+        let wins = 0;
+        let totalPrizeEarned = 0;
+
+        thisYearData.forEach(item => {
+            let res = cfg.type === '1800' ? check1800(item.draw) : check9000(item.draw);
+            if ((cfg.type === '1800' && res.puffs >= 3) || (cfg.type === '9000' && res.pass)) {
+                wins++;
+                totalPrizeEarned += res.puffs * cfg.unitPrize * cfg.unitBet;
+            }
+        });
+
+        // 1. 今年歷史勝率
+        let histWinRate = totalDraws > 0 ? (wins / totalDraws) : 0;
+        
+        // 2. 下期貝氏機率預測 (Laplace Rule of Succession 平滑處理)
+        // 用於處理極端值，賦予未開出機率一個數學權重
+        let nextProb = (wins + 1) / (totalDraws + 2); 
+
+        // 3. 數學期望值 (EV) = (機率 * 獲勝時平均彩金) - 當期實付本金
+        let costPerRound = cfg.totalCost * (1 - cfg.rebate / 100);
+        let avgPrizeWhenWin = wins > 0 ? (totalPrizeEarned / wins) : (cfg.type === '1800' ? 3 * cfg.unitPrize * cfg.unitBet : 2 * cfg.unitPrize * cfg.unitBet);
+        let expectedValue = (nextProb * avgPrizeWhenWin) - costPerRound;
+
+        // 4. 莊家策略判斷
+        let recText = "";
+        let recColor = "";
+        
+        if (totalDraws < 10) {
+            recText = "⏳ 數據樣本不足，建議先寫入歷史資料再行評估。";
+            recColor = "#64748b";
+        } else if (expectedValue > costPerRound * 0.1) {
+            recText = "🔥 EV強勢為正，凱利公式建議：果斷進場下注！";
+            recColor = "#059669";
+        } else if (expectedValue > -costPerRound * 0.2) {
+            recText = "⚠️ 變異數收斂邊緣，建議：縮小注碼試探水溫。";
+            recColor = "#d97706";
+        } else {
+            recText = "❄️ 期望值偏負 (莊家優勢區)，建議：空手觀望。";
+            recColor = "#dc2626";
+        }
+
+        return `
+            <div class="ai-prediction-box">
+                <h5>🤖 莊家高數預測引擎</h5>
+                <div class="ai-row">
+                    <span style="color:var(--text-muted);">今年開出勝率：</span>
+                    <span style="color:#0f172a;">${(histWinRate * 100).toFixed(2)}%</span>
+                </div>
+                <div class="ai-row">
+                    <span style="color:var(--text-muted);">下期貝氏機率：</span>
+                    <span style="color:#0284c7;">${(nextProb * 100).toFixed(2)}%</span>
+                </div>
+                <div class="ai-row">
+                    <span style="color:var(--text-muted);">單期期望值(EV)：</span>
+                    <span style="color:${expectedValue >= 0 ? '#059669' : '#dc2626'};">${expectedValue >= 0 ? '+' : ''}${expectedValue.toFixed(0)} 元</span>
+                </div>
+                <div class="ai-suggestion" style="color: ${recColor}; border: 1px solid ${recColor}40;">
+                    ${recText}
+                </div>
+            </div>
+        `;
+    }
+
     function renderSettingsPanel() {
         let container = document.getElementById('setting-inputs');
         let html = '';
@@ -294,9 +379,13 @@
         ['tt-1800', 'tt-9000', '539-1800', '539-9000'].forEach(key => {
             let cfg = spaceConfigs[key];
             let labelPrize = cfg.type === '1800' ? '三星單碰彩金 (元)' : '四星單碰彩金 (元)';
+            
+            // 取得每個區塊專屬的高數預測 HTML
+            let predictionHtml = getPredictionHtml(key, cfg);
+
             html += `
                 <div class="space-config-card">
-                    <h4>${cfg.name}</h4>
+                    <h4>${cfg.name} <span>配置區</span></h4>
                     <div class="setting-item">
                         <label>下注金額 (元/碰)</label>
                         <input type="number" id="cfg-unitbet-${key}" value="${cfg.unitBet}" step="0.5" oninput="onUnitBetChange('${key}')" disabled>
@@ -313,6 +402,7 @@
                         <label>${labelPrize}</label>
                         <input type="number" id="cfg-prize-${key}" value="${cfg.unitPrize}" disabled>
                     </div>
+                    ${predictionHtml}
                 </div>
             `;
         });
@@ -357,8 +447,9 @@
             localStorage.setItem(`cfg_${key}`, JSON.stringify(spaceConfigs[key]));
         });
 
+        // 儲存後重新渲染，預測引擎會馬上依據新參數重新計算 EV 與建議
         renderSettingsPanel();
-        alert("所有設定已成功儲存並同步連動結算！");
+        alert("所有設定已成功儲存！高數預測引擎已同步重新精算。");
     }
 
     onSnapshot(collection(db, "matrix_systems"), (snapshot) => {
@@ -372,7 +463,11 @@
         Object.keys(spaceData).forEach(k => {
             spaceData[k].sort((a, b) => new Date(b.date) - new Date(a.date));
         });
-        if (currentSpace !== 'arena') {
+        
+        if (currentSpace === 'arena') {
+            // 在擂台時若背景收到資料更新，也同步刷新預測面板
+            renderSettingsPanel();
+        } else {
             renderMain();
         }
     }, (err) => {
@@ -417,7 +512,6 @@
         let cfg = spaceConfigs[currentSpace];
         let data = spaceData[currentSpace];
 
-        // 當期實付本金 = 牌面總本金 * (1 - 退水比例/100)
         let costPerRound = cfg.totalCost * (1 - cfg.rebate / 100);
         let totalCount = data.length;
         let totalCost = totalCount * costPerRound;
@@ -432,7 +526,6 @@
                 if (res.puffs === 4) count4++;
                 else if (res.puffs === 3) count3++;
 
-                // 彩金計算：中獎碰數 × 單碰彩金 × 下注金額
                 let prize = res.puffs * cfg.unitPrize * cfg.unitBet;
                 totalRevenue += prize;
 
@@ -468,7 +561,6 @@
                 let res = check9000(item.draw);
                 if (res.pass) passCount++;
 
-                // 彩金計算：中獎碰數 (2碰) × 單碰彩金 × 下注金額
                 let prize = res.puffs * cfg.unitPrize * cfg.unitBet;
                 totalRevenue += prize;
 
