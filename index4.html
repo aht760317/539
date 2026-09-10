@@ -431,7 +431,14 @@
         .stat-value { font-size: 26px; font-weight: 900; margin: 4px 0; font-family: monospace; }
         .stat-sub { font-size: 11px; color: #64748b; }
 
-        .tools-panel { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; margin-bottom: 18px; }
+        /* ⭐⭐⭐ 精準三分列陣：修復空白、全面對齊 ⭐⭐⭐ */
+        .tools-panel { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 14px; 
+            margin-bottom: 18px; 
+            align-items: stretch;
+        }
         .tool-card { 
             background: var(--panel-bg); 
             padding: 16px; 
@@ -441,32 +448,38 @@
             backdrop-filter: blur(12px);
             display: flex;
             flex-direction: column;
+            min-width: 0; 
         }
         .tool-card h3 { 
-            font-size: 14px; 
-            margin-bottom: 12px; 
+            font-size: 13px; 
+            margin-bottom: 10px; 
             padding-bottom: 8px; 
             border-bottom: 1px solid rgba(0,0,0,0.06); 
             display: flex;
             align-items: center;
             justify-content: space-between;
             font-weight: 900;
+            flex-shrink: 0;
         }
         
-        .badge-list { display: flex; flex-wrap: wrap; gap: 6px; }
+        .badge-list { 
+            display: grid; 
+            grid-template-columns: repeat(4, 1fr); 
+            gap: 6px; 
+        }
         .info-badge { 
             display: flex; 
             flex-direction: column; 
             align-items: center; 
             background: #ffffff; 
-            padding: 5px 8px; 
+            padding: 5px 2px; 
             border-radius: 8px; 
-            min-width: 44px;
             border: 1px solid #e2e8f0;
             position: relative;
+            text-align: center;
         }
-        .info-badge .num { font-size: 17px; font-weight: 900; font-family: monospace; }
-        .info-badge .desc { font-size: 10px; margin-top: 1px; font-weight: bold; }
+        .info-badge .num { font-size: 15px; font-weight: 900; font-family: monospace; line-height: 1.1; }
+        .info-badge .desc { font-size: 9.5px; margin-top: 2px; font-weight: bold; white-space: nowrap; }
 
         .info-badge.hit-today {
             box-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
@@ -493,31 +506,38 @@
         .cold-badge .num { color: #0284c7; }
         .cold-badge .desc { color: #0369a1; }
 
-        .recom-grid { display: grid; grid-template-columns: 1fr; gap: 6px; margin-top: 8px; flex: 1;}
+        /* 推薦矩陣改為 2 欄整齊網格，飽滿對齊 */
+        .recom-grid { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 8px; 
+            flex: 1;
+            align-content: stretch;
+        }
         .recom-card {
             background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(248,250,252,0.95));
             border: 1px solid #e2e8f0;
             border-radius: 8px;
-            padding: 6px 10px;
+            padding: 8px;
             display: flex;
-            align-items: center;
+            flex-direction: column;
             justify-content: space-between;
-            gap: 6px;
             position: relative;
+            min-height: 72px;
         }
         .recom-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3.5px; border-radius: 8px 0 0 8px;}
         .recom-card.c-gold::before { background: #f59e0b; }
         .recom-card.c-cyan::before { background: #06b6d4; }
         .recom-card.c-rose::before { background: #f43f5e; }
 
-        .recom-header { display: flex; align-items: center; gap: 6px; white-space: nowrap; flex-shrink: 0; }
+        .recom-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
         .recom-title { font-size: 11px; font-weight: 900; }
-        .recom-sub { font-size: 9px; color: #64748b; font-weight: bold; background: rgba(0,0,0,0.04); padding: 2px 4px; border-radius: 4px;}
+        .recom-sub { font-size: 9px; color: #64748b; font-weight: bold; background: rgba(0,0,0,0.04); padding: 1px 4px; border-radius: 4px;}
         
-        .recom-balls { display: flex; gap: 4px; align-items: center; flex-wrap: nowrap; justify-content: flex-end; width: 100%;}
+        .recom-balls { display: flex; gap: 4px; align-items: center; justify-content: flex-start; flex-wrap: wrap; }
         .recom-ball {
-            width: 20px;
-            height: 20px;
+            width: 23px;
+            height: 23px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -538,17 +558,17 @@
             padding: 0; 
             border: none;
             flex: 1;
-            justify-content: center;
+            justify-content: space-between;
         }
 
-        .realistic-machine { position: relative; width: 120px; height: 120px; margin-top: 8px; }
+        .realistic-machine { position: relative; width: 120px; height: 120px; margin: 4px 0; }
         .glass-sphere { width: 120px; height: 120px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #ffffff 0%, #e0f2fe 60%, #bae6fd 100%); border: 2.5px solid #7dd3fc; position: absolute; top: 0; left: 0; box-shadow: 0 4px 14px rgba(14, 165, 233, 0.15); }
         .glass-overlay { width: 100%; height: 100%; border-radius: 50%; position: absolute; top: 0; left: 0; box-shadow: inset -6px -6px 12px rgba(14, 165, 233, 0.2), inset 5px 5px 10px rgba(255,255,255,0.9); pointer-events: none; z-index: 10; }
         .suction-tube { position: absolute; top: -16px; left: 50%; transform: translateX(-50%); width: 22px; height: 24px; background: linear-gradient(to right, rgba(255,255,255,0.9), rgba(186,230,253,0.7), rgba(255,255,255,0.9)); border: 1.5px solid #0284c7; border-bottom: none; border-radius: 5px 5px 0 0; z-index: 15; }
         .machine-base { position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); width: 65px; height: 15px; background: #334155; border-radius: 3px; z-index: 12; }
         .mini-ball { position: absolute; width: 16px; height: 16px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #fde047, #f59e0b); color: #78350f; font-size: 8px; font-weight: 900; display: flex; align-items: center; justify-content: center; top: 0; left: 0; z-index: 5; transition: transform 0s, opacity 0.5s; }
         
-        .machine-balls { display: flex; justify-content: center; gap: 4px; padding: 6px; background: #f8fafc; border-radius: 16px; margin-top: 10px; width: 100%; max-width: 250px; border: 1px solid #e2e8f0; }
+        .machine-balls { display: flex; justify-content: center; gap: 4px; padding: 6px; background: #f8fafc; border-radius: 16px; width: 100%; max-width: 250px; border: 1px solid #e2e8f0; margin-top: 4px; }
         .machine-ball { width: 32px; height: 32px; border-radius: 50%; background: #ffffff; color: #94a3b8; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 900; border: 1.5px dashed #cbd5e1; transition: all 0.4s; font-family: monospace; }
         .machine-ball.revealed { background: linear-gradient(135deg, #fde047, #f59e0b); color: #78350f; border: 1.5px solid #b45309; box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3); transform: scale(1.08); }
 
@@ -655,6 +675,11 @@
         .edit-btn { background: #f1f5f9; color: #334155; }
         .edit-btn:hover { background: #e2e8f0; }
 
+        @media (max-width: 1024px) {
+            .tools-panel { grid-template-columns: 1fr; }
+            .recom-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
         @media (max-width: 768px) {
             :root { --ball-size: 28px; }
             body { padding: 10px 6px; }
@@ -718,7 +743,7 @@
                 font-size: 12px; 
             }
             
-            .recom-header { flex-direction: column; align-items: flex-start; gap: 2px;}
+            .recom-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -907,7 +932,7 @@
                     <div class="mobile-cards-container" id="tier-mobile-cards-container"></div>
                 </div>
 
-                <!-- Tab 4: 1800/9000碰立柱倍投規劃 (精準物理模型修正版) -->
+                <!-- Tab 4: 1800/9000碰立柱倍投規劃 -->
                 <div id="tab-content-matrix-calc" style="display:none;">
                     <div class="calc-form-grid" style="background:#faf5ff; border-color:#e9d5ff;">
                         <div class="calc-input-group" style="grid-column: span 2;">
@@ -944,9 +969,7 @@
 
                     <div class="profit-table-wrapper">
                         <table class="profit-table">
-                            <thead id="matrix-thead">
-                                <!-- JS 動態渲染準確表頭 -->
-                            </thead>
+                            <thead id="matrix-thead"></thead>
                             <tbody id="matrix-plan-tbody"></tbody>
                         </table>
                     </div>
@@ -979,6 +1002,7 @@
         </div>
     </div>
 
+    <!-- ⭐⭐⭐ 完美三分等寬對齊區塊：無多餘空白 ⭐⭐⭐ -->
     <div class="tools-panel">
         <!-- 區塊一：冷熱號區塊 -->
         <div class="tool-card">
@@ -987,30 +1011,30 @@
                 <span id="hot-hit-summary" style="font-size:11px; font-weight:normal; color:#ef4444;"></span>
             </h3>
             <div class="badge-list" id="hot-numbers">
-                <div style="font-size:12px; color:#94a3b8;">累積開獎數據後顯示...</div>
+                <div style="font-size:12px; color:#94a3b8; grid-column:span 4;">累積開獎數據後顯示...</div>
             </div>
             
-            <h3 style="color:#0284c7; margin-top:16px;">
+            <h3 style="color:#0284c7; margin-top:14px;">
                 <span>❄️ 極凍遺漏冷門號</span>
                 <span id="cold-hit-summary" style="font-size:11px; font-weight:normal; color:#0284c7;"></span>
             </h3>
             <div class="badge-list" id="cold-numbers">
-                <div style="font-size:12px; color:#94a3b8;">累積開獎數據後顯示...</div>
+                <div style="font-size:12px; color:#94a3b8; grid-column:span 4;">累積開獎數據後顯示...</div>
             </div>
         </div>
 
-        <!-- 區塊二：推薦矩陣區塊 -->
+        <!-- 區塊二：推薦矩陣區塊 (雙欄排版，完全充實) -->
         <div class="tool-card">
-            <h3 style="color:#475569; margin-bottom:12px;">
+            <h3 style="color:#475569;">
                 <span>🎯 三大模式同步推薦</span>
-                <button onclick="refreshRecommendations()" style="border:none; background:#0284c7; color:white; padding:4px 10px; border-radius:5px; font-size:11px; cursor:pointer; font-weight:bold;">🔄 換一組</button>
+                <button onclick="refreshRecommendations()" style="border:none; background:#0284c7; color:white; padding:3px 8px; border-radius:5px; font-size:11px; cursor:pointer; font-weight:bold;">🔄 換一組</button>
             </h3>
-            <div class="recom-grid" id="recom-container" style="margin-top:0;">
-                <div style="font-size:12px; color:#94a3b8;">累積足夠開獎資料後生成...</div>
+            <div class="recom-grid" id="recom-container">
+                <div style="font-size:12px; color:#94a3b8; grid-column:span 2;">累積足夠開獎資料後生成...</div>
             </div>
         </div>
 
-        <!-- 區塊三：3D 量子搖號機 -->
+        <!-- 區塊三：3D 量子搖號機 (垂直居中對稱) -->
         <div class="tool-card">
             <h3 style="color:var(--neon-purple);">🎰 3D 量子搖號機</h3>
             <div class="single-machine-wrapper">
@@ -1023,13 +1047,13 @@
                 <div class="machine-balls" id="machine-balls-1">
                     <div class="machine-ball">?</div><div class="machine-ball">?</div><div class="machine-ball">?</div><div class="machine-ball">?</div><div class="machine-ball">?</div>
                 </div>
-                <div style="width: 100%; margin-top: 14px;">
+                <div style="width: 100%; margin-top: 8px;">
                     <button class="btn-roll" id="btn-roll-all" onclick="startRoll()">🌪️ 啟動量子搖號</button>
                 </div>
             </div>
         </div>
 
-        <!-- 獨家立柱風控矩陣追蹤 -->
+        <!-- 獨家立柱風控矩陣追蹤 (全寬橫跨) -->
         <div class="tool-card" style="grid-column: 1 / -1;">
             <h3 style="color:#059669; border-bottom: 2px solid rgba(5,150,105,0.2);">
                 <span>🎯 獨家立柱風控矩陣 - 歷史與AI預測推薦系統</span>
@@ -1598,12 +1622,12 @@
         let m3_4 = [...getRandomPicks(m3_top, 2), ...getRandomPicks(m3_mid, 2)].sort((a, b) => a - b);
 
         const list = [
-            { cardClass: 'c-gold', colorType: 'q-gold', title: '🎰 1.搖機三星', sub: '3D碰撞', nums: m1_3 },
-            { cardClass: 'c-gold', colorType: 'q-gold', title: '🎰 1.搖機四星', sub: '動態落點', nums: m1_4 },
-            { cardClass: 'c-rose', colorType: 'q-rose', title: '📊 2.歷史三星', sub: '高頻連動', nums: m2_3 },
-            { cardClass: 'c-rose', colorType: 'q-rose', title: '📊 2.歷史四星', sub: '共振拖牌', nums: m2_4 },
-            { cardClass: 'c-cyan', colorType: 'q-cyan', title: '🔥 3.AI必三星', sub: '爆發臨界', nums: m3_3 },
-            { cardClass: 'c-cyan', colorType: 'q-cyan', title: '🔥 3.AI必四星', sub: '期望權重', nums: m3_4 }
+            { cardClass: 'c-gold', colorType: 'q-gold', title: '🎰 搖機三星', sub: '3D碰撞', nums: m1_3 },
+            { cardClass: 'c-gold', colorType: 'q-gold', title: '🎰 搖機四星', sub: '動態落點', nums: m1_4 },
+            { cardClass: 'c-rose', colorType: 'q-rose', title: '📊 歷史三星', sub: '高頻連動', nums: m2_3 },
+            { cardClass: 'c-rose', colorType: 'q-rose', title: '📊 歷史四星', sub: '共振拖牌', nums: m2_4 },
+            { cardClass: 'c-cyan', colorType: 'q-cyan', title: '🔥 AI必三星', sub: '爆發臨界', nums: m3_3 },
+            { cardClass: 'c-cyan', colorType: 'q-cyan', title: '🔥 AI必四星', sub: '期望權重', nums: m3_4 }
         ];
 
         container.innerHTML = list.map((item) => {
@@ -2099,18 +2123,17 @@
         renderTierTracker();
     }
 
-    // ⭐⭐⭐ 1800碰 / 9000碰 專用倍投計算模組 (固定成本賠率，自選起始下注額，精準物理中獎碰數) ⭐⭐⭐
     function updateMatrixFixedSpec() {
         const mode = document.getElementById('matrix-mode').value;
         const costInput = document.getElementById('matrix-cost');
         const prizeInput = document.getElementById('matrix-prize');
 
         if (mode === '1800') {
-            costInput.value = 1134; // 1800 - 666
-            prizeInput.value = 570;  // 1元單碰 570
+            costInput.value = 1134; 
+            prizeInput.value = 570;  
         } else {
-            costInput.value = 4545; // 9000 - 4455
-            prizeInput.value = 8000; // 1元單碰 8000 (中2碰即 16000)
+            costInput.value = 4545; 
+            prizeInput.value = 8000; 
         }
     }
 
@@ -2120,14 +2143,11 @@
         const targetProfit = parseFloat(document.getElementById('matrix-target-profit').value) || 500;
         const days = parseInt(document.getElementById('matrix-days').value, 10) || 6;
 
-        // 固定核心數據：
-        // 1800碰: 1元成本1134，中3碰=1710，中4碰=2280
-        // 9000碰: 1元成本4545，4柱開5球唯一分佈 (2,1,1,1)，固定剛好中 2 碰 = 16000
         const netCostPerUnit = mode === '1800' ? 1134 : 4545;
         const singlePrizePerUnit = mode === '1800' ? 570 : 8000;
 
         const baseHits = mode === '1800' ? 3 : 2;
-        const basePrizePerUnit = singlePrizePerUnit * baseHits; // 1800碰為1710，9000碰為16000
+        const basePrizePerUnit = singlePrizePerUnit * baseHits; 
         const netWinPerUnit = basePrizePerUnit - netCostPerUnit;
 
         const thead = document.getElementById('matrix-thead');
@@ -2171,7 +2191,6 @@
             if (d === 1) {
                 bet = firstBet;
             } else {
-                // 從第二期起，依保底獲利動態推算最小整數下注額
                 bet = Math.ceil((cumCost + targetProfit) / netWinPerUnit);
                 if (bet < 1) bet = 1;
             }
@@ -2230,7 +2249,6 @@
                     </div>
                 `;
             } else {
-                // 9000 碰：物理上限最多中 2 碰
                 rowsHtml += `
                     <tr>
                         <td><strong>第 ${d} 期</strong></td>
