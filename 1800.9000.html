@@ -81,7 +81,7 @@
         }
         .settings-panel h3, .batch-panel h3, .input-panel h2 { margin-bottom: 12px; font-size: 15px; font-weight: 900; display: flex; justify-content: space-between; align-items: center; color: var(--text-main); }
         
-        .setting-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 12px; }
+        .setting-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; margin-bottom: 12px; }
         .space-config-card { background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
         .space-config-card h4 { font-size: 14px; font-weight: 900; color: var(--purple-color); margin-bottom: 12px; border-bottom: 2px solid #e2e8f0; padding-bottom: 6px; display: flex; justify-content: space-between; align-items: center; }
         .setting-item { margin-bottom: 10px; }
@@ -120,21 +120,26 @@
         .num-ball.hit { background: linear-gradient(135deg, #ef4444, #dc2626); color: #ffffff; border-color: #991b1b; }
         .num-ball.draw { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #78350f; border-color: #b45309; }
 
-        /* 高數預測面板樣式 */
+        /* 高數預測與倍投面板樣式 */
         .ai-prediction-box {
             margin-top: 14px;
-            padding: 12px;
-            background: #ffffff;
-            border: 1px dashed #94a3b8;
-            border-radius: 8px;
-            font-size: 12px;
+            padding: 14px;
+            background: linear-gradient(to bottom, #ffffff, #f8fafc);
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 13px;
         }
         .ai-prediction-box h5 {
-            color: #4f46e5; margin: 0 0 8px 0; font-size: 13px; font-weight: 900;
+            color: #0f172a; margin: 0 0 10px 0; font-size: 14px; font-weight: 900;
+            display: flex; align-items: center; gap: 6px;
         }
-        .ai-row { display: flex; justify-content: space-between; margin-bottom: 6px; font-weight: bold; }
-        .ai-suggestion {
-            margin-top: 8px; padding: 8px; background: #f8fafc; border-radius: 6px; text-align: center; font-weight: 900; font-size: 13px;
+        .ai-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-weight: bold; border-bottom: 1px dashed #e2e8f0; padding-bottom: 4px;}
+        .ai-row:last-child { border-bottom: none; }
+        .ai-highlight { color: #dc2626; font-size: 15px; font-weight: 900; }
+        .ai-prob { color: #0284c7; font-size: 15px; font-weight: 900; }
+        
+        .strategy-box {
+            margin-top: 12px; padding: 10px; border-radius: 8px; text-align: center; font-weight: 900; font-size: 13px;
         }
     </style>
 </head>
@@ -296,78 +301,101 @@
         }
     }
 
-    // 當修改「下注金額」時，牌面總本金自動連動倍增
     window.onUnitBetChange = function(key) {
         let unitBet = parseFloat(document.getElementById(`cfg-unitbet-${key}`).value) || 0;
         let base = spaceConfigs[key].basePuffs || (key.includes('1800') ? 1800 : 9000);
         document.getElementById(`cfg-cost-${key}`).value = unitBet * base;
     }
 
-    // 🏆 莊家高等數學與機率預測引擎
+    // 🚀 動態均值回歸預測模型 & 保本倍投計算機
     function getPredictionHtml(key, cfg) {
         let data = spaceData[key] || [];
-        // 取今年的數據作為大數法則母體 (動態鎖定 2026)
-        let thisYearData = data.filter(item => item.date.startsWith('2026'));
+        
+        // 確保資料是由新到舊排序
+        let sortedData = [...data].sort((a, b) => new Date(b.date) - new Date(a.date));
+        let thisYearData = sortedData.filter(item => item.date.startsWith('2026'));
         let totalDraws = thisYearData.length;
         let wins = 0;
-        let totalPrizeEarned = 0;
+        
+        // 找出目前「連續未開」期數
+        let currentLosingStreak = 0;
+        for (let i = 0; i < sortedData.length; i++) {
+            let res = cfg.type === '1800' ? check1800(sortedData[i].draw) : check9000(sortedData[i].draw);
+            let isWin = (cfg.type === '1800' && res.puffs >= 3) || (cfg.type === '9000' && res.pass);
+            if (!isWin) {
+                currentLosingStreak++;
+            } else {
+                break; // 遇到贏的就中斷，得到近期連敗次數
+            }
+        }
 
+        // 計算今年歷史勝率
         thisYearData.forEach(item => {
             let res = cfg.type === '1800' ? check1800(item.draw) : check9000(item.draw);
-            if ((cfg.type === '1800' && res.puffs >= 3) || (cfg.type === '9000' && res.pass)) {
-                wins++;
-                totalPrizeEarned += res.puffs * cfg.unitPrize * cfg.unitBet;
-            }
+            if ((cfg.type === '1800' && res.puffs >= 3) || (cfg.type === '9000' && res.pass)) wins++;
         });
-
-        // 1. 今年歷史勝率
+        
         let histWinRate = totalDraws > 0 ? (wins / totalDraws) : 0;
-        
-        // 2. 下期貝氏機率預測 (Laplace Rule of Succession 平滑處理)
-        // 用於處理極端值，賦予未開出機率一個數學權重
-        let nextProb = (wins + 1) / (totalDraws + 2); 
+        // 若完全沒資料，給個基底勝率 (1800 碰約 15%，9000 碰約 25% 供初始參考)
+        if (totalDraws === 0) histWinRate = cfg.type === '1800' ? 0.15 : 0.25;
 
-        // 3. 數學期望值 (EV) = (機率 * 獲勝時平均彩金) - 當期實付本金
+        // 💥 均值回歸修正機率
+        // 隨著連敗期數增加，宇宙的拉力會越來越大，我們給予每期 5%~10% 的權重提升
+        let regressionBoost = currentLosingStreak * 0.08; 
+        let nextProb = Math.min(histWinRate + regressionBoost, 0.99); // 最高不超過 99%
+
+        // 🛡️ 智能護城河與倍投計算
         let costPerRound = cfg.totalCost * (1 - cfg.rebate / 100);
-        let avgPrizeWhenWin = wins > 0 ? (totalPrizeEarned / wins) : (cfg.type === '1800' ? 3 * cfg.unitPrize * cfg.unitBet : 2 * cfg.unitPrize * cfg.unitBet);
-        let expectedValue = (nextProb * avgPrizeWhenWin) - costPerRound;
-
-        // 4. 莊家策略判斷
-        let recText = "";
-        let recColor = "";
+        let minWinPrize = cfg.type === '1800' ? (3 * cfg.unitPrize * cfg.unitBet) : (2 * cfg.unitPrize * cfg.unitBet);
         
-        if (totalDraws < 10) {
-            recText = "⏳ 數據樣本不足，建議先寫入歷史資料再行評估。";
-            recColor = "#64748b";
-        } else if (expectedValue > costPerRound * 0.1) {
-            recText = "🔥 EV強勢為正，凱利公式建議：果斷進場下注！";
-            recColor = "#059669";
-        } else if (expectedValue > -costPerRound * 0.2) {
-            recText = "⚠️ 變異數收斂邊緣，建議：縮小注碼試探水溫。";
-            recColor = "#d97706";
+        // 計算容錯空間：連續幾期平推不會虧？
+        let maxFlatRounds = Math.floor(minWinPrize / costPerRound);
+        
+        let strategyHtml = "";
+        if (currentLosingStreak === 0) {
+            strategyHtml = `
+                <div class="strategy-box" style="background: #ecfdf5; color: #065f46; border: 1px solid #34d399;">
+                    🎉 剛開出獲利！建議：平推 1 倍，順勢收割。
+                </div>`;
+        } else if (currentLosingStreak < maxFlatRounds) {
+            strategyHtml = `
+                <div class="strategy-box" style="background: #f0fdf4; color: #166534; border: 1px solid #86efac;">
+                    🛡️ 護城河防禦中！目前虧損可被 1 次過關覆蓋，<br>建議：繼續平推，無需倍投！
+                </div>`;
         } else {
-            recText = "❄️ 期望值偏負 (莊家優勢區)，建議：空手觀望。";
-            recColor = "#dc2626";
+            // 已超過平推極限，啟動黃金倍投 (斐波那契數列)
+            // 這裡簡單計算：為了要覆蓋已虧損總額 (連敗期數 * 成本) + 下一期成本，求需要下注幾倍
+            let totalLoss = currentLosingStreak * costPerRound;
+            // 解方程式： 倍數 * minWinPrize > totalLoss + (倍數 * costPerRound)
+            // 倍數 * (minWinPrize - costPerRound) > totalLoss
+            // 倍數 > totalLoss / (minWinPrize - costPerRound)
+            let requiredMulti = Math.ceil(totalLoss / (minWinPrize - costPerRound));
+            // 限制最低倍數為 2
+            requiredMulti = Math.max(requiredMulti, 2);
+
+            strategyHtml = `
+                <div class="strategy-box" style="background: #fffbeb; color: #b45309; border: 1px solid #fcd34d;">
+                    🔥 均值拉力逼近！建議啟用保本倍投策略：<br>
+                    下一期下注 <span style="font-size:16px; color:#dc2626;">${requiredMulti}</span> 倍，過關即可全部回本並獲利！
+                </div>`;
         }
 
         return `
             <div class="ai-prediction-box">
-                <h5>🤖 莊家高數預測引擎</h5>
+                <h5>🤖 動態均值回歸與倍投預測</h5>
                 <div class="ai-row">
-                    <span style="color:var(--text-muted);">今年開出勝率：</span>
-                    <span style="color:#0f172a;">${(histWinRate * 100).toFixed(2)}%</span>
-                </div>
-                <div class="ai-row">
-                    <span style="color:var(--text-muted);">下期貝氏機率：</span>
-                    <span style="color:#0284c7;">${(nextProb * 100).toFixed(2)}%</span>
+                    <span style="color:var(--text-muted);">近期連續未開：</span>
+                    <span class="ai-highlight">${currentLosingStreak} 期</span>
                 </div>
                 <div class="ai-row">
-                    <span style="color:var(--text-muted);">單期期望值(EV)：</span>
-                    <span style="color:${expectedValue >= 0 ? '#059669' : '#dc2626'};">${expectedValue >= 0 ? '+' : ''}${expectedValue.toFixed(0)} 元</span>
+                    <span style="color:var(--text-muted);">長期平均勝率：</span>
+                    <span style="color:#0f172a;">${(histWinRate * 100).toFixed(1)}%</span>
                 </div>
-                <div class="ai-suggestion" style="color: ${recColor}; border: 1px solid ${recColor}40;">
-                    ${recText}
+                <div class="ai-row">
+                    <span style="color:var(--text-muted);">修正後下期開出機率：</span>
+                    <span class="ai-prob">${(nextProb * 100).toFixed(1)}% 🚀</span>
                 </div>
+                ${strategyHtml}
             </div>
         `;
     }
@@ -379,13 +407,11 @@
         ['tt-1800', 'tt-9000', '539-1800', '539-9000'].forEach(key => {
             let cfg = spaceConfigs[key];
             let labelPrize = cfg.type === '1800' ? '三星單碰彩金 (元)' : '四星單碰彩金 (元)';
-            
-            // 取得每個區塊專屬的高數預測 HTML
             let predictionHtml = getPredictionHtml(key, cfg);
 
             html += `
                 <div class="space-config-card">
-                    <h4>${cfg.name} <span>配置區</span></h4>
+                    <h4>${cfg.name}</h4>
                     <div class="setting-item">
                         <label>下注金額 (元/碰)</label>
                         <input type="number" id="cfg-unitbet-${key}" value="${cfg.unitBet}" step="0.5" oninput="onUnitBetChange('${key}')" disabled>
@@ -447,7 +473,6 @@
             localStorage.setItem(`cfg_${key}`, JSON.stringify(spaceConfigs[key]));
         });
 
-        // 儲存後重新渲染，預測引擎會馬上依據新參數重新計算 EV 與建議
         renderSettingsPanel();
         alert("所有設定已成功儲存！高數預測引擎已同步重新精算。");
     }
@@ -465,7 +490,6 @@
         });
         
         if (currentSpace === 'arena') {
-            // 在擂台時若背景收到資料更新，也同步刷新預測面板
             renderSettingsPanel();
         } else {
             renderMain();
