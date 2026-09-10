@@ -111,7 +111,7 @@
             border: 1.5px solid rgba(217, 119, 6, 0.4);
             border-radius: 18px;
             width: 100%;
-            max-width: 1050px;
+            max-width: 1100px;
             height: 90vh;
             display: flex;
             flex-direction: column;
@@ -280,7 +280,7 @@
             transition: 0.2s;
         }
         .act-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
-        .btn-win { background: #16a34a; color: #ffffff; box-shadow: 0 2px 8px rgba(22, 163, 74, 0.25); }
+        .btn-win { background: #16a34a; color: #ffffff; box-shadow: 0 2px 8px rgba(220, 38, 38, 0.25); }
         .btn-lose { background: #dc2626; color: #ffffff; box-shadow: 0 2px 8px rgba(220, 38, 38, 0.25); }
         .btn-reset { background: #64748b; color: #ffffff; flex: 0.4; }
 
@@ -907,31 +907,31 @@
                     <div class="mobile-cards-container" id="tier-mobile-cards-container"></div>
                 </div>
 
-                <!-- Tab 4: 1800/9000碰立柱倍投規劃 (全新加入) -->
+                <!-- Tab 4: 1800/9000碰立柱倍投規劃 -->
                 <div id="tab-content-matrix-calc" style="display:none;">
                     <div class="calc-form-grid" style="background:#faf5ff; border-color:#e9d5ff;">
                         <div class="calc-input-group" style="grid-column: span 2;">
                             <label style="color:#6b21a8;">🎯 立柱模式選擇</label>
-                            <select id="matrix-mode" onchange="updateMatrixParamInputs(); calculateMatrixPlan();">
-                                <option value="1800">1800碰 (三星立柱 ｜ 實繳 1,134元 ｜ 保底3碰贏 1,710元)</option>
-                                <option value="9000">9000碰 (四星立柱 ｜ 實繳 4,545元 ｜ 保底2碰贏 16,000元)</option>
+                            <select id="matrix-mode" onchange="updateMatrixDefaults(); calculateMatrixPlan();">
+                                <option value="1800">1800碰 (三星立柱 ｜ 3碰與4碰雙軌結算)</option>
+                                <option value="9000">9000碰 (四星立柱 ｜ 2碰與3碰雙軌結算)</option>
                             </select>
                         </div>
                         <div class="calc-input-group">
-                            <label style="color:#6b21a8;">💰 每期保底利潤 (元)</label>
-                            <input type="number" id="matrix-target-profit" value="500" min="100" max="100000" step="100">
+                            <label style="color:#6b21a8;">💰 每期保底淨利 (元)</label>
+                            <input type="number" id="matrix-target-profit" value="500" min="50" max="100000" step="50">
                         </div>
                         <div class="calc-input-group">
                             <label style="color:#6b21a8;">📅 追號規劃期數</label>
                             <input type="number" id="matrix-days" value="6" min="1" max="15" step="1">
                         </div>
                         <div class="calc-input-group">
-                            <label>💵 1元成本/退佣後</label>
-                            <input type="number" id="matrix-cost" value="1134" readonly style="background:#f1f5f9; color:#64748b;">
+                            <label style="color:#0284c7;">💵 1元實付成本(可自訂)</label>
+                            <input type="number" id="matrix-cost" value="1134" min="1" step="1">
                         </div>
                         <div class="calc-input-group">
-                            <label>🏆 1元基本彩金</label>
-                            <input type="number" id="matrix-prize" value="1710" readonly style="background:#f1f5f9; color:#64748b;">
+                            <label style="color:#0284c7;" id="matrix-prize-label">🏆 1元單碰彩金(可自訂)</label>
+                            <input type="number" id="matrix-prize" value="570" min="1" step="10">
                         </div>
                         <button class="btn-recalc" style="background:linear-gradient(135deg, #7c3aed, #4f46e5);" onclick="calculateMatrixPlan()">⚡ 演算立柱倍投</button>
                     </div>
@@ -940,15 +940,16 @@
 
                     <div class="profit-table-wrapper">
                         <table class="profit-table">
-                            <thead>
+                            <thead id="matrix-thead">
                                 <tr>
                                     <th>期數</th>
                                     <th>下注倍數 (元)</th>
                                     <th>當期實繳成本</th>
                                     <th>累計總實繳</th>
-                                    <th>保底中獎彩金</th>
-                                    <th>結算實賺淨利</th>
-                                    <th>驚喜超額彩金 (4碰/3碰)</th>
+                                    <th style="color:#059669;">中 3 碰彩金</th>
+                                    <th style="color:#059669;">中 3 碰淨利</th>
+                                    <th style="color:#7c3aed;">中 4 碰彩金</th>
+                                    <th style="color:#7c3aed;">中 4 碰淨利 (大爆發)</th>
                                 </tr>
                             </thead>
                             <tbody id="matrix-plan-tbody"></tbody>
@@ -2103,17 +2104,21 @@
         renderTierTracker();
     }
 
-    // ⭐⭐⭐ 1800碰 / 9000碰 專用倍投計算模組 ⭐⭐⭐
-    function updateMatrixParamInputs() {
+    // ⭐⭐⭐ 1800碰 / 9000碰 專用倍投計算模組 (支持自訂成本與3碰/4碰雙軌結算) ⭐⭐⭐
+    function updateMatrixDefaults() {
         const mode = document.getElementById('matrix-mode').value;
         const costInput = document.getElementById('matrix-cost');
         const prizeInput = document.getElementById('matrix-prize');
+        const prizeLabel = document.getElementById('matrix-prize-label');
+
         if (mode === '1800') {
-            costInput.value = 1134; // 1800 - 666
-            prizeInput.value = 1710; // 3 * 570
+            costInput.value = 1134; // 預設 1800 - 666
+            prizeInput.value = 570;  // 1元 1 碰彩金 570
+            prizeLabel.innerText = "🏆 1元單碰彩金(可自訂)";
         } else {
-            costInput.value = 4545; // 9000 - 4455
-            prizeInput.value = 16000; // 8000 * 2
+            costInput.value = 4545; // 預設 9000 - 4455
+            prizeInput.value = 8000; // 1元 1 碰彩金 8000
+            prizeLabel.innerText = "🏆 1元單碰彩金(可自訂)";
         }
     }
 
@@ -2121,19 +2126,61 @@
         const mode = document.getElementById('matrix-mode').value;
         const targetProfit = parseFloat(document.getElementById('matrix-target-profit').value) || 500;
         const days = parseInt(document.getElementById('matrix-days').value, 10) || 6;
+        
+        // 抓取自訂輸入的成本與彩金
+        const netCostPerUnit = parseFloat(document.getElementById('matrix-cost').value) || (mode === '1800' ? 1134 : 4545);
+        const singlePrizePerUnit = parseFloat(document.getElementById('matrix-prize').value) || (mode === '1800' ? 570 : 8000);
 
-        // 參數精算：
-        // 1800碰: 1元實付 1800-666 = 1134元，保底3碰 3*570 = 1710元，4碰驚喜 4*570 = 2280元
-        // 9000碰: 1元實付 9000-4455 = 4545元，保底2碰 8000*2 = 16000元，3碰驚喜 8000*3 = 24000元
-        const netCostPerUnit = mode === '1800' ? 1134 : 4545;
-        const basePrizePerUnit = mode === '1800' ? 1710 : 16000;
-        const bonusPrizePerUnit = mode === '1800' ? 2280 : 24000;
+        // 碰數設定：
+        // 1800碰：保底 3 碰、超額 4 碰
+        // 9000碰：保底 2 碰、超額 3 碰
+        const baseHits = mode === '1800' ? 3 : 2;
+        const bonusHits = mode === '1800' ? 4 : 3;
+
+        const basePrizePerUnit = singlePrizePerUnit * baseHits;
+        const bonusPrizePerUnit = singlePrizePerUnit * bonusHits;
+
         const netWinPerUnit = basePrizePerUnit - netCostPerUnit;
+
+        // 動態更換表格標題
+        const thead = document.getElementById('matrix-thead');
+        if (mode === '1800') {
+            thead.innerHTML = `
+                <tr>
+                    <th>期數</th>
+                    <th>下注倍數 (元)</th>
+                    <th>當期實繳成本</th>
+                    <th>累計總實繳</th>
+                    <th style="color:#059669;">中 3 碰彩金</th>
+                    <th style="color:#059669;">中 3 碰淨利 (保底)</th>
+                    <th style="color:#7c3aed;">中 4 碰彩金</th>
+                    <th style="color:#7c3aed;">中 4 碰淨利 (大爆發)</th>
+                </tr>
+            `;
+        } else {
+            thead.innerHTML = `
+                <tr>
+                    <th>期數</th>
+                    <th>下注倍數 (元)</th>
+                    <th>當期實繳成本</th>
+                    <th>累計總實繳</th>
+                    <th style="color:#059669;">中 2 碰彩金</th>
+                    <th style="color:#059669;">中 2 碰淨利 (保底)</th>
+                    <th style="color:#7c3aed;">中 3 碰彩金</th>
+                    <th style="color:#7c3aed;">中 3 碰淨利 (大爆發)</th>
+                </tr>
+            `;
+        }
 
         const tbody = document.getElementById('matrix-plan-tbody');
         const mobileContainer = document.getElementById('matrix-plan-mobile-cards');
         tbody.innerHTML = '';
         mobileContainer.innerHTML = '';
+
+        if (netWinPerUnit <= 0) {
+            alert("⚠️ 錯誤：每 1 元保底彩金 (" + basePrizePerUnit + "元) 小於等於 1 元實付成本 (" + netCostPerUnit + "元)，無法進行盈利倍投演算！請修正金額。");
+            return;
+        }
 
         let cumCost = 0;
         let rowsHtml = '';
@@ -2144,7 +2191,6 @@
             if (d === 1) {
                 mult = 1;
             } else {
-                // 有贏就好的動態倍數推導公式
                 mult = Math.ceil((cumCost + targetProfit) / netWinPerUnit);
                 if (mult < 1) mult = 1;
             }
@@ -2166,6 +2212,7 @@
                     <td style="color:#b91c1c;">${cumCost.toLocaleString()} 元</td>
                     <td>${basePrize.toLocaleString()} 元</td>
                     <td class="text-green">+${baseProfit.toLocaleString()} 元</td>
+                    <td>${bonusPrize.toLocaleString()} 元</td>
                     <td class="text-purple">+${bonusProfit.toLocaleString()} 元</td>
                 </tr>
             `;
@@ -2182,21 +2229,21 @@
                             <span class="val">${currentCost.toLocaleString()} 元</span>
                         </div>
                         <div class="day-plan-item">
-                            <span class="label">📉 累計實繳</span>
+                            <span class="label">📉 累計總實繳</span>
                             <span class="val" style="color:#b91c1c;">${cumCost.toLocaleString()} 元</span>
                         </div>
                         <div class="day-plan-item">
-                            <span class="label">🏆 保底彩金</span>
+                            <span class="label">🏆 中 ${baseHits} 碰彩金</span>
                             <span class="val">${basePrize.toLocaleString()} 元</span>
                         </div>
                         <div class="day-plan-item">
-                            <span class="label">保底淨利</span>
+                            <span class="label">中 ${baseHits} 碰淨利</span>
                             <span class="val text-green">+${baseProfit.toLocaleString()} 元</span>
                         </div>
                     </div>
                     <div style="border-top:1px dashed #e2e8f0; padding-top:4px; display:flex; justify-content:space-between; align-items:center;">
-                        <span style="font-size:11px; color:#7c3aed; font-weight:bold;">⚡ 若開出超額彩金</span>
-                        <span class="text-purple" style="font-size:12px; font-weight:900;">+${bonusProfit.toLocaleString()} 元</span>
+                        <span style="font-size:11px; color:#7c3aed; font-weight:bold;">⚡ 中 ${bonusHits} 碰彩金+淨利</span>
+                        <span class="text-purple" style="font-size:12px; font-weight:900;">${bonusPrize.toLocaleString()} 元 (+${bonusProfit.toLocaleString()})</span>
                     </div>
                 </div>
             `;
@@ -2204,7 +2251,7 @@
 
         tbody.innerHTML = rowsHtml;
         mobileContainer.innerHTML = mobileCardsHtml;
-        document.getElementById('matrix-plan-summary').innerText = `[${days}期 ${mode}碰倍投規劃總備援金：${cumCost.toLocaleString()} 元 ｜ 保證每期開出結算淨賺至少 +${targetProfit.toLocaleString()} 元]`;
+        document.getElementById('matrix-plan-summary').innerText = `[${days}期 ${mode}碰倍投規劃 ｜ 1元成本：${netCostPerUnit.toLocaleString()}元 ｜ 總備援金：${cumCost.toLocaleString()} 元 ｜ 保證每期開出結算淨賺至少 +${targetProfit.toLocaleString()} 元]`;
     }
 
     function openProfitModal(tabKey) {
@@ -2212,7 +2259,6 @@
         calculateSingleTargetPlan();
         calculateFourTargetPlan();
         renderTierTracker();
-        updateMatrixParamInputs();
         calculateMatrixPlan();
 
         if (tabKey) {
@@ -2263,7 +2309,7 @@
     window.resetTierGame = resetTierGame;
     window.calculateSingleTargetPlan = calculateSingleTargetPlan;
     window.calculateFourTargetPlan = calculateFourTargetPlan;
-    window.updateMatrixParamInputs = updateMatrixParamInputs;
+    window.updateMatrixDefaults = updateMatrixDefaults;
     window.calculateMatrixPlan = calculateMatrixPlan;
     window.loadMoreHistory = loadMoreHistory;
     window.refreshRecommendations = refreshRecommendations;
