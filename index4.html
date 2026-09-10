@@ -60,8 +60,8 @@
             padding: 3px 12px; 
             border-radius: 20px; 
             font-size: 11px; 
-            font-weight: bold;
-            color: #065f46;
+            font-weight: bold; 
+            color: #065f46; 
             margin-top: 6px; 
         }
         .dot { width: 7px; height: 7px; border-radius: 50%; background: #10b981; box-shadow: 0 0 6px #10b981; }
@@ -69,13 +69,15 @@
         .top-action-bar {
             display: flex;
             justify-content: center;
+            gap: 12px;
             margin-bottom: 16px;
+            flex-wrap: wrap;
         }
         .btn-open-modal {
             background: linear-gradient(135deg, #d97706, #b45309);
             color: white;
             border: none;
-            padding: 12px 24px;
+            padding: 12px 20px;
             font-size: 14px;
             font-weight: 900;
             border-radius: 10px;
@@ -87,6 +89,11 @@
             transition: all 0.2s;
         }
         .btn-open-modal:hover { filter: brightness(1.1); transform: translateY(-1px); }
+
+        .btn-open-modal.matrix-btn {
+            background: linear-gradient(135deg, #7c3aed, #4f46e5);
+            box-shadow: 0 4px 15px rgba(124, 58, 237, 0.25);
+        }
 
         .modal-overlay {
             position: fixed;
@@ -172,6 +179,10 @@
             border-color: #cbd5e1;
             color: #d97706;
             border-top: 3px solid #d97706;
+        }
+        .tab-btn.matrix-active {
+            color: #7c3aed !important;
+            border-top: 3px solid #7c3aed !important;
         }
         
         .modal-body {
@@ -567,7 +578,7 @@
             border-radius: 6px; 
             font-size: 14px; 
             outline: none; 
-            font-family: monospace;
+            font-family: monospace; 
             font-weight: 600;
         }
         .form-group input:focus { border-color: var(--ai-color); }
@@ -648,6 +659,8 @@
             :root { --ball-size: 28px; }
             body { padding: 10px 6px; }
             header { padding: 12px 8px; margin-bottom: 12px; }
+            .top-action-bar { flex-direction: column; gap: 8px; }
+            .btn-open-modal { width: 100%; justify-content: center; padding: 10px 14px; font-size: 13px; }
             .stats-board { grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
             .stat-card { padding: 10px; }
             .stat-value { font-size: 22px; margin: 2px 0; }
@@ -702,10 +715,9 @@
             .num-ball { 
                 width: var(--ball-size); 
                 height: var(--ball-size); 
-                font-size: 12px;
+                font-size: 12px; 
             }
             
-            /* 行動版推薦矩陣微調 */
             .recom-header { flex-direction: column; align-items: flex-start; gap: 2px;}
         }
     </style>
@@ -722,16 +734,19 @@
     </header>
 
     <div class="top-action-bar">
-        <button class="btn-open-modal" onclick="openProfitModal()">
+        <button class="btn-open-modal" onclick="openProfitModal('single-target')">
             📊 點擊開啟：天天樂坐車目標獲利與倍投規劃表 (單碼/多碼/階梯)
+        </button>
+        <button class="btn-open-modal matrix-btn" onclick="openProfitModal('matrix-calc')">
+            ⚡ 點擊開啟：1800/9000碰立柱倍投規劃表 (保證有贏計算)
         </button>
     </div>
 
-    <!-- 收益與倍投Modal保持原樣 -->
+    <!-- 獲利與倍投規劃 Modal -->
     <div class="modal-overlay" id="profit-modal" onclick="closeModalOnOverlay(event)">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>💰 天天樂坐車下注・目標倍投與階梯紀律規劃表</h2>
+                <h2>💰 天天樂坐車・立柱倍投與階梯紀律規劃系統</h2>
                 <button class="modal-close" onclick="closeProfitModal()">&times;</button>
             </div>
             
@@ -739,9 +754,11 @@
                 <button class="tab-btn active" id="tab-btn-single-target" onclick="switchModalTab('single-target')">🌟 單碼目標倍投</button>
                 <button class="tab-btn" id="tab-btn-four-target" onclick="switchModalTab('four-target')">🎯 4碼目標倍投</button>
                 <button class="tab-btn" id="tab-btn-tier-track" onclick="switchModalTab('tier-track')">⚖️ 階梯均注紀律追蹤表</button>
+                <button class="tab-btn" id="tab-btn-matrix-calc" onclick="switchModalTab('matrix-calc')">⚡ 1800/9000碰倍投規劃</button>
             </div>
 
             <div class="modal-body">
+                <!-- Tab 1: 單碼目標倍投 -->
                 <div id="tab-content-single-target">
                     <div class="calc-form-grid">
                         <div class="calc-input-group">
@@ -788,6 +805,7 @@
                     <div class="mobile-cards-container" id="st-plan-mobile-cards"></div>
                 </div>
 
+                <!-- Tab 2: 4碼目標倍投 -->
                 <div id="tab-content-four-target" style="display:none;">
                     <div class="calc-form-grid">
                         <div class="calc-input-group">
@@ -835,6 +853,7 @@
                     <div class="mobile-cards-container" id="ft-plan-mobile-cards"></div>
                 </div>
 
+                <!-- Tab 3: 階梯追蹤表 -->
                 <div id="tab-content-tier-track" style="display:none;">
                     <div class="tier-sub-tabs">
                         <button class="sub-tab-btn active" id="sub-tier-single" onclick="switchTierSubMode('single')">🌟 單碼階梯 (3期一階)</button>
@@ -887,6 +906,56 @@
                     </div>
                     <div class="mobile-cards-container" id="tier-mobile-cards-container"></div>
                 </div>
+
+                <!-- Tab 4: 1800/9000碰立柱倍投規劃 (全新加入) -->
+                <div id="tab-content-matrix-calc" style="display:none;">
+                    <div class="calc-form-grid" style="background:#faf5ff; border-color:#e9d5ff;">
+                        <div class="calc-input-group" style="grid-column: span 2;">
+                            <label style="color:#6b21a8;">🎯 立柱模式選擇</label>
+                            <select id="matrix-mode" onchange="updateMatrixParamInputs(); calculateMatrixPlan();">
+                                <option value="1800">1800碰 (三星立柱 ｜ 實繳 1,134元 ｜ 保底3碰贏 1,710元)</option>
+                                <option value="9000">9000碰 (四星立柱 ｜ 實繳 4,545元 ｜ 保底2碰贏 16,000元)</option>
+                            </select>
+                        </div>
+                        <div class="calc-input-group">
+                            <label style="color:#6b21a8;">💰 每期保底利潤 (元)</label>
+                            <input type="number" id="matrix-target-profit" value="500" min="100" max="100000" step="100">
+                        </div>
+                        <div class="calc-input-group">
+                            <label style="color:#6b21a8;">📅 追號規劃期數</label>
+                            <input type="number" id="matrix-days" value="6" min="1" max="15" step="1">
+                        </div>
+                        <div class="calc-input-group">
+                            <label>💵 1元成本/退佣後</label>
+                            <input type="number" id="matrix-cost" value="1134" readonly style="background:#f1f5f9; color:#64748b;">
+                        </div>
+                        <div class="calc-input-group">
+                            <label>🏆 1元基本彩金</label>
+                            <input type="number" id="matrix-prize" value="1710" readonly style="background:#f1f5f9; color:#64748b;">
+                        </div>
+                        <button class="btn-recalc" style="background:linear-gradient(135deg, #7c3aed, #4f46e5);" onclick="calculateMatrixPlan()">⚡ 演算立柱倍投</button>
+                    </div>
+
+                    <div style="font-size:12px; font-weight:bold; color:#7c3aed; margin-bottom:8px;" id="matrix-plan-summary"></div>
+
+                    <div class="profit-table-wrapper">
+                        <table class="profit-table">
+                            <thead>
+                                <tr>
+                                    <th>期數</th>
+                                    <th>下注倍數 (元)</th>
+                                    <th>當期實繳成本</th>
+                                    <th>累計總實繳</th>
+                                    <th>保底中獎彩金</th>
+                                    <th>結算實賺淨利</th>
+                                    <th>驚喜超額彩金 (4碰/3碰)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="matrix-plan-tbody"></tbody>
+                        </table>
+                    </div>
+                    <div class="mobile-cards-container" id="matrix-plan-mobile-cards"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -914,9 +983,7 @@
         </div>
     </div>
 
-    <!-- 👇 三大區塊改成平行排列 (三分列陣) 👇 -->
     <div class="tools-panel">
-        
         <!-- 區塊一：冷熱號區塊 -->
         <div class="tool-card">
             <h3 style="color:#dc2626;">
@@ -936,7 +1003,7 @@
             </div>
         </div>
 
-        <!-- 區塊二：推薦矩陣區塊 (極簡單行版) -->
+        <!-- 區塊二：推薦矩陣區塊 -->
         <div class="tool-card">
             <h3 style="color:#475569; margin-bottom:12px;">
                 <span>🎯 三大模式同步推薦</span>
@@ -966,7 +1033,7 @@
             </div>
         </div>
 
-        <!-- 👇 獨家立柱風控矩陣追蹤 (維持寬度跨滿) 👇 -->
+        <!-- 獨家立柱風控矩陣追蹤 -->
         <div class="tool-card" style="grid-column: 1 / -1;">
             <h3 style="color:#059669; border-bottom: 2px solid rgba(5,150,105,0.2);">
                 <span>🎯 獨家立柱風控矩陣 - 歷史與AI預測推薦系統</span>
@@ -978,11 +1045,9 @@
                     <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #e2e8f0; padding-bottom:8px; margin-bottom:10px;">
                         <strong style="color:#0284c7; font-size:15px;">🌟 1800 碰 (三星立柱)</strong>
                     </div>
-                    <!-- 單行緊湊型立柱說明 -->
                     <div style="font-size:11px; color:#64748b; margin-bottom:10px; font-family:monospace; background:#f8fafc; padding:6px; border-radius:6px; text-align:center; white-space:nowrap; overflow-x:auto;">
                         [一柱] 10~18 (9顆) ｜ [二柱] 20~29 (10顆) ｜ [三柱] 01~09, 19, 30~39 (20顆)
                     </div>
-                    <!-- 三種機率呈現區塊 -->
                     <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:6px;">
                         <div class="status-item" style="padding:6px; min-width:0;">
                             <div class="label" style="color:#dc2626; font-size:10px;">目前連漏</div>
@@ -1005,10 +1070,7 @@
                             <div style="font-size:9px; color:#16a34a; margin-top:2px;">均值回歸</div>
                         </div>
                     </div>
-                    <!-- 👇 進場提醒區塊 👇 -->
-                    <div id="advice-1800" style="margin-top:8px; padding:8px; text-align:center; border-radius:6px; font-size:13px; font-weight:900;">
-                        <!-- JS 動態寫入提醒 -->
-                    </div>
+                    <div id="advice-1800" style="margin-top:8px; padding:8px; text-align:center; border-radius:6px; font-size:13px; font-weight:900;"></div>
                 </div>
 
                 <!-- 9000碰 區塊 -->
@@ -1016,11 +1078,9 @@
                     <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #e2e8f0; padding-bottom:8px; margin-bottom:10px;">
                         <strong style="color:#7c3aed; font-size:15px;">🏆 9000 碰 (四星立柱)</strong>
                     </div>
-                    <!-- 單行緊湊型立柱說明 -->
                     <div style="font-size:11px; color:#64748b; margin-bottom:10px; font-family:monospace; background:#f8fafc; padding:6px; border-radius:6px; text-align:center; white-space:nowrap; overflow-x:auto;">
                         [一] 01~09 (9) ｜ [二] 10~19 (10) ｜ [三] 20~29 (10) ｜ [四] 30~39 (10)
                     </div>
-                    <!-- 三種機率呈現區塊 -->
                     <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:6px;">
                         <div class="status-item" style="padding:6px; min-width:0;">
                             <div class="label" style="color:#dc2626; font-size:10px;">目前連漏</div>
@@ -1043,17 +1103,13 @@
                             <div style="font-size:9px; color:#7c3aed; margin-top:2px;">均值回歸</div>
                         </div>
                     </div>
-                    <!-- 👇 進場提醒區塊 👇 -->
-                    <div id="advice-9000" style="margin-top:8px; padding:8px; text-align:center; border-radius:6px; font-size:13px; font-weight:900;">
-                        <!-- JS 動態寫入提醒 -->
-                    </div>
+                    <div id="advice-9000" style="margin-top:8px; padding:8px; text-align:center; border-radius:6px; font-size:13px; font-weight:900;"></div>
                 </div>
             </div>
             <div style="font-size:11px; color:#64748b; margin-top:10px; text-align:center;">
                 💡 <b>進場燈號指標：</b> 系統會自動監測連漏狀態，一旦漏期超過歷史平均週期，即會啟動進場警報，請隨時留意<b>紅燈警示</b>！
             </div>
         </div>
-        <!-- 👆 新增結束 👆 -->
     </div>
 
     <div class="input-panel">
@@ -1545,7 +1601,6 @@
         let m3_3 = [...getRandomPicks(m3_top, 2), ...getRandomPicks(m3_mid, 1)].sort((a, b) => a - b);
         let m3_4 = [...getRandomPicks(m3_top, 2), ...getRandomPicks(m3_mid, 2)].sort((a, b) => a - b);
 
-        // 簡化版、單行的標題與內容
         const list = [
             { cardClass: 'c-gold', colorType: 'q-gold', title: '🎰 1.搖機三星', sub: '3D碰撞', nums: m1_3 },
             { cardClass: 'c-gold', colorType: 'q-gold', title: '🎰 1.搖機四星', sub: '動態落點', nums: m1_4 },
@@ -1570,17 +1625,14 @@
         }).join('');
     }
 
-    // ⭐⭐ 分析 1800碰與9000碰 歷史與預測機率，並加入警報功能 ⭐⭐
     function analyzeComboPatterns() {
         let completedDraws = battleHistory.filter(item => !item.isPending && item.draw && item.draw.length === 5);
         if(completedDraws.length === 0) return;
 
-        // 1800 碰定義
         const col1800_1 = [10,11,12,13,14,15,16,17,18];
         const col1800_2 = [20,21,22,23,24,25,26,27,28,29];
         const col1800_3 = [1,2,3,4,5,6,7,8,9, 19, 30,31,32,33,34,35,36,37,38,39];
 
-        // 9000 碰定義
         const col9000_1 = [1,2,3,4,5,6,7,8,9];
         const col9000_2 = [10,11,12,13,14,15,16,17,18,19];
         const col9000_3 = [20,21,22,23,24,25,26,27,28,29];
@@ -1593,7 +1645,6 @@
         completedDraws.forEach((record) => {
             let d = record.draw;
             
-            // 檢查是否中 1800 碰 (三柱皆有號碼)
             let h1 = d.some(n => col1800_1.includes(n));
             let h2 = d.some(n => col1800_2.includes(n));
             let h3 = d.some(n => col1800_3.includes(n));
@@ -1603,7 +1654,6 @@
             if(!hit1800 && !found1800) gap1800++;
             else found1800 = true;
 
-            // 檢查是否中 9000 碰 (四柱皆有號碼)
             let c1 = d.some(n => col9000_1.includes(n));
             let c2 = d.some(n => col9000_2.includes(n));
             let c3 = d.some(n => col9000_3.includes(n));
@@ -1615,26 +1665,21 @@
             else found9000 = true;
         });
 
-        // 理論基礎機率
         const p_base_1800 = 0.5536; 
         const p_base_9000 = 0.2735;
 
-        // 歷史真實機率
         let p_hist_1800 = (hits1800 / completedDraws.length) * 100;
         let p_hist_9000 = (hits9000 / completedDraws.length) * 100;
 
-        // 歷史平均週期
         let avgCycle1800 = hits1800 > 0 ? (completedDraws.length / hits1800) : (1 / p_base_1800);
         let avgCycle9000 = hits9000 > 0 ? (completedDraws.length / hits9000) : (1 / p_base_9000);
 
-        // AI 動態爆發機率計算 (增加爆發權重感受)
         let boost1800 = (gap1800 / avgCycle1800) * 0.15;
         let finalProb1800 = Math.min((p_base_1800 * (1 + boost1800)), 0.99) * 100;
         
         let boost9000 = (gap9000 / avgCycle9000) * 0.15;
         let finalProb9000 = Math.min((p_base_9000 * (1 + boost9000)), 0.99) * 100;
 
-        // 更新 UI
         document.getElementById('gap-1800').innerText = `${gap1800}期`;
         document.getElementById('avg-gap-1800').innerText = `平均 ${avgCycle1800.toFixed(1)}期`;
         document.getElementById('prob-base-1800').innerText = `${(p_base_1800 * 100).toFixed(1)}%`;
@@ -1647,7 +1692,6 @@
         document.getElementById('prob-hist-9000').innerText = `${p_hist_9000.toFixed(1)}%`;
         document.getElementById('prob-ai-9000').innerText = `${finalProb9000.toFixed(1)}%`;
 
-        // 👇 智能進場提醒邏輯 1800碰 👇
         let adv1800 = document.getElementById('advice-1800');
         if (gap1800 > avgCycle1800) {
             adv1800.innerHTML = `🚨 【漏期達標】次期爆發率飆破 ${finalProb1800.toFixed(1)}%！強烈建議進場！`;
@@ -1660,7 +1704,6 @@
             adv1800.style.background = '#f0fdf4'; adv1800.style.color = '#16a34a'; adv1800.style.border = '1px solid #bbf7d0';
         }
 
-        // 👇 智能進場提醒邏輯 9000碰 👇
         let adv9000 = document.getElementById('advice-9000');
         if (gap9000 > avgCycle9000) {
             adv9000.innerHTML = `🚨 【漏期達標】次期爆發率飆破 ${finalProb9000.toFixed(1)}%！強烈建議進場！`;
@@ -2060,24 +2103,144 @@
         renderTierTracker();
     }
 
-    function openProfitModal() {
+    // ⭐⭐⭐ 1800碰 / 9000碰 專用倍投計算模組 ⭐⭐⭐
+    function updateMatrixParamInputs() {
+        const mode = document.getElementById('matrix-mode').value;
+        const costInput = document.getElementById('matrix-cost');
+        const prizeInput = document.getElementById('matrix-prize');
+        if (mode === '1800') {
+            costInput.value = 1134; // 1800 - 666
+            prizeInput.value = 1710; // 3 * 570
+        } else {
+            costInput.value = 4545; // 9000 - 4455
+            prizeInput.value = 16000; // 8000 * 2
+        }
+    }
+
+    function calculateMatrixPlan() {
+        const mode = document.getElementById('matrix-mode').value;
+        const targetProfit = parseFloat(document.getElementById('matrix-target-profit').value) || 500;
+        const days = parseInt(document.getElementById('matrix-days').value, 10) || 6;
+
+        // 參數精算：
+        // 1800碰: 1元實付 1800-666 = 1134元，保底3碰 3*570 = 1710元，4碰驚喜 4*570 = 2280元
+        // 9000碰: 1元實付 9000-4455 = 4545元，保底2碰 8000*2 = 16000元，3碰驚喜 8000*3 = 24000元
+        const netCostPerUnit = mode === '1800' ? 1134 : 4545;
+        const basePrizePerUnit = mode === '1800' ? 1710 : 16000;
+        const bonusPrizePerUnit = mode === '1800' ? 2280 : 24000;
+        const netWinPerUnit = basePrizePerUnit - netCostPerUnit;
+
+        const tbody = document.getElementById('matrix-plan-tbody');
+        const mobileContainer = document.getElementById('matrix-plan-mobile-cards');
+        tbody.innerHTML = '';
+        mobileContainer.innerHTML = '';
+
+        let cumCost = 0;
+        let rowsHtml = '';
+        let mobileCardsHtml = '';
+
+        for (let d = 1; d <= days; d++) {
+            let mult = 1;
+            if (d === 1) {
+                mult = 1;
+            } else {
+                // 有贏就好的動態倍數推導公式
+                mult = Math.ceil((cumCost + targetProfit) / netWinPerUnit);
+                if (mult < 1) mult = 1;
+            }
+
+            let currentCost = mult * netCostPerUnit;
+            cumCost += currentCost;
+
+            let basePrize = mult * basePrizePerUnit;
+            let baseProfit = basePrize - cumCost;
+
+            let bonusPrize = mult * bonusPrizePerUnit;
+            let bonusProfit = bonusPrize - cumCost;
+
+            rowsHtml += `
+                <tr>
+                    <td><strong>第 ${d} 期</strong></td>
+                    <td class="text-gold" style="font-size:14px; font-weight:900;">${mult} 元</td>
+                    <td>${currentCost.toLocaleString()} 元</td>
+                    <td style="color:#b91c1c;">${cumCost.toLocaleString()} 元</td>
+                    <td>${basePrize.toLocaleString()} 元</td>
+                    <td class="text-green">+${baseProfit.toLocaleString()} 元</td>
+                    <td class="text-purple">+${bonusProfit.toLocaleString()} 元</td>
+                </tr>
+            `;
+
+            mobileCardsHtml += `
+                <div class="day-plan-card">
+                    <div class="day-plan-card-header">
+                        <span class="day-plan-tag">🎯 第 ${d} 期 (${mode}碰)</span>
+                        <span class="day-plan-tier" style="color:#7c3aed; background:#faf5ff;">下注：${mult} 元</span>
+                    </div>
+                    <div class="day-plan-grid">
+                        <div class="day-plan-item">
+                            <span class="label">💵 當期實繳</span>
+                            <span class="val">${currentCost.toLocaleString()} 元</span>
+                        </div>
+                        <div class="day-plan-item">
+                            <span class="label">📉 累計實繳</span>
+                            <span class="val" style="color:#b91c1c;">${cumCost.toLocaleString()} 元</span>
+                        </div>
+                        <div class="day-plan-item">
+                            <span class="label">🏆 保底彩金</span>
+                            <span class="val">${basePrize.toLocaleString()} 元</span>
+                        </div>
+                        <div class="day-plan-item">
+                            <span class="label">保底淨利</span>
+                            <span class="val text-green">+${baseProfit.toLocaleString()} 元</span>
+                        </div>
+                    </div>
+                    <div style="border-top:1px dashed #e2e8f0; padding-top:4px; display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-size:11px; color:#7c3aed; font-weight:bold;">⚡ 若開出超額彩金</span>
+                        <span class="text-purple" style="font-size:12px; font-weight:900;">+${bonusProfit.toLocaleString()} 元</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        tbody.innerHTML = rowsHtml;
+        mobileContainer.innerHTML = mobileCardsHtml;
+        document.getElementById('matrix-plan-summary').innerText = `[${days}期 ${mode}碰倍投規劃總備援金：${cumCost.toLocaleString()} 元 ｜ 保證每期開出結算淨賺至少 +${targetProfit.toLocaleString()} 元]`;
+    }
+
+    function openProfitModal(tabKey) {
         document.getElementById('profit-modal').style.display = 'flex';
         calculateSingleTargetPlan();
         calculateFourTargetPlan();
         renderTierTracker();
+        updateMatrixParamInputs();
+        calculateMatrixPlan();
+
+        if (tabKey) {
+            switchModalTab(tabKey);
+        }
     }
+
     function closeProfitModal() {
         document.getElementById('profit-modal').style.display = 'none';
     }
+
     function closeModalOnOverlay(e) {
         if (e.target.id === 'profit-modal') closeProfitModal();
     }
 
     function switchModalTab(tabKey) {
-        const tabs = ['single-target', 'four-target', 'tier-track'];
+        const tabs = ['single-target', 'four-target', 'tier-track', 'matrix-calc'];
         tabs.forEach(t => {
-            document.getElementById(`tab-btn-${t}`).classList.toggle('active', t === tabKey);
-            document.getElementById(`tab-content-${t}`).style.display = (t === tabKey) ? 'block' : 'none';
+            const btn = document.getElementById(`tab-btn-${t}`);
+            const content = document.getElementById(`tab-content-${t}`);
+            if (btn && content) {
+                const isActive = (t === tabKey);
+                btn.classList.toggle('active', isActive);
+                if (t === 'matrix-calc') {
+                    btn.classList.toggle('matrix-active', isActive);
+                }
+                content.style.display = isActive ? 'block' : 'none';
+            }
         });
     }
 
@@ -2100,6 +2263,8 @@
     window.resetTierGame = resetTierGame;
     window.calculateSingleTargetPlan = calculateSingleTargetPlan;
     window.calculateFourTargetPlan = calculateFourTargetPlan;
+    window.updateMatrixParamInputs = updateMatrixParamInputs;
+    window.calculateMatrixPlan = calculateMatrixPlan;
     window.loadMoreHistory = loadMoreHistory;
     window.refreshRecommendations = refreshRecommendations;
 
