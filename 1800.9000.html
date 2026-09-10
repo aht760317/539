@@ -53,6 +53,7 @@
         .panel { background: var(--panel-bg); padding: 14px; border-radius: 12px; border: 1px solid var(--panel-border); margin-bottom: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
         .panel-title { font-size: 14px; font-weight: 900; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px; color: var(--text-main); }
 
+        /* 設定四宮格 */
         .setting-grid { display: grid; grid-template-columns: 1fr; gap: 14px; align-items: stretch; }
         @media (min-width: 900px) { .setting-grid { grid-template-columns: repeat(2, 1fr); } } 
 
@@ -74,21 +75,45 @@
         .dash-card { background: rgba(255,255,255,0.1); border-radius: 8px; padding: 10px; border: 1px solid rgba(255,255,255,0.1); font-size: 12px; }
         .dash-card h4 { color: #a5b4fc; font-size: 12px; margin-bottom: 4px; }
 
-        /* 🔥 獨立的偏態雷達看板 */
+        /* 🔥 獨立的偏態雷達看板 (升級：精確顯示各柱機率) */
         .radar-panel {
             background: linear-gradient(135deg, #fef2f2, #fff1f2);
             border: 2px dashed #fca5a5;
             border-radius: 12px;
             padding: 14px;
             margin-bottom: 14px;
-            box-shadow: 0 4px 10px rgba(220, 38, 38, 0.1);
+            box-shadow: 0 4px 10px rgba(220, 38, 38, 0.08);
         }
         .radar-panel h3 { font-size: 15px; color: #991b1b; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid #fecaca; padding-bottom: 6px; }
         .radar-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
         @media (min-width: 768px) { .radar-grid { grid-template-columns: repeat(2, 1fr); } }
-        .radar-card { background: #ffffff; border: 1px solid #fca5a5; border-radius: 8px; padding: 10px; font-size: 12px; line-height: 1.6; }
-        .radar-card h4 { color: #dc2626; font-size: 13px; font-weight: 900; margin-bottom: 6px; }
+        
+        .radar-card { background: #ffffff; border: 1px solid #fca5a5; border-radius: 8px; padding: 12px; font-size: 12px; line-height: 1.5; }
+        .radar-card h4 { color: #dc2626; font-size: 13px; font-weight: 900; margin-bottom: 6px; display:flex; justify-content:space-between; align-items:center;}
         .radar-highlight { color: #b91c1c; font-weight: 900; font-size: 14px; }
+
+        /* 各柱獨立機率 2x2 網格 */
+        .col-prob-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+            margin: 8px 0;
+        }
+        .col-prob-item {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 6px 8px;
+            font-size: 11px;
+        }
+        .col-prob-item.danger-col {
+            background: #fff1f2;
+            border-color: #fca5a5;
+        }
+        .col-prob-item .col-title { font-weight: bold; color: #475569; margin-bottom: 2px; }
+        .col-prob-item.danger-col .col-title { color: #dc2626; }
+        .col-prob-item .col-val { font-weight: 900; font-size: 13px; color: #0284c7; }
+        .col-prob-item.danger-col .col-val { color: #dc2626; }
         
         /* 經典三維預測版面 */
         .ai-prediction-box { margin-top: auto; padding: 14px; background: linear-gradient(to bottom, #ffffff, #f8fafc); border: 2px solid #e2e8f0; border-radius: 10px; font-size: 12px; }
@@ -143,17 +168,9 @@
         <button id="btn-arena" class="mode-btn arena-btn active" onclick="switchSpace('arena')">⚔️ AI 科技擂台 (設定/記帳)</button>
     </div>
 
-    <!-- 🚨 獨立的偏態雷達：同柱三顆預警 -->
-    <div id="radar-panel" class="radar-panel" style="display:none;">
-        <h3>🚨 極端偏態雷達 (同柱三顆斷柱預警)</h3>
-        <div class="radar-grid" id="radar-content">
-            <div style="text-align:center; padding:10px;">資料掃描中...</div>
-        </div>
-    </div>
-
     <!-- 💡 全局戰略看板 -->
     <div id="global-strategy" class="strategy-dashboard" style="display:none;">
-        <h3>💡 莊家全局戰略總覽 (不含偏態，純機率決策)</h3>
+        <h3>💡 莊家全局戰略總覽 (純機率進場決策)</h3>
         <div class="dashboard-grid" id="dashboard-content">
             <div style="text-align:center; padding:10px;">資料運算中...</div>
         </div>
@@ -198,6 +215,14 @@
             <input type="password" id="input-pwd" placeholder="密碼 0000">
             <button class="btn-main" onclick="unlockSettings()" style="flex:1; background:#64748b;">解鎖</button>
             <button class="btn-main" id="btn-save" onclick="saveSettings()" style="display: none; flex:2; background:#0284c7;">💾 儲存並更新高數預測</button>
+        </div>
+    </div>
+
+    <!-- 🚨 獨立偏態雷達：移至批次匯入正上方，精算各柱機率 -->
+    <div id="radar-panel" class="radar-panel" style="display:none;">
+        <h3>🚨 極端偏態雷達 (同柱三顆斷柱預警)</h3>
+        <div class="radar-grid" id="radar-content">
+            <div style="text-align:center; padding:10px;">資料掃描中...</div>
         </div>
     </div>
 
@@ -314,9 +339,8 @@
         document.getElementById(`cfg-cost-${key}`).value = unitBet * spaceConfigs[key].basePuffs;
     }
 
-    // --- 獨立的偏態雷達分析函式 (專算同柱三顆) ---
+    // --- 🚨 偏態雷達分析函式 (精算各柱三顆獨立機率) ---
     function analyzeRadar(gameType) {
-        // gameType = 'tt' or '539' (用 9000碰的資料庫，因為同柱三顆是以四柱來算)
         let spaceKey = gameType + '-9000';
         let data = [...(spaceData[spaceKey] || [])].sort((a, b) => new Date(b.date) - new Date(a.date));
         
@@ -325,8 +349,10 @@
         let tripleLosingStreak = 0;
         let hitTripleBefore = false;
         
-        // 統計四個柱子各自發生三顆的次數
-        let colStats = { q1: 0, q2: 0, q3: 0, q4: 0 };
+        // 追蹤各柱出現 >=3 顆的次數與各自的連漏期數
+        let colHits = { q1: 0, q2: 0, q3: 0, q4: 0 };
+        let colStreaks = { q1: 0, q2: 0, q3: 0, q4: 0 };
+        let colFound = { q1: false, q2: false, q3: false, q4: false };
 
         let reversedData = [...data].reverse();
         for (let i = 0; i < reversedData.length; i++) {
@@ -341,6 +367,12 @@
                 if (!isTriple) tripleLosingStreak++;
                 else hitTripleBefore = true;
             }
+
+            // 各柱獨立連漏期數
+            if (!colFound.q1) { if (q1 < 3) colStreaks.q1++; else colFound.q1 = true; }
+            if (!colFound.q2) { if (q2 < 3) colStreaks.q2++; else colFound.q2 = true; }
+            if (!colFound.q3) { if (q3 < 3) colStreaks.q3++; else colFound.q3 = true; }
+            if (!colFound.q4) { if (q4 < 3) colStreaks.q4++; else colFound.q4 = true; }
         }
 
         data.forEach(item => {
@@ -351,31 +383,44 @@
             balls.forEach(n => { if(n<=9) q1++; else if(n<=19) q2++; else if(n<=29) q3++; else q4++; });
             
             if (q1>=3 || q2>=3 || q3>=3 || q4>=3) tripleWins++;
-            if (q1>=3) colStats.q1++;
-            if (q2>=3) colStats.q2++;
-            if (q3>=3) colStats.q3++;
-            if (q4>=3) colStats.q4++;
+            if (q1>=3) colHits.q1++;
+            if (q2>=3) colHits.q2++;
+            if (q3>=3) colHits.q3++;
+            if (q4>=3) colHits.q4++;
         });
 
-        let P_Triple = totalDraws > 0 ? (tripleWins / totalDraws) : 0.08; // 歷史自然機率約 8%
-        // 每悶一期，發生機率增加 2%
-        let tripleNextProb = Math.min(P_Triple + (tripleLosingStreak * 0.02), 0.99); 
+        // 理論基準 (超幾何分配): 1柱(9顆球)約7.0%, 2~4柱(10顆球)各約9.6%
+        let theoBase = { q1: 0.0703, q2: 0.0956, q3: 0.0956, q4: 0.0956 };
         
-        // 找出最危險的柱子 (歷史上最常出三顆的)
-        let mostDangerCol = "";
-        let maxCount = Math.max(colStats.q1, colStats.q2, colStats.q3, colStats.q4);
-        if (maxCount > 0) {
-            let cols = [];
-            if(colStats.q1 === maxCount) cols.push("第1柱 (01-09)");
-            if(colStats.q2 === maxCount) cols.push("第2柱 (10-19)");
-            if(colStats.q3 === maxCount) cols.push("第3柱 (20-29)");
-            if(colStats.q4 === maxCount) cols.push("第4柱 (30-39)");
-            mostDangerCol = cols.join("、");
-        } else {
-            mostDangerCol = "尚無極端數據";
-        }
+        // 各柱獨立動態機率 = (50% 理論 + 50% 歷史經驗) + (各柱獨立連漏期數 * 0.5% 均值拉力)
+        let colProbs = {};
+        ['q1', 'q2', 'q3', 'q4'].forEach(k => {
+            let empRate = totalDraws > 0 ? (colHits[k] / totalDraws) : theoBase[k];
+            let baseRate = 0.5 * theoBase[k] + 0.5 * empRate;
+            colProbs[k] = Math.min(baseRate + (colStreaks[k] * 0.005), 0.50); // 單柱最高上限50%
+        });
 
-        return { gameName: gameType === 'tt' ? '天天樂' : '五三九', tripleLosingStreak, tripleNextProb, mostDangerCol, totalDraws };
+        // 互斥事件求和：總體爆發機率
+        let tripleNextProb = Math.min(colProbs.q1 + colProbs.q2 + colProbs.q3 + colProbs.q4, 0.95);
+
+        // 找出機率最高 (最危險) 的柱位
+        let maxProb = Math.max(colProbs.q1, colProbs.q2, colProbs.q3, colProbs.q4);
+        let dangerCols = [];
+        if (colProbs.q1 === maxProb) dangerCols.push("第1柱 (01-09)");
+        if (colProbs.q2 === maxProb) dangerCols.push("第2柱 (10-19)");
+        if (colProbs.q3 === maxProb) dangerCols.push("第3柱 (20-29)");
+        if (colProbs.q4 === maxProb) dangerCols.push("第4柱 (30-39)");
+
+        return { 
+            gameName: gameType === 'tt' ? '天天樂' : '五三九', 
+            tripleLosingStreak, 
+            tripleNextProb, 
+            colProbs, 
+            colStreaks, 
+            dangerColsText: dangerCols.join("、"),
+            maxProb,
+            totalDraws 
+        };
     }
 
     function renderRadar() {
@@ -389,13 +434,49 @@
                 html += `<div class="radar-card"><h4>${r.gameName}</h4><div style="color:#94a3b8;">數據不足</div></div>`;
                 return;
             }
+
+            let isMaxQ1 = r.colProbs.q1 === r.maxProb;
+            let isMaxQ2 = r.colProbs.q2 === r.maxProb;
+            let isMaxQ3 = r.colProbs.q3 === r.maxProb;
+            let isMaxQ4 = r.colProbs.q4 === r.maxProb;
+
             html += `
                 <div class="radar-card">
-                    <h4>📡 ${r.gameName} 偏態監控</h4>
-                    <div>目前已 <span class="radar-highlight">${r.tripleLosingStreak}</span> 期未發生「同柱三顆」</div>
-                    <div>下期爆發機率飆升至：<span class="radar-highlight">${(r.tripleNextProb*100).toFixed(1)}%</span></div>
-                    <div style="margin-top:4px; padding:4px; background:#fef2f2; border:1px solid #fecaca; border-radius:4px; color:#b91c1c;">
-                        ⚠️ 最危險(最易爆發)區域：<br><strong>${r.mostDangerCol}</strong>
+                    <h4>
+                        <span>📡 ${r.gameName} 偏態監控</span>
+                        <span style="font-size:11px; color:#64748b;">連漏 ${r.tripleLosingStreak} 期未出三顆</span>
+                    </h4>
+                    
+                    <div style="margin-bottom:6px;">
+                        總體下期爆發機率：<span class="radar-highlight">${(r.tripleNextProb * 100).toFixed(1)}%</span>
+                    </div>
+
+                    <!-- 各區獨立機率 2x2 面板 -->
+                    <div class="col-prob-grid">
+                        <div class="col-prob-item ${isMaxQ1 ? 'danger-col' : ''}">
+                            <div class="col-title">第1柱 (01-09) ${isMaxQ1 ? '⚠️' : ''}</div>
+                            <div class="col-val">${(r.colProbs.q1 * 100).toFixed(1)}%</div>
+                            <div style="color:#94a3b8; font-size:10px;">連漏 ${r.colStreaks.q1} 期</div>
+                        </div>
+                        <div class="col-prob-item ${isMaxQ2 ? 'danger-col' : ''}">
+                            <div class="col-title">第2柱 (10-19) ${isMaxQ2 ? '⚠️' : ''}</div>
+                            <div class="col-val">${(r.colProbs.q2 * 100).toFixed(1)}%</div>
+                            <div style="color:#94a3b8; font-size:10px;">連漏 ${r.colStreaks.q2} 期</div>
+                        </div>
+                        <div class="col-prob-item ${isMaxQ3 ? 'danger-col' : ''}">
+                            <div class="col-title">第3柱 (20-29) ${isMaxQ3 ? '⚠️' : ''}</div>
+                            <div class="col-val">${(r.colProbs.q3 * 100).toFixed(1)}%</div>
+                            <div style="color:#94a3b8; font-size:10px;">連漏 ${r.colStreaks.q3} 期</div>
+                        </div>
+                        <div class="col-prob-item ${isMaxQ4 ? 'danger-col' : ''}">
+                            <div class="col-title">第4柱 (30-39) ${isMaxQ4 ? '⚠️' : ''}</div>
+                            <div class="col-val">${(r.colProbs.q4 * 100).toFixed(1)}%</div>
+                            <div style="color:#94a3b8; font-size:10px;">連漏 ${r.colStreaks.q4} 期</div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top:6px; padding:6px 8px; background:#fff1f2; border:1px solid #fecaca; border-radius:6px; color:#b91c1c; font-size:11px;">
+                        ⚠️ <strong>最易爆發區域：</strong>${r.dangerColsText} (高達 ${(r.maxProb * 100).toFixed(1)}%)
                     </div>
                 </div>
             `;
@@ -403,7 +484,7 @@
         container.innerHTML = html;
     }
 
-    // 🏆 回歸純淨的「三維量化分析引擎」
+    // 🏆 三維量化分析引擎
     function analyzeSpace(key) {
         let cfg = spaceConfigs[key];
         let data = [...(spaceData[key] || [])].sort((a, b) => new Date(a.date) - new Date(b.date)); 
