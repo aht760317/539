@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <title>天天樂 雙玩法即時結算與統計系統</title>
+    <title>天天樂 雙玩法獨立系統 (含批量匯入)</title>
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f4f6f9; margin: 0; padding: 20px; color: #333; }
         .container { max-width: 1000px; margin: 0 auto; background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
@@ -12,17 +12,17 @@
         .mode-btn { flex: 1; padding: 12px; border: 2px solid #1a73e8; background: #fff; color: #1a73e8; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; transition: all 0.2s; }
         .mode-btn.active { background: #1a73e8; color: #fff; }
 
-        .settings-panel { background: #f8f9fa; border: 1px solid #dfe1e5; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
-        .settings-panel h3 { margin: 0 0 10px; font-size: 15px; color: #3c4043; display: flex; justify-content: space-between; align-items: center; }
+        .settings-panel, .batch-panel { background: #f8f9fa; border: 1px solid #dfe1e5; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+        .settings-panel h3, .batch-panel h3 { margin: 0 0 10px; font-size: 15px; color: #3c4043; display: flex; justify-content: space-between; align-items: center; }
         .setting-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 10px; }
         .setting-item label { display: block; font-size: 12px; color: #5f6368; margin-bottom: 4px; font-weight: bold; }
         .setting-item input { width: 100%; padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; box-sizing: border-box; }
         .setting-actions { display: flex; gap: 10px; align-items: center; margin-top: 10px; }
         
-        .form-group { display: flex; gap: 10px; margin-bottom: 20px; background: #e8f0fe; padding: 15px; border-radius: 8px; align-items: center; flex-wrap: wrap; }
+        .form-group { display: flex; gap: 10px; margin-bottom: 15px; background: #e8f0fe; padding: 15px; border-radius: 8px; align-items: center; flex-wrap: wrap; }
         .form-group input { padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; }
-        .form-group button, .setting-actions button { background: #1a73e8; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; }
-        .form-group button:hover, .setting-actions button:hover { background: #1557b0; }
+        .form-group button, .setting-actions button, .batch-panel button { background: #1a73e8; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        .form-group button:hover, .setting-actions button:hover, .batch-panel button:hover { background: #1557b0; }
 
         .stats-box { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 25px; }
         .stat-card { background: #f1f3f4; padding: 15px; border-radius: 8px; text-align: center; }
@@ -37,6 +37,7 @@
         .badge-danger { background: #fce8e6; color: #c5221f; padding: 4px 8px; border-radius: 4px; font-weight: bold; }
         .table-container { max-height: 450px; overflow-y: auto; border: 1px solid #eee; border-radius: 8px; }
         .locked-text { color: #d93025; font-size: 13px; font-weight: normal; }
+        textarea { width: 100%; height: 80px; padding: 8px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 6px; font-family: monospace; font-size: 13px; margin-bottom: 10px; }
     </style>
 </head>
 <body>
@@ -44,7 +45,7 @@
 <div class="container">
     <h1>
         <span id="mainTitle">天天樂 1800碰 智慧結算系統</span>
-        <span style="font-size: 13px; font-weight: normal; color: #5f6368;">(雙模式切換)</span>
+        <span style="font-size: 13px; font-weight: normal; color: #5f6368;">(雙空間獨立版)</span>
     </h1>
 
     <div class="mode-switcher">
@@ -52,6 +53,7 @@
         <button id="btnMode9000" class="mode-btn" onclick="switchMode(9000)">🚀 9000碰 (四星四柱版)</button>
     </div>
 
+    <!-- 獨立參數設定面板 -->
     <div class="settings-panel">
         <h3>
             <span id="settingsTitle">⚙️ 1800碰 參數設定面板</span>
@@ -65,12 +67,21 @@
         </div>
     </div>
 
+    <!-- 單筆新增 -->
     <div class="form-group">
         <label>日期：</label>
         <input type="date" id="inputDate">
         <label>5個號碼：</label>
         <input type="text" id="inputBalls" placeholder="例如: 07 09 12 15 27" style="flex: 1; min-width: 200px;">
-        <button onclick="addNewRecord()">新增並計算</button>
+        <button onclick="addNewRecord()">單筆新增並計算</button>
+    </div>
+
+    <!-- 批量一鍵匯入多期面板 -->
+    <div class="batch-panel">
+        <h3>📋 批量一鍵匯入多期開獎號碼</h3>
+        <div style="font-size: 12px; color: #5f6368; margin-bottom: 6px;">格式範例 (每行一筆)：2026-09-10 07 09 12 15 27</div>
+        <textarea id="batchText" placeholder="請直接將多行歷史資料貼在這邊..."></textarea>
+        <button onclick="batchImport()">一鍵匯入所有期數</button>
     </div>
 
     <div class="stats-box" id="statsContainer"></div>
@@ -86,10 +97,66 @@
 <script>
     let currentMode = 1800;
 
-    let settings1800 = { baseCost: 1800, rebatePercent: 37, multiplier: 1 }; // multiplier 代表下注金額/倍數
+    // 兩套完全獨立的參數設定
+    let settings1800 = { baseCost: 1800, rebatePercent: 37, multiplier: 1 }; 
     let settings9000 = { baseCost: 9000, rebatePercent: 50, prize2Puffs: 8000 };
 
-    const rawData = [
+    // 兩套完全獨立的資料庫空間
+    let rawData1800 = [
+        "2026-09-10 07 09 12 15 27", "2026-09-09 01 09 15 37 38", "2026-09-08 04 06 15 22 25", "2026-09-07 12 13 17 28 34", "2026-09-06 06 12 14 24 32",
+        "2026-09-05 08 24 26 35 39", "2026-09-04 04 07 10 27 38", "2026-09-03 03 06 23 29 35", "2026-09-02 01 07 08 18 39", "2026-09-01 09 12 28 30 37",
+        "2026-08-31 06 23 27 28 31", "2026-08-30 03 04 14 29 30", "2026-08-29 04 12 29 30 39", "2026-08-28 02 13 20 22 38", "2026-08-27 02 07 17 23 38",
+        "2026-08-26 02 24 27 35 39", "2026-08-25 09 11 14 16 34", "2026-08-24 08 10 22 23 36", "2026-08-23 02 15 22 29 33", "2026-08-22 04 25 31 37 39",
+        "2026-08-21 10 30 31 34 35", "2026-08-20 09 15 25 32 38", "2026-08-19 05 15 31 38 39", "2026-08-18 07 15 21 33 34", "2026-08-17 02 05 14 31 39",
+        "2026-08-16 02 08 10 23 39", "2026-08-15 04 07 10 25 31", "2026-08-14 09 11 13 27 36", "2026-08-13 06 11 14 21 24", "2026-08-12 05 08 11 21 32",
+        "2026-08-11 09 10 11 13 25", "2026-08-10 09 14 19 26 32", "2026-08-09 05 11 14 27 33", "2026-08-08 01 14 19 35 38", "2026-08-07 08 17 28 32 34",
+        "2026-08-06 04 10 35 37 39", "2026-08-05 19 23 29 30 38", "2026-08-04 08 16 19 24 32", "2026-08-03 02 03 20 24 27", "2026-08-02 02 15 21 25 29",
+        "2026-08-01 03 17 18 20 37", "2026-07-31 06 13 26 29 31", "2026-07-30 12 19 26 29 39", "2026-07-29 05 14 21 30 34", "2026-07-28 01 11 19 34 39",
+        "2026-07-27 14 16 18 24 25", "2026-07-26 04 12 14 17 20", "2026-07-25 11 14 16 22 32", "2026-07-24 03 16 19 30 33", "2026-07-23 01 14 16 22 23",
+        "2026-07-22 16 25 27 28 39", "2026-07-21 14 27 29 31 33", "2026-07-20 12 13 21 27 28", "2026-07-19 04 12 19 27 33", "2026-07-18 03 27 31 32 36",
+        "2026-07-17 07 08 11 17 39", "2026-07-16 02 05 10 26 34", "2026-07-15 12 23 26 29 38", "2026-07-14 06 09 31 33 37", "2026-07-13 02 05 19 27 34",
+        "2026-07-12 01 07 12 15 33", "2026-07-11 10 12 25 28 34", "2026-07-10 02 06 11 21 27", "2026-07-09 11 23 25 28 36", "2026-07-08 06 13 26 27 36",
+        "2026-07-07 13 18 21 23 30", "2026-07-06 11 16 17 19 36", "2026-07-05 06 11 29 34 38", "2026-07-04 04 06 15 26 29", "2026-07-03 04 09 28 35 36",
+        "2026-07-02 04 22 27 34 39", "2026-07-01 11 17 28 35 36", "2026-06-30 09 12 22 37 38", "2026-06-29 03 15 25 27 34", "2026-06-28 22 29 34 36 37",
+        "2026-06-27 12 22 29 33 36", "2026-06-26 03 06 18 27 35", "2026-06-25 02 03 12 19 36", "2026-06-24 03 05 23 32 38", "2026-06-23 01 05 11 16 24",
+        "2026-06-22 05 11 20 32 36", "2026-06-21 01 02 13 19 35", "2026-06-20 17 23 33 35 39", "2026-06-19 05 08 20 32 38", "2026-06-18 13 21 22 25 30",
+        "2026-06-17 01 06 27 30 37", "2026-06-16 05 09 19 33 37", "2026-06-15 01 14 24 32 35", "2026-06-14 02 06 26 32 37", "2026-06-13 13 14 16 17 33",
+        "2026-06-12 02 06 31 33 37", "2026-06-11 06 28 35 36 37", "2026-06-10 05 06 21 23 31", "2026-06-09 04 11 24 26 39", "2026-06-08 11 22 23 26 28",
+        "2026-06-07 14 23 32 36 37", "2026-06-06 02 05 06 24 28", "2026-06-05 06 23 25 27 38", "2026-06-04 09 17 28 29 33", "2026-06-03 05 11 19 25 31",
+        "2026-06-02 06 14 23 28 37", "2026-06-01 04 09 15 20 30", "2026-05-31 01 15 21 23 24", "2026-05-30 02 05 27 35 36", "2026-05-29 02 12 20 30 34",
+        "2026-05-28 07 15 16 22 30", "2026-05-27 02 06 19 22 27", "2026-05-26 02 14 34 35 39", "2026-05-25 02 04 11 12 24", "2026-05-24 07 26 33 35 37",
+        "2026-05-23 06 14 16 28 36", "2026-05-22 01 06 11 34 39", "2026-05-21 02 10 16 20 39", "2026-05-20 09 13 15 18 19", "2026-05-19 11 16 30 31 33",
+        "2026-05-18 03 12 15 29 33", "2026-05-17 10 12 21 22 30", "2026-05-16 06 10 26 29 33", "2026-05-15 01 08 31 32 38", "2026-05-14 04 19 23 24 32",
+        "2026-05-13 08 17 25 31 33", "2026-05-12 14 17 19 29 38", "2026-05-11 09 11 17 25 29", "2026-05-10 04 11 12 28 35", "2026-05-09 05 09 12 14 15",
+        "2026-05-08 03 08 12 26 29", "2026-05-07 02 05 13 16 36", "2026-05-06 08 13 18 32 36", "2026-05-05 09 13 17 19 31", "2026-05-04 05 10 14 16 22",
+        "2026-05-03 11 16 18 20 23", "2026-05-02 08 19 28 35 36", "2026-05-01 10 14 21 33 39", "2026-04-30 01 05 20 21 39", "2026-04-29 14 19 33 37 38",
+        "2026-04-28 02 04 05 10 31", "2026-04-27 09 11 18 33 37", "2026-04-26 01 05 06 20 34", "2026-04-25 03 06 18 29 34", "2026-04-24 15 17 30 34 35",
+        "2026-04-23 09 14 19 30 33", "2026-04-22 02 11 12 35 39", "2026-04-21 07 17 36 38 39", "2026-04-20 13 16 23 33 36", "2026-04-19 01 10 13 14 31",
+        "2026-04-18 09 10 23 24 25", "2026-04-17 08 10 21 22 38", "2026-04-16 21 28 30 32 39", "2026-04-15 02 08 23 33 34", "2026-04-14 03 13 20 29 37",
+        "2026-04-13 14 16 20 22 38", "2026-04-12 10 16 18 27 28", "2026-04-11 11 12 28 29 31", "2026-04-10 01 05 17 23 32", "2026-04-09 06 07 08 27 32",
+        "2026-04-08 04 08 23 28 29", "2026-04-07 04 05 20 21 39", "2026-04-06 04 13 16 19 37", "2026-04-05 01 04 09 18 32", "2026-04-04 14 15 23 30 37",
+        "2026-04-03 07 21 25 31 37", "2026-04-02 07 12 16 20 32", "2026-04-01 04 05 10 13 32", "2026-03-31 01 09 18 31 36", "2026-03-30 01 03 14 20 29",
+        "2026-03-29 02 10 16 27 39", "2026-03-28 04 06 25 26 33", "2026-03-27 02 17 18 26 35", "2026-03-26 04 05 17 24 38", "2026-03-25 09 12 20 23 26",
+        "2026-03-24 04 09 17 26 35", "2026-03-23 04 07 10 28 37", "2026-03-22 04 30 33 37 39", "2026-03-21 13 18 27 31 32", "2026-03-20 03 14 20 27 37",
+        "2026-03-19 08 13 21 27 31", "2026-03-18 12 19 20 30 36", "2026-03-17 10 12 13 19 26", "2026-03-16 13 23 25 34 36", "2026-03-15 14 17 24 34 35",
+        "2026-03-14 09 21 23 27 33", "2026-03-13 09 15 18 26 35", "2026-03-12 16 19 21 29 38", "2026-03-11 18 24 28 34 39", "2026-03-10 21 22 32 35 38",
+        "2026-03-09 04 14 15 23 29", "2026-03-08 10 19 29 33 36", "2026-03-07 10 15 31 35 38", "2026-03-06 03 17 18 27 35", "2026-03-05 01 03 04 13 17",
+        "2026-03-04 12 13 16 25 38", "2026-03-03 06 07 30 32 33", "2026-03-02 08 10 11 21 29", "2026-03-01 10 13 24 32 38", "2026-02-28 26 29 30 31 32",
+        "2026-02-27 03 09 10 20 27", "2026-02-26 05 07 10 33 34", "2026-02-25 03 04 14 31 33", "2026-02-24 03 10 20 26 30", "2026-02-23 03 24 25 34 37",
+        "2026-02-22 19 23 29 30 36", "2026-02-21 10 19 22 31 36", "2026-02-20 03 22 27 31 37", "2026-02-19 06 08 14 22 28", "2026-02-18 08 11 26 28 35",
+        "2026-02-17 01 03 15 17 21", "2026-02-16 04 09 14 26 34", "2026-02-15 02 13 20 28 30", "2026-02-14 11 15 18 25 27", "2026-02-13 14 18 23 27 29",
+        "2026-02-12 04 10 19 23 26", "2026-02-11 04 05 12 26 32", "2026-02-10 02 08 11 36 37", "2026-02-09 18 20 24 29 33", "2026-02-08 08 12 15 24 34",
+        "2026-02-07 05 11 26 28 39", "2026-02-06 08 26 28 32 38", "2026-02-05 09 11 25 26 29", "2026-02-04 05 06 13 15 23", "2026-02-03 01 08 23 24 36",
+        "2026-02-02 06 12 19 22 25", "2026-02-01 02 14 18 20 35", "2026-01-31 09 13 18 24 28", "2026-01-30 02 04 08 17 21", "2026-01-29 05 06 13 27 32",
+        "2026-01-28 01 04 22 33 39", "2026-01-27 01 02 05 07 20", "2026-01-26 01 14 19 27 37", "2026-01-25 15 18 25 33 35", "2026-01-24 11 14 15 20 36",
+        "2026-01-23 06 08 11 27 28", "2026-01-22 13 14 18 26 32", "2026-01-21 07 08 13 22 28", "2026-01-20 11 19 22 27 30", "2026-01-19 16 18 19 31 37",
+        "2026-01-18 08 18 28 33 39", "2026-01-17 03 08 16 31 33", "2026-01-16 06 18 28 32 36", "2026-01-15 02 09 12 25 39", "2026-01-14 04 09 25 27 35",
+        "2026-01-13 13 18 27 28 35", "2026-01-12 07 16 17 19 35", "2026-01-11 12 13 15 24 34", "2026-01-10 23 25 28 29 35", "2026-01-09 02 15 19 24 36",
+        "2026-01-08 02 03 09 11 31", "2026-01-07 01 10 28 31 39", "2026-01-06 05 09 15 21 24", "2026-01-05 09 19 20 26 32", "2026-01-04 01 04 34 37 39",
+        "2026-01-03 09 14 19 20 24", "2026-01-02 13 14 24 25 35", "2026-01-01 01 03 09 11 21"
+    ];
+
+    let rawData9000 = [
         "2026-09-10 07 09 12 15 27", "2026-09-09 01 09 15 37 38", "2026-09-08 04 06 15 22 25", "2026-09-07 12 13 17 28 34", "2026-09-06 06 12 14 24 32",
         "2026-09-05 08 24 26 35 39", "2026-09-04 04 07 10 27 38", "2026-09-03 03 06 23 29 35", "2026-09-02 01 07 08 18 39", "2026-09-01 09 12 28 30 37",
         "2026-08-31 06 23 27 28 31", "2026-08-30 03 04 14 29 30", "2026-08-29 04 12 29 30 39", "2026-08-28 02 13 20 22 38", "2026-08-27 02 07 17 23 38",
@@ -168,7 +235,7 @@
             container.innerHTML = `
                 <div class="setting-item"><label>牌面總本金</label><input type="number" id="cfgBaseCost" value="${settings1800.baseCost}" disabled></div>
                 <div class="setting-item"><label>退水比例 (%)</label><input type="number" id="cfgRebate" value="${settings1800.rebatePercent}" disabled></div>
-                <div class="setting-item"><label>下注金額/倍數 (預設1)</label><input type="number" id="cfgPrize" value="${settings1800.multiplier}" disabled></div>
+                <div class="setting-item"><label>下注金額/倍數</label><input type="number" id="cfgPrize" value="${settings1800.multiplier}" disabled></div>
             `;
         } else {
             container.innerHTML = `
@@ -258,13 +325,15 @@
         let statsContainer = document.getElementById("statsContainer");
         tbody.innerHTML = "";
 
+        let currentData = (currentMode === 1800) ? rawData1800 : rawData9000;
+
         if (currentMode === 1800) {
             thead.innerHTML = `<tr><th>日期</th><th>開出號碼</th><th>第一柱(10-18)</th><th>第二柱(20-29)</th><th>第三柱(19+01-09+30-39)</th><th>結果狀態</th></tr>`;
             
             let count4 = 0, count3 = 0;
             let costPer期 = settings1800.baseCost * (1 - settings1800.rebatePercent / 100);
 
-            rawData.forEach(item => {
+            currentData.forEach(item => {
                 let parts = item.trim().split(/\s+/);
                 let date = parts[0], balls = parts.slice(1);
                 let res = check1800(balls);
@@ -279,10 +348,8 @@
                 tbody.appendChild(tr);
             });
 
-            let totalCount = rawData.length;
+            let totalCount = currentData.length;
             let totalCost = totalCount * costPer期;
-            
-            // 核心套用：三碰 = 3 * 570 * 金額(multiplier)；四碰 = 4 * 570 * 金額(multiplier)
             let totalRevenue = (count4 * 4 * 570 * settings1800.multiplier) + (count3 * 3 * 570 * settings1800.multiplier);
             let netProfit = totalRevenue - totalCost;
 
@@ -299,7 +366,7 @@
             let passCount = 0;
             let costPer期 = settings9000.baseCost * (1 - settings9000.rebatePercent / 100);
 
-            rawData.forEach(item => {
+            currentData.forEach(item => {
                 let parts = item.trim().split(/\s+/);
                 let date = parts[0], balls = parts.slice(1);
                 let res = check9000(balls);
@@ -312,7 +379,7 @@
                 tbody.appendChild(tr);
             });
 
-            let totalCount = rawData.length;
+            let totalCount = currentData.length;
             let totalCost = totalCount * costPer期;
             let totalRevenue = passCount * 2 * settings9000.prize2Puffs;
             let netProfit = totalRevenue - totalCost;
@@ -342,9 +409,42 @@
         }
 
         let newEntry = `${date} ${balls.join(" ")}`;
-        rawData.unshift(newEntry);
+        if (currentMode === 1800) {
+            rawData1800.unshift(newEntry);
+        } else {
+            rawData9000.unshift(newEntry);
+        }
+
         renderTable();
         document.getElementById("inputBalls").value = "";
+        alert("單筆新增成功！");
+    }
+
+    function batchImport() {
+        let text = document.getElementById("batchText").value.trim();
+        if (!text) {
+            alert("請先貼上要匯入的資料！");
+            return;
+        }
+
+        let lines = text.split("\n");
+        let addedCount = 0;
+
+        lines.forEach(line => {
+            line = line.trim();
+            if (line) {
+                if (currentMode === 1800) {
+                    rawData1800.unshift(line);
+                } else {
+                    rawData9000.unshift(line);
+                }
+                addedCount++;
+            }
+        });
+
+        renderTable();
+        document.getElementById("batchText").value = "";
+        alert(`成功批量匯入 ${addedCount} 筆資料！`);
     }
 
     renderSettingsPanel();
