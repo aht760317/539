@@ -2,41 +2,84 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <title>天天樂 1800碰 立柱計算與記錄系統</title>
+    <title>天天樂 1800碰 立柱即時結算系統</title>
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f4f6f9; margin: 0; padding: 20px; color: #333; }
-        .container { max-width: 900px; margin: 0 auto; background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-        h1 { font-size: 22px; color: #1a73e8; margin-top: 0; border-bottom: 2px solid #eee; padding-bottom: 10px; }
-        .form-group { display: flex; gap: 10px; margin-bottom: 20px; background: #f8f9fa; padding: 15px; border-radius: 8px; align-items: center; flex-wrap: wrap; }
+        .container { max-width: 950px; margin: 0 auto; background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+        h1 { font-size: 22px; color: #1a73e8; margin-top: 0; border-bottom: 2px solid #eee; padding-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        
+        .settings-panel { background: #f8f9fa; border: 1px solid #dfe1e5; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+        .settings-panel h3 { margin: 0 0 10px; font-size: 15px; color: #3c4043; display: flex; justify-content: space-between; align-items: center; }
+        .setting-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 10px; }
+        .setting-item label { display: block; font-size: 12px; color: #5f6368; margin-bottom: 4px; font-weight: bold; }
+        .setting-item input { width: 100%; padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; box-sizing: border-box; }
+        .setting-actions { display: flex; gap: 10px; align-items: center; margin-top: 10px; }
+        
+        .form-group { display: flex; gap: 10px; margin-bottom: 20px; background: #e8f0fe; padding: 15px; border-radius: 8px; align-items: center; flex-wrap: wrap; }
         .form-group input { padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; }
-        .form-group button { background: #1a73e8; color: white; border: none; padding: 9px 18px; border-radius: 6px; cursor: pointer; font-weight: bold; }
-        .form-group button:hover { background: #1557b0; }
+        .form-group button, .setting-actions button { background: #1a73e8; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        .form-group button:hover, .setting-actions button:hover { background: #1557b0; }
+
         .stats-box { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 25px; }
-        .stat-card { background: #e8f0fe; padding: 15px; border-radius: 8px; text-align: center; }
+        .stat-card { background: #f1f3f4; padding: 15px; border-radius: 8px; text-align: center; }
         .stat-card h3 { margin: 0 0 5px; font-size: 14px; color: #5f6368; }
         .stat-card p { margin: 0; font-size: 20px; font-weight: bold; color: #1a73e8; }
+        
         table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }
         th, td { padding: 10px 12px; text-align: center; border-bottom: 1px solid #eee; }
         th { background: #f8f9fa; color: #3c4043; }
         .badge-4 { background: #ceead6; color: #0d652d; padding: 4px 8px; border-radius: 4px; font-weight: bold; }
         .badge-3 { background: #feefc3; color: #b06000; padding: 4px 8px; border-radius: 4px; font-weight: bold; }
-        .badge-0 { background: #fce8e6; color: #c5221f; padding: 4px 8px; font-weight: bold; }
-        .table-container { max-height: 500px; overflow-y: auto; border: 1px solid #eee; border-radius: 8px; }
+        .badge-0 { background: #fce8e6; color: #c5221f; padding: 4px 8px; border-radius: 4px; font-weight: bold; }
+        .table-container { max-height: 450px; overflow-y: auto; border: 1px solid #eee; border-radius: 8px; }
+        .locked-text { color: #d93025; font-size: 13px; font-weight: normal; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>天天樂 1800碰（三柱全包）即時統計系統</h1>
+    <h1>
+        <span>天天樂 1800碰 智慧結算系統</span>
+        <span style="font-size: 13px; font-weight: normal; color: #5f6368;">(三柱全包版)</span>
+    </h1>
 
+    <!-- 系統設定面板 -->
+    <div class="settings-panel">
+        <h3>
+            <span>⚙️ 參數設定面板</span>
+            <span id="lockStatus" class="locked-text">🔒 狀態：已鎖定 (需密碼 0000 解鎖)</span>
+        </h3>
+        <div class="setting-grid">
+            <div class="setting-item">
+                <label>牌面總本金 (元)</label>
+                <input type="number" id="cfgBaseCost" value="1800" disabled>
+            </div>
+            <div class="setting-item">
+                <label>退水比例 (%) 例如 37</label>
+                <input type="number" id="cfgRebate" value="37" disabled>
+            </div>
+            <div class="setting-item">
+                <label>單碰三星獎金 (元)</label>
+                <input type="number" id="cfgPrize" value="570" disabled>
+            </div>
+        </div>
+        <div class="setting-actions">
+            <input type="password" id="inputPwd" placeholder="輸入密碼 0000" style="padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px; width: 130px;">
+            <button onclick="unlockSettings()" style="background: #5f6368;">解鎖修改</button>
+            <button id="btnSave" onclick="saveSettings()" style="background: #28a745; display: none;">儲存並重新計算</button>
+        </div>
+    </div>
+
+    <!-- 新增紀錄面板 -->
     <div class="form-group">
         <label>日期：</label>
         <input type="date" id="inputDate">
-        <label>5個號碼 (空格隔開)：</label>
+        <label>5個號碼：</label>
         <input type="text" id="inputBalls" placeholder="例如: 07 09 12 15 27" style="flex: 1; min-width: 200px;">
         <button onclick="addNewRecord()">新增並計算</button>
     </div>
 
+    <!-- 統計看板 -->
     <div class="stats-box">
         <div class="stat-card">
             <h3>總期數</h3>
@@ -51,11 +94,12 @@
             <p id="count3">0</p>
         </div>
         <div class="stat-card">
-            <h3>估算總營利</h3>
+            <h3>總營利結算</h3>
             <p id="totalProfit">$0</p>
         </div>
     </div>
 
+    <!-- 列表 -->
     <div class="table-container">
         <table>
             <thead>
@@ -76,7 +120,14 @@
 </div>
 
 <script>
-    // 預設代入您提供的完整 253 筆資料
+    // 預設全域設定變數
+    let currentSettings = {
+        baseCost: 1800,
+        rebatePercent: 37,
+        unitPrize: 570
+    };
+
+    // 預設帶入完整 253 筆資料
     const rawData = [
         "2026-09-10 07 09 12 15 27", "2026-09-09 01 09 15 37 38", "2026-09-08 04 06 15 22 25", "2026-09-07 12 13 17 28 34", "2026-09-06 06 12 14 24 32",
         "2026-09-05 08 24 26 35 39", "2026-09-04 04 07 10 27 38", "2026-09-03 03 06 23 29 35", "2026-09-02 01 07 08 18 39", "2026-09-01 09 12 28 30 37",
@@ -133,10 +184,51 @@
 
     let records = [];
 
+    // 解鎖功能
+    function unlockSettings() {
+        let pwd = document.getElementById("inputPwd").value;
+        if (pwd === "0000") {
+            document.getElementById("cfgBaseCost").disabled = false;
+            document.getElementById("cfgRebate").disabled = false;
+            document.getElementById("cfgPrize").disabled = false;
+            document.getElementById("btnSave").style.display = "inline-block";
+            document.getElementById("lockStatus").innerText = "🔓 狀態：已解鎖，可進行修改";
+            document.getElementById("lockStatus").style.color = "#28a745";
+            alert("密碼正確，設定已解鎖！");
+        } else {
+            alert("密碼錯誤！請輸入 0000");
+        }
+    }
+
+    // 儲存設定並重新計算
+    function saveSettings() {
+        let bCost = parseFloat(document.getElementById("cfgBaseCost").value);
+        let rebate = parseFloat(document.getElementById("cfgRebate").value);
+        let prize = parseFloat(document.getElementById("cfgPrize").value);
+
+        if (isNaN(bCost) || isNaN(rebate) || isNaN(prize)) {
+            alert("請填入有效的數字！");
+            return;
+        }
+
+        currentSettings.baseCost = bCost;
+        currentSettings.rebatePercent = rebate;
+        currentSettings.unitPrize = prize;
+
+        // 重新上鎖
+        document.getElementById("cfgBaseCost").disabled = true;
+        document.getElementById("cfgRebate").disabled = true;
+        document.getElementById("cfgPrize").disabled = true;
+        document.getElementById("btnSave").style.display = "none";
+        document.getElementById("inputPwd").value = "";
+        document.getElementById("lockStatus").innerText = "🔒 狀態：已鎖定 (需密碼 0000 解鎖)";
+        document.getElementById("lockStatus").style.color = "#d93025";
+
+        renderTable();
+        alert("設定已儲存並重新完成營利結算！");
+    }
+
     // 柱位判定邏輯
-    // 第一柱：10-18
-    // 第二柱：20-29
-    // 第三柱：19 + (01-09) + (30-39)
     function checkPillars(balls) {
         let p1 = 0, p2 = 0, p3 = 0;
         balls.forEach(n => {
@@ -146,25 +238,20 @@
             } else if (num >= 20 && num <= 29) {
                 p2++;
             } else {
-                // 包含 19 及 01-09、30-39
                 p3++;
             }
         });
 
-        // 檢查是否斷柱（任一柱為 0 則沒中三星）
         if (p1 === 0 || p2 === 0 || p3 === 0) {
             return { type: 0, text: "未中獎", p1, p2, p3 };
         }
 
-        // 計算碰數：組合公式 $\binom{c1}{1}\binom{c2}{1}\binom{c3}{1}$ 等同於各柱球數相乘
         let totalPuffs = p1 * p2 * p3;
-
         if (totalPuffs === 4) {
             return { type: 4, text: "4碰", p1, p2, p3 };
         } else if (totalPuffs === 3) {
             return { type: 3, text: "3碰", p1, p2, p3 };
         } else {
-            // 保險判斷（理論上 3 柱選 5 球分配不會大於 4 碰）
             return { type: totalPuffs, text: `${totalPuffs}碰`, p1, p2, p3 };
         }
     }
@@ -185,7 +272,9 @@
 
         let count4 = 0;
         let count3 = 0;
-        let costPer期 = 1134; // 37%退傭後實付成本
+
+        // 依據目前設定計算實付成本
+        let costPer期 = currentSettings.baseCost * (1 - currentSettings.rebatePercent / 100);
 
         records.forEach(r => {
             if (r.result.type === 4) count4++;
@@ -209,8 +298,8 @@
 
         let totalCount = records.length;
         let totalCost = totalCount * costPer期;
-        // 獎金計算：4碰領 4*570，3碰領 3*570
-        let totalRevenue = (count4 * 4 * 570) + (count3 * 3 * 570);
+        // 獎金：4碰領 4 * 單碰獎金，3碰領 3 * 單碰獎金
+        let totalRevenue = (count4 * 4 * currentSettings.unitPrize) + (count3 * 3 * currentSettings.unitPrize);
         let netProfit = totalRevenue - totalCost;
 
         document.getElementById("totalCount").innerText = totalCount + " 期";
@@ -218,7 +307,7 @@
         document.getElementById("count3").innerText = count3 + " 次";
         
         let profitElement = document.getElementById("totalProfit");
-        profitElement.innerText = (netProfit >= 0 ? "+$" : "-$") + Math.abs(netProfit).toLocaleString();
+        profitElement.innerText = (netProfit >= 0 ? "+$" : "-$") + Math.abs(Math.round(netProfit)).toLocaleString();
         profitElement.style.color = netProfit >= 0 ? "#28a745" : "#dc3545";
     }
 
@@ -238,11 +327,10 @@
         }
 
         let newEntry = `${date} ${balls.join(" ")}`;
-        rawData.unshift(newEntry); // 加到最前面
+        rawData.unshift(newEntry);
         processData();
         renderTable();
 
-        // 清空輸入框
         document.getElementById("inputBalls").value = "";
     }
 
