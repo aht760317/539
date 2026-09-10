@@ -139,7 +139,7 @@
         .ai-prob { color: #0284c7; font-size: 15px; font-weight: 900; }
         
         .strategy-box {
-            margin-top: 12px; padding: 10px; border-radius: 8px; text-align: center; font-weight: 900; font-size: 13px;
+            margin-top: 12px; padding: 10px; border-radius: 8px; text-align: center; font-weight: 900; font-size: 13px; line-height: 1.6;
         }
     </style>
 </head>
@@ -307,17 +307,17 @@
         document.getElementById(`cfg-cost-${key}`).value = unitBet * base;
     }
 
-    // 🚀 動態均值回歸預測模型 & 保本倍投計算機
+    // 🚀 動態均值回歸預測模型 & 莊家戰略指令 (升級版)
     function getPredictionHtml(key, cfg) {
         let data = spaceData[key] || [];
         
-        // 確保資料是由新到舊排序
         let sortedData = [...data].sort((a, b) => new Date(b.date) - new Date(a.date));
+        // 取 2026 年資料來算基本勝率
         let thisYearData = sortedData.filter(item => item.date.startsWith('2026'));
         let totalDraws = thisYearData.length;
         let wins = 0;
         
-        // 找出目前「連續未開」期數
+        // 1. 偵測「近期連續未開」期數
         let currentLosingStreak = 0;
         for (let i = 0; i < sortedData.length; i++) {
             let res = cfg.type === '1800' ? check1800(sortedData[i].draw) : check9000(sortedData[i].draw);
@@ -325,70 +325,79 @@
             if (!isWin) {
                 currentLosingStreak++;
             } else {
-                break; // 遇到贏的就中斷，得到近期連敗次數
+                break;
             }
         }
 
-        // 計算今年歷史勝率
+        // 計算今年勝率
         thisYearData.forEach(item => {
             let res = cfg.type === '1800' ? check1800(item.draw) : check9000(item.draw);
             if ((cfg.type === '1800' && res.puffs >= 3) || (cfg.type === '9000' && res.pass)) wins++;
         });
         
-        let histWinRate = totalDraws > 0 ? (wins / totalDraws) : 0;
-        // 若完全沒資料，給個基底勝率 (1800 碰約 15%，9000 碰約 25% 供初始參考)
-        if (totalDraws === 0) histWinRate = cfg.type === '1800' ? 0.15 : 0.25;
+        let histWinRate = totalDraws > 0 ? (wins / totalDraws) : (cfg.type === '1800' ? 0.15 : 0.25);
 
-        // 💥 均值回歸修正機率
-        // 隨著連敗期數增加，宇宙的拉力會越來越大，我們給予每期 5%~10% 的權重提升
-        let regressionBoost = currentLosingStreak * 0.08; 
-        let nextProb = Math.min(histWinRate + regressionBoost, 0.99); // 最高不超過 99%
+        // 2. 均值回歸修正機率 (連續悶越久，下一期開出機率越飆高)
+        let regressionBoost = currentLosingStreak * 0.12; 
+        let nextProb = Math.min(histWinRate + regressionBoost, 0.99);
 
-        // 🛡️ 智能護城河與倍投計算
+        // 3. 護城河與倍投精算
         let costPerRound = cfg.totalCost * (1 - cfg.rebate / 100);
         let minWinPrize = cfg.type === '1800' ? (3 * cfg.unitPrize * cfg.unitBet) : (2 * cfg.unitPrize * cfg.unitBet);
-        
-        // 計算容錯空間：連續幾期平推不會虧？
         let maxFlatRounds = Math.floor(minWinPrize / costPerRound);
         
+        // 4. 下達無情的莊家戰略指令
         let strategyHtml = "";
-        if (currentLosingStreak === 0) {
+        
+        if (totalDraws === 0) {
             strategyHtml = `
-                <div class="strategy-box" style="background: #ecfdf5; color: #065f46; border: 1px solid #34d399;">
-                    🎉 剛開出獲利！建議：平推 1 倍，順勢收割。
+                <div class="strategy-box" style="background: #f1f5f9; color: #475569; border: 1px dashed #cbd5e1;">
+                    ⏳ 缺乏歷史數據，請先使用一鍵匯入倒進歷史開獎。
                 </div>`;
-        } else if (currentLosingStreak < maxFlatRounds) {
+        } else if (currentLosingStreak === 0) {
             strategyHtml = `
-                <div class="strategy-box" style="background: #f0fdf4; color: #166534; border: 1px solid #86efac;">
-                    🛡️ 護城河防禦中！目前虧損可被 1 次過關覆蓋，<br>建議：繼續平推，無需倍投！
+                <div class="strategy-box" style="background: #fef2f2; color: #dc2626; border: 2px solid #fecaca;">
+                    【❄️ 絕對空手觀望】<br>
+                    上一期剛大爆發開出！均值已被重置釋放完畢。<br>
+                    這時進場等於送錢給莊家，請鎖死資金耐心等待！
+                </div>`;
+        } else if (currentLosingStreak === 1 || currentLosingStreak === 2) {
+             strategyHtml = `
+                <div class="strategy-box" style="background: #f8fafc; color: #64748b; border: 2px solid #e2e8f0;">
+                    【👀 獵豹潛伏期】<br>
+                    目前悶了 ${currentLosingStreak} 期，拉力正在成形中。<br>
+                    建議：資金先不動，等待肥羊散戶幫我們扛掉機率。
+                </div>`;
+        } else if (currentLosingStreak > 2 && currentLosingStreak <= maxFlatRounds) {
+            strategyHtml = `
+                <div class="strategy-box" style="background: #ecfdf5; color: #059669; border: 2px solid #6ee7b7;">
+                    【🔥 精準狙擊進場！】<br>
+                    回歸拉力極強！您的「護城河」還能扛得住平推。<br>
+                    👉 建議下注：<span style="font-size:16px;">維持平推 1 倍</span> 穩穩收割。
                 </div>`;
         } else {
-            // 已超過平推極限，啟動黃金倍投 (斐波那契數列)
-            // 這裡簡單計算：為了要覆蓋已虧損總額 (連敗期數 * 成本) + 下一期成本，求需要下注幾倍
+            // 超過平推極限，啟動黃金倍投逆推
             let totalLoss = currentLosingStreak * costPerRound;
-            // 解方程式： 倍數 * minWinPrize > totalLoss + (倍數 * costPerRound)
-            // 倍數 * (minWinPrize - costPerRound) > totalLoss
-            // 倍數 > totalLoss / (minWinPrize - costPerRound)
             let requiredMulti = Math.ceil(totalLoss / (minWinPrize - costPerRound));
-            // 限制最低倍數為 2
             requiredMulti = Math.max(requiredMulti, 2);
 
             strategyHtml = `
-                <div class="strategy-box" style="background: #fffbeb; color: #b45309; border: 1px solid #fcd34d;">
-                    🔥 均值拉力逼近！建議啟用保本倍投策略：<br>
-                    下一期下注 <span style="font-size:16px; color:#dc2626;">${requiredMulti}</span> 倍，過關即可全部回本並獲利！
+                <div class="strategy-box" style="background: #fffbeb; color: #b45309; border: 2px solid #fcd34d;">
+                    【⚔️ 啟動保本倍投策略】<br>
+                    已經逼近極端機率！平推已無法覆蓋虧損。<br>
+                    👉 建議下注：改成 <span style="font-size:18px; color:#dc2626;">${requiredMulti}</span> 倍，中獎即連本帶利全收！
                 </div>`;
         }
 
         return `
             <div class="ai-prediction-box">
-                <h5>🤖 動態均值回歸與倍投預測</h5>
+                <h5>🤖 動態均值回歸預測與莊家指令</h5>
                 <div class="ai-row">
                     <span style="color:var(--text-muted);">近期連續未開：</span>
                     <span class="ai-highlight">${currentLosingStreak} 期</span>
                 </div>
                 <div class="ai-row">
-                    <span style="color:var(--text-muted);">長期平均勝率：</span>
+                    <span style="color:var(--text-muted);">歷史平均物理勝率：</span>
                     <span style="color:#0f172a;">${(histWinRate * 100).toFixed(1)}%</span>
                 </div>
                 <div class="ai-row">
