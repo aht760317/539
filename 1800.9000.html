@@ -81,12 +81,12 @@
         }
         .settings-panel h3, .batch-panel h3, .input-panel h2 { margin-bottom: 12px; font-size: 15px; font-weight: 900; display: flex; justify-content: space-between; align-items: center; color: var(--text-main); }
         
-        .setting-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin-bottom: 12px; }
-        .space-config-card { background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 12px; }
-        .space-config-card h4 { font-size: 13px; font-weight: 900; color: var(--purple-color); margin-bottom: 8px; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px; }
+        .setting-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; margin-bottom: 12px; }
+        .space-config-card { background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 14px; }
+        .space-config-card h4 { font-size: 13px; font-weight: 900; color: var(--purple-color); margin-bottom: 10px; border-bottom: 1px solid #e2e8f0; padding-bottom: 5px; }
         .setting-item { margin-bottom: 8px; }
         .setting-item label { display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 3px; font-weight: bold; }
-        .setting-item input { width: 100%; padding: 6px 8px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-size: 13px; font-family: monospace; font-weight: bold; box-sizing: border-box; }
+        .setting-item input { width: 100%; padding: 7px 9px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-size: 13px; font-family: monospace; font-weight: bold; box-sizing: border-box; }
         .setting-item input:disabled { background: #f1f5f9; color: #64748b; }
         .setting-actions { display: flex; gap: 10px; align-items: center; margin-top: 12px; flex-wrap: wrap; border-top: 1px solid #e2e8f0; padding-top: 12px; }
 
@@ -155,7 +155,7 @@
         </div>
     </div>
 
-    <!-- 批量匯入面板 (整合在設定與中樞區) -->
+    <!-- 批量匯入面板 (在擂台設定區顯示) -->
     <div class="batch-panel" id="batch-input-panel">
         <h3>📋 多天歷史開獎號碼整頁貼上一鍵導入</h3>
         <div class="form-row" style="margin-bottom: 8px;">
@@ -226,12 +226,13 @@
 
     let currentSpace = 'arena';
 
+    // 移除下注倍數，換成 unitBet (下注金額)，totalCost 為牌面總本金
     let spaceConfigs = {
-        'tt-1800': { name: '天天樂 1800碰 (三星全包版)', baseCost: 1800, rebate: 37, multi: 1, unitPrize: 570, type: '1800' },
-        'tt-9000': { name: '天天樂 9000碰 (四星四柱版)', baseCost: 9000, rebate: 50, multi: 1, unitPrize: 8000, type: '9000' },
-        '539-1800': { name: '五三九 1800碰 (三星全包版)', baseCost: 1800, rebate: 37, multi: 1, unitPrize: 570, type: '1800' },
-        '539-9000': { name: '五三九 9000碰 (四星四柱版)', baseCost: 9000, rebate: 50, multi: 1, unitPrize: 8000, type: '9000' },
-        'arena': { name: 'AI 科技對決擂台', baseCost: 0, rebate: 0, multi: 1, unitPrize: 0, type: 'arena' }
+        'tt-1800': { name: '天天樂 1800碰 (三星全包版)', unitBet: 1, basePuffs: 1800, totalCost: 1800, rebate: 37, unitPrize: 570, type: '1800' },
+        'tt-9000': { name: '天天樂 9000碰 (四星四柱版)', unitBet: 1, basePuffs: 9000, totalCost: 9000, rebate: 50, unitPrize: 8000, type: '9000' },
+        '539-1800': { name: '五三九 1800碰 (三星全包版)', unitBet: 1, basePuffs: 1800, totalCost: 1800, rebate: 37, unitPrize: 570, type: '1800' },
+        '539-9000': { name: '五三九 9000碰 (四星四柱版)', unitBet: 1, basePuffs: 9000, totalCost: 9000, rebate: 50, unitPrize: 8000, type: '9000' },
+        'arena': { name: 'AI 科技對決擂台', unitBet: 0, totalCost: 0, rebate: 0, unitPrize: 0, type: 'arena' }
     };
 
     let spaceData = {
@@ -262,7 +263,6 @@
         let historyPanel = document.getElementById('history-panel');
 
         if (spaceKey === 'arena') {
-            // 擂台空間：顯示中樞設定與多期匯入，隱藏單筆填寫與戰績表格
             arenaSettingsPanel.style.display = 'block';
             batchPanel.style.display = 'block';
             inputPanel.style.display = 'none';
@@ -270,7 +270,6 @@
             historyPanel.style.display = 'none';
             renderSettingsPanel();
         } else {
-            // 一般賽道：隱藏中樞與多期匯入，顯示單筆輸入、統計看板與戰績表
             arenaSettingsPanel.style.display = 'none';
             batchPanel.style.display = 'none';
             inputPanel.style.display = 'block';
@@ -279,6 +278,13 @@
             document.getElementById('batch-target-space').value = spaceKey;
             renderMain();
         }
+    }
+
+    // 當修改「下注金額」時，牌面總本金自動連動倍增
+    window.onUnitBetChange = function(key) {
+        let unitBet = parseFloat(document.getElementById(`cfg-unitbet-${key}`).value) || 0;
+        let base = spaceConfigs[key].basePuffs || (key.includes('1800') ? 1800 : 9000);
+        document.getElementById(`cfg-cost-${key}`).value = unitBet * base;
     }
 
     function renderSettingsPanel() {
@@ -291,10 +297,22 @@
             html += `
                 <div class="space-config-card">
                     <h4>${cfg.name}</h4>
-                    <div class="setting-item"><label>牌面總本金 (元)</label><input type="number" id="cfg-cost-${key}" value="${cfg.baseCost}" disabled></div>
-                    <div class="setting-item"><label>退水比例 (%)</label><input type="number" id="cfg-rebate-${key}" value="${cfg.rebate}" disabled></div>
-                    <div class="setting-item"><label>${labelPrize}</label><input type="number" id="cfg-prize-${key}" value="${cfg.unitPrize}" disabled></div>
-                    <div class="setting-item"><label>下注倍數</label><input type="number" id="cfg-multi-${key}" value="${cfg.multi}" step="0.1" disabled></div>
+                    <div class="setting-item">
+                        <label>下注金額 (元/碰)</label>
+                        <input type="number" id="cfg-unitbet-${key}" value="${cfg.unitBet}" step="0.5" oninput="onUnitBetChange('${key}')" disabled>
+                    </div>
+                    <div class="setting-item">
+                        <label>牌面總本金 (元)</label>
+                        <input type="number" id="cfg-cost-${key}" value="${cfg.totalCost}" disabled>
+                    </div>
+                    <div class="setting-item">
+                        <label>退水比例 (%)</label>
+                        <input type="number" id="cfg-rebate-${key}" value="${cfg.rebate}" disabled>
+                    </div>
+                    <div class="setting-item">
+                        <label>${labelPrize}</label>
+                        <input type="number" id="cfg-prize-${key}" value="${cfg.unitPrize}" disabled>
+                    </div>
                 </div>
             `;
         });
@@ -310,15 +328,15 @@
         let pwd = document.getElementById('input-pwd').value;
         if (pwd === "0000") {
             ['tt-1800', 'tt-9000', '539-1800', '539-9000'].forEach(key => {
+                document.getElementById(`cfg-unitbet-${key}`).disabled = false;
                 document.getElementById(`cfg-cost-${key}`).disabled = false;
                 document.getElementById(`cfg-rebate-${key}`).disabled = false;
                 document.getElementById(`cfg-prize-${key}`).disabled = false;
-                document.getElementById(`cfg-multi-${key}`).disabled = false;
             });
             document.getElementById('btn-save').style.display = 'inline-block';
-            document.getElementById('lock-status').innerText = "🔓 狀態：已解鎖";
+            document.getElementById('lock-status').innerText = "🔓 狀態：已解鎖 (可修改全部設定)";
             document.getElementById('lock-status').style.color = "var(--success-color)";
-            alert("密碼正確，全系統參數已解鎖！");
+            alert("密碼正確，全部設定參數已解鎖！");
         } else {
             alert("密碼錯誤！請輸入 0000");
         }
@@ -326,21 +344,21 @@
 
     window.saveSettings = function() {
         ['tt-1800', 'tt-9000', '539-1800', '539-9000'].forEach(key => {
+            let unitBet = parseFloat(document.getElementById(`cfg-unitbet-${key}`).value);
             let cost = parseFloat(document.getElementById(`cfg-cost-${key}`).value);
             let rebate = parseFloat(document.getElementById(`cfg-rebate-${key}`).value);
             let prize = parseFloat(document.getElementById(`cfg-prize-${key}`).value);
-            let multi = parseFloat(document.getElementById(`cfg-multi-${key}`).value);
 
-            if (!isNaN(cost)) spaceConfigs[key].baseCost = cost;
+            if (!isNaN(unitBet)) spaceConfigs[key].unitBet = unitBet;
+            if (!isNaN(cost)) spaceConfigs[key].totalCost = cost;
             if (!isNaN(rebate)) spaceConfigs[key].rebate = rebate;
             if (!isNaN(prize)) spaceConfigs[key].unitPrize = prize;
-            if (!isNaN(multi)) spaceConfigs[key].multi = multi;
 
             localStorage.setItem(`cfg_${key}`, JSON.stringify(spaceConfigs[key]));
         });
 
         renderSettingsPanel();
-        alert("所有空間設定已成功儲存並同步連動結算！");
+        alert("所有設定已成功儲存並同步連動結算！");
     }
 
     onSnapshot(collection(db, "matrix_systems"), (snapshot) => {
@@ -398,13 +416,15 @@
 
         let cfg = spaceConfigs[currentSpace];
         let data = spaceData[currentSpace];
-        let costPerRound = (cfg.baseCost * (1 - cfg.rebate / 100)) * cfg.multi;
+
+        // 當期實付本金 = 牌面總本金 * (1 - 退水比例/100)
+        let costPerRound = cfg.totalCost * (1 - cfg.rebate / 100);
         let totalCount = data.length;
         let totalCost = totalCount * costPerRound;
         let totalRevenue = 0;
 
         if (cfg.type === '1800') {
-            thead.innerHTML = `<tr><th>📅 日期</th><th>📺 開獎 5 碼</th><th>第一柱(10-18)</th><th>第二柱(20-29)</th><th>第三柱(其它)</th><th>結果狀態</th><th>中獎碰數</th><th>當期彩金 (碰數×單碰×倍數)</th><th>操作</th></tr>`;
+            thead.innerHTML = `<tr><th>📅 日期</th><th>📺 開獎 5 碼</th><th>第一柱(10-18)</th><th>第二柱(20-29)</th><th>第三柱(其它)</th><th>結果狀態</th><th>中獎碰數</th><th>當期彩金 (碰數×單碰×下注元)</th><th>操作</th></tr>`;
 
             let count4 = 0, count3 = 0;
             data.forEach(item => {
@@ -412,7 +432,8 @@
                 if (res.puffs === 4) count4++;
                 else if (res.puffs === 3) count3++;
 
-                let prize = res.puffs * cfg.unitPrize * cfg.multi;
+                // 彩金計算：中獎碰數 × 單碰彩金 × 下注金額
+                let prize = res.puffs * cfg.unitPrize * cfg.unitBet;
                 totalRevenue += prize;
 
                 let badge = res.puffs >= 4 ? "badge-success" : (res.puffs > 0 ? "badge-warning" : "badge-danger");
@@ -440,14 +461,15 @@
             `;
 
         } else {
-            thead.innerHTML = `<tr><th>📅 日期</th><th>📺 開獎 5 碼</th><th>第1柱(01-09)</th><th>第2柱(10-19)</th><th>第3柱(20-29)</th><th>第4柱(30-39)</th><th>結果狀態</th><th>中獎碰數</th><th>當期彩金 (碰數×單碰×倍數)</th><th>操作</th></tr>`;
+            thead.innerHTML = `<tr><th>📅 日期</th><th>📺 開獎 5 碼</th><th>第1柱(01-09)</th><th>第2柱(10-19)</th><th>第3柱(20-29)</th><th>第4柱(30-39)</th><th>結果狀態</th><th>中獎碰數</th><th>當期彩金 (碰數×單碰×下注元)</th><th>操作</th></tr>`;
 
             let passCount = 0;
             data.forEach(item => {
                 let res = check9000(item.draw);
                 if (res.pass) passCount++;
 
-                let prize = res.puffs * cfg.unitPrize * cfg.multi;
+                // 彩金計算：中獎碰數 (2碰) × 單碰彩金 × 下注金額
+                let prize = res.puffs * cfg.unitPrize * cfg.unitBet;
                 totalRevenue += prize;
 
                 let badge = res.pass ? "badge-success" : "badge-danger";
@@ -512,7 +534,6 @@
         }
     }
 
-    // 歷史紀錄批次匯入：支援指定目標空間（1800碰 或 9000碰，天天樂 或 五三九）
     window.batchImport = async function() {
         let targetSpace = document.getElementById('batch-target-space').value;
         let text = document.getElementById('batch-text').value.trim();
