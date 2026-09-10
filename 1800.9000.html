@@ -69,6 +69,7 @@
         .mode-switcher { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 8px; margin-bottom: 18px; }
         .mode-btn { padding: 10px 14px; border: 2px solid #cbd5e1; background: #ffffff; color: #475569; font-size: 13px; font-weight: 900; border-radius: 10px; cursor: pointer; transition: all 0.2s; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
         .mode-btn.active { border-color: var(--primary-color); background: var(--primary-color); color: #fff; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25); }
+        .mode-btn.arena-btn.active { border-color: var(--purple-color); background: var(--purple-color); box-shadow: 0 4px 12px rgba(124, 58, 237, 0.25); }
 
         .settings-panel, .batch-panel, .input-panel, .history-panel { 
             background: var(--panel-bg); 
@@ -81,13 +82,16 @@
         }
         .settings-panel h3, .batch-panel h3, .input-panel h2 { margin-bottom: 12px; font-size: 15px; font-weight: 900; display: flex; justify-content: space-between; align-items: center; color: var(--text-main); }
         
-        .setting-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 10px; }
-        .setting-item label { display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 4px; font-weight: bold; }
-        .setting-item input { width: 100%; padding: 7px 10px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-size: 14px; font-family: monospace; font-weight: bold; box-sizing: border-box; }
-        .setting-item input:disabled { background: #f8fafc; color: #64748b; }
-        .setting-actions { display: flex; gap: 10px; align-items: center; margin-top: 10px; flex-wrap: wrap; }
+        .setting-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-bottom: 12px; }
+        .space-config-card { background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 12px; }
+        .space-config-card h4 { font-size: 13px; font-weight: 900; color: var(--purple-color); margin-bottom: 8px; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px; }
+        .setting-item { margin-bottom: 8px; }
+        .setting-item label { display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 3px; font-weight: bold; }
+        .setting-item input { width: 100%; padding: 6px 8px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-size: 13px; font-family: monospace; font-weight: bold; box-sizing: border-box; }
+        .setting-item input:disabled { background: #f1f5f9; color: #64748b; }
+        .setting-actions { display: flex; gap: 10px; align-items: center; margin-top: 12px; flex-wrap: wrap; border-top: 1px solid #e2e8f0; padding-top: 12px; }
 
-        .form-row { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 12px; }
+        .form-row { display: flex; flex-wrap: gap; gap: 12px; margin-bottom: 12px; }
         .form-group { flex: 1; min-width: 170px; display: flex; flex-direction: column; gap: 4px; }
         .form-group label { font-size: 11px; font-weight: 800; color: #334155; }
         .form-group input { padding: 8px 10px; background: #ffffff; border: 1.5px solid #cbd5e1; color: var(--text-main); border-radius: 6px; font-size: 14px; outline: none; font-family: monospace; font-weight: 600; }
@@ -131,29 +135,29 @@
 
     <!-- 五大空間切換選單 -->
     <div class="mode-switcher">
-        <button id="btn-tt-1800" class="mode-btn active" onclick="switchSpace('tt-1800')">📊 天天樂 1800碰 (三星)</button>
+        <button id="btn-tt-1800" class="mode-btn" onclick="switchSpace('tt-1800')">📊 天天樂 1800碰 (三星)</button>
         <button id="btn-tt-9000" class="mode-btn" onclick="switchSpace('tt-9000')">🚀 天天樂 9000碰 (四星)</button>
         <button id="btn-539-1800" class="mode-btn" onclick="switchSpace('539-1800')">📊 五三九 1800碰 (三星)</button>
         <button id="btn-539-9000" class="mode-btn" onclick="switchSpace('539-9000')">🚀 五三九 9000碰 (四星)</button>
-        <button id="btn-arena" class="mode-btn" onclick="switchSpace('arena')" style="border-color:var(--purple-color); color:var(--purple-color);">⚔️ AI 科技對決擂台</button>
+        <button id="btn-arena" class="mode-btn arena-btn active" onclick="switchSpace('arena')">⚔️ AI 科技對決擂台</button>
     </div>
 
-    <!-- 獨立參數設定面板 (需密碼 0000) -->
-    <div class="settings-panel">
+    <!-- 集中參數設定面板 (移至擂台空間) -->
+    <div class="settings-panel" id="arena-settings-panel">
         <h3>
-            <span id="settings-title">⚙️ 當前空間參數設定面板</span>
+            <span>⚙️ 全系統戰略中樞與各空間參數設定面板</span>
             <span id="lock-status" class="locked-text">🔒 狀態：已鎖定 (需密碼 0000 解鎖)</span>
         </h3>
         <div class="setting-grid" id="setting-inputs"></div>
         <div class="setting-actions">
             <input type="password" id="input-pwd" placeholder="輸入密碼 0000" style="padding: 6px 10px; border: 1.5px solid #cbd5e1; border-radius: 6px; width: 130px; font-size:13px;">
             <button class="btn-action" onclick="unlockSettings()" style="background: #64748b;">解鎖修改</button>
-            <button class="btn-action" id="btn-save" onclick="saveSettings()" style="background: #059669; display: none;">儲存並同步雲端</button>
+            <button class="btn-action" id="btn-save" onclick="saveSettings()" style="background: #059669; display: none;">儲存全部參數並同步雲端</button>
         </div>
     </div>
 
     <!-- 單筆新增 / 補填面板 -->
-    <div class="input-panel">
+    <div class="input-panel" id="single-input-panel">
         <h2 id="input-panel-title">📝 單筆新增 / 事後補填開獎號碼</h2>
         <div class="form-row">
             <div class="form-group" style="flex: 0.6;">
@@ -169,7 +173,7 @@
     </div>
 
     <!-- 批量匯入面板 -->
-    <div class="batch-panel">
+    <div class="batch-panel" id="batch-input-panel">
         <h3>📋 多天歷史開獎號碼整頁貼上一鍵導入</h3>
         <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 6px;">格式範例 (每行一筆)：<code>2026-09-10 07 09 12 15 27</code> 或使用逗號</div>
         <textarea id="batch-text" placeholder="請直接將多行歷史資料貼在這邊..."></textarea>
@@ -208,8 +212,7 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // 五大空間設定與資料庫管理
-    let currentSpace = 'tt-1800';
+    let currentSpace = 'arena';
 
     let spaceConfigs = {
         'tt-1800': { name: '天天樂 1800碰 (三星全包版)', baseCost: 1800, rebate: 37, multi: 1, type: '1800' },
@@ -238,43 +241,41 @@
         document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
         document.getElementById(`btn-${spaceKey}`).classList.add('active');
 
-        document.getElementById('settings-title').innerText = `⚙️ ${spaceConfigs[spaceKey].name} 參數設定面板`;
-        
-        let panel = document.querySelector('.settings-panel');
-        let batchPanel = document.querySelector('.batch-panel');
-        let inputPanel = document.querySelector('.input-panel');
-        
+        let arenaSettingsPanel = document.getElementById('arena-settings-panel');
+        let batchPanel = document.getElementById('batch-input-panel');
+        let inputPanel = document.getElementById('single-input-panel');
+
         if (spaceKey === 'arena') {
-            panel.style.display = 'none';
+            arenaSettingsPanel.style.display = 'block';
             batchPanel.style.display = 'none';
             inputPanel.style.display = 'none';
+            renderSettingsPanel();
         } else {
-            panel.style.display = 'block';
+            arenaSettingsPanel.style.display = 'none';
             batchPanel.style.display = 'block';
             inputPanel.style.display = 'block';
-            renderSettingsPanel();
         }
 
         renderMain();
     }
 
     function renderSettingsPanel() {
-        let cfg = spaceConfigs[currentSpace];
         let container = document.getElementById('setting-inputs');
+        let html = '';
 
-        if (cfg.type === '1800') {
-            container.innerHTML = `
-                <div class="setting-item"><label>牌面總本金 (元)</label><input type="number" id="cfg-cost" value="${cfg.baseCost}" disabled></div>
-                <div class="setting-item"><label>退水比例 (%)</label><input type="number" id="cfg-rebate" value="${cfg.rebate}" disabled></div>
-                <div class="setting-item"><label>下注金額 / 倍數</label><input type="number" id="cfg-multi" value="${cfg.multi}" disabled></div>
+        ['tt-1800', 'tt-9000', '539-1800', '539-9000'].forEach(key => {
+            let cfg = spaceConfigs[key];
+            html += `
+                <div class="space-config-card">
+                    <h4>${cfg.name}</h4>
+                    <div class="setting-item"><label>牌面總本金 (元)</label><input type="number" id="cfg-cost-${key}" value="${cfg.baseCost}" disabled></div>
+                    <div class="setting-item"><label>退水比例 (%)</label><input type="number" id="cfg-rebate-${key}" value="${cfg.rebate}" disabled></div>
+                    <div class="setting-item"><label>下注倍數</label><input type="number" id="cfg-multi-${key}" value="${cfg.multi}" disabled></div>
+                </div>
             `;
-        } else {
-            container.innerHTML = `
-                <div class="setting-item"><label>牌面總本金 (元)</label><input type="number" id="cfg-cost" value="${cfg.baseCost}" disabled></div>
-                <div class="setting-item"><label>退水比例 (%)</label><input type="number" id="cfg-rebate" value="${cfg.rebate}" disabled></div>
-                <div class="setting-item"><label>下注金額 / 倍數</label><input type="number" id="cfg-multi" value="${cfg.multi}" disabled></div>
-            `;
-        }
+        });
+
+        container.innerHTML = html;
         document.getElementById('btn-save').style.display = 'none';
         document.getElementById('input-pwd').value = '';
         document.getElementById('lock-status').innerText = "🔒 狀態：已鎖定 (需密碼 0000 解鎖)";
@@ -284,33 +285,36 @@
     window.unlockSettings = function() {
         let pwd = document.getElementById('input-pwd').value;
         if (pwd === "0000") {
-            document.getElementById('cfg-cost').disabled = false;
-            document.getElementById('cfg-rebate').disabled = false;
-            document.getElementById('cfg-multi').disabled = false;
+            ['tt-1800', 'tt-9000', '539-1800', '539-9000'].forEach(key => {
+                document.getElementById(`cfg-cost-${key}`).disabled = false;
+                document.getElementById(`cfg-rebate-${key}`).disabled = false;
+                document.getElementById(`cfg-multi-${key}`).disabled = false;
+            });
             document.getElementById('btn-save').style.display = 'inline-block';
             document.getElementById('lock-status').innerText = "🔓 狀態：已解鎖";
             document.getElementById('lock-status').style.color = "var(--success-color)";
-            alert("密碼正確，設定已解鎖！");
+            alert("密碼正確，全系統參數已解鎖！");
         } else {
             alert("密碼錯誤！請輸入 0000");
         }
     }
 
     window.saveSettings = function() {
-        let cost = parseFloat(document.getElementById('cfg-cost').value);
-        let rebate = parseFloat(document.getElementById('cfg-rebate').value);
-        let multi = parseFloat(document.getElementById('cfg-multi').value);
+        ['tt-1800', 'tt-9000', '539-1800', '539-9000'].forEach(key => {
+            let cost = parseFloat(document.getElementById(`cfg-cost-${key}`).value);
+            let rebate = parseFloat(document.getElementById(`cfg-rebate-${key}`).value);
+            let multi = parseFloat(document.getElementById(`cfg-multi-${key}`).value);
 
-        if (isNaN(cost) || isNaN(rebate) || isNaN(multi)) return alert("請輸入有效的數字！");
+            if (!isNaN(cost)) spaceConfigs[key].baseCost = cost;
+            if (!isNaN(rebate)) spaceConfigs[key].rebate = rebate;
+            if (!isNaN(multi)) spaceConfigs[key].multi = multi;
 
-        spaceConfigs[currentSpace].baseCost = cost;
-        spaceConfigs[currentSpace].rebate = rebate;
-        spaceConfigs[currentSpace].multi = multi;
+            localStorage.setItem(`cfg_${key}`, JSON.stringify(spaceConfigs[key]));
+        });
 
-        localStorage.setItem(`cfg_${currentSpace}`, JSON.stringify(spaceConfigs[currentSpace]));
         renderSettingsPanel();
         renderMain();
-        alert("設定已成功儲存與更新結算！");
+        alert("所有空間參數已成功儲存並同步連動結算！");
     }
 
     // Firebase 實時連線
@@ -330,7 +334,6 @@
         console.error("雲端同步錯誤:", err);
     });
 
-    // 柱位計算邏輯
     function check1800(balls) {
         let p1 = 0, p2 = 0, p3 = 0;
         balls.forEach(n => {
@@ -359,20 +362,20 @@
     }
 
     function renderMain() {
+        let thead = document.getElementById('table-head');
+        let tbody = document.getElementById('result-tbody');
+        let statsContainer = document.getElementById('stats-container');
+        tbody.innerHTML = '';
+
         if (currentSpace === 'arena') {
-            document.getElementById('stats-container').innerHTML = `<div class="stat-card" style="grid-column:1/-1;"><h3>提示</h3><p>科技對決擂台可切換至上方 1800/9000 碰專屬空間進行立柱與倍投結算！</p></div>`;
-            document.getElementById('table-head').innerHTML = `<tr><th>說明</th></tr>`;
-            document.getElementById('result-tbody').innerHTML = `<tr><td>請切換至天天樂或五三九的 1800 / 9000 碰空間。</td></tr>`;
+            statsContainer.innerHTML = `<div class="stat-card" style="grid-column:1/-1;"><h3>💡 系統提示</h3><p>上方已整合全系統「參數設定與控制中樞」，您可以點擊上方其他 4 個獨立賽道分頁查看各別的歷史戰績與連動計算結果！</p></div>`;
+            thead.innerHTML = `<tr><th>⚔️ AI 科技對決擂台總覽</th></tr>`;
+            tbody.innerHTML = `<tr><td style="padding: 24px; color: var(--text-muted);">請點選上方標籤切換至「天天樂」或「五三九」的 1800 / 9000 碰空間，即可即時檢視由中樞參數所連動計算的戰績與營利。</td></tr>`;
             return;
         }
 
         let cfg = spaceConfigs[currentSpace];
         let data = spaceData[currentSpace];
-        let tbody = document.getElementById('result-tbody');
-        let thead = document.getElementById('table-head');
-        let statsContainer = document.getElementById('stats-container');
-        tbody.innerHTML = '';
-
         let costPerRound = cfg.baseCost * (1 - cfg.rebate / 100);
         let totalCount = data.length;
         let totalCost = totalCount * costPerRound;
@@ -385,8 +388,8 @@
             data.forEach(item => {
                 let res = check1800(item.draw);
                 let prize = 0;
-                if (res.type === 4) { count4++; prize = 4 * 570 * cfg.multiplier; }
-                else if (res.type === 3) { count3++; prize = 3 * 570 * cfg.multiplier; }
+                if (res.type === 4) { count4++; prize = 4 * 570 * cfg.multi; }
+                else if (res.type === 3) { count3++; prize = 3 * 570 * cfg.multi; }
                 totalRevenue += prize;
 
                 let badge = res.type === 4 ? "badge-success" : (res.type === 3 ? "badge-warning" : "badge-danger");
@@ -419,7 +422,7 @@
             data.forEach(item => {
                 let res = check9000(item.draw);
                 let prize = 0;
-                if (res.pass) { passCount++; prize = 2 * 8000 * cfg.multiplier; }
+                if (res.pass) { passCount++; prize = 2 * 8000 * cfg.multi; }
                 totalRevenue += prize;
 
                 let badge = res.pass ? "badge-success" : "badge-danger";
@@ -516,7 +519,7 @@
     }
 
     document.getElementById('input-date').value = new Date().toISOString().split('T')[0];
-    switchSpace('tt-1800');
+    switchSpace('arena');
 </script>
 
 </body>
