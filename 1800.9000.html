@@ -338,7 +338,7 @@
         if (savedCfg) spaceConfigs[key] = { ...spaceConfigs[key], ...JSON.parse(savedCfg) };
     });
 
-    // 防呆驗證的檢查函數
+    // 防呆驗證的檢查函數 (自動精算 3碰/4碰)
     function check1800(balls) {
         if (!balls || !Array.isArray(balls)) return { puffs: 0, text: "錯誤", p1:0, p2:0, p3:0 };
         let p1=0, p2=0, p3=0;
@@ -393,24 +393,9 @@
         }
     }
 
-    window.updateConfigDisplay = function(key) {
+    window.onUnitBetChange = function(key) {
         let unitBet = parseFloat(document.getElementById(`cfg-unitbet-${key}`).value) || 0;
-        let basePuffs = spaceConfigs[key].basePuffs;
-        let rebate = parseFloat(document.getElementById(`cfg-rebate-${key}`).value) || 0;
-        let unitPrize = parseFloat(document.getElementById(`cfg-prize-${key}`).value) || 0;
-        
-        let costInput = document.getElementById(`cfg-cost-${key}`);
-        if(costInput) costInput.value = unitBet * basePuffs;
-
-        let realCost = unitBet * basePuffs * (1 - rebate / 100);
-        let winPuffs = spaceConfigs[key].type === '1800' ? 3 : 2;
-        let totalPrize = unitBet * winPuffs * unitPrize;
-        let netProfit = totalPrize - realCost;
-
-        let elRealCost = document.getElementById(`display-realcost-${key}`);
-        let elNetProfit = document.getElementById(`display-netprofit-${key}`);
-        if(elRealCost) elRealCost.innerText = `$${Math.round(realCost).toLocaleString()}`;
-        if(elNetProfit) elNetProfit.innerText = `+$${Math.round(netProfit).toLocaleString()}`;
+        document.getElementById(`cfg-cost-${key}`).value = unitBet * spaceConfigs[key].basePuffs;
     }
 
     function analyzeRadar(gameType) {
@@ -732,32 +717,47 @@
                 let cfg = analysis.cfg;
                 let labelPrize = cfg.type === '1800' ? '三星單碰(元)' : '四星單碰(元)';
 
-                let realCost = cfg.unitBet * cfg.basePuffs * (1 - cfg.rebate / 100);
-                let winPuffs = cfg.type === '1800' ? 3 : 2;
-                let totalPrize = cfg.unitBet * winPuffs * cfg.unitPrize;
-                let netProfit = totalPrize - realCost;
+                // ★ 精算該區塊的「歷史累積投入」與「歷史總營利」
+                let histCost = 0;
+                let histPrize = 0;
+                let list = spaceData[key] || [];
+                list.forEach(item => {
+                    if (!item || !item.draw || !Array.isArray(item.draw)) return;
+                    let myBet = item.myBet !== undefined ? parseFloat(item.myBet) : 0;
+                    if (myBet > 0) {
+                        let roundCost = myBet * Number(cfg.basePuffs) * (1 - Number(cfg.rebate) / 100);
+                        histCost += roundCost;
+                        let res = cfg.type === '1800' ? check1800(item.draw) : check9000(item.draw);
+                        let roundPrize = res.puffs * Number(cfg.unitPrize) * myBet;
+                        histPrize += roundPrize;
+                    }
+                });
+                let histProfit = histPrize - histCost;
 
                 html += `
                     <div class="space-config-card">
                         <h4>${cfg.name}</h4>
                         <div class="input-row">
-                            <div class="setting-item"><label>預測下注 (元/碰)</label><input type="number" id="cfg-unitbet-${key}" value="${cfg.unitBet}" step="0.1" oninput="updateConfigDisplay('${key}')" disabled></div>
+                            <div class="setting-item"><label>預測下注 (元/碰)</label><input type="number" id="cfg-unitbet-${key}" value="${cfg.unitBet}" step="0.1" oninput="onUnitBetChange('${key}')" disabled></div>
                             <div class="setting-item"><label>牌面本金 (元)</label><input type="number" id="cfg-cost-${key}" value="${cfg.unitBet * cfg.basePuffs}" disabled></div>
                         </div>
                         <div class="input-row">
-                            <div class="setting-item"><label>退水 (%)</label><input type="number" id="cfg-rebate-${key}" value="${cfg.rebate}" oninput="updateConfigDisplay('${key}')" disabled></div>
-                            <div class="setting-item"><label>${labelPrize}</label><input type="number" id="cfg-prize-${key}" value="${cfg.unitPrize}" oninput="updateConfigDisplay('${key}')" disabled></div>
+                            <div class="setting-item"><label>退水 (%)</label><input type="number" id="cfg-rebate-${key}" value="${cfg.rebate}" disabled></div>
+                            <div class="setting-item"><label>${labelPrize}</label><input type="number" id="cfg-prize-${key}" value="${cfg.unitPrize}" disabled></div>
                         </div>
-                        <div style="background:#f1f5f9; padding:8px; border-radius:6px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; border: 1px solid #cbd5e1;">
-                            <div style="text-align:center; flex:1; border-right: 1px solid #cbd5e1;">
-                                <div style="font-size:10px; color:#64748b; font-weight:bold;">真實單期成本</div>
-                                <div style="font-size:14px; font-weight:900; color:#475569; font-family:monospace;" id="display-realcost-${key}">$${Math.round(realCost).toLocaleString()}</div>
+                        
+                        <!-- ★ 該區塊的歷史真實累積損益看板 -->
+                        <div style="background:#f8fafc; padding:8px; border-radius:6px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; border: 1px dashed #cbd5e1;">
+                            <div style="text-align:center; flex:1; border-right: 1px dashed #cbd5e1;">
+                                <div style="font-size:10px; color:#64748b; font-weight:bold;">該區塊累積投入成本</div>
+                                <div style="font-size:14px; font-weight:900; color:#475569; font-family:monospace;">$${Math.round(histCost).toLocaleString()}</div>
                             </div>
                             <div style="text-align:center; flex:1;">
-                                <div style="font-size:10px; color:#64748b; font-weight:bold;">過關單期淨利</div>
-                                <div style="font-size:14px; font-weight:900; color:#059669; font-family:monospace;" id="display-netprofit-${key}">+$${Math.round(netProfit).toLocaleString()}</div>
+                                <div style="font-size:10px; color:#64748b; font-weight:bold;">該區塊歷史總營利</div>
+                                <div style="font-size:14px; font-weight:900; color:${histProfit >= 0 ? '#059669' : '#dc2626'}; font-family:monospace;">${histProfit >= 0 ? '+$' : '-$'}${Math.abs(Math.round(histProfit)).toLocaleString()}</div>
                             </div>
                         </div>
+
                         ${getPredictionHtml(analysis)}
                     </div>
                 `;
