@@ -118,12 +118,10 @@
         .giant-card .g-title { font-size: 10px; color: #475569; font-weight: bold; margin-bottom: 2px; }
         .giant-card .g-val { font-size: 13px; font-weight: 900; color: #0f172a; }
         
-        /* 綠燈 (達標推薦) */
         .giant-card.highlight { background: #ecfdf5; border-color: #34d399; box-shadow: 0 2px 4px rgba(16, 185, 129, 0.1); }
         .giant-card.highlight .g-title { color: #065f46; }
         .giant-card.highlight .g-val { color: #059669; }
         
-        /* 淡紅燈 (未達標警告) */
         .giant-card.danger { background: #fef2f2; border-color: #fca5a5; box-shadow: 0 2px 4px rgba(220, 38, 38, 0.05); }
         .giant-card.danger .g-title { color: #991b1b; }
         .giant-card.danger .g-val { color: #dc2626; }
@@ -150,11 +148,13 @@
         textarea { width: 100%; height: 80px; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-family: monospace; font-size: 12px; margin-bottom: 8px; }
         .btn-main { background: linear-gradient(135deg, #0284c7, #2563eb); color: white; border: none; padding: 10px; font-size: 13px; font-weight: 900; border-radius: 8px; cursor: pointer; width: 100%; }
 
+        /* 修改：6宮格統計數據 */
         .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 14px; }
-        @media (min-width: 768px) { .stats-grid { grid-template-columns: repeat(4, 1fr); } }
-        .stat-item { background: #fff; padding: 12px; border-radius: 8px; text-align: center; border: 1px solid #e2e8f0; }
+        @media (min-width: 768px) { .stats-grid { grid-template-columns: repeat(3, 1fr); } }
+        @media (min-width: 1024px) { .stats-grid { grid-template-columns: repeat(6, 1fr); } }
+        .stat-item { background: #fff; padding: 12px; border-radius: 8px; text-align: center; border: 1px solid #e2e8f0; display: flex; flex-direction: column; justify-content: center; }
         .stat-item h3 { font-size: 11px; color: #64748b; margin-bottom: 4px; font-weight:bold;}
-        .stat-item p { font-size: 18px; font-weight: 900; font-family: monospace; margin:0;}
+        .stat-item p { font-size: 16px; font-weight: 900; font-family: monospace; margin:0;}
 
         .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 8px; border: 1px solid #e2e8f0; }
         table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 700px; }
@@ -204,7 +204,6 @@
     <!-- 模塊 1：決策矩陣 (Arena) -->
     <!-- ========================================== -->
     
-    <!-- 📖 新增：六大巨頭指標說明書 -->
     <div class="guide-box" id="arena-guide" style="display:none;">
         <h4 onclick="toggleGuide()">📖 六大巨頭指標說明書 (點擊展開/收合) <span>▼</span></h4>
         <div class="guide-grid" id="guide-content">
@@ -289,7 +288,6 @@
             在此輸入每天「真實下注」的金額 (元/碰)。系統會根據您的「資金策略」與「虧損額」，自動給出下一局最優打法！僅支援整數輸入 (1, 2, 3...)。
         </div>
 
-        <!-- ★ 資金策略選擇器 -->
         <div class="form-group" style="margin-bottom: 12px; background: #f8fafc; padding: 10px; border-radius: 8px; border: 1px dashed #94a3b8;">
             <label style="color: #0f172a; font-size: 12px; font-weight:900;">🛡️ 選擇當前資金控管策略 (將即時改變下方建議)：</label>
             <select id="ledger-strategy" style="color: var(--primary-color); font-weight:bold; margin-top:4px;" onchange="renderLedgerSummary()">
@@ -354,13 +352,13 @@
             </div>
             <div class="form-group" style="flex: 1;">
                 <label>真實下注 (元/碰)</label>
-                <!-- 限制整數 step="1" -->
                 <input type="number" id="input-mybet" step="1" min="0" value="1" style="background:#ecfdf5; border-color:#a7f3d0; color:#065f46;">
             </div>
         </div>
         <button class="btn-main" onclick="addNewRecord()">☁️ 儲存並結算</button>
     </div>
 
+    <!-- ★ 新增 6宮格數據看板 (歷史過關率 vs 當前爆發機率) -->
     <div class="stats-grid" id="stats-container" style="display:none;"></div>
 
     <div class="panel" id="history-panel" style="display:none;">
@@ -392,9 +390,8 @@
 
     let currentSpace = 'arena';
     let currentYear = new Date().getFullYear();
-    let selectedYear = currentYear.toString(); // 預設現在年份
+    let selectedYear = currentYear.toString();
 
-    // 參數初始化
     let spaceConfigs = {
         'tt-1800': { name: '天天樂 1800碰', unitBet: 1, basePuffs: 1800, rebate: 37, unitPrize: 570, type: '1800' },
         'tt-9000': { name: '天天樂 9000碰', unitBet: 1, basePuffs: 9000, rebate: 50, unitPrize: 8000, type: '9000' },
@@ -409,12 +406,11 @@
         if (savedCfg) spaceConfigs[key] = { ...spaceConfigs[key], ...JSON.parse(savedCfg) };
     });
 
-    // 📅 初始化年度選單 (動態支援至未來 5 年)
     function initYearFilter() {
         let select = document.getElementById('global-year-filter');
         if(!select) return;
         select.innerHTML = '<option value="all">所有歷史年度</option>';
-        let maxYear = currentYear + 5; // 預留未來5年
+        let maxYear = currentYear + 5; 
         for(let y = maxYear; y >= 2010; y--) {
             select.innerHTML += `<option value="${y}" ${y === currentYear ? 'selected' : ''}>${y} 年度</option>`;
         }
@@ -448,7 +444,6 @@
         return { pass, puffs: pass?2:0, text: pass?"過關":"斷柱", q1, q2, q3, q4 };
     }
 
-    // 資料過濾核心：所有運算都要經過此函數過濾年度
     function getFilteredData(spaceKey) {
         let rawData = spaceData[spaceKey] || [];
         return rawData.filter(x => {
@@ -480,7 +475,7 @@
         document.getElementById('batch-input-panel').style.display = isArena ? 'block' : 'none';
         document.getElementById('global-strategy').style.display = isArena ? 'block' : 'none';
         document.getElementById('radar-panel').style.display = isArena ? 'block' : 'none';
-        document.getElementById('arena-guide').style.display = isArena ? 'block' : 'none'; // 顯示說明書
+        document.getElementById('arena-guide').style.display = isArena ? 'block' : 'none';
         
         document.getElementById('actual-bet-panel').style.display = isLedger ? 'block' : 'none';
 
@@ -520,7 +515,6 @@
         if(elNetProfit) elNetProfit.innerText = `+$${Math.round(netProfit).toLocaleString()}`;
     }
 
-    // ★ 雷達冷卻演算法優化
     function analyzeRadar(gameType) {
         let spaceKey = gameType + '-9000';
         let data = getFilteredData(spaceKey);
@@ -530,7 +524,6 @@
         let overallHitFound = false;
 
         let colHits = { q1: 0, q2: 0, q3: 0, q4: 0 };
-        // 用來追蹤「單柱」的連漏期數
         let colStreaks = { q1: 0, q2: 0, q3: 0, q4: 0 };
         let colFound = { q1: false, q2: false, q3: false, q4: false };
 
@@ -544,20 +537,17 @@
                 if(num<=9) q1++; else if(num<=19) q2++; else if(num<=29) q3++; else q4++; 
             });
 
-            // 計算各柱歷史發生次數
             if(q1>=3) colHits.q1++;
             if(q2>=3) colHits.q2++;
             if(q3>=3) colHits.q3++;
             if(q4>=3) colHits.q4++;
 
-            // 計算整體大盤連漏
             let isTripleOrMore = (q1>=3 || q2>=3 || q3>=3 || q4>=3); 
             if (!overallHitFound) {
                 if (isTripleOrMore) overallHitFound = true;
                 else tripleLosingStreak++;
             }
 
-            // 計算單柱連漏
             if (!colFound.q1) { if(q1>=3) colFound.q1 = true; else colStreaks.q1++; }
             if (!colFound.q2) { if(q2>=3) colFound.q2 = true; else colStreaks.q2++; }
             if (!colFound.q3) { if(q3>=3) colFound.q3 = true; else colStreaks.q3++; }
@@ -570,7 +560,6 @@
         let colProbs = {};
         ['q1', 'q2', 'q3', 'q4'].forEach(k => {
             let empRate = totalDraws > 0 ? (colHits[k] / totalDraws) : 0.02;
-            // ★ 動態加權：歷史機率 + (連漏期數 * 補償係數)。剛開出的柱子(streak=0)機率會瞬間降回底層(2%~4%)。
             colProbs[k] = empRate + (colStreaks[k] * 0.005); 
         });
 
@@ -699,9 +688,9 @@
             prevWasWin = isWin;
         });
 
-        // 基礎機率計算
         let baseP_Threshold = cfg.type === '1800' ? 0.15 : 0.25;
-        let P_Win = totalDraws > 0 ? (wins / totalDraws) : baseP_Threshold;
+        let empWinRate = totalDraws > 0 ? (wins / totalDraws) : baseP_Threshold;
+        let P_Win = empWinRate; 
         let modelA_Prob = Math.min(P_Win + (losingStreak * 0.10), 0.99);
 
         let P_Win_Given_Win = (WW + WL > 0) ? (WW / (WW + WL)) : 0;
@@ -725,11 +714,10 @@
         return { 
             cfg, totalDraws, latestIsWin, continuousHits, losingStreak, 
             modelA_Prob, P_Win_Given_Win, P_Win_Given_Lose, EV, costPerRound, minPrize,
-            zScore, bayesProb, mcMaxLossStreak, expectedLosing, baseP_Threshold
+            zScore, bayesProb, mcMaxLossStreak, expectedLosing, baseP_Threshold, empWinRate
         };
     }
 
-    // 模塊1：客觀的巨頭儀表板 (UI全新優化 - 綠色達標/淡紅不達標) + 【六大指標綜合描述】
     function getPredictionHtml(analysis) {
         let { cfg, totalDraws, latestIsWin, continuousHits, losingStreak, expectedLosing, modelA_Prob, P_Win_Given_Win, P_Win_Given_Lose, EV, zScore, bayesProb, mcMaxLossStreak, costPerRound, baseP_Threshold } = analysis;
         
@@ -739,10 +727,9 @@
         let markovState = latestIsWin ? `${(P_Win_Given_Win*100).toFixed(1)}% (連中)` : `${(P_Win_Given_Lose*100).toFixed(1)}% (反轉)`;
         let adviceBayes = `${(bayesProb*100).toFixed(1)}%`;
         let adviceZ = `Z = ${Number(zScore).toFixed(2)}`;
-        let adviceMC = `${losingStreak} / ${expectedLosing} 期`; // 顯示目前連槓 vs 預期連槓
+        let adviceMC = `${losingStreak} / ${expectedLosing} 期`; 
         let evVal = EV > 0 ? `+${Number(EV).toFixed(0)}` : Number(EV).toFixed(0);
 
-        // ★ 六大巨頭單獨達標邏輯 (綠色 or 淡紅)
         let passLaplace = modelA_Prob > baseP_Threshold;
         let passBayes = bayesProb > baseP_Threshold;
         let passMC = losingStreak >= expectedLosing;
@@ -758,14 +745,13 @@
         let consensusDesc = "";
         let consensusColor = "";
 
-        // ★ 六維綜合描述 (替代舊版只顯示單一指標的缺點)
         if (zScore >= 1.5 && EV > 0) {
             consensusTitle = "🟢 S級狙擊 (六大巨頭強烈共識)";
-            consensusDesc = `【綜合評估】①數學家與③贏家皆確認勝率反彈，且④偏離度(Z=${Number(zScore).toFixed(2)})突破冰點達極端值，配合⑤壓力完全釋放與⑥期望值大幅轉正。大莊家決議：【進場平推 1 單位】。`;
+            consensusDesc = `【綜合評估】①數學家與③贏家皆確認勝率反彈，且④偏離度突破冰點達極端值(Z=${Number(zScore).toFixed(2)})，配合⑤壓力完全釋放與⑥期望值大幅轉正。大莊家決議：【進場平推 1 單位】。`;
             consensusColor = "background:#ecfdf5; color:#065f46; border: 2px solid #10b981;";
         } else if (zScore >= 0.5 && EV > 0) {
             consensusTitle = "🟢 A級佈局 (多維指標共振)";
-            consensusDesc = `【綜合評估】④偏離度(Z=${Number(zScore).toFixed(2)})已脫離常態雜訊區，結合${passBayes?'③贏家真實勝率達標':'基礎機率回穩'}，且⑥確認具備正期望值套利空間。大莊家決議：【標準進場 1 單位】。`;
+            consensusDesc = `【綜合評估】④偏離度已脫離常態雜訊區(Z=${Number(zScore).toFixed(2)})，結合${passBayes?'③贏家真實勝率達標':'基礎機率回穩'}，且⑥確認具備正期望值套利空間。大莊家決議：【標準進場 1 單位】。`;
             consensusColor = "background:#f0fdf4; color:#15803d; border: 2px solid #86efac;";
         } else if (latestIsWin) {
             consensusTitle = "🟡 動能追擊 (投機家主導)";
@@ -855,7 +841,6 @@
                             <div class="setting-item"><label>${labelPrize}</label><input type="number" id="cfg-prize-${key}" value="${cfg.unitPrize}" disabled></div>
                         </div>
                         
-                        <!-- ★ 該區塊的歷史真實累積損益看板 -->
                         <div style="background:#f8fafc; padding:8px; border-radius:6px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; border: 1px dashed #cbd5e1;">
                             <div style="text-align:center; flex:1; border-right: 1px dashed #cbd5e1;">
                                 <div style="font-size:10px; color:#64748b; font-weight:bold;">累積投入成本</div>
@@ -924,7 +909,7 @@
         }
     }
 
-    // 模塊2：實戰回本建議 (六大巨頭綜合診斷 + 組頭整數限制版)
+    // 模塊2：實戰回本建議
     window.renderLedgerSummary = function() {
         try {
             let totalCount = 0;
@@ -984,8 +969,9 @@
                 let unitNetWin = unitPrizeTotal - unitCost; 
                 let exactNeeded = (isLoss && unitNetWin > 0) ? (lossAmount / unitNetWin) : 0;
 
-                // ★ 先產生「巨頭綜合診斷」文字
                 let expertDiagnosis = "";
+                let passBayes = a.bayesProb > a.baseP_Threshold;
+
                 if (a.zScore >= 1.5 && a.EV > 0) {
                     expertDiagnosis = `【巨頭診斷】①③勝率反轉、④偏離極端(Z=${Number(a.zScore).toFixed(2)})、⑥期望值大幅>0，S級套利點浮現。`;
                 } else if (a.zScore >= 0.5 && a.EV > 0) {
@@ -996,7 +982,6 @@
                     expertDiagnosis = `【巨頭診斷】④偏離度不足且⑥期望值為負，六大指標全面示警禁入。`;
                 }
 
-                // ★ 再套入「資金配置策略」
                 if (a.zScore >= 0.5 && a.EV > 0) {
                     let level = a.zScore >= 1.5 ? 'S' : 'A';
                     let targetBet = 1;
@@ -1215,13 +1200,24 @@
                     `);
                 });
 
+                // 6宮格戰情面板 (1800碰)
+                let analysis = analyzeSpace(currentSpace);
+                let empRateStr = (analysis.empWinRate * 100).toFixed(1) + '%';
+                let curRateStr = (analysis.modelA_Prob * 100).toFixed(1) + '%';
+                let isDue = analysis.modelA_Prob > analysis.empWinRate; // 爆發機率 > 平均機率
+
                 let hypoNetProfit = hypoTotalRevenue - hypoTotalCost;
 
                 document.getElementById('stats-container').innerHTML = `
-                    <div class="stat-item"><h3>總期數</h3><p>${data.length} 期</p></div>
+                    <div class="stat-item"><h3>本年度總期數</h3><p>${data.length} 期</p></div>
                     <div class="stat-item"><h3>3碰 次數</h3><p style="color:#d97706;">${count3} 次</p></div>
                     <div class="stat-item"><h3>4碰 次數</h3><p style="color:#059669;">${count4} 次</p></div>
-                    <div class="stat-item"><h3>理論總營利 (均注1元/碰)</h3><p style="color:${hypoNetProfit>=0?'#059669':'#dc2626'}">${hypoNetProfit>=0?'+$':'-$'}${Math.abs(Math.round(hypoNetProfit)).toLocaleString()}</p></div>
+                    <div class="stat-item"><h3>歷史平均過關率</h3><p style="color:#475569;">${empRateStr}</p></div>
+                    <div class="stat-item" style="border-color:${isDue?'#34d399':'#e2e8f0'}; background:${isDue?'#ecfdf5':'#fff'};">
+                        <h3 style="color:${isDue?'#065f46':'#64748b'};">當前爆發機率</h3>
+                        <p style="color:${isDue?'#059669':'#0f172a'};">${curRateStr} ${isDue?'🔥':''}</p>
+                    </div>
+                    <div class="stat-item"><h3>理論總營利 (均注1元)</h3><p style="color:${hypoNetProfit>=0?'#059669':'#dc2626'}">${hypoNetProfit>=0?'+$':'-$'}${Math.abs(Math.round(hypoNetProfit)).toLocaleString()}</p></div>
                 `;
 
             } else {
@@ -1265,14 +1261,25 @@
                     `);
                 });
 
+                // 6宮格戰情面板 (9000碰)
+                let analysis = analyzeSpace(currentSpace);
+                let empRateStr = (analysis.empWinRate * 100).toFixed(1) + '%';
+                let curRateStr = (analysis.modelA_Prob * 100).toFixed(1) + '%';
+                let isDue = analysis.modelA_Prob > analysis.empWinRate; // 爆發機率 > 平均機率
+
                 let failCount = data.length - passCount;
                 let hypoNetProfit = hypoTotalRevenue - hypoTotalCost;
 
                 document.getElementById('stats-container').innerHTML = `
-                    <div class="stat-item"><h3>總期數</h3><p>${data.length} 期</p></div>
+                    <div class="stat-item"><h3>本年度總期數</h3><p>${data.length} 期</p></div>
                     <div class="stat-item"><h3>中獎次數 (過)</h3><p style="color:#059669;">${passCount} 次</p></div>
                     <div class="stat-item"><h3>未中次數 (斷柱)</h3><p style="color:#dc2626;">${failCount} 次</p></div>
-                    <div class="stat-item"><h3>理論總營利 (均注1元/碰)</h3><p style="color:${hypoNetProfit>=0?'#059669':'#dc2626'}">${hypoNetProfit>=0?'+$':'-$'}${Math.abs(Math.round(hypoNetProfit)).toLocaleString()}</p></div>
+                    <div class="stat-item"><h3>歷史平均過關率</h3><p style="color:#475569;">${empRateStr}</p></div>
+                    <div class="stat-item" style="border-color:${isDue?'#34d399':'#e2e8f0'}; background:${isDue?'#ecfdf5':'#fff'};">
+                        <h3 style="color:${isDue?'#065f46':'#64748b'};">當前爆發機率</h3>
+                        <p style="color:${isDue?'#059669':'#0f172a'};">${curRateStr} ${isDue?'🔥':''}</p>
+                    </div>
+                    <div class="stat-item"><h3>理論總營利 (均注1元)</h3><p style="color:${hypoNetProfit>=0?'#059669':'#dc2626'}">${hypoNetProfit>=0?'+$':'-$'}${Math.abs(Math.round(hypoNetProfit)).toLocaleString()}</p></div>
                 `;
             }
         } catch(e) {
