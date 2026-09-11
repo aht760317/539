@@ -63,6 +63,14 @@
         .panel { background: var(--panel-bg); padding: 14px; border-radius: 12px; border: 1px solid var(--panel-border); margin-bottom: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
         .panel-title { font-size: 14px; font-weight: 900; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px; color: var(--text-main); }
 
+        /* 巨頭說明書 */
+        .guide-box { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px; margin-bottom: 14px; font-size: 12px; line-height: 1.6; }
+        .guide-box h4 { margin-bottom: 8px; color: #0f172a; font-size: 14px; display: flex; align-items: center; gap: 6px; cursor: pointer; }
+        .guide-grid { display: grid; grid-template-columns: 1fr; gap: 8px; margin-top: 10px; display: none; }
+        .guide-item { background: #fff; padding: 8px; border-radius: 6px; border-left: 4px solid var(--primary-color); box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+        .guide-item strong { color: var(--primary-color); }
+        .guide-target { color: var(--success-color); font-weight: 900; font-size: 11px; margin-top: 4px; display: block; }
+
         .setting-grid { display: grid; grid-template-columns: 1fr; gap: 14px; align-items: stretch; }
         @media (min-width: 900px) { .setting-grid { grid-template-columns: repeat(2, 1fr); } } 
 
@@ -101,16 +109,24 @@
         .col-prob-item .col-val { font-weight: 900; font-size: 13px; color: #0284c7; }
         .col-prob-item.danger-col .col-val { color: #dc2626; }
         
-        /* 🔥 六大巨頭儀表板 (UI全新優化) */
+        /* 🔥 六大巨頭儀表板 (UI全新優化 - 綠色達標/淡紅不達標) */
         .ai-prediction-box { margin-top: auto; padding: 12px; background: linear-gradient(to bottom, #ffffff, #f8fafc); border: 2px solid #e2e8f0; border-radius: 10px; font-size: 12px; }
-        .ai-prediction-box h5 { color: #0f172a; margin: 0; font-size: 13px; font-weight: 900; display: flex; align-items: center; gap: 6px; }
+        .ai-prediction-box h5 { color: #0f172a; margin: 0; font-size: 13px; font-weight: 900; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid #cbd5e1; padding-bottom: 6px; }
         
         .giant-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin: 10px 0; }
-        .giant-card { background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px; text-align: center; }
+        .giant-card { background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px; text-align: center; transition: 0.2s; }
         .giant-card .g-title { font-size: 10px; color: #475569; font-weight: bold; margin-bottom: 2px; }
         .giant-card .g-val { font-size: 13px; font-weight: 900; color: #0f172a; }
-        .giant-card.highlight .g-title { color: #047857; }
+        
+        /* 綠燈 (達標推薦) */
+        .giant-card.highlight { background: #ecfdf5; border-color: #34d399; box-shadow: 0 2px 4px rgba(16, 185, 129, 0.1); }
+        .giant-card.highlight .g-title { color: #065f46; }
         .giant-card.highlight .g-val { color: #059669; }
+        
+        /* 淡紅燈 (未達標警告) */
+        .giant-card.danger { background: #fef2f2; border-color: #fca5a5; box-shadow: 0 2px 4px rgba(220, 38, 38, 0.05); }
+        .giant-card.danger .g-title { color: #991b1b; }
+        .giant-card.danger .g-val { color: #dc2626; }
         
         .strategy-box { margin-top: 10px; padding: 10px; border-radius: 8px; text-align: center; font-weight: 900; font-size: 13px; line-height: 1.5; }
         .strategy-box h6 { font-size:14px; margin:0 0 6px 0; }
@@ -166,12 +182,12 @@
         <div class="cloud-badge"><div class="dot"></div> Firebase 雲端同步中</div>
     </header>
 
-    <!-- ★ 戰略年度選擇器 -->
+    <!-- ★ 無限未來作戰年度切換引擎 -->
     <div class="year-filter-bar">
         <label>📅 作戰年度切換：</label>
         <select id="global-year-filter" onchange="applyYearFilter()">
             <option value="all">所有歷史年度</option>
-            <!-- JS 動態生成選項 -->
+            <!-- JS 動態生成 -->
         </select>
     </div>
 
@@ -187,6 +203,38 @@
     <!-- ========================================== -->
     <!-- 模塊 1：決策矩陣 (Arena) -->
     <!-- ========================================== -->
+    
+    <!-- 📖 新增：六大巨頭指標說明書 -->
+    <div class="guide-box" id="arena-guide" style="display:none;">
+        <h4 onclick="toggleGuide()">📖 六大巨頭指標說明書 (點擊展開/收合) <span>▼</span></h4>
+        <div class="guide-grid" id="guide-content">
+            <div class="guide-item">
+                <strong>① 數學家 (物理勝率)：</strong><br>該盤口的基礎過關機率。
+                <span class="guide-target">🎯 達標亮綠門檻：目前勝率必須大於遊戲基礎機率。</span>
+            </div>
+            <div class="guide-item">
+                <strong>② 投機家 (連莊動能)：</strong><br>抓短線熱度，觀察上一期是否過關。
+                <span class="guide-target">🎯 達標亮綠門檻：上一期剛中獎 (顯示連中動能)。</span>
+            </div>
+            <div class="guide-item">
+                <strong>③ 贏家 (貝氏)：</strong><br>結合歷史與現狀，動態修正後的當下實際勝率。
+                <span class="guide-target">🎯 達標亮綠門檻：修正後勝率大於基礎機率。</span>
+            </div>
+            <div class="guide-item">
+                <strong>④ 銀行家 (偏離度 Z-Score)：</strong><br>測量連槓期數偏離平均值的嚴重程度。<br><span style="color:#dc2626;">(決定是否進場的核心！)</span>
+                <span class="guide-target">🎯 達標亮綠門檻：數值大於或等於 0.5。低於 0.5 會亮紅燈警告。</span>
+            </div>
+            <div class="guide-item">
+                <strong>⑤ 精算家 (破產壓力)：</strong><br>連槓期數是否已達到平均值，代表風險釋放。
+                <span class="guide-target">🎯 達標亮綠門檻：目前連槓期數 $\ge$ 理論預期連槓期數。</span>
+            </div>
+            <div class="guide-item">
+                <strong>⑥ 大莊家 (數學期望值 EV)：</strong><br>下注 1 元/碰 跑長期的平均賺賠金額。
+                <span class="guide-target">🎯 達標亮綠門檻：數值必須大於 0 (+ 元) 才能下注。負數絕對亮紅燈！</span>
+            </div>
+        </div>
+    </div>
+
     <div id="global-strategy" class="strategy-dashboard" style="display:none;">
         <h3>💡 六大巨頭會診看板 (純機率進場決策)</h3>
         <div class="dashboard-grid" id="dashboard-content">
@@ -344,7 +392,8 @@
     const db = getFirestore(app);
 
     let currentSpace = 'arena';
-    let selectedYear = '2026'; // 預設年度
+    let currentYear = new Date().getFullYear();
+    let selectedYear = currentYear.toString(); // 預設現在年份
 
     // 參數初始化
     let spaceConfigs = {
@@ -361,13 +410,14 @@
         if (savedCfg) spaceConfigs[key] = { ...spaceConfigs[key], ...JSON.parse(savedCfg) };
     });
 
-    // 初始化年度選單 (2010 ~ 2026)
+    // 📅 初始化年度選單 (動態支援至未來 5 年)
     function initYearFilter() {
         let select = document.getElementById('global-year-filter');
         if(!select) return;
         select.innerHTML = '<option value="all">所有歷史年度</option>';
-        for(let y = 2026; y >= 2010; y--) {
-            select.innerHTML += `<option value="${y}" ${y === 2026 ? 'selected' : ''}>${y} 年度</option>`;
+        let maxYear = currentYear + 5; // 預留未來5年
+        for(let y = maxYear; y >= 2010; y--) {
+            select.innerHTML += `<option value="${y}" ${y === currentYear ? 'selected' : ''}>${y} 年度</option>`;
         }
     }
     initYearFilter();
@@ -409,6 +459,15 @@
         }).sort((a, b) => new Date(b.date) - new Date(a.date));
     }
 
+    window.toggleGuide = function() {
+        let content = document.getElementById('guide-content');
+        if (content.style.display === "none" || content.style.display === "") {
+            content.style.display = "grid";
+        } else {
+            content.style.display = "none";
+        }
+    }
+
     window.switchSpace = function(spaceKey) {
         currentSpace = spaceKey;
         document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
@@ -422,6 +481,7 @@
         document.getElementById('batch-input-panel').style.display = isArena ? 'block' : 'none';
         document.getElementById('global-strategy').style.display = isArena ? 'block' : 'none';
         document.getElementById('radar-panel').style.display = isArena ? 'block' : 'none';
+        document.getElementById('arena-guide').style.display = isArena ? 'block' : 'none'; // 顯示說明書
         
         document.getElementById('actual-bet-panel').style.display = isLedger ? 'block' : 'none';
 
@@ -461,7 +521,7 @@
         if(elNetProfit) elNetProfit.innerText = `+$${Math.round(netProfit).toLocaleString()}`;
     }
 
-    // ★ 雷達冷卻演算法優化：將「單柱連漏期數」納入機率權重
+    // ★ 雷達冷卻演算法優化
     function analyzeRadar(gameType) {
         let spaceKey = gameType + '-9000';
         let data = getFilteredData(spaceKey);
@@ -491,14 +551,14 @@
             if(q3>=3) colHits.q3++;
             if(q4>=3) colHits.q4++;
 
-            // 計算整體連漏
+            // 計算整體大盤連漏
             let isTripleOrMore = (q1>=3 || q2>=3 || q3>=3 || q4>=3); 
             if (!overallHitFound) {
                 if (isTripleOrMore) overallHitFound = true;
                 else tripleLosingStreak++;
             }
 
-            // 計算單柱連漏 (如果還沒找到近期開出，就持續累加)
+            // 計算單柱連漏
             if (!colFound.q1) { if(q1>=3) colFound.q1 = true; else colStreaks.q1++; }
             if (!colFound.q2) { if(q2>=3) colFound.q2 = true; else colStreaks.q2++; }
             if (!colFound.q3) { if(q3>=3) colFound.q3 = true; else colStreaks.q3++; }
@@ -511,8 +571,8 @@
         let colProbs = {};
         ['q1', 'q2', 'q3', 'q4'].forEach(k => {
             let empRate = totalDraws > 0 ? (colHits[k] / totalDraws) : 0.02;
-            // ★ 動態加權：歷史機率 + (連漏期數 * 補償係數)。剛開出的柱子(streak=0)機率會瞬間降回底層。
-            colProbs[k] = empRate + (colStreaks[k] * 0.004); 
+            // ★ 動態加權：歷史機率 + (連漏期數 * 補償係數)。剛開出的柱子(streak=0)機率會瞬間降回底層(2%~4%)。
+            colProbs[k] = empRate + (colStreaks[k] * 0.005); 
         });
 
         let maxProb = Math.max(colProbs.q1, colProbs.q2, colProbs.q3, colProbs.q4);
@@ -640,7 +700,9 @@
             prevWasWin = isWin;
         });
 
-        let P_Win = totalDraws > 0 ? (wins / totalDraws) : (cfg.type === '1800' ? 0.15 : 0.25);
+        // 基礎機率計算
+        let baseP_Threshold = cfg.type === '1800' ? 0.15 : 0.25;
+        let P_Win = totalDraws > 0 ? (wins / totalDraws) : baseP_Threshold;
         let modelA_Prob = Math.min(P_Win + (losingStreak * 0.10), 0.99);
 
         let P_Win_Given_Win = (WW + WL > 0) ? (WW / (WW + WL)) : 0;
@@ -664,13 +726,13 @@
         return { 
             cfg, totalDraws, latestIsWin, continuousHits, losingStreak, 
             modelA_Prob, P_Win_Given_Win, P_Win_Given_Lose, EV, costPerRound, minPrize,
-            zScore, bayesProb, mcMaxLossStreak, expectedLosing
+            zScore, bayesProb, mcMaxLossStreak, expectedLosing, baseP_Threshold
         };
     }
 
-    // 模塊1：客觀的巨頭儀表板 (UI 極致優化)
+    // 模塊1：客觀的巨頭儀表板 (UI全新優化 - 綠色達標/淡紅不達標)
     function getPredictionHtml(analysis) {
-        let { cfg, totalDraws, latestIsWin, continuousHits, losingStreak, expectedLosing, modelA_Prob, P_Win_Given_Win, P_Win_Given_Lose, EV, zScore, bayesProb, mcMaxLossStreak, costPerRound } = analysis;
+        let { cfg, totalDraws, latestIsWin, continuousHits, losingStreak, expectedLosing, modelA_Prob, P_Win_Given_Win, P_Win_Given_Lose, EV, zScore, bayesProb, mcMaxLossStreak, costPerRound, baseP_Threshold } = analysis;
         
         if (totalDraws < 5) return `<div class="ai-prediction-box" style="text-align:center; color:#94a3b8; padding:20px;">⏳ 歷史數據不足，請先匯入開獎紀錄</div>`;
 
@@ -678,8 +740,16 @@
         let markovState = latestIsWin ? `${(P_Win_Given_Win*100).toFixed(1)}% (連中)` : `${(P_Win_Given_Lose*100).toFixed(1)}% (反轉)`;
         let adviceBayes = `${(bayesProb*100).toFixed(1)}%`;
         let adviceZ = `Z = ${Number(zScore).toFixed(2)}`;
-        let adviceMC = `${mcMaxLossStreak} 期`;
+        let adviceMC = `${losingStreak} / ${expectedLosing} 期`; // 顯示目前連槓 vs 預期連槓
         let evVal = EV > 0 ? `+${Number(EV).toFixed(0)}` : Number(EV).toFixed(0);
+
+        // ★ 六大巨頭單獨達標邏輯 (綠色 or 淡紅)
+        let c1 = modelA_Prob > baseP_Threshold ? 'highlight' : 'danger';
+        let c2 = latestIsWin ? 'highlight' : 'danger';
+        let c3 = bayesProb > baseP_Threshold ? 'highlight' : 'danger';
+        let c4 = zScore >= 0.5 ? 'highlight' : 'danger';
+        let c5 = losingStreak >= expectedLosing ? 'highlight' : 'danger'; // 超過平均連槓代表風險釋放
+        let c6 = EV > 0 ? 'highlight' : 'danger';
 
         let consensusTitle = "";
         let consensusDesc = "";
@@ -709,27 +779,27 @@
                 <div style="font-size: 10px; color: #64748b; margin-bottom: 6px;">(純機率運算，不含個人損益情緒)</div>
                 
                 <div class="giant-grid">
-                    <div class="giant-card">
+                    <div class="giant-card ${c1}">
                         <div class="g-title">① 數學家(均值)</div>
                         <div class="g-val">${adviceLaplace}</div>
                     </div>
-                    <div class="giant-card">
+                    <div class="giant-card ${c2}">
                         <div class="g-title">② 投機家(動能)</div>
                         <div class="g-val">${markovState}</div>
                     </div>
-                    <div class="giant-card">
+                    <div class="giant-card ${c3}">
                         <div class="g-title">③ 贏家(貝氏)</div>
                         <div class="g-val">${adviceBayes}</div>
                     </div>
-                    <div class="giant-card ${zScore >= 0.5 ? 'highlight' : ''}">
+                    <div class="giant-card ${c4}">
                         <div class="g-title">④ 銀行家(偏離)</div>
                         <div class="g-val">${adviceZ}</div>
                     </div>
-                    <div class="giant-card">
+                    <div class="giant-card ${c5}">
                         <div class="g-title">⑤ 精算家(壓力)</div>
                         <div class="g-val">${adviceMC}</div>
                     </div>
-                    <div class="giant-card ${EV > 0 ? 'highlight' : ''}">
+                    <div class="giant-card ${c6}">
                         <div class="g-title">⑥ 莊家(期望值)</div>
                         <div class="g-val">${evVal}</div>
                     </div>
@@ -754,7 +824,6 @@
                 let cfg = analysis.cfg;
                 let labelPrize = cfg.type === '1800' ? '三星單碰(元)' : '四星單碰(元)';
 
-                // ★ 精算該區塊的「歷史累積投入」與「歷史總營利」
                 let histCost = 0;
                 let histPrize = 0;
                 let list = getFilteredData(key); // 使用過濾後的年份資料
