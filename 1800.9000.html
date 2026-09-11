@@ -91,9 +91,11 @@
         .col-prob-item .col-val { font-weight: 900; font-size: 13px; color: #0284c7; }
         .col-prob-item.danger-col .col-val { color: #dc2626; }
         
-        /* 🔥 六維預測版面 */
+        /* 🔥 六維預測版面更新 */
         .ai-prediction-box { margin-top: auto; padding: 12px; background: linear-gradient(to bottom, #ffffff, #f8fafc); border: 2px solid #e2e8f0; border-radius: 10px; font-size: 12px; }
-        .ai-prediction-box h5 { color: #0f172a; margin: 0 0 10px 0; font-size: 13px; font-weight: 900; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid #cbd5e1; padding-bottom: 6px;}
+        .ai-prediction-box h5 { color: #0f172a; margin: 0; font-size: 13px; font-weight: 900; display: flex; align-items: center; gap: 6px; }
+        .ai-prediction-subtitle { font-size: 10px; color: #64748b; margin-bottom: 10px; border-bottom: 1px solid #cbd5e1; padding-bottom: 6px; }
+        
         .ai-row { display: flex; flex-direction: column; margin-bottom: 6px; border-bottom: 1px dashed #e2e8f0; padding-bottom: 6px; }
         .ai-row-header { display: flex; justify-content: space-between; font-weight: bold; align-items: center; width: 100%; }
         .ai-row-desc { font-size: 10.5px; color: #64748b; font-weight: normal; margin-top: 3px; line-height: 1.3; }
@@ -351,7 +353,7 @@
         
         let colHits = { q1: 0, q2: 0, q3: 0, q4: 0 };
 
-        // ★ 修正：從最新(index 0)往回看，只要看到有3顆，連漏就停止計算
+        // 從最新(index 0)往回看，只要看到有3顆，連漏就停止計算
         for (let i = 0; i < data.length; i++) {
             if (!data[i].date.startsWith('2026')) continue;
             let balls = data[i].draw;
@@ -366,7 +368,6 @@
             }
         }
 
-        // 歷史總體機率統計
         data.forEach(item => {
             if (!item.date.startsWith('2026')) return;
             totalDraws++;
@@ -426,7 +427,7 @@
                 <div class="radar-card">
                     <h4>
                         <span>📡 ${r.gameName} 偏態監控 (3顆以上)</span>
-                        <span style="font-size:11px; color:#64748b;">目前連漏 ${r.tripleLosingStreak} 期</span>
+                        <span style="font-size:11px; color:#64748b;">目前連漏 ${r.tripleLosingStreak} 期未出</span>
                     </h4>
                     
                     <div style="margin-bottom:6px;">
@@ -471,7 +472,7 @@
         let continuousHits = 0; 
         let losingStreak = 0;
 
-        // ★ 修正：從最新(index 0)精準計算目前的連莊/連漏期數
+        // 從最新(index 0)計算實質中獎/過關的連槓期數
         for (let i = 0; i < data.length; i++) {
             if (!data[i].date.startsWith('2026')) continue;
             let balls = data[i].draw;
@@ -488,7 +489,6 @@
             }
         }
 
-        // 馬可夫鍊與長期勝率需要從舊到新跑
         let WW = 0, WL = 0, LW = 0, LL = 0; 
         let prevWasWin = null;
         let reversedData = [...data].reverse();
@@ -518,7 +518,6 @@
         let bayesProb = latestIsWin ? ((P_Win_Given_Win * P_Win) / ((P_Win_Given_Win * P_Win) + ((1 - P_Win_Given_Lose) * (1 - P_Win)))) : P_Win;
         if(isNaN(bayesProb)) bayesProb = P_Win;
 
-        // 計算 Z-Score
         let expectedLosing = cfg.type === '1800' ? 6 : 3;
         let stdDev = cfg.type === '1800' ? 2 : 1.5; 
         let zScore = (losingStreak - expectedLosing) / stdDev;
@@ -543,11 +542,11 @@
         
         if (totalDraws < 5) return `<div class="ai-prediction-box" style="text-align:center; color:#94a3b8; padding:20px;">⏳ 歷史數據不足，請先匯入開獎紀錄</div>`;
 
-        let adviceLaplace = `平滑預測勝率 ${(modelA_Prob * 100).toFixed(1)}%`;
-        let markovState = latestIsWin ? `連莊機率 ${(P_Win_Given_Win*100).toFixed(1)}%` : `反彈機率 ${(P_Win_Given_Lose*100).toFixed(1)}%`;
-        let adviceBayes = `動態勝率更新 ${(bayesProb*100).toFixed(1)}%`;
-        let adviceZ = zScore > 1 ? `極端偏態 (Z=${zScore.toFixed(1)}) 👉 買進` : `常態波動內 (Z=${zScore.toFixed(1)})`;
-        let adviceMC = `最大回撤壓力約 ${mcMaxLossStreak} 期`;
+        let adviceLaplace = `平滑基礎勝率 ${(modelA_Prob * 100).toFixed(1)}%`;
+        let markovState = latestIsWin ? `連中機率 ${(P_Win_Given_Win*100).toFixed(1)}%` : `止損反彈機率 ${(P_Win_Given_Lose*100).toFixed(1)}%`;
+        let adviceBayes = `即時過關勝率 ${(bayesProb*100).toFixed(1)}%`;
+        let adviceZ = zScore > 1 ? `極端偏離 (Z=${zScore.toFixed(1)}) 👉 買進` : `常態波動內 (Z=${zScore.toFixed(1)})`;
+        let adviceMC = `極端連槓破產壓力約 ${mcMaxLossStreak} 期`;
 
         let consensusTitle = "";
         let consensusDesc = "";
@@ -557,31 +556,32 @@
         if (EV > 0 && zScore > 0.5) {
             let act = requiredMulti > 1 ? `保本倍投 ${requiredMulti} 倍` : `平推 1 倍`;
             consensusTitle = "🔥 S級量化指令：果斷狙擊";
-            consensusDesc = `目前連漏 ${losingStreak} 期。Z-Score與EV雙重視角確認極端偏態，貝氏機率看漲。<br>👉 建議：【${act}】。`;
+            consensusDesc = `目前實質連槓 ${losingStreak} 期。Z-Score與EV雙重視角確認突破賠率劣勢，貝氏勝率看漲。<br>👉 建議：【${act}】。`;
             consensusColor = "background:#ecfdf5; color:#065f46; border: 2px solid #6ee7b7;";
             oppCostText = `💸 機會成本警示：若不出手，等同放棄均值回歸帶來的 $${Math.round(EV)} 數學套利空間。`;
         } else if (latestIsWin) {
             consensusTitle = "⚠️ B級動能指令：輕倉試探";
-            consensusDesc = `剛開出。馬可夫鏈顯示具連莊動能，但Kelly期望值未達絕對優勢。<br>👉 建議：【縮碼 0.5 倍】順勢摸摸看。`;
+            consensusDesc = `上一期剛中獎/過關。馬可夫鏈顯示具連莊動能，但Kelly期望值未達絕對優勢。<br>👉 建議：【縮碼 0.5 倍】順勢摸摸看。`;
             consensusColor = "background:#fffbeb; color:#b45309; border: 2px solid #fcd34d;";
-            oppCostText = `⚖️ 機會成本警示：盈虧比不佳，盲目下滿注將承受高達 $${Math.round(costPerRound)} 的回撤風險。`;
+            oppCostText = `⚖️ 機會成本警示：盈虧比不佳，盲目下滿注將承受高達 $${Math.round(costPerRound)} 的資金回撤風險。`;
         } else {
              consensusTitle = "❄️ 絕對防禦指令：空手觀望";
-             consensusDesc = `目前僅漏 ${losingStreak} 期 (該玩法平均漏值為 ${expectedLosing} 期)。未達統計學偏離度，下注形同送錢給莊家。<br>👉 建議：【鎖死資金】絕不出手。`;
+             consensusDesc = `目前僅實質連槓 ${losingStreak} 期 (該玩法平均需槓 ${expectedLosing} 期)。未達統計學偏離度標準，下注形同送錢。<br>👉 建議：【鎖死資金】絕不出手。`;
              consensusColor = "background:#f1f5f9; color:#475569; border: 2px solid #cbd5e1;";
-             oppCostText = `🛡️ 機會成本警示：強行進場將白白耗損 $${Math.round(costPerRound)}，導致真正極端偏態來臨時無本金可打。`;
+             oppCostText = `🛡️ 機會成本警示：強行進場將白白耗損 $${Math.round(costPerRound)}，導致真正極端反彈來臨時無本金可打。`;
         }
 
         return `
             <div class="ai-prediction-box">
-                <h5>🤖 六維量化交易引擎 (華爾街模組)</h5>
+                <h5>🤖 六維量化交易引擎 (實質過關/中獎模型)</h5>
+                <div class="ai-prediction-subtitle">(註：此引擎專注運算該玩法的實質過關勝率，與上方同柱3顆雷達為獨立系統，完全排除偏態干擾)</div>
                 
                 <div class="ai-row">
                     <div class="ai-row-header">
                         <span style="color:#047857;">① Laplace 均值回歸：</span>
                         <span style="color:#0f172a; font-size:11px;">${adviceLaplace}</span>
                     </div>
-                    <div class="ai-row-desc">衡量長期基礎勝率，過濾短期波動，找出該玩法的物理極限。</div>
+                    <div class="ai-row-desc">衡量長期基礎過關/中獎機率，過濾短期波動雜訊，找出該玩法的物理極限。</div>
                 </div>
                 
                 <div class="ai-row">
@@ -589,7 +589,7 @@
                         <span style="color:#047857;">② Markov 馬可夫鏈：</span>
                         <span style="color:#0f172a; font-size:11px;">${markovState}</span>
                     </div>
-                    <div class="ai-row-desc">捕捉相鄰兩期的狀態轉移，判定目前是「連莊趨勢」還是「斷龍反轉」。</div>
+                    <div class="ai-row-desc">捕捉相鄰兩期的狀態轉移，判定目前是「連中/連過」趨勢還是「連槓/斷柱」反轉。</div>
                 </div>
                 
                 <div class="ai-row">
@@ -597,7 +597,7 @@
                         <span style="color:#047857;">③ Bayes 貝氏動態機率：</span>
                         <span style="color:#0f172a; font-size:11px;">${adviceBayes}</span>
                     </div>
-                    <div class="ai-row-desc">融合歷史勝率與最新開獎狀態，動態校正出的「真實即時勝率」。</div>
+                    <div class="ai-row-desc">融合歷史勝率與最新過關狀態，動態校正出的「真實即時勝率」。</div>
                 </div>
                 
                 <div class="ai-row">
@@ -605,7 +605,7 @@
                         <span style="color:#047857;">④ Z-Score 偏離度：</span>
                         <span style="color:#0f172a; font-size:11px;">${adviceZ}</span>
                     </div>
-                    <div class="ai-row-desc">衡量當前連漏期數偏離平均值的程度。Z<0代表極度正常，>1代表極端偏態隨時爆發。</div>
+                    <div class="ai-row-desc">衡量當前連槓期數偏離「平均連槓次數」的程度。Z>1代表偏離常態即將爆發。</div>
                 </div>
                 
                 <div class="ai-row">
@@ -613,7 +613,7 @@
                         <span style="color:#047857;">⑤ Monte Carlo 模擬：</span>
                         <span style="color:#0f172a; font-size:11px;">${adviceMC}</span>
                     </div>
-                    <div class="ai-row-desc">模擬極端運氣下的最大連輸期數，用於準備「破產防禦本金」。</div>
+                    <div class="ai-row-desc">模擬極端運氣下的最大連槓期數，用於準備「破產防禦本金」。</div>
                 </div>
                 
                 <div class="ai-row" style="border-bottom:none;">
@@ -683,7 +683,7 @@
                 status = `🎯 狙擊區 (EV>0) 👉 <span style="color:#a7f3d0;">建議：${act}</span>`;
                 cssClass = "cold";
             } else if (a.latestIsWin) {
-                status = `🔥 連莊動能 👉 <span style="color:#fde68a;">建議：縮碼 0.5 倍試探</span>`;
+                status = `🔥 連中動能 👉 <span style="color:#fde68a;">建議：縮碼 0.5 倍試探</span>`;
                 cssClass = "hot";
             } else {
                 status = `❄️ 莊家收割期 👉 <span style="color:#cbd5e1;">建議：空手觀望</span>`;
