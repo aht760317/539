@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>天天樂 & 五三九 雙核心量化操盤系統 (動態凱利升級版)</title>
+    <title>天天樂 & 五三九 雙核心量化操盤系統 (單碼AI透視版)</title>
     <style>
         :root {
             --bg-color: #f8fafc; 
@@ -49,7 +49,7 @@
 
         .mode-switcher { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin-bottom: 14px; }
         @media (min-width: 768px) { .mode-switcher { grid-template-columns: repeat(3, 1fr); } }
-        @media (min-width: 1024px) { .mode-switcher { grid-template-columns: repeat(6, 1fr); } }
+        @media (min-width: 1024px) { .mode-switcher { grid-template-columns: repeat(7, 1fr); } } /* 增加按鈕數量適應 */
         
         .mode-btn { 
             padding: 8px 4px; border: 1.5px solid #cbd5e1; background: #fff; color: #475569; 
@@ -58,6 +58,7 @@
         .mode-btn.active { border-color: var(--primary-color); background: var(--primary-color); color: #fff; box-shadow: 0 2px 8px rgba(2, 132, 199, 0.3); }
         .mode-btn.arena-btn.active { border-color: var(--purple-color); background: var(--purple-color); box-shadow: 0 2px 8px rgba(124, 58, 237, 0.3); }
         .mode-btn.ledger-btn.active { border-color: var(--success-color); background: var(--success-color); box-shadow: 0 2px 8px rgba(5, 150, 105, 0.3); }
+        .mode-btn.single-btn.active { border-color: #ea580c; background: linear-gradient(135deg, #ea580c, #c2410c); box-shadow: 0 2px 8px rgba(234, 88, 12, 0.3); }
 
         .panel { background: var(--panel-bg); padding: 14px; border-radius: 12px; border: 1px solid var(--panel-border); margin-bottom: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
         .panel-title { font-size: 14px; font-weight: 900; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px; color: var(--text-main); }
@@ -164,6 +165,23 @@
 
         .btn-tbl-action { background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 4px; padding: 2px 6px; cursor: pointer; font-size: 11px; font-weight: bold; }
         .btn-tbl-action:hover { background: #e2e8f0; }
+
+        /* 單碼解析專用樣式 */
+        .single-ball-dashboard { background: linear-gradient(135deg, #1f2937, #0f172a); color: #fff; padding: 16px; border-radius: 12px; border: 1px solid #334155; margin-bottom: 14px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        .single-ball-dashboard h3 { margin-bottom: 12px; font-size: 16px; display: flex; align-items: center; gap: 8px; color: #f97316; border-bottom: 1px solid #334155; padding-bottom: 8px;}
+        .sb-prob-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 12px;}
+        @media (min-width: 768px) { .sb-prob-grid { grid-template-columns: repeat(5, 1fr); } }
+        .sb-prob-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px; text-align: center; }
+        .sb-prob-card h4 { font-size: 11px; color: #94a3b8; margin-bottom: 4px; font-weight: bold;}
+        .sb-prob-card p { font-size: 16px; font-weight: 900; margin: 0; color: #38bdf8;}
+        .sb-prob-card p.hot { color: #f87171; }
+        .sb-prob-card p.cold { color: #818cf8; }
+
+        .sb-status-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 16px; }
+        @media (min-width: 768px) { .sb-status-grid { grid-template-columns: repeat(4, 1fr); } }
+        .sb-status-item { background: #1e293b; padding: 10px; border-radius: 8px; border-left: 4px solid #f97316; }
+        .sb-status-item h4 { font-size: 11px; color: #94a3b8; margin-bottom: 2px;}
+        .sb-status-item p { font-size: 14px; font-weight: 900; margin:0; color:#fff;}
     </style>
 </head>
 <body>
@@ -186,13 +204,76 @@
         <button id="btn-tt-9000" class="mode-btn" onclick="switchSpace('tt-9000')">天天樂 9000碰</button>
         <button id="btn-539-1800" class="mode-btn" onclick="switchSpace('539-1800')">五三九 1800碰</button>
         <button id="btn-539-9000" class="mode-btn" onclick="switchSpace('539-9000')">五三九 9000碰</button>
-        <button id="btn-arena" class="mode-btn arena-btn active" onclick="switchSpace('arena')">⚔️ 決策矩陣 (專家客觀分析)</button>
-        <button id="btn-ledger" class="mode-btn ledger-btn" onclick="switchSpace('ledger')">📝 真實下注 (實戰回本策略)</button>
+        <button id="btn-arena" class="mode-btn arena-btn active" onclick="switchSpace('arena')">⚔️ 決策矩陣</button>
+        <button id="btn-ledger" class="mode-btn ledger-btn" onclick="switchSpace('ledger')">📝 真實下注</button>
+        <!-- 新增：單碼 AI 透視按鈕 -->
+        <button id="btn-single-ball" class="mode-btn single-btn" onclick="switchSpace('single-ball')">🎯 單碼 AI 透視</button>
     </div>
 
+    <!-- ========================================== -->
+    <!-- 模塊：單碼 AI 透視 (Single Ball) -->
+    <!-- ========================================== -->
+    <div id="single-ball-panel" style="display:none;">
+        <div class="panel">
+            <div class="panel-title">🎯 單一號碼量子掃描 (2007年全歷史對齊)</div>
+            <div style="font-size:11px; color:#64748b; margin-bottom:12px; font-weight:bold;">
+                輸入 1~39 的號碼，系統將掃描該號碼在五大週期的開出機率，並由六大專家專屬診斷「下一期」的爆發可能。
+            </div>
+            
+            <div class="form-row" style="background: #f8fafc; padding: 12px; border-radius: 8px; border: 1px solid #e2e8f0; align-items: flex-end;">
+                <div class="form-group" style="flex:1;">
+                    <label>🔍 掃描號碼 (01~39)</label>
+                    <input type="number" id="sb-input-ball" min="1" max="39" placeholder="例如: 07" style="font-size:16px; font-weight:900; text-align:center; color:#ea580c; border-color:#fdba74;">
+                </div>
+                <div class="form-group" style="flex:2;">
+                    <label>🎯 選擇資料庫 (決定母體)</label>
+                    <select id="sb-input-space" style="color: var(--purple-color); font-weight:bold;">
+                        <option value="539-9000">📊 五三九 全資料庫 (推薦)</option>
+                        <option value="tt-9000">🚀 天天樂 全資料庫</option>
+                    </select>
+                </div>
+                <button class="btn-main" onclick="executeSingleBallScan()" style="background: linear-gradient(135deg, #ea580c, #c2410c); flex:1; height: 38px;">🚀 啟動量子掃描</button>
+            </div>
+        </div>
+
+        <div id="sb-result-container" style="display:none;">
+            <div class="single-ball-dashboard">
+                <h3><span id="sb-title-ball" style="background:#fff; color:#ea580c; border-radius:50%; width:24px; height:24px; display:inline-flex; align-items:center; justify-content:center; font-weight:900; font-size:14px; margin-right:4px;">07</span> 號碼五大週期機率透視</h3>
+                
+                <div class="sb-prob-grid">
+                    <div class="sb-prob-card"><h4>歷史總機率</h4><p id="sb-p-all">--%</p><div style="font-size:9px; color:#64748b; margin-top:2px;">(絕對基因)</div></div>
+                    <div class="sb-prob-card"><h4>今年度機率</h4><p id="sb-p-year">--%</p><div style="font-size:9px; color:#64748b; margin-top:2px;">(今年趨勢)</div></div>
+                    <div class="sb-prob-card"><h4>近 100 期</h4><p id="sb-p-100">--%</p><div style="font-size:9px; color:#64748b; margin-top:2px;">(中期動能)</div></div>
+                    <div class="sb-prob-card"><h4>近 50 期</h4><p id="sb-p-50">--%</p><div style="font-size:9px; color:#64748b; margin-top:2px;">(短期動能)</div></div>
+                    <div class="sb-prob-card"><h4>近 30 期</h4><p id="sb-p-30">--%</p><div style="font-size:9px; color:#64748b; margin-top:2px;">(極短線爆發)</div></div>
+                </div>
+
+                <div class="sb-status-grid">
+                    <div class="sb-status-item"><h4>當前遺漏期數</h4><p id="sb-miss-curr" style="color:#fcd34d;">0 期</p></div>
+                    <div class="sb-status-item" style="border-left-color:#3b82f6;"><h4>歷史最大遺漏</h4><p id="sb-miss-max">0 期</p></div>
+                    <div class="sb-status-item" style="border-left-color:#8b5cf6;"><h4>極端偏離 Z-Score</h4><p id="sb-zscore">0.00</p></div>
+                    <div class="sb-status-item" style="border-left-color:#ef4444;"><h4>極限壓力閥</h4><p id="sb-pressure">0%</p></div>
+                </div>
+
+                <div style="background:#0f172a; padding:12px; border-radius:8px; border:1px solid #334155;">
+                    <h4 style="color:#e2e8f0; font-size:13px; margin-bottom:10px; border-bottom:1px solid #334155; padding-bottom:6px;">🤖 單碼專屬六大巨頭診斷</h4>
+                    <div class="giant-grid" id="sb-giants-container">
+                        <!-- 動態插入巨頭卡片 -->
+                    </div>
+                    <div id="sb-final-verdict" style="margin-top:12px; padding:10px; border-radius:6px; font-size:13px; font-weight:bold; line-height:1.5;">
+                        <!-- 動態插入綜合結論 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ========================================== -->
     <!-- 模塊 1：決策矩陣 (Arena) -->
+    <!-- ========================================== -->
     <div class="guide-box" id="arena-guide" style="display:none;">
-        <h4 onclick="toggleGuide()">📖 六大巨頭指標說明書 (點擊展開/收合) <span>▼</span></h4>
+        <h4 onclick="toggleGuide()">📖 系統六大巨頭指標說明書 (點擊展開/收合) <span>▼</span></h4>
         <div class="guide-grid" id="guide-content">
             <div class="guide-item">
                 <strong>① 數學家 (物理勝率)：</strong><br>該盤口的基礎過關機率。
@@ -228,7 +309,7 @@
         </div>
     </div>
 
-    <div class="panel" id="arena-settings-panel">
+    <div class="panel" id="arena-settings-panel" style="display:none;">
         <div class="panel-title">
             <span>⚙️ 盤口參數與【六大巨頭客觀決策矩陣】</span>
             <span id="lock-status" style="color:var(--danger-color); font-size:11px;">🔒 已鎖定(0000)</span>
@@ -249,7 +330,7 @@
         </div>
     </div>
 
-    <div class="panel" id="batch-input-panel">
+    <div class="panel" id="batch-input-panel" style="display:none;">
         <div class="panel-title">📋 歷史開獎批次匯入</div>
         <div class="form-group" style="margin-bottom: 8px;">
             <label>🎯 匯入目標空間：</label>
@@ -265,7 +346,9 @@
         <button class="btn-main" onclick="batchImport()" style="background: linear-gradient(135deg, #7c3aed, #4f46e5);">⚡ 智慧解析並匯入</button>
     </div>
 
+    <!-- ========================================== -->
     <!-- 模塊 2：真實下注 (Ledger) -->
+    <!-- ========================================== -->
     <div class="panel" id="actual-bet-panel" style="display:none;">
         <div class="panel-title">📝 我的真實下注記帳與損益中樞</div>
         <div style="font-size:11px; color:#64748b; margin-bottom:10px; font-weight:bold;">
@@ -319,7 +402,9 @@
         </div>
     </div>
 
+    <!-- ========================================== -->
     <!-- 各空間專屬歷史版面 -->
+    <!-- ========================================== -->
     <div class="panel" id="single-input-panel" style="display:none;">
         <div class="panel-title">📝 單筆開獎與實單填寫</div>
         <div class="form-row">
@@ -333,7 +418,6 @@
             </div>
             <div class="form-group" style="flex: 1;">
                 <label>真實下注 (元/碰)</label>
-                <!-- 加入 input-mybet，預設為 1 -->
                 <input type="number" id="input-mybet" step="1" min="0" value="1" style="background:#ecfdf5; border-color:#a7f3d0; color:#065f46;">
             </div>
         </div>
@@ -400,7 +484,7 @@
 
     window.applyYearFilter = function() {
         selectedYear = document.getElementById('global-year-filter').value;
-        switchSpace(currentSpace);
+        if(currentSpace !== 'single-ball') switchSpace(currentSpace);
     };
 
     function check1800(balls) {
@@ -453,8 +537,10 @@
 
         let isArena = (spaceKey === 'arena');
         let isLedger = (spaceKey === 'ledger');
-        let isSpace = (!isArena && !isLedger);
+        let isSingleBall = (spaceKey === 'single-ball');
+        let isSpace = (!isArena && !isLedger && !isSingleBall);
 
+        // 控制原本的面板
         document.getElementById('arena-settings-panel').style.display = isArena ? 'block' : 'none';
         document.getElementById('batch-input-panel').style.display = isArena ? 'block' : 'none';
         document.getElementById('global-strategy').style.display = isArena ? 'block' : 'none';
@@ -467,17 +553,187 @@
         document.getElementById('stats-container').style.display = isSpace ? 'grid' : 'none';
         document.getElementById('history-panel').style.display = isSpace ? 'block' : 'none';
 
+        // 控制新的單碼面板
+        document.getElementById('single-ball-panel').style.display = isSingleBall ? 'block' : 'none';
+
         if (isArena) {
             renderSettingsPanel();
             renderDashboard();
             renderRadar();
         } else if (isLedger) {
             renderLedgerSummary();
+        } else if (isSingleBall) {
+            // 切換到單碼頁面時不預設執行，等使用者按按鈕
         } else {
             document.getElementById('batch-target-space').value = spaceKey;
             renderMain();
         }
     };
+
+    // ==============================================================
+    // 🎯 核心新功能：單碼 AI 深度解析演算法
+    // ==============================================================
+    window.executeSingleBallScan = function() {
+        let ballInput = document.getElementById('sb-input-ball').value;
+        let spaceKey = document.getElementById('sb-input-space').value;
+        
+        let target = parseInt(ballInput, 10);
+        if (isNaN(target) || target < 1 || target > 39) {
+            alert("❌ 請輸入 01 到 39 之間的有效號碼！");
+            return;
+        }
+
+        // 注意：單碼分析必須用「全歷史」，忽略上方年度過濾器
+        let rawData = spaceData[spaceKey] || [];
+        let data = [...rawData].sort((a, b) => new Date(b.date) - new Date(a.date)); // 最新的在 index 0
+
+        if (data.length < 100) {
+            alert("⚠️ 該資料庫數據不足 100 期，無法進行深度解析。請先匯入歷史資料。");
+            return;
+        }
+
+        let totalDraws = data.length;
+        let cYear = new Date().getFullYear().toString();
+
+        // 1. 五大週期統計計數器
+        let hitsAll = 0, hitsYear = 0, hits100 = 0, hits50 = 0, hits30 = 0;
+        let yearTotal = 0;
+        
+        let currentMissing = -1; 
+        let missingHistory = []; 
+        let tempMiss = 0;
+
+        // 反轉陣列從最舊到最新開始掃描 (建立遺漏歷史與馬可夫)
+        let reversedData = [...data].reverse();
+        reversedData.forEach((item) => {
+            let isHit = item.draw.includes(target);
+            if (isHit) {
+                missingHistory.push(tempMiss);
+                tempMiss = 0;
+            } else {
+                tempMiss++;
+            }
+        });
+        currentMissing = tempMiss;
+
+        // 計算五大週期命中數 (從最新往前算)
+        data.forEach((item, idx) => {
+            let isHit = item.draw.includes(target);
+            if (isHit) hitsAll++;
+            
+            if (String(item.date).startsWith(cYear)) {
+                yearTotal++;
+                if (isHit) hitsYear++;
+            }
+            if (idx < 100 && isHit) hits100++;
+            if (idx < 50 && isHit) hits50++;
+            if (idx < 30 && isHit) hits30++;
+        });
+
+        let probAll = (hitsAll / totalDraws) * 100;
+        let probYear = yearTotal > 0 ? (hitsYear / yearTotal) * 100 : 0;
+        let prob100 = (hits100 / 100) * 100;
+        let prob50 = (hits50 / 50) * 100;
+        let prob30 = (hits30 / 30) * 100;
+
+        // 基礎統計學
+        let avgMissing = missingHistory.length > 0 ? missingHistory.reduce((a,b)=>a+b,0)/missingHistory.length : 0;
+        let maxMissing = Math.max(...missingHistory, currentMissing);
+        let variance = missingHistory.reduce((acc, val) => acc + Math.pow(val - avgMissing, 2), 0) / missingHistory.length;
+        let stdDev = Math.sqrt(variance || 1);
+        let zScore = (currentMissing - avgMissing) / stdDev;
+
+        // 馬可夫條件機率
+        let markovHit = 0;
+        let markovMiss = 0;
+        let mMissTracker = 0;
+        reversedData.forEach((item, idx) => {
+            let isHit = item.draw.includes(target);
+            if (idx > 0 && mMissTracker === currentMissing) {
+                if (isHit) markovHit++; else markovMiss++;
+            }
+            if (isHit) mMissTracker = 0; else mMissTracker++;
+        });
+        // Laplace Smoothing
+        let probMarkov = ((markovHit + 0.15) / (markovHit + markovMiss + 1)) * 100;
+        let pressureRatio = maxMissing > 0 ? (currentMissing / maxMissing) * 100 : 0;
+
+        // 綜合預測
+        let nextDrawPrediction = (probMarkov * 0.5) + (probAll * 0.2) + (prob30 * 0.3);
+
+        // ------ 更新 UI ------
+        document.getElementById('sb-result-container').style.display = 'block';
+        document.getElementById('sb-title-ball').innerText = String(target).padStart(2, '0');
+
+        let formatProb = (p, base) => {
+            let clz = p > base * 1.1 ? 'hot' : (p < base * 0.9 ? 'cold' : '');
+            return `<span class="${clz}">${p.toFixed(1)}%</span>`;
+        };
+
+        document.getElementById('sb-p-all').innerHTML = probAll.toFixed(1) + '%';
+        document.getElementById('sb-p-year').innerHTML = formatProb(probYear, probAll);
+        document.getElementById('sb-p-100').innerHTML = formatProb(prob100, probAll);
+        document.getElementById('sb-p-50').innerHTML = formatProb(prob50, probAll);
+        document.getElementById('sb-p-30').innerHTML = formatProb(prob30, probAll);
+
+        document.getElementById('sb-miss-curr').innerText = `${currentMissing} 期`;
+        document.getElementById('sb-miss-max').innerText = `${maxMissing} 期`;
+        document.getElementById('sb-zscore').innerText = isNaN(zScore) ? '0.00' : zScore.toFixed(2);
+        document.getElementById('sb-pressure').innerText = pressureRatio.toFixed(1) + '%';
+
+        // 生成六大巨頭針對此號碼的診斷
+        let g1Color = prob30 < probAll ? 'highlight' : 'danger';
+        let g1Text = prob30 < probAll ? '低檔補漲拉力強' : '高檔過熱需冷卻';
+        
+        let g2Color = prob30 > prob100 ? 'highlight' : 'danger';
+        let g2Text = prob30 > prob100 ? '熱錢集中(強勢)' : '動能衰退(弱勢)';
+
+        let g3Color = probMarkov > probAll ? 'highlight' : 'danger';
+        let g3Text = `${probMarkov.toFixed(1)}% (條件勝率)`;
+
+        let g4Color = zScore >= 1.5 ? 'highlight' : (zScore <= -0.5 ? 'danger' : '');
+        let g4Text = zScore >= 1.5 ? '極端乾旱(抄底)' : '乖離率正常區間';
+
+        let g5Color = pressureRatio > 80 ? 'highlight' : 'danger';
+        let g5Text = pressureRatio > 80 ? '臨近歷史極限爆發' : '未達壓力臨界點';
+
+        let g6Color = nextDrawPrediction > probAll ? 'highlight' : 'danger';
+        let g6Text = `${nextDrawPrediction.toFixed(1)}% (綜合預測)`;
+
+        document.getElementById('sb-giants-container').innerHTML = `
+            <div class="giant-card ${g1Color}"><div class="g-title">①數學家(均值回歸)</div><div class="g-val" style="font-size:11px;">${g1Text}</div></div>
+            <div class="giant-card ${g2Color}"><div class="g-title">②資金家(短線動能)</div><div class="g-val" style="font-size:11px;">${g2Text}</div></div>
+            <div class="giant-card ${g3Color}"><div class="g-title">③贏家(馬可夫慣性)</div><div class="g-val">${g3Text}</div></div>
+            <div class="giant-card ${g4Color}"><div class="g-title">④銀行家(Z-Score)</div><div class="g-val" style="font-size:11px;">${g4Text}</div></div>
+            <div class="giant-card ${g5Color}"><div class="g-title">⑤精算家(極限壓力)</div><div class="g-val" style="font-size:11px;">${g5Text}</div></div>
+            <div class="giant-card ${g6Color}"><div class="g-title">⑥大莊家(下期開出率)</div><div class="g-val">${g6Text}</div></div>
+        `;
+
+        // 綜合判定
+        let verdictTitle, verdictDesc, verdictColor;
+        if (zScore >= 1.5 && probMarkov > probAll && pressureRatio > 70) {
+            verdictTitle = "🟢 S級單碼絕佳買點 (極端冰點反彈)";
+            verdictDesc = `【診斷】該號碼已進入歷史罕見的冰凍期 (Z=${zScore.toFixed(2)})，壓力閥飆升至 ${pressureRatio.toFixed(0)}%。馬可夫鏈顯示此水位反轉機率極高，強烈建議納入組合！`;
+            verdictColor = "background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid #059669;";
+        } else if (prob30 > prob100 && prob50 > prob100) {
+            verdictTitle = "🟡 短線動能爆發區 (強勢追擊)";
+            verdictDesc = `【診斷】此號碼短期與中期機率皆突破歷史均值，資金高度集中。可趁熱度未散前進行順勢追擊操作。`;
+            verdictColor = "background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid #d97706;";
+        } else if (probMarkov < probAll && zScore < 0.5) {
+            verdictTitle = "🔴 嚴格冷凍區 (雜訊過大禁入)";
+            verdictDesc = `【診斷】該號碼缺乏均值回歸拉力，且馬可夫歷史軌跡顯示當前狀態極度不易開出。大莊家建議直接剃除此號碼，不納入選號。`;
+            verdictColor = "background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid #dc2626;";
+        } else {
+            verdictTitle = "⚪ 溫和盤整區 (中性觀望)";
+            verdictDesc = `【診斷】號碼表現平庸，未觸及任何極端佈局指標。綜合預測開出率為 ${nextDrawPrediction.toFixed(1)}%，若無其他靈感，建議優先選擇其他 S 或 A 級號碼。`;
+            verdictColor = "background: rgba(100, 116, 139, 0.2); color: #94a3b8; border: 1px solid #475569;";
+        }
+
+        let verdictDiv = document.getElementById('sb-final-verdict');
+        verdictDiv.style = verdictColor + " margin-top:12px; padding:10px; border-radius:6px; font-size:13px; font-weight:bold; line-height:1.5;";
+        verdictDiv.innerHTML = `<div style="font-size:14px; margin-bottom:4px;">${verdictTitle}</div><div style="font-size:12px; font-weight:normal;">${verdictDesc}</div>`;
+    };
+    // ==============================================================
 
     window.updateConfigDisplay = function(key) {
         let unitBet = parseFloat(document.getElementById(`cfg-unitbet-${key}`).value) || 0;
@@ -637,7 +893,6 @@
         let continuousHits = 0; 
         let losingStreak = 0;
 
-        // 計算當前狀態
         for (let i = 0; i < data.length; i++) {
             let balls = data[i].draw;
             if (!balls || !Array.isArray(balls) || balls.length === 0) continue;
@@ -657,13 +912,11 @@
 
         let reversedData = [...data].reverse();
         
-        // --- 模型參數設定 ---
         let baseP_Threshold = cfg.type === '1800' ? 0.15 : 0.25;
         let costPerRound = Number(cfg.unitBet) * Number(cfg.basePuffs) * (1 - Number(cfg.rebate) / 100);
         let minPrize = cfg.type === '1800' ? 3 * Number(cfg.unitPrize) * Number(cfg.unitBet) : 2 * Number(cfg.unitPrize) * Number(cfg.unitBet);
         let netWin = minPrize - costPerRound;
 
-        // --- 理論資金曲線、波動率與馬可夫鏈記憶計算 ---
         let theoreticalEquity = 0;
         let peakTheoretical = 0;
         let maxDrawdown = 0;
@@ -680,13 +933,11 @@
             
             if (isWin) wins++;
 
-            // 1. 資金曲線與最大回撤
             theoreticalEquity += (isWin ? netWin : -costPerRound);
             if (theoreticalEquity > peakTheoretical) peakTheoretical = theoreticalEquity;
             let dd = peakTheoretical - theoreticalEquity;
             if (dd > maxDrawdown) maxDrawdown = dd;
 
-            // 2. 馬可夫鏈：歷史上在「跟目前一樣的連敗次數」下，下一期發生什麼事？
             if (idx > 0) { 
                 if (tempStreak === losingStreak) {
                     if (isWin) markovW++; else markovL++;
@@ -698,30 +949,21 @@
         });
 
         let currentDrawdown = peakTheoretical - theoreticalEquity;
-        
-        // 數學家基礎機率
         let empWinRate = totalDraws > 0 ? (wins / totalDraws) : baseP_Threshold;
-        
-        // 馬可夫動態機率 (搭配 Laplace Smoothing 避免零樣本錯誤)
         let markovProb = (markovW + baseP_Threshold) / (markovW + markovL + 1);
-        
-        // 贏家：貝氏機率融合
         let bayesProb = (markovProb * 0.7) + (empWinRate * 0.3);
 
-        // 銀行家：Z-Score
         let expectedLosing = cfg.type === '1800' ? 6 : 3;
         let stdDev = cfg.type === '1800' ? 2 : 1.5; 
         let zScore = (losingStreak - expectedLosing) / stdDev;
 
-        // 資金家：凱利公式
         let oddsB = costPerRound > 0 ? (netWin / costPerRound) : 0;
         let fullKelly = oddsB > 0 ? ((bayesProb * oddsB) - (1 - bayesProb)) / oddsB : 0;
-        let fracKelly = Math.max(0, fullKelly * 0.3); // 30% 分數凱利防止破產
+        let fracKelly = Math.max(0, fullKelly * 0.3);
 
-        // 亂流防禦機制判定 (Drawdown Penalty)
         let isTurbulent = false;
         if (maxDrawdown > costPerRound * 5 && currentDrawdown >= maxDrawdown * 0.8) {
-            isTurbulent = true; // 當前回撤逼近歷史最深水區的80%
+            isTurbulent = true; 
         }
 
         let EV = (bayesProb * minPrize) - ((1 - bayesProb) * costPerRound);
@@ -1150,13 +1392,15 @@
             renderRadar();
         } else if (currentSpace === 'ledger') {
             renderLedgerSummary();
+        } else if (currentSpace === 'single-ball') {
+            // 不主動掃描，等按鈕
         } else {
             renderMain();
         }
     });
 
     function renderMain() {
-        if(currentSpace === 'arena' || currentSpace === 'ledger') return;
+        if(currentSpace === 'arena' || currentSpace === 'ledger' || currentSpace === 'single-ball') return;
         
         try {
             let cfg = spaceConfigs[currentSpace];
