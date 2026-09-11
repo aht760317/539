@@ -3,8 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>天天樂 & 五三九 雙核心量化操盤系統 (極速精準版)</title>
+    <title>天天樂 & 五三九 雙核心量化操盤系統 (終極獵人完全體)</title>
     <style>
+        /* ==========================================
+           1. 全局變數與基礎字體設定 (回歸乾淨明亮專業版)
+           ========================================== */
         :root {
             --bg-color: #f8fafc; 
             --panel-bg: #ffffff;
@@ -24,6 +27,9 @@
         body { background-color: var(--bg-color); color: var(--text-main); padding: 8px; line-height: 1.5; }
         .container { max-width: 1200px; margin: 0 auto; }
 
+        /* ==========================================
+           2. 頂部導航列 (Header)
+           ========================================== */
         header { 
             background: linear-gradient(135deg, #ffffff, #f0f9ff); border: 1px solid #bae6fd;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); padding: 12px; border-radius: 12px; margin-bottom: 12px; text-align: center; 
@@ -39,31 +45,46 @@
         }
         .dot { width: 6px; height: 6px; border-radius: 50%; background: #10b981; box-shadow: 0 0 4px #10b981; }
 
-        /* 年度篩選器 */
+        /* 年度切換器 */
         .year-filter-bar {
             background: #1e293b; color: #fff; padding: 10px; border-radius: 8px; margin-bottom: 14px;
             display: flex; justify-content: center; align-items: center; gap: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
         .year-filter-bar select {
             padding: 6px 12px; font-size: 14px; font-weight: bold; border-radius: 6px; border: 2px solid #3b82f6;
-            background: #0f172a; color: #60a5fa; cursor: pointer; outline: none;
+            background: #0f172a; color: #60a5fa; cursor: pointer; outline: none; transition: 0.2s;
         }
 
+        /* ==========================================
+           3. 核心功能切換按鈕 (Mode Switcher)
+           ========================================== */
         .mode-switcher { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin-bottom: 14px; }
         @media (min-width: 768px) { .mode-switcher { grid-template-columns: repeat(4, 1fr); } }
-        @media (min-width: 1024px) { .mode-switcher { grid-template-columns: repeat(7, 1fr); } }
+        @media (min-width: 1024px) { .mode-switcher { grid-template-columns: repeat(7, 1fr); } } 
         
         .mode-btn { 
             padding: 8px 4px; border: 1.5px solid #cbd5e1; background: #fff; color: #475569; 
             font-size: 12px; font-weight: 800; border-radius: 8px; cursor: pointer; transition: 0.2s; text-align: center; white-space: nowrap;
         }
+        .mode-btn:hover { background: #f8fafc; }
         .mode-btn.active { border-color: var(--primary-color); background: var(--primary-color); color: #fff; box-shadow: 0 2px 8px rgba(2, 132, 199, 0.3); }
         .mode-btn.arena-btn.active { border-color: var(--purple-color); background: var(--purple-color); box-shadow: 0 2px 8px rgba(124, 58, 237, 0.3); }
         .mode-btn.ledger-btn.active { border-color: var(--success-color); background: var(--success-color); box-shadow: 0 2px 8px rgba(5, 150, 105, 0.3); }
-        .mode-btn.single-btn.active { border-color: var(--orange-color); background: var(--orange-color); box-shadow: 0 2px 8px rgba(234, 88, 12, 0.3); color: #fff; }
+        .mode-btn.single-btn.active { border-color: var(--orange-color); background: var(--orange-color); box-shadow: 0 2px 8px rgba(234, 88, 12, 0.3); color:#fff; }
 
+        /* ==========================================
+           4. 基礎面板與網格 (Panels)
+           ========================================== */
         .panel { background: var(--panel-bg); padding: 14px; border-radius: 12px; border: 1px solid var(--panel-border); margin-bottom: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
         .panel-title { font-size: 14px; font-weight: 900; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px; color: var(--text-main); }
+
+        .form-row { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+        @media (min-width: 768px) { .form-row { flex-direction: row; } }
+        .form-group label { display: block; font-size: 11px; font-weight: 800; color: #334155; margin-bottom: 2px; }
+        .form-group input, .form-group select { width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; font-family: monospace; font-weight: bold; outline:none; transition: 0.2s; }
+        
+        textarea { width: 100%; height: 80px; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-family: monospace; font-size: 12px; margin-bottom: 8px; outline:none; }
+        .btn-main { background: linear-gradient(135deg, #0284c7, #2563eb); color: white; border: none; padding: 10px; font-size: 13px; font-weight: 900; border-radius: 8px; cursor: pointer; width: 100%; transition: 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
 
         .guide-box { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px; margin-bottom: 14px; font-size: 12px; line-height: 1.6; }
         .guide-box h4 { margin-bottom: 8px; color: #0f172a; font-size: 14px; display: flex; align-items: center; gap: 6px; cursor: pointer; }
@@ -74,7 +95,6 @@
 
         .setting-grid { display: grid; grid-template-columns: 1fr; gap: 14px; align-items: stretch; }
         @media (min-width: 900px) { .setting-grid { grid-template-columns: repeat(2, 1fr); } } 
-
         .space-config-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px; display: flex; flex-direction: column; }
         .space-config-card h4 { font-size: 13px; font-weight: 900; color: var(--purple-color); margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
         .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
@@ -85,7 +105,7 @@
         .action-bar { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
         .action-bar input { padding: 8px; border: 1.5px solid #cbd5e1; border-radius: 6px; flex: 1; min-width: 120px; font-size: 13px; font-weight: bold; }
         
-        /* 策略儀表板保持原視覺 */
+        /* 決策看板與六大巨頭網格 */
         .strategy-dashboard { background: linear-gradient(135deg, #1e1b4b, #312e81); color: #fff; padding: 16px; border-radius: 12px; margin-bottom: 14px; box-shadow: 0 4px 12px rgba(49, 46, 129, 0.4); }
         .strategy-dashboard h3 { font-size: 15px; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 6px; }
         .dashboard-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
@@ -93,25 +113,8 @@
         .dash-card { background: rgba(255,255,255,0.1); border-radius: 8px; padding: 10px; border: 1px solid rgba(255,255,255,0.1); font-size: 12px; }
         .dash-card h4 { color: #a5b4fc; font-size: 12px; margin-bottom: 4px; }
 
-        .radar-panel { background: linear-gradient(135deg, #fef2f2, #fff1f2); border: 2px dashed #fca5a5; border-radius: 12px; padding: 14px; margin-bottom: 14px; box-shadow: 0 4px 10px rgba(220, 38, 38, 0.08); }
-        .radar-panel h3 { font-size: 15px; color: #991b1b; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid #fecaca; padding-bottom: 6px; }
-        .radar-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
-        @media (min-width: 768px) { .radar-grid { grid-template-columns: repeat(2, 1fr); } }
-        .radar-card { background: #ffffff; border: 1px solid #fca5a5; border-radius: 8px; padding: 12px; font-size: 12px; line-height: 1.5; }
-        .radar-card h4 { color: #dc2626; font-size: 13px; font-weight: 900; margin-bottom: 6px; display:flex; justify-content:space-between; align-items:center;}
-        .radar-highlight { color: #b91c1c; font-weight: 900; font-size: 14px; }
-        
-        .col-prob-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 8px 0; }
-        .col-prob-item { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 6px 8px; font-size: 11px; text-align: center; }
-        .col-prob-item.danger-col { background: #fff1f2; border-color: #fca5a5; }
-        .col-prob-item .col-title { font-weight: bold; color: #475569; margin-bottom: 2px; }
-        .col-prob-item.danger-col .col-title { color: #dc2626; }
-        .col-prob-item .col-val { font-weight: 900; font-size: 13px; color: #0284c7; }
-        .col-prob-item.danger-col .col-val { color: #dc2626; }
-        
         .ai-prediction-box { margin-top: auto; padding: 12px; background: linear-gradient(to bottom, #ffffff, #f8fafc); border: 2px solid #e2e8f0; border-radius: 10px; font-size: 12px; }
         .ai-prediction-box h5 { color: #0f172a; margin: 0; font-size: 13px; font-weight: 900; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid #cbd5e1; padding-bottom: 6px; }
-        
         .giant-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin: 10px 0; }
         @media (min-width: 768px) { .giant-grid { grid-template-columns: repeat(3, 1fr); } }
         .giant-card { background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px; text-align: center; transition: 0.2s; }
@@ -121,31 +124,31 @@
         .giant-card.highlight { background: #ecfdf5; border-color: #34d399; box-shadow: 0 2px 4px rgba(16, 185, 129, 0.1); }
         .giant-card.highlight .g-title { color: #065f46; }
         .giant-card.highlight .g-val { color: #059669; }
-        
         .giant-card.danger { background: #fef2f2; border-color: #fca5a5; box-shadow: 0 2px 4px rgba(220, 38, 38, 0.05); }
         .giant-card.danger .g-title { color: #991b1b; }
         .giant-card.danger .g-val { color: #dc2626; }
-        
         .strategy-box { margin-top: 10px; padding: 10px; border-radius: 8px; text-align: center; font-weight: 900; font-size: 13px; line-height: 1.5; }
         .strategy-box h6 { font-size:14px; margin:0 0 6px 0; }
 
-        .ledger-stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 12px; }
-        @media (min-width: 768px) { .ledger-stats-grid { grid-template-columns: repeat(4, 1fr); } }
-        .ledger-stat-card { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px; text-align: center; }
-        .ledger-stat-card h4 { font-size: 11px; color: #64748b; margin-bottom: 4px; }
-        .ledger-stat-card p { font-size: 16px; font-weight: 900; font-family: monospace; margin: 0; }
+        /* 雷達專區 */
+        .radar-panel { background: linear-gradient(135deg, #fef2f2, #fff1f2); border: 2px dashed #fca5a5; border-radius: 12px; padding: 14px; margin-bottom: 14px; box-shadow: 0 4px 10px rgba(220, 38, 38, 0.08); }
+        .radar-panel h3 { font-size: 15px; color: #991b1b; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid #fecaca; padding-bottom: 6px; }
+        .radar-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        @media (min-width: 768px) { .radar-grid { grid-template-columns: repeat(2, 1fr); } }
+        .radar-card { background: #ffffff; border: 1px solid #fca5a5; border-radius: 8px; padding: 12px; font-size: 12px; line-height: 1.5; }
+        .radar-card h4 { color: #dc2626; font-size: 13px; font-weight: 900; margin-bottom: 6px; display:flex; justify-content:space-between; align-items:center;}
+        .radar-highlight { color: #b91c1c; font-weight: 900; font-size: 14px; }
+        .col-prob-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 8px 0; }
+        .col-prob-item { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 6px 8px; font-size: 11px; text-align: center; }
+        .col-prob-item.danger-col { background: #fff1f2; border-color: #fca5a5; }
+        .col-prob-item .col-title { font-weight: bold; color: #475569; margin-bottom: 2px; }
+        .col-prob-item.danger-col .col-title { color: #dc2626; }
+        .col-prob-item .col-val { font-weight: 900; font-size: 13px; color: #0284c7; }
+        .col-prob-item.danger-col .col-val { color: #dc2626; }
 
-        .rec-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 10px; }
-        @media (min-width: 768px) { .rec-grid { grid-template-columns: repeat(2, 1fr); } }
-
-        .form-row { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
-        @media (min-width: 768px) { .form-row { flex-direction: row; } }
-        .form-group label { font-size: 11px; font-weight: 800; color: #334155; margin-bottom: 2px; }
-        .form-group input, .form-group select { width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; font-family: monospace; }
-        
-        textarea { width: 100%; height: 80px; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-family: monospace; font-size: 12px; margin-bottom: 8px; }
-        .btn-main { background: linear-gradient(135deg, #0284c7, #2563eb); color: white; border: none; padding: 10px; font-size: 13px; font-weight: 900; border-radius: 8px; cursor: pointer; width: 100%; }
-
+        /* ==========================================
+           5. 數據表格與標籤 (Tables & Badges)
+           ========================================== */
         .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 14px; }
         @media (min-width: 768px) { .stats-grid { grid-template-columns: repeat(3, 1fr); } }
         @media (min-width: 1024px) { .stats-grid { grid-template-columns: repeat(6, 1fr); } }
@@ -153,9 +156,9 @@
         .stat-item h3 { font-size: 11px; color: #64748b; margin-bottom: 4px; font-weight:bold;}
         .stat-item p { font-size: 16px; font-weight: 900; font-family: monospace; margin:0;}
 
-        /* 表格固定表頭 */
-        .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 8px; border: 1px solid #e2e8f0; max-height: 500px; overflow-y: auto; background:#fff; }
-        table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 12px; min-width: 700px; }
+        /* 表格優化：固定表頭 (Sticky Header) */
+        .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 8px; border: 1px solid #e2e8f0; max-height: 500px; overflow-y: auto; background:#fff;}
+        table { width: 100%; border-collapse: separate; border-spacing:0; font-size: 12px; min-width: 700px; }
         th { background: #f8fafc; padding: 10px 4px; border-bottom: 2px solid #cbd5e1; color: #475569; white-space: nowrap; position: sticky; top: 0; z-index: 10; font-weight: 900; }
         td { padding: 8px 4px; border-bottom: 1px solid #e2e8f0; text-align: center; vertical-align: middle; }
         tr:hover td { background: #f1f5f9; }
@@ -166,14 +169,13 @@
         .bg-yellow { background: #fef9c3; color: #854d0e; border: 1px solid #fde047;}
 
         .num-container { display: flex; gap: 3px; justify-content: center; flex-wrap: wrap; }
-        .num-ball { width: var(--ball-size); height: var(--ball-size); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 900; font-family: monospace; }
-        .draw-ball { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #78350f; border: 1px solid #b45309; }
+        .num-ball { width: var(--ball-size); height: var(--ball-size); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 900; font-family: monospace; background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #78350f; border: 1px solid #b45309; }
 
         .btn-tbl-action { background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 4px; padding: 2px 6px; cursor: pointer; font-size: 11px; font-weight: bold; }
         .btn-tbl-action:hover { background: #e2e8f0; }
 
         /* ==========================================
-           單碼量化透視 & 39碼名冊專用 (還原專業原版風格)
+           6. 單碼量化透視專區與名冊
            ========================================== */
         .sb-dash-header { display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 900; color: var(--text-main); border-bottom: 2px solid #f1f5f9; padding-bottom: 8px; margin-bottom: 12px; }
         .sb-ball-circle { width: 28px; height: 28px; border-radius: 50%; background: var(--orange-color); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 14px; font-family: monospace; }
@@ -184,7 +186,7 @@
         .sb-prob-card h4 { font-size: 11px; color: #64748b; margin-bottom: 4px; font-weight: bold;}
         .sb-prob-card p { font-size: 16px; font-weight: 900; margin: 0; color: #0f172a; font-family: monospace;}
         
-        /* 輔助標籤 */
+        /* 輔助標籤：加速度與警告 */
         .accel-tag { font-size: 11px; font-weight: bold; margin-top: 4px; display:inline-block; }
         .accel-up { color: #dc2626; } 
         .accel-dn { color: #059669; } 
@@ -221,14 +223,33 @@
         .gateway-banner { padding: 12px; border-radius: 8px; margin-bottom: 12px; font-weight: 900; font-size: 14px; text-align: center; border: 2px solid; }
         .gateway-go { background: #ecfdf5; color: #065f46; border-color: #10b981; }
         .gateway-nogo { background: #fef2f2; color: #b91c1c; border-color: #ef4444; }
+
+        /* Ledger 統計卡片 */
+        .ledger-stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 12px; }
+        @media (min-width: 768px) { .ledger-stats-grid { grid-template-columns: repeat(4, 1fr); } }
+        .ledger-stat-card { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px; text-align: center; }
+        .ledger-stat-card h4 { font-size: 11px; color: #64748b; margin-bottom: 4px; }
+        .ledger-stat-card p { font-size: 16px; font-weight: 900; font-family: monospace; margin: 0; }
+        .rec-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 10px; }
+        @media (min-width: 768px) { .rec-grid { grid-template-columns: repeat(2, 1fr); } }
+
+        /* 讀取狀態遮罩 (防呆) */
+        #global-loader { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.95); z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center; transition: opacity 0.3s; }
+        .loader-spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top-color: var(--primary-color); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom:12px;}
+        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
+<div id="global-loader">
+    <div class="loader-spinner"></div>
+    <h2 style="color:var(--text-main); font-weight:900; font-size:18px;">☁️ 雲端數據庫同步中...</h2>
+</div>
+
 <div class="container">
     <header>
         <h1>⚡ 天天樂 & 五三九 雙核心量化操盤系統 ⚡</h1>
-        <div class="cloud-badge"><div class="dot"></div> Firebase 雲端同步中</div>
+        <div class="cloud-badge"><div class="dot"></div> Firebase 終極獵人引擎上線</div>
     </header>
 
     <div class="year-filter-bar">
@@ -255,20 +276,20 @@
         <div class="panel">
             <div class="panel-title">🎯 39 碼全盤量化雷達與行動閘門</div>
             <div style="font-size:11px; color:#64748b; margin-bottom:12px; font-weight:bold; line-height:1.5;">
-                系統已優化：動態擷取近 500 期作為高精度運算母體，一鍵解鎖今晚能不能下柱的最終判決！
+                結合動態加速度與多空排列，一鍵解鎖今晚能不能下柱的最終判決！(計算母體：全歷史數據)
             </div>
             
             <div class="form-row" style="background: #f8fafc; padding: 12px; border-radius: 8px; border: 1px solid #e2e8f0; align-items: flex-end;">
                 <div class="form-group" style="flex:2;">
                     <label>🎯 選擇資料庫 (決定母體)</label>
                     <select id="sb-input-space" style="color: var(--purple-color); font-weight:bold;">
-                        <option value="539-9000">📊 五三九 全資料庫 (推薦)</option>
+                        <option value="539-9000">📊 五三九 全資料庫</option>
                         <option value="tt-9000">🚀 天天樂 全資料庫</option>
                     </select>
                 </div>
                 <div class="form-group" style="flex:1;">
                     <label>🔍 查單碼 (1~39)</label>
-                    <input type="number" id="sb-input-ball" min="1" max="39" placeholder="例: 07" style="text-align:center; color:var(--orange-color);">
+                    <input type="number" id="sb-input-ball" min="1" max="39" placeholder="例: 07" style="text-align:center; color:#ea580c;">
                 </div>
                 <button class="btn-main" onclick="executeSingleBallScan()" style="background: #cbd5e1; color:#1e293b; flex:1;">🔍 查詢</button>
                 <button class="btn-main" onclick="scanAll39Balls()" style="background: var(--orange-color); flex:2;">🔮 一鍵掃描 39 碼分級</button>
@@ -485,6 +506,7 @@
     let currentSpace = 'arena';
     let currentYear = new Date().getFullYear();
     let selectedYear = currentYear.toString();
+    let isDataLoaded = false; 
 
     let spaceConfigs = {
         'tt-1800': { name: '天天樂 1800碰', unitBet: 1, basePuffs: 1800, rebate: 37, unitPrize: 570, type: '1800' },
@@ -579,6 +601,8 @@
 
         document.getElementById('single-ball-panel').style.display = isSingleBall ? 'block' : 'none';
 
+        if(!isDataLoaded) return; 
+
         if (isArena) {
             renderSettingsPanel();
             renderDashboard();
@@ -586,7 +610,7 @@
         } else if (isLedger) {
             renderLedgerSummary();
         } else if (isSingleBall) {
-            // 切換至單碼頁面時等待手動操作
+            // 單碼頁面保留，等待手動按鈕
         } else {
             document.getElementById('batch-target-space').value = spaceKey;
             renderMain();
@@ -594,16 +618,13 @@
     };
 
     // ==============================================================
-    // 🎯 核心演算法：單碼經驗貝氏平滑與量化指標 (優化：取近 500 期)
+    // 🎯 核心演算法：單碼經驗貝氏平滑與量化指標 (使用全資料庫)
     // ==============================================================
-    function computeAdvancedBallStats(target, dataFull, cYear) {
-        // 效能優化：只取最近 500 期作為動態運算母體，避免歷史數據稀釋並加速運算
-        let data = dataFull.slice(0, 500); 
+    function computeAdvancedBallStats(target, data, cYear) {
         let totalDraws = data.length;
-        if (totalDraws === 0) return null;
-
         let hitsAll = 0, hitsYear = 0, hits100 = 0, hits50 = 0, hits30 = 0;
         let yearTotal = 0;
+        
         let currentMissing = -1; 
         let missingHistory = []; 
         let tempMiss = 0;
@@ -660,7 +681,7 @@
             }
             if (isHit) mMissTracker = 0; else mMissTracker++;
         });
-        // 加入經驗貝氏平滑，將權重分配給基礎機率
+        // 經驗貝氏平滑：加入適當的先驗權重，讓極端值回歸
         let probMarkov = ((markovHit + baseProbRatio * 5) / (markovHit + markovMiss + 5)) * 100;
 
         // 綜合預測開出率 (純機率加權，完美保持在 5%~25% 真實尺度)
@@ -687,13 +708,12 @@
 
         let rawData = spaceData[spaceKey] || [];
         let data = [...rawData].sort((a, b) => new Date(b.date) - new Date(a.date)); 
-        if (data.length < 100) return alert("⚠️ 數據不足，無法進行解析。");
+        if (data.length < 100) return alert("⚠️ 數據不足 100 期，無法進行深度解析。");
 
         document.getElementById('all-balls-roster-container').style.display = 'none';
         
         let cYear = new Date().getFullYear().toString();
         let stats = computeAdvancedBallStats(target, data, cYear);
-        if (!stats) return;
 
         document.getElementById('sb-result-container').style.display = 'block';
         document.getElementById('sb-title-ball').innerText = String(target).padStart(2, '0');
@@ -711,11 +731,11 @@
         
         let accelEl = document.getElementById('sb-accel-tag');
         if (stats.accel > 0) {
-            accelEl.innerHTML = `<span class="accel-up">+${stats.accel.toFixed(1)}%</span>`;
+            accelEl.innerHTML = `(<span class="accel-up">+${stats.accel.toFixed(1)}%</span>)`;
         } else if (stats.accel < 0) {
-            accelEl.innerHTML = `<span class="accel-dn">${stats.accel.toFixed(1)}%</span>`;
+            accelEl.innerHTML = `(<span class="accel-dn">${stats.accel.toFixed(1)}%</span>)`;
         } else {
-            accelEl.innerHTML = `<span style="color:#64748b;">0.0%</span>`;
+            accelEl.innerHTML = `(0.0%)`;
         }
 
         let trendBanner = document.getElementById('sb-trend-banner');
@@ -768,20 +788,20 @@
         let verdictTitle, verdictDesc, verdictColor;
         if (isS) {
             verdictTitle = "🔥 S 級 (極端爆發 / 必選主力)";
-            verdictDesc = `【診斷】極其罕見的高勝率買點！均線多頭且具備極端 Z-Score (${z.toFixed(2)})。強烈推薦！`;
-            verdictColor = "background:#fef2f2; color:#b91c1c; border:1.5px solid #fca5a5;";
+            verdictDesc = `【診斷】極其罕見的高勝率買點！均線多頭且具備極端 Z-Score (${z.toFixed(2)})。主力下注，強烈推薦！`;
+            verdictColor = "background:#fef2f2; color:#b91c1c; border:1px solid #fca5a5;";
         } else if (isA) {
             verdictTitle = "🟢 A 級 (優質候選 / 穩定佈局)";
-            verdictDesc = `【診斷】預測機率 ${p.toFixed(1)}%，明顯優於大盤平均，數學期望值轉正。適合作為核心副牌佈局。`;
-            verdictColor = "background:#ecfdf5; color:#047857; border:1.5px solid #6ee7b7;";
+            verdictDesc = `【診斷】預測機率 ${p.toFixed(1)}%，明顯優於大盤平均，數學期望值轉正。適合做為核心副牌佈局。`;
+            verdictColor = "background:#ecfdf5; color:#047857; border:1px solid #6ee7b7;";
         } else if (isC) {
             verdictTitle = "🔴 C 級 (極端危險 / 嚴格剔除)";
             verdictDesc = `【診斷】開出率不足，或剛開出處於嚴格冰凍期。一律不碰，直接剔除！`;
-            verdictColor = "background:#f1f5f9; color:#475569; border:1.5px solid #cbd5e1;";
+            verdictColor = "background:#f1f5f9; color:#475569; border:1px solid #cbd5e1;";
         } else {
             verdictTitle = "⚪ B 級 (溫和盤整 / 中性觀望)";
-            verdictDesc = `【診斷】機率 ${p.toFixed(1)}% 屬於隨機雜訊區間。不強也不弱，無數學優勢。不主動下注。`;
-            verdictColor = "background:#ffffff; color:#64748b; border:1.5px solid #e2e8f0;";
+            verdictDesc = `【診斷】隨機雜訊區間。不強也不弱，無數學優勢。不主動下注。`;
+            verdictColor = "background:#ffffff; color:#64748b; border:1px solid #e2e8f0;";
         }
 
         let verdictDiv = document.getElementById('sb-final-verdict');
@@ -806,13 +826,13 @@
 
         for (let target = 1; target <= 39; target++) {
             let stats = computeAdvancedBallStats(target, data, cYear);
-            if(!stats) continue;
             let p = stats.nextDrawPrediction;
             let z = stats.zScore;
             
             let ballStr = String(target).padStart(2, '0');
             let obj = { ball: ballStr, prob: p.toFixed(1), z: isNaN(z) ? 0 : z.toFixed(2) };
 
+            // 嚴格雙軌分級邏輯
             let isS = (p >= 16.5) || (p >= 13.5 && z >= 2.0);
             let isA = (!isS) && (p >= 14.5 || (p >= 13.0 && z >= 1.5));
             let isC = (p < 11.5 || stats.currentMissing === 0);
@@ -837,7 +857,7 @@
             gatewayAlert.innerHTML = `🔴 【大盤閘門鎖死】選號池優質號碼不足 (S級: ${sClass.length} 顆, A級: ${aClass.length} 顆) 👉 雜訊過高，強制 0 元觀望！`;
         }
 
-        // 點擊聯動功能：點擊名冊上的號碼，自動執行單碼查詢並平滑捲動到頂部
+        // 點擊聯動功能：點擊名冊號碼自動查詢並捲動到頂部
         let renderBadge = (item) => `<div class="ball-badge" title="Z-Score: ${item.z}" onclick="document.getElementById('sb-input-ball').value='${item.ball}'; executeSingleBallScan(); window.scrollTo({top: 0, behavior: 'smooth'});"><span class="b-num">${item.ball}</span><span class="b-prob">${item.prob}%</span></div>`;
 
         document.getElementById('roster-grid-content').innerHTML = `
@@ -890,8 +910,7 @@
 
     function analyzeRadar(gameType) {
         let spaceKey = gameType + '-9000';
-        // 效能優化：雷達掃描也只抓 500 期
-        let data = getFilteredData(spaceKey).slice(0, 500);
+        let data = getFilteredData(spaceKey);
         let totalDraws = data.length;
         let tripleLosingStreak = 0;
         let overallHitFound = false;
@@ -992,8 +1011,7 @@
 
     function analyzeSpace(key) {
         let cfg = spaceConfigs[key] || { type: '1800', unitBet: 1, basePuffs: 1800, rebate: 0, unitPrize: 0, name: '' };
-        // 效能優化：大盤分析也擷取近 500 期
-        let data = getFilteredData(key).slice(0, 500);
+        let data = getFilteredData(key);
         
         let totalDraws = data.length;
         let wins = 0;
@@ -1058,7 +1076,6 @@
 
         let currentDrawdown = peakTheoretical - theoreticalEquity;
         let empWinRate = totalDraws > 0 ? (wins / totalDraws) : baseP_Threshold;
-        // 經驗貝氏平滑
         let markovProb = ((markovW + baseP_Threshold * 10) / (markovW + markovL + 10));
         let bayesProb = (markovProb * 0.6) + (empWinRate * 0.4);
 
@@ -1145,12 +1162,12 @@
                 }
 
                 recHtml += `
-                    <div style="padding:16px; border:1.5px solid; border-radius:10px; ${cardStyle} line-height:1.6; background-color:#fff;">
-                        <div style="font-weight:900; font-size:15px; color:#0f172a; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
+                    <div style="padding:14px; border:1.5px solid; border-radius:10px; ${cardStyle} line-height:1.6; background-color:#fff;">
+                        <div style="font-weight:900; font-size:14px; color:#0f172a; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
                             <span>${a.cfg.name}</span>
-                            <span style="font-size:14px; font-weight:900; color:#dc2626;">${statusText}</span>
+                            <span style="font-size:13px; font-weight:900; color:#dc2626;">${statusText}</span>
                         </div>
-                        <div style="font-size:13px; color:#334155;">${reasonText}</div>
+                        <div style="font-size:12px; color:#334155;">${reasonText}</div>
                     </div>
                 `;
             });
@@ -1218,7 +1235,7 @@
     };
 
     // ==============================================================
-    // Firebase 資料掛載與全域渲染
+    // Firebase 資料掛載與全域渲染 (性能極速版)
     // ==============================================================
     onSnapshot(collection(db, "matrix_systems"), (snapshot) => {
         Object.keys(spaceData).forEach(k => spaceData[k] = []);
@@ -1403,7 +1420,7 @@
         if(!date || !ballsStr) return alert("⚠️ 請輸入完整的開獎日期與開獎號碼！");
         let nums = ballsStr.match(/\d+/g);
         if(!nums || nums.length !== 5) return alert("⚠️ 開獎號碼必須剛好 5 個數字！");
-        let draw = nums.map(n=>parseInt(n)).sort((a,b)=>a-b);
+        let draw = nums.map(n=>parseInt(n, 10)).sort((a,b)=>a-b);
         
         if (draw[0] < 1 || draw[4] > 39) return alert("❌ 開獎號碼必須介於 01 到 39 之間！");
         if (new Set(draw).size !== 5) return alert("❌ 號碼不可重複輸入！");
@@ -1430,11 +1447,13 @@
             let matchDate = line.match(/^(\d{4}[-/]\d{1,2}[-/]\d{1,2})/);
             if(matchDate) {
                 let date = matchDate[1].replace(/\//g, '-');
-                let nums = line.substring(matchDate[0].length).match(/\b(0?[1-9]|[1-3][0-9])\b/g);
+                let restOfLine = line.substring(matchDate[0].length);
+                let nums = restOfLine.match(/\d+/g);
                 if(nums && nums.length >= 5) {
-                    let draw = nums.slice(0,5).map(n=>parseInt(n)).sort((a,b)=>a-b);
-                    if(draw[0] >= 1 && draw[4] <= 39 && new Set(draw).size === 5) {
-                        records.push({ id: `${targetSpace}_${date}`, space: targetSpace, date, draw: draw, myBet: 0 });
+                    let draw = nums.map(n=>parseInt(n, 10)).filter(n => n >= 1 && n <= 39);
+                    let uniqueDraw = Array.from(new Set(draw)).slice(0, 5).sort((a,b)=>a-b);
+                    if(uniqueDraw.length === 5) {
+                        records.push({ id: `${targetSpace}_${date}`, space: targetSpace, date: date, draw: uniqueDraw, myBet: 0 });
                     } else { skipCount++; }
                 }
             }
