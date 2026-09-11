@@ -83,6 +83,14 @@
         .radar-card h4 { color: #dc2626; font-size: 13px; font-weight: 900; margin-bottom: 6px; display:flex; justify-content:space-between; align-items:center;}
         .radar-highlight { color: #b91c1c; font-weight: 900; font-size: 14px; }
         
+        .col-prob-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 8px 0; }
+        .col-prob-item { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 6px 8px; font-size: 11px; text-align: center; }
+        .col-prob-item.danger-col { background: #fff1f2; border-color: #fca5a5; }
+        .col-prob-item .col-title { font-weight: bold; color: #475569; margin-bottom: 2px; }
+        .col-prob-item.danger-col .col-title { color: #dc2626; }
+        .col-prob-item .col-val { font-weight: 900; font-size: 13px; color: #0284c7; }
+        .col-prob-item.danger-col .col-val { color: #dc2626; }
+        
         /* 🔥 六維預測版面 */
         .ai-prediction-box { margin-top: auto; padding: 12px; background: linear-gradient(to bottom, #ffffff, #f8fafc); border: 2px solid #e2e8f0; border-radius: 10px; font-size: 12px; }
         .ai-prediction-box h5 { color: #0f172a; margin: 0 0 10px 0; font-size: 13px; font-weight: 900; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid #cbd5e1; padding-bottom: 6px;}
@@ -335,6 +343,7 @@
     }
 
     function analyzeRadar(gameType) {
+        // 分別讀取完全獨立的資料：天天樂讀取 'tt-9000'，五三九讀取 '539-9000'
         let spaceKey = gameType + '-9000';
         let data = [...(spaceData[spaceKey] || [])].sort((a, b) => new Date(b.date) - new Date(a.date));
         
@@ -402,7 +411,8 @@
             tripleLosingStreak, 
             tripleNextProb, 
             dangerColsText: dangerCols.join("、"),
-            totalDraws 
+            totalDraws,
+            colProbs
         };
     }
 
@@ -411,12 +421,16 @@
         if(!container) return;
         let html = '';
         
+        // 分別跑 天天樂 ('tt') 和 五三九 ('539')
         ['tt', '539'].forEach(type => {
             let r = analyzeRadar(type);
             if(r.totalDraws < 5) {
                 html += `<div class="radar-card"><h4>${r.gameName}</h4><div style="color:#94a3b8;">數據不足</div></div>`;
                 return;
             }
+
+            let maxProb = Math.max(r.colProbs.q1, r.colProbs.q2, r.colProbs.q3, r.colProbs.q4);
+            let getClass = (val) => val === maxProb ? "danger-col" : "";
 
             html += `
                 <div class="radar-card">
@@ -427,6 +441,25 @@
                     
                     <div style="margin-bottom:6px;">
                         下期偏態爆發機率：<span class="radar-highlight">${(r.tripleNextProb * 100).toFixed(1)}%</span>
+                    </div>
+
+                    <div class="col-prob-grid">
+                        <div class="col-prob-item ${getClass(r.colProbs.q1)}">
+                            <div class="col-title">第1柱(01-09)</div>
+                            <div class="col-val">${(r.colProbs.q1 * 100).toFixed(1)}%</div>
+                        </div>
+                        <div class="col-prob-item ${getClass(r.colProbs.q2)}">
+                            <div class="col-title">第2柱(10-19)</div>
+                            <div class="col-val">${(r.colProbs.q2 * 100).toFixed(1)}%</div>
+                        </div>
+                        <div class="col-prob-item ${getClass(r.colProbs.q3)}">
+                            <div class="col-title">第3柱(20-29)</div>
+                            <div class="col-val">${(r.colProbs.q3 * 100).toFixed(1)}%</div>
+                        </div>
+                        <div class="col-prob-item ${getClass(r.colProbs.q4)}">
+                            <div class="col-title">第4柱(30-39)</div>
+                            <div class="col-val">${(r.colProbs.q4 * 100).toFixed(1)}%</div>
+                        </div>
                     </div>
 
                     <div style="margin-top:6px; padding:6px 8px; background:#fff1f2; border:1px solid #fecaca; border-radius:6px; color:#b91c1c; font-size:11px;">
@@ -517,22 +550,12 @@
         
         if (totalDraws < 5) return `<div class="ai-prediction-box" style="text-align:center; color:#94a3b8; padding:20px;">⏳ 歷史數據不足，請先匯入開獎紀錄</div>`;
 
-        // ① Laplace 均值回歸
         let adviceLaplace = `平滑預測勝率 ${(modelA_Prob * 100).toFixed(1)}%`;
-        
-        // ② Markov 馬可夫鏈
         let markovState = latestIsWin ? `連莊機率 ${(P_Win_Given_Win*100).toFixed(1)}%` : `反彈機率 ${(P_Win_Given_Lose*100).toFixed(1)}%`;
-        
-        // ③ Bayes 貝氏定理
         let adviceBayes = `動態勝率更新 ${(bayesProb*100).toFixed(1)}%`;
-        
-        // ④ Z-Score 標準差
         let adviceZ = zScore > 1 ? `偏離常態 (Z=${zScore.toFixed(1)}) 👉 強烈買進` : `常態波動內 (Z=${zScore.toFixed(1)})`;
-        
-        // ⑤ Monte Carlo 壓力測試
         let adviceMC = `最大回撤壓力約 ${mcMaxLossStreak} 期`;
 
-        // ⑥ 綜合策略評斷
         let consensusTitle = "";
         let consensusDesc = "";
         let consensusColor = "";
@@ -790,7 +813,6 @@
         let thead = document.getElementById('table-head');
         tbody.innerHTML = '';
         
-        // 理論的均注（每期都下一元）營利
         let hypoTotalCost = 0;
         let hypoTotalRevenue = 0;
 
@@ -804,13 +826,11 @@
                 if (res.puffs === 3) count3++;
                 if (res.puffs === 4) count4++;
 
-                // 計算 真實記帳損益 (表格顯示用)
                 let myBet = item.myBet !== undefined ? parseFloat(item.myBet) : 0;
                 let realDrawCost = myBet * cfg.totalCost * (1 - cfg.rebate / 100);
                 let realDrawPrize = res.puffs * cfg.unitPrize * myBet;
                 let roundProfit = realDrawPrize - realDrawCost;
 
-                // 計算 理論全部下1倍的損益 (統計區塊用)
                 let hypoDrawCost = 1 * cfg.totalCost * (1 - cfg.rebate / 100);
                 let hypoDrawPrize = res.puffs * cfg.unitPrize * 1;
                 hypoTotalCost += hypoDrawCost;
@@ -838,7 +858,6 @@
                 `);
             });
 
-            // 計算理論淨利潤
             let hypoNetProfit = hypoTotalRevenue - hypoTotalCost;
 
             document.getElementById('stats-container').innerHTML = `
@@ -856,13 +875,11 @@
                 let res = check9000(item.draw);
                 if (res.pass) passCount++;
 
-                // 計算 真實記帳損益 (表格顯示用)
                 let myBet = item.myBet !== undefined ? parseFloat(item.myBet) : 0;
                 let realDrawCost = myBet * cfg.totalCost * (1 - cfg.rebate / 100);
                 let realDrawPrize = res.puffs * cfg.unitPrize * myBet;
                 let roundProfit = realDrawPrize - realDrawCost;
 
-                // 計算 理論全部下1倍的損益 (統計區塊用)
                 let hypoDrawCost = 1 * cfg.totalCost * (1 - cfg.rebate / 100);
                 let hypoDrawPrize = res.puffs * cfg.unitPrize * 1;
                 hypoTotalCost += hypoDrawCost;
@@ -891,8 +908,6 @@
             });
 
             let failCount = data.length - passCount;
-            
-            // 計算理論淨利潤
             let hypoNetProfit = hypoTotalRevenue - hypoTotalCost;
 
             document.getElementById('stats-container').innerHTML = `
