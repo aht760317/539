@@ -392,7 +392,8 @@
         if(!select) return;
         select.innerHTML = '<option value="all">所有歷史年度</option>';
         let maxYear = currentYear + 5; 
-        for(let y = maxYear; y >= 2010; y--) {
+        // 【優化】支援到 2007 年
+        for(let y = maxYear; y >= 2007; y--) { 
             select.innerHTML += `<option value="${y}" ${y === currentYear ? 'selected' : ''}>${y} 年度</option>`;
         }
     }
@@ -1143,6 +1144,17 @@
             let cfg = spaceConfigs[currentSpace];
             let data = getFilteredData(currentSpace);
             
+            // 【優化】獨立計算今年度 (currentYear) 的平均過關率
+            let thisYearData = (spaceData[currentSpace] || []).filter(x => x && x.date && String(x.date).startsWith(currentYear.toString()));
+            let thisYearWins = 0;
+            thisYearData.forEach(item => {
+                if (!item.draw || !Array.isArray(item.draw)) return;
+                let res = cfg.type === '1800' ? check1800(item.draw) : check9000(item.draw);
+                let isWin = (cfg.type === '1800' && res.puffs >= 3) || (cfg.type === '9000' && res.pass);
+                if (isWin) thisYearWins++;
+            });
+            let thisYearRateStr = thisYearData.length > 0 ? (thisYearWins / thisYearData.length * 100).toFixed(1) + '%' : '--%';
+
             let tbody = document.getElementById('result-tbody');
             let thead = document.getElementById('table-head');
             tbody.innerHTML = '';
@@ -1200,11 +1212,18 @@
 
                 let hypoNetProfit = hypoTotalRevenue - hypoTotalCost;
 
+                // 【優化】加入今年度平均的排版
                 document.getElementById('stats-container').innerHTML = `
-                    <div class="stat-item"><h3>本年度總期數</h3><p>${data.length} 期</p></div>
+                    <div class="stat-item"><h3>區間總期數</h3><p>${data.length} 期</p></div>
                     <div class="stat-item"><h3>3碰 次數</h3><p style="color:#d97706;">${count3} 次</p></div>
                     <div class="stat-item"><h3>4碰 次數</h3><p style="color:#059669;">${count4} 次</p></div>
-                    <div class="stat-item"><h3>歷史平均過關率</h3><p style="color:#475569;">${empRateStr}</p></div>
+                    <div class="stat-item">
+                        <h3 style="margin-bottom:2px;">平均過關率</h3>
+                        <p style="color:#475569;">${empRateStr}</p>
+                        <div style="font-size:10px; color:#94a3b8; margin-top:4px; border-top:1px dashed #e2e8f0; padding-top:4px;">
+                            今年度平均: <span style="color:#0284c7; font-weight:bold;">${thisYearRateStr}</span>
+                        </div>
+                    </div>
                     <div class="stat-item" style="border-color:${isDue?'#34d399':'#e2e8f0'}; background:${isDue?'#ecfdf5':'#fff'};">
                         <h3 style="color:${isDue?'#065f46':'#64748b'};">當前爆發機率</h3>
                         <p style="color:${isDue?'#059669':'#0f172a'};">${curRateStr} ${isDue?'🔥':''}</p>
@@ -1261,11 +1280,18 @@
                 let failCount = data.length - passCount;
                 let hypoNetProfit = hypoTotalRevenue - hypoTotalCost;
 
+                // 【優化】加入今年度平均的排版
                 document.getElementById('stats-container').innerHTML = `
-                    <div class="stat-item"><h3>本年度總期數</h3><p>${data.length} 期</p></div>
+                    <div class="stat-item"><h3>區間總期數</h3><p>${data.length} 期</p></div>
                     <div class="stat-item"><h3>中獎次數 (過)</h3><p style="color:#059669;">${passCount} 次</p></div>
                     <div class="stat-item"><h3>未中次數 (斷柱)</h3><p style="color:#dc2626;">${failCount} 次</p></div>
-                    <div class="stat-item"><h3>歷史平均過關率</h3><p style="color:#475569;">${empRateStr}</p></div>
+                    <div class="stat-item">
+                        <h3 style="margin-bottom:2px;">平均過關率</h3>
+                        <p style="color:#475569;">${empRateStr}</p>
+                        <div style="font-size:10px; color:#94a3b8; margin-top:4px; border-top:1px dashed #e2e8f0; padding-top:4px;">
+                            今年度平均: <span style="color:#0284c7; font-weight:bold;">${thisYearRateStr}</span>
+                        </div>
+                    </div>
                     <div class="stat-item" style="border-color:${isDue?'#34d399':'#e2e8f0'}; background:${isDue?'#ecfdf5':'#fff'};">
                         <h3 style="color:${isDue?'#065f46':'#64748b'};">當前爆發機率</h3>
                         <p style="color:${isDue?'#059669':'#0f172a'};">${curRateStr} ${isDue?'🔥':''}</p>
