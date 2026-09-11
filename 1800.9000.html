@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>天天樂 & 五三九 巨頭聯合量化交易系統</title>
+    <title>天天樂 & 五三九 六大巨頭聯合量化交易系統</title>
     <style>
         :root {
             --bg-color: #f8fafc; 
@@ -91,7 +91,7 @@
         .col-prob-item .col-val { font-weight: 900; font-size: 13px; color: #0284c7; }
         .col-prob-item.danger-col .col-val { color: #dc2626; }
         
-        /* 🔥 五大巨頭預測版面 */
+        /* 🔥 六大巨頭預測版面 */
         .ai-prediction-box { margin-top: auto; padding: 12px; background: linear-gradient(to bottom, #ffffff, #f8fafc); border: 2px solid #e2e8f0; border-radius: 10px; font-size: 12px; }
         .ai-prediction-box h5 { color: #0f172a; margin: 0; font-size: 13px; font-weight: 900; display: flex; align-items: center; gap: 6px; }
         .ai-prediction-subtitle { font-size: 10px; color: #059669; font-weight:bold; margin-bottom: 10px; border-bottom: 1px solid #cbd5e1; padding-bottom: 6px; }
@@ -147,7 +147,7 @@
 
 <div class="container">
     <header>
-        <h1>⚡ 天天樂 & 五三九 巨頭聯合量化交易系統 ⚡</h1>
+        <h1>⚡ 天天樂 & 五三九 六大巨頭聯合量化交易系統 ⚡</h1>
         <div class="cloud-badge"><div class="dot"></div> Firebase 雲端同步中</div>
     </header>
 
@@ -162,7 +162,7 @@
 
     <!-- 💡 全局戰略看板 (Arena) -->
     <div id="global-strategy" class="strategy-dashboard" style="display:none;">
-        <h3>💡 五大巨頭會診看板 (純機率進場決策)</h3>
+        <h3>💡 六大巨頭會診看板 (純機率進場決策)</h3>
         <div class="dashboard-grid" id="dashboard-content">
             <div style="text-align:center; padding:10px;">資料運算中...</div>
         </div>
@@ -206,7 +206,7 @@
     <!-- 集中參數設定 & 頂級預測 (Arena) -->
     <div class="panel" id="arena-settings-panel">
         <div class="panel-title">
-            <span>⚙️ 盤口參數與【聯合決策矩陣】</span>
+            <span>⚙️ 盤口參數與【六大巨頭聯合決策矩陣】</span>
             <span id="lock-status" style="color:var(--danger-color); font-size:11px;">🔒 已鎖定(0000)</span>
         </div>
         <div class="setting-grid" id="setting-inputs"></div>
@@ -237,7 +237,7 @@
                 <option value="539-9000">🚀 五三九 9000碰</option>
             </select>
         </div>
-        <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 6px;">批次匯入之歷史紀錄，預設真實下注皆為 0 (不計入實單損益)。</div>
+        <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 6px;">批次匯入之歷史紀錄,預設真實下注皆為 0 (不計入實單損益)。</div>
         <textarea id="batch-text" placeholder="格式: 2026-09-10 07 09 12 15 27"></textarea>
         <button class="btn-main" onclick="batchImport()" style="background: linear-gradient(135deg, #7c3aed, #4f46e5);">⚡ 智慧解析並匯入</button>
     </div>
@@ -543,7 +543,7 @@
         let markovState = latestIsWin ? `連中延續率 ${(P_Win_Given_Win*100).toFixed(1)}%` : `止損反轉率 ${(P_Win_Given_Lose*100).toFixed(1)}%`;
         let adviceBayes = `真實過關率 ${(bayesProb*100).toFixed(1)}%`;
         let adviceZ = zScore >= 0.5 ? `突破常態 (Z=${zScore.toFixed(2)}) 👉 偏離平均值` : `常態波動內 (Z=${zScore.toFixed(2)})`;
-        let adviceMC = `極端連槓壓力約 ${mcMaxLossStreak} 期`;
+        let adviceMC = `極端連槓破產壓力約 ${mcMaxLossStreak} 期`;
 
         let consensusTitle = "";
         let consensusDesc = "";
@@ -574,8 +574,8 @@
 
         return `
             <div class="ai-prediction-box">
-                <h5>🤖 華爾街五大巨頭：聯合量化決策矩陣</h5>
-                <div class="ai-prediction-subtitle">(嚴格執行機率與紀律操作，獨立於偏態雷達，保本與勝率優先)</div>
+                <h5>🤖 華爾街六大巨頭：聯合量化決策矩陣</h5>
+                <div class="ai-prediction-subtitle">(六維模組齊聚，精準把關勝率與風險)</div>
                 
                 <div class="ai-row">
                     <div class="ai-row-header">
@@ -603,15 +603,23 @@
                 
                 <div class="ai-row">
                     <div class="ai-row-header">
-                        <span style="color:#047857;">④ 銀行家視角 (Z-Score & MC)：</span>
-                        <span style="color:#0f172a; font-size:11px;">${adviceZ} / ${adviceMC}</span>
+                        <span style="color:#047857;">④ 銀行家視角 (Z-Score 偏離度)：</span>
+                        <span style="color:#0f172a; font-size:11px;">${adviceZ}</span>
                     </div>
-                    <div class="ai-row-desc">「風控至上，計算極端連槓壓力，死守資金防線。」</div>
+                    <div class="ai-row-desc">「衡量連槓期數偏離平均的程度，判斷何時跨越常態雜訊區。」</div>
+                </div>
+
+                <div class="ai-row">
+                    <div class="ai-row-header">
+                        <span style="color:#047857;">⑤ 保險精算家視角 (Monte Carlo 壓力)：</span>
+                        <span style="color:#0f172a; font-size:11px;">${adviceMC}</span>
+                    </div>
+                    <div class="ai-row-desc">「模擬極端連槓破產壓力，為本金築起最後一道防禦城牆。」</div>
                 </div>
                 
                 <div class="ai-row" style="border-bottom:none;">
                     <div class="ai-row-header">
-                        <span style="color:var(--text-muted);">⑤ 大莊家視角 (Kelly EV 期望值)：</span>
+                        <span style="color:var(--text-muted);">⑥ 大莊家視角 (Kelly EV 期望值)：</span>
                         <span style="color:${EV>0?'#059669':'#dc2626'};">${EV>0?'+':''}${EV.toFixed(0)} 元</span>
                     </div>
                     <div class="ai-row-desc">「沒有正期望值絕不下注，靠數學而非運氣掠奪財富。」</div>
