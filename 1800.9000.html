@@ -160,13 +160,12 @@
         <button id="btn-tt-9000" class="mode-btn" onclick="switchSpace('tt-9000')">天天樂 9000碰</button>
         <button id="btn-539-1800" class="mode-btn" onclick="switchSpace('539-1800')">五三九 1800碰</button>
         <button id="btn-539-9000" class="mode-btn" onclick="switchSpace('539-9000')">五三九 9000碰</button>
-        <!-- 分離出客觀分析 與 主觀記帳策略 -->
         <button id="btn-arena" class="mode-btn arena-btn active" onclick="switchSpace('arena')">⚔️ 決策矩陣 (專家客觀分析)</button>
         <button id="btn-ledger" class="mode-btn ledger-btn" onclick="switchSpace('ledger')">📝 真實下注 (實戰回本策略)</button>
     </div>
 
     <!-- ========================================== -->
-    <!-- 模塊 1：決策矩陣 (Arena) - 純客觀機率，不含個人損益 -->
+    <!-- 模塊 1：決策矩陣 (Arena) -->
     <!-- ========================================== -->
     <div id="global-strategy" class="strategy-dashboard" style="display:none;">
         <h3>💡 六大巨頭會診看板 (純機率進場決策)</h3>
@@ -211,15 +210,25 @@
         <button class="btn-main" onclick="batchImport()" style="background: linear-gradient(135deg, #7c3aed, #4f46e5);">⚡ 智慧解析並匯入</button>
     </div>
 
-
     <!-- ========================================== -->
-    <!-- 模塊 2：真實下注 (Ledger) - 包含實戰回本建議 -->
+    <!-- 模塊 2：真實下注 (Ledger) - 三大資金策略 -->
     <!-- ========================================== -->
     <div class="panel" id="actual-bet-panel" style="display:none;">
         <div class="panel-title">📝 我的真實下注記帳與損益中樞</div>
         <div style="font-size:11px; color:#64748b; margin-bottom:10px; font-weight:bold;">
-            在此輸入您每天「真實下注」的倍數。若當天觀望沒買請輸入 0。系統會自動幫您計算回本與損益！
+            在此輸入每天的下注倍數。系統會根據您的「資金控管策略」與「真實虧損額」，自動給出下一局的最優打法！
         </div>
+        
+        <!-- ★ 新增：三大資金策略選擇器 -->
+        <div class="form-group" style="margin-bottom: 12px; background: #f1f5f9; padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1;">
+            <label style="color: #0f172a; font-size: 13px;">🛡️ 選擇您的資金控管策略 (影響下方建議倍數)：</label>
+            <select id="ledger-strategy" style="color: var(--primary-color); font-weight:bold; margin-top:4px;" onchange="renderLedgerSummary()">
+                <option value="conservative">🛡️ 保本防禦打法 (極限鎖死 1 倍，活著最重要)</option>
+                <option value="moderate" selected>📈 穩健增盈打法 (依虧損溫和放大，上限 2 倍)</option>
+                <option value="aggressive">🔥 激進追盤打法 (強勢倍投加速回本，上限 3 倍)</option>
+            </select>
+        </div>
+
         <div class="form-row">
             <div class="form-group">
                 <label>選擇開獎日期</label>
@@ -248,20 +257,16 @@
             <div class="ledger-stat-card"><h4>全局真實淨損益</h4><p id="ledger-profit" style="color:#64748b;">$0</p></div>
         </div>
 
-        <!-- 🎯 跨盤口智能回本引擎 (只在此區塊顯示動態倍數) -->
+        <!-- 🎯 跨盤口智能回本引擎 -->
         <div style="margin-top:20px; border-top:2px dashed #cbd5e1; padding-top:14px;">
             <h3 style="font-size:15px; margin-bottom:10px; color:#0f172a; display:flex; align-items:center; gap:6px;">
-                <span>🎯 跨盤口智能回本引擎 (配合專家分析的實戰建議)</span>
+                <span>🎯 跨盤口智能回本引擎 (實戰動態倍數建議)</span>
             </h3>
-            <div style="font-size:11.5px; color:#64748b; margin-bottom:12px; line-height:1.5;">
-                系統已自動抓取您的【全局真實淨損益】。若您目前處於虧損，本引擎會抓取專家給出「綠燈進場」的盤口，幫您精算需放大的倍數以加速回本；若盤面為紅燈劣勢，本引擎將嚴厲封鎖資金，絕不允許您盲目凹單回本。
-            </div>
             <div class="rec-grid" id="ledger-recommendations-container">
                 <div style="text-align:center; padding:10px;">資料運算中...</div>
             </div>
         </div>
     </div>
-
 
     <!-- ========================================== -->
     <!-- 各空間專屬歷史版面 -->
@@ -330,7 +335,6 @@
         if (savedCfg) spaceConfigs[key] = { ...spaceConfigs[key], ...JSON.parse(savedCfg) };
     });
 
-    // 加上防呆驗證的檢查函數
     function check1800(balls) {
         if (!balls || !Array.isArray(balls)) return { puffs: 0, text: "錯誤", p1:0, p2:0, p3:0 };
         let p1=0, p2=0, p3=0;
@@ -525,7 +529,6 @@
         }
     }
 
-    // ★ 核心分析：回歸客觀純淨的機率運算，不混入使用者個人損益
     function analyzeSpace(key) {
         let cfg = spaceConfigs[key] || { type: '1800', unitBet: 1, totalCost: 0, rebate: 0, unitPrize: 0, name: '' };
         let rawData = spaceData[key] || [];
@@ -622,7 +625,6 @@
         let consensusColor = "";
         let oppCostText = "";
 
-        // 客觀分析，只給出標準的 1倍, 0.5倍, 0倍
         if (zScore >= 1.5 && EV > 0) {
             consensusTitle = "🟢 莊家與銀行家聯集：無情狙擊";
             consensusDesc = `當前連槓 ${losingStreak} 期。Z-Score 高達 ${Number(zScore).toFixed(2)}，突破冰點。大莊家確認數學套利空間。<br>👉 董事會客觀決議：【<strong>進場平推 1 倍</strong>】。`;
@@ -649,7 +651,7 @@
             <div class="ai-prediction-box">
                 <h5>🤖 六大巨頭客觀決策矩陣</h5>
                 <div style="font-size: 10px; color: #64748b; margin-bottom: 10px; border-bottom: 1px solid #cbd5e1; padding-bottom: 6px;">
-                    (註：此為專家對當下盤口的純客觀判斷，不含您的個人損益狀況)
+                    (註：此為專家對當下盤口的純客觀判斷，不含您的個人損益與資金策略)
                 </div>
                 
                 <div class="ai-row">
@@ -753,6 +755,7 @@
                 let status = "";
                 let cssClass = "";
                 
+                // 客觀看板，不帶策略倍數，僅顯示標準倍數
                 if (a.zScore >= 1.5 && a.EV > 0) {
                     status = `🎯 無情狙擊 👉 <span style="color:#a7f3d0;">強勢進場 1 倍</span>`;
                     cssClass = "cold";
@@ -779,8 +782,8 @@
         }
     }
 
-    // 模塊2：實戰回本建議 (計算跨盤口損失，並給出動態倍數)
-    function renderLedgerSummary() {
+    // 模塊2：實戰回本建議 (依照三大策略動態調整)
+    window.renderLedgerSummary = function() {
         try {
             let totalCount = 0;
             let totalCost = 0;
@@ -810,13 +813,24 @@
             let isLoss = globalNetProfit < 0;
             let lossAmount = isLoss ? Math.abs(globalNetProfit) : 0;
 
-            document.getElementById('ledger-count').innerText = `${totalCount} 期`;
-            document.getElementById('ledger-cost').innerText = `$${Math.round(totalCost).toLocaleString()}`;
-            document.getElementById('ledger-prize').innerText = `$${Math.round(totalPrize).toLocaleString()}`;
-            document.getElementById('ledger-profit').innerText = `${globalNetProfit >= 0 ? '+$' : '-$'}${Math.abs(Math.round(globalNetProfit)).toLocaleString()}`;
-            document.getElementById('ledger-profit').style.color = profitColor;
+            let elCount = document.getElementById('ledger-count');
+            let elCost = document.getElementById('ledger-cost');
+            let elPrize = document.getElementById('ledger-prize');
+            let elProfit = document.getElementById('ledger-profit');
+            
+            if(elCount) elCount.innerText = `${totalCount} 期`;
+            if(elCost) elCost.innerText = `$${Math.round(totalCost).toLocaleString()}`;
+            if(elPrize) elPrize.innerText = `$${Math.round(totalPrize).toLocaleString()}`;
+            if(elProfit) {
+                elProfit.innerText = `${globalNetProfit >= 0 ? '+$' : '-$'}${Math.abs(Math.round(globalNetProfit)).toLocaleString()}`;
+                elProfit.style.color = profitColor;
+            }
 
-            // 2. 跨盤口動態回本演算法 (4 個空間)
+            // 取得當前策略
+            let strategySelect = document.getElementById('ledger-strategy');
+            let strategy = strategySelect ? strategySelect.value : 'moderate';
+
+            // 2. 跨盤口動態回本演算法 (依策略變動)
             let recHtml = '';
             ['tt-1800', 'tt-9000', '539-1800', '539-9000'].forEach(key => {
                 let a = analyzeSpace(key);
@@ -827,37 +841,65 @@
                 let reasonText = '';
                 let cardStyle = '';
 
-                // 結合「客觀燈號」與「個人回本需求」
+                // 計算理論回本所需倍數
+                let unitNetWin = a.minPrize - a.costPerRound;
+                let neededMultiplier = (isLoss && unitNetWin > 0) ? (lossAmount / unitNetWin) : 0;
+
                 if (a.zScore >= 0.5 && a.EV > 0) {
-                    let unitNetWin = a.minPrize - a.costPerRound;
+                    let level = a.zScore >= 1.5 ? 'S' : 'A';
                     let targetBet = 1.0;
-                    
-                    // 【回本精算】：如果處於虧損，且該空間獲利為正，計算要放大幾倍才能加速補血
-                    if (isLoss && unitNetWin > 0) { 
-                        let needed = lossAmount / unitNetWin;
-                        // 最高鎖定在 3倍 以防破產風險
-                        targetBet = Math.min(Math.ceil((1 + needed) * 2) / 2, 3.0); 
+
+                    // 依照三大策略賦予不同倍數上限
+                    if (strategy === 'conservative') {
+                        // 保本防禦：最高 1 倍。不刻意放大倍數回本。
+                        recBet = isLoss ? (level === 'S' ? 1.0 : 0.5) : (level === 'S' ? 1.0 : 0.5);
+                        reasonText = `[🛡️ 保本防禦] 嚴格鎖死資金上限 1 倍。專家給出進場綠燈，建議以 <strong>${recBet} 倍</strong> 慢慢把本金磨回來，活著最重要。`;
+                    } else if (strategy === 'moderate') {
+                        // 穩健增盈：最高 2 倍。
+                        if (isLoss) {
+                            targetBet = Math.ceil((1 + neededMultiplier) * 2) / 2; // 取 0.5 的倍數
+                            recBet = Math.min(targetBet, level === 'S' ? 2.0 : 1.5);
+                            reasonText = `[📈 穩健增盈] 系統精算跨盤總虧損。專家給出綠燈，建議溫和放大至 <strong>${recBet} 倍</strong>，兼顧加速回血與防禦風險。`;
+                        } else {
+                            recBet = level === 'S' ? 1.5 : 1.0;
+                            reasonText = `[📈 穩健增盈] 目前整體獲利中。專家給出綠燈，建議以標準 <strong>${recBet} 倍</strong> 穩健套利。`;
+                        }
+                    } else if (strategy === 'aggressive') {
+                        // 激進追盤：最高 3 倍。
+                        if (isLoss) {
+                            targetBet = Math.ceil((1 + neededMultiplier * 1.5) * 2) / 2; // 更激進的放大
+                            recBet = Math.min(targetBet, level === 'S' ? 3.0 : 2.0);
+                            reasonText = `[🔥 激進追盤] 捕捉到高勝率突破口！為強力掃平歷史虧損，極限加碼至 <strong>${recBet} 倍</strong>，請注意您的總資金承受度！`;
+                        } else {
+                            recBet = level === 'S' ? 2.0 : 1.5;
+                            reasonText = `[🔥 激進追盤] 目前整體獲利中。趁著優勢盤面，強力放大至 <strong>${recBet} 倍</strong> 擴大戰果。`;
+                        }
                     }
-                    
-                    recBet = targetBet;
-                    let level = a.zScore >= 1.5 ? '🔥 巨頭綠燈 (強)' : '🟢 巨頭綠燈 (中)';
-                    statusText = `${level} 👉 實戰建議: ${recBet} 倍`;
+
+                    statusText = `${level === 'S' ? '🔥 S級狙擊' : '🟢 A級佈局'} 👉 建議: ${recBet} 倍`;
                     cardStyle = 'background:#ecfdf5; border-color:#a7f3d0;';
-                    reasonText = isLoss
-                        ? `[回本策略] 跨盤總虧損 $${Math.round(lossAmount)}。巨頭指示此盤口達進場優勢 (Z=${Number(a.zScore).toFixed(2)})，建議放大至 <strong>${recBet} 倍</strong> 加速回血。`
-                        : `巨頭指示此盤口達進場優勢 (Z=${Number(a.zScore).toFixed(2)})，目前整體獲利中，請維持標準 <strong>${recBet} 倍</strong> 穩健套利。`;
+
                 } else if (a.latestIsWin) {
-                    recBet = isLoss ? 1.0 : 0.5; 
-                    statusText = `🟡 巨頭黃燈 (動能) 👉 實戰建議: ${recBet} 倍`;
+                    // 動能追擊策略
+                    if (strategy === 'conservative') {
+                        recBet = 0.5;
+                        reasonText = `[🛡️ 保本防禦] 盤面具連莊熱度。用最小單位 <strong>${recBet} 倍</strong> 順勢摸底，一斷即停。`;
+                    } else if (strategy === 'moderate') {
+                        recBet = isLoss ? 1.0 : 0.5;
+                        reasonText = `[📈 穩健增盈] 盤面具連莊熱度。建議用 <strong>${recBet} 倍</strong> 順勢衝浪，吃滿短線紅利。`;
+                    } else {
+                        recBet = isLoss ? 1.5 : 1.0;
+                        reasonText = `[🔥 激進追盤] 連莊熱區確認！用較大倉位 <strong>${recBet} 倍</strong> 強勢跟單，斷莊立刻斬倉。`;
+                    }
+
+                    statusText = `🟡 動能追擊 👉 建議: ${recBet} 倍`;
                     cardStyle = 'background:#fffbeb; border-color:#fcd34d;';
-                    reasonText = isLoss
-                        ? `[追擊策略] 剛開出具連莊動能。為填補虧損，可適度用 <strong>${recBet} 倍</strong> 順勢跟車，一斷即停。`
-                        : `剛開出具連莊動能，請用獲利輕倉 <strong>${recBet} 倍</strong> 順勢衝浪。`;
                 } else {
+                    // 紅燈絕對觀望，任何策略都是 0
                     recBet = 0;
-                    statusText = `🔴 巨頭紅燈 (劣勢) 👉 實戰建議: 0 倍`;
+                    statusText = `🔴 銀行家否決 👉 建議: 0 倍`;
                     cardStyle = 'background:#fef2f2; border-color:#fca5a5;';
-                    reasonText = `[防禦策略] 巨頭判定此處為常態雜訊 (連槓 ${a.losingStreak} 期)，期望值為負。請嚴格鎖死資金，<strong>絕對不要在這裡凹單回本！</strong>`;
+                    reasonText = `[防禦機制啟動] 專家判定此處為常態雜訊 (連槓 ${a.losingStreak} 期)。期望值為負，就算再急著回本也絕對不能凹單，<strong>強制 0 倍觀望！</strong>`;
                 }
 
                 recHtml += `
