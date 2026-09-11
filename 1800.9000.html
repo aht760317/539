@@ -111,6 +111,10 @@
         .ledger-stat-card h4 { font-size: 11px; color: #64748b; margin-bottom: 4px; }
         .ledger-stat-card p { font-size: 16px; font-weight: 900; font-family: monospace; margin: 0; }
 
+        /* 跨盤口建議看板 */
+        .rec-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 10px; }
+        @media (min-width: 768px) { .rec-grid { grid-template-columns: repeat(2, 1fr); } }
+
         .form-row { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
         @media (min-width: 768px) { .form-row { flex-direction: row; } }
         .form-group label { font-size: 11px; font-weight: 800; color: #334155; margin-bottom: 2px; }
@@ -196,10 +200,23 @@
         <button class="btn-main" onclick="saveLedger()" style="background: linear-gradient(135deg, #10b981, #059669); margin-bottom:12px;">💰 記錄實單 (立即更新真實損益)</button>
         
         <div class="ledger-stats-grid" id="ledger-summary-container">
-            <div class="ledger-stat-card"><h4>實單下注期數</h4><p id="ledger-count">0 期</p></div>
-            <div class="ledger-stat-card"><h4>真實投入成本</h4><p id="ledger-cost" style="color:#475569;">$0</p></div>
-            <div class="ledger-stat-card"><h4>真實中獎彩金</h4><p id="ledger-prize" style="color:#0284c7;">$0</p></div>
-            <div class="ledger-stat-card"><h4>真實實收淨損益</h4><p id="ledger-profit" style="color:#64748b;">$0</p></div>
+            <div class="ledger-stat-card"><h4>總實單下注期數</h4><p id="ledger-count">0 期</p></div>
+            <div class="ledger-stat-card"><h4>總真實投入成本</h4><p id="ledger-cost" style="color:#475569;">$0</p></div>
+            <div class="ledger-stat-card"><h4>總真實中獎彩金</h4><p id="ledger-prize" style="color:#0284c7;">$0</p></div>
+            <div class="ledger-stat-card"><h4>全局真實淨損益</h4><p id="ledger-profit" style="color:#64748b;">$0</p></div>
+        </div>
+
+        <!-- 跨盤口智能回本建議 -->
+        <div style="margin-top:20px; border-top:2px dashed #cbd5e1; padding-top:14px;">
+            <h3 style="font-size:14px; margin-bottom:10px; color:#0f172a; display:flex; align-items:center; gap:6px;">
+                <span>🎯 跨盤口智能回本引擎 (下一局該怎麼下？)</span>
+            </h3>
+            <div style="font-size:11px; color:#64748b; margin-bottom:10px; line-height:1.5;">
+                系統已自動抓取您的【全局真實淨損益】。若目前處於虧損，大腦會在勝率高點(綠燈)自動精算放大倍數加速回本；若盤面劣勢(紅燈)，系統將嚴厲封鎖資金，絕不盲目凹單。
+            </div>
+            <div class="rec-grid" id="ledger-recommendations-container">
+                <!-- JS 動態生成 4 個區塊 -->
+            </div>
         </div>
     </div>
 
@@ -463,24 +480,6 @@
         container.innerHTML = html;
     }
 
-    // 計算特定空間的真實記帳損益，用來判斷是否需要放大倍數回本
-    function getSpaceNetProfit(key) {
-        let cfg = spaceConfigs[key];
-        let list = spaceData[key] || [];
-        let cost = 0, prize = 0;
-        list.forEach(item => {
-            let myBet = item.myBet !== undefined ? parseFloat(item.myBet) : 0;
-            if (myBet > 0) {
-                let roundCost = myBet * cfg.totalCost * (1 - cfg.rebate / 100);
-                cost += roundCost;
-                let res = cfg.type === '1800' ? check1800(item.draw) : check9000(item.draw);
-                let roundPrize = res.puffs * cfg.unitPrize * myBet;
-                prize += roundPrize;
-            }
-        });
-        return prize - cost;
-    }
-
     function analyzeSpace(key) {
         let cfg = spaceConfigs[key];
         let data = [...(spaceData[key] || [])].sort((a, b) => new Date(b.date) - new Date(a.date)); 
@@ -545,192 +544,11 @@
         let minPrize = cfg.type === '1800' ? 3 * cfg.unitPrize * cfg.unitBet : 2 * cfg.unitPrize * cfg.unitBet;
         let EV = (bayesProb * minPrize) - ((1 - bayesProb) * costPerRound);
         
-        let netProfit = getSpaceNetProfit(key);
-        
         return { 
             cfg, totalDraws, latestIsWin, continuousHits, losingStreak, 
             modelA_Prob, P_Win_Given_Win, P_Win_Given_Lose, EV, costPerRound, minPrize,
-            zScore, bayesProb, mcMaxLossStreak, expectedLosing, netProfit
+            zScore, bayesProb, mcMaxLossStreak, expectedLosing
         };
-    }
-
-    function getPredictionHtml(analysis) {
-        let { cfg, totalDraws, latestIsWin, continuousHits, losingStreak, expectedLosing, modelA_Prob, P_Win_Given_Win, P_Win_Given_Lose, EV, zScore, bayesProb, mcMaxLossStreak, costPerRound, netProfit } = analysis;
-        
-        if (totalDraws < 5) return `<div class="ai-prediction-box" style="text-align:center; color:#94a3b8; padding:20px;">⏳ 歷史數據不足，請先匯入開獎紀錄</div>`;
-
-        let adviceLaplace = `物理基礎勝率 ${(modelA_Prob * 100).toFixed(1)}%`;
-        let markovState = latestIsWin ? `連中延續率 ${(P_Win_Given_Win*100).toFixed(1)}%` : `止損反轉率 ${(P_Win_Given_Lose*100).toFixed(1)}%`;
-        let adviceBayes = `真實過關率 ${(bayesProb*100).toFixed(1)}%`;
-        let adviceZ = zScore >= 0.5 ? `突破常態 (Z=${zScore.toFixed(2)}) 👉 偏離平均值` : `常態波動內 (Z=${zScore.toFixed(2)})`;
-        let adviceMC = `極端連槓破產壓力約 ${mcMaxLossStreak} 期`;
-
-        let consensusTitle = "";
-        let consensusDesc = "";
-        let consensusColor = "";
-        let oppCostText = "";
-        let suggestedBet = 0;
-
-        // ★ 動態回本與下注倍數計算邏輯
-        // 如果損益為負數（有虧損需要回本），且訊號為綠燈，將倍數適度拉高至 1.5 倍來加速打平
-        let isNegative = netProfit < 0;
-
-        if (zScore >= 1.5 && EV > 0) {
-            suggestedBet = isNegative ? 1.5 : 1.0;
-            consensusTitle = "🟢 莊家與銀行家聯集：無情狙擊";
-            consensusDesc = `當前連槓 ${losingStreak} 期。Z-Score 高達 ${zScore.toFixed(2)}，突破冰點。大莊家確認數學套利空間。<br>👉 建議下注倍數：【<strong>${suggestedBet} 倍</strong>】 ${isNegative ? '(含虧損回本加碼)' : ''}`;
-            consensusColor = "background:#ecfdf5; color:#065f46; border: 2px solid #10b981;";
-            oppCostText = `🏆 贏家視角：此時不進，等同放棄期望值 $${Math.round(EV)} 的絕對套利機會。`;
-        } else if (zScore >= 0.5 && EV > 0) {
-            suggestedBet = isNegative ? 1.5 : 1.0;
-            consensusTitle = "🟢 數學家與贏家共識：紀律佈局";
-            consensusDesc = `當前連槓 ${losingStreak} 期。Z-Score 突破 0.5。數學家判定已脫離常態雜訊。<br>👉 建議下注倍數：【<strong>${suggestedBet} 倍</strong>】 ${isNegative ? '(含虧損回本加碼)' : ''}`;
-            consensusColor = "background:#f0fdf4; color:#15803d; border: 2px solid #86efac;";
-            oppCostText = `🏦 銀行家警告：雖然可進場，但請備妥承受極端 ${mcMaxLossStreak} 期連槓的防禦本金。`;
-        } else if (latestIsWin) {
-            suggestedBet = isNegative ? 1.0 : 0.5;
-            consensusTitle = "🟡 投機家狂歡：動能追擊";
-            consensusDesc = `上一期剛中獎/過關。投機家嗅到資金熱度，捕捉連莊群聚效應。<br>👉 建議下注倍數：【<strong>${suggestedBet} 倍</strong>】順勢跟隨。`;
-            consensusColor = "background:#fffbeb; color:#b45309; border: 2px solid #f59e0b;";
-            oppCostText = `🏄 投機家語錄：衝浪只順勢，一斷莊立刻收手，絕對不在斷龍時凹單。`;
-        } else {
-             suggestedBet = 0;
-             consensusTitle = "🔴 銀行家否決：空手觀望";
-             consensusDesc = `當前僅連槓 ${losingStreak} 期 (該盤路平均需槓 ${expectedLosing} 期)。未達偏離度標準。<br>👉 建議下注倍數：【<strong>0 倍 (空手)</strong>】鎖死資金。`;
-             consensusColor = "background:#fef2f2; color:#b91c1c; border: 2px solid #ef4444;";
-             oppCostText = `🏦 銀行家警告：此區間進場是純賭博，白白耗損 $${Math.round(costPerRound)}，將導致真正機會來臨時無子彈可打。`;
-        }
-
-        return `
-            <div class="ai-prediction-box">
-                <h5>🤖 華爾街六大巨頭：聯合量化決策矩陣</h5>
-                <div class="ai-prediction-subtitle">目前真實損益：<span style="color:${netProfit>=0?'#059669':'#dc2626'}">${netProfit>=0?'+$':'-$'}${Math.abs(Math.round(netProfit)).toLocaleString()}</span> | 建議下注：<strong>${suggestedBet} 倍</strong></div>
-                
-                <div class="ai-row">
-                    <div class="ai-row-header">
-                        <span style="color:#047857;">① 數學家視角 (Laplace 均值回歸)：</span>
-                        <span style="color:#0f172a; font-size:11px;">${adviceLaplace}</span>
-                    </div>
-                    <div class="ai-row-desc">「萬物皆有極限，過濾雜訊，尋找大數法則的絕對引力。」</div>
-                </div>
-                
-                <div class="ai-row">
-                    <div class="ai-row-header">
-                        <span style="color:#047857;">② 投機家視角 (Markov 馬可夫鏈)：</span>
-                        <span style="color:#0f172a; font-size:11px;">${markovState}</span>
-                    </div>
-                    <div class="ai-row-desc">「順勢而為，捕捉短期資金動能與連莊熱度。」</div>
-                </div>
-                
-                <div class="ai-row">
-                    <div class="ai-row-header">
-                        <span style="color:#047857;">③ 贏家視角 (Bayes 貝氏動態)：</span>
-                        <span style="color:#0f172a; font-size:11px;">${adviceBayes}</span>
-                    </div>
-                    <div class="ai-row-desc">「不帶偏見，根據最新開獎狀態無情修正真實機率。」</div>
-                </div>
-                
-                <div class="ai-row">
-                    <div class="ai-row-header">
-                        <span style="color:#047857;">④ 銀行家視角 (Z-Score 偏離度)：</span>
-                        <span style="color:#0f172a; font-size:11px;">${adviceZ}</span>
-                    </div>
-                    <div class="ai-row-desc">「衡量連槓期數偏離平均的程度，判斷何時跨越常態雜訊區。」</div>
-                </div>
-
-                <div class="ai-row">
-                    <div class="ai-row-header">
-                        <span style="color:#047857;">⑤ 保險精算家視角 (Monte Carlo 壓力)：</span>
-                        <span style="color:#0f172a; font-size:11px;">${adviceMC}</span>
-                    </div>
-                    <div class="ai-row-desc">「模擬極端連槓破產壓力，為本金築起最後一道防禦城牆。」</div>
-                </div>
-                
-                <div class="ai-row" style="border-bottom:none;">
-                    <div class="ai-row-header">
-                        <span style="color:var(--text-muted);">⑥ 大莊家視角 (Kelly EV 期望值)：</span>
-                        <span style="color:${EV>0?'#059669':'#dc2626'};">${EV>0?'+':''}${EV.toFixed(0)} 元</span>
-                    </div>
-                    <div class="ai-row-desc">「沒有正期望值絕不下注，靠數學而非運氣掠奪財富。」</div>
-                </div>
-
-                <div class="strategy-box" style="${consensusColor}">
-                    <h6>${consensusTitle}</h6>
-                    <div style="margin-bottom:8px;">${consensusDesc}</div>
-                    <div class="risk-warning-box" style="border-color:${EV>0?'#059669':'#dc2626'};">
-                        ${oppCostText}
-                    </div>
-                </div>
-            </div>
-        `;
-    }
-
-    function renderSettingsPanel() {
-        let container = document.getElementById('setting-inputs');
-        let html = '';
-
-        ['tt-1800', 'tt-9000', '539-1800', '539-9000'].forEach(key => {
-            let analysis = analyzeSpace(key);
-            let cfg = analysis.cfg;
-            let labelPrize = cfg.type === '1800' ? '三星單碰(元)' : '四星單碰(元)';
-
-            html += `
-                <div class="space-config-card">
-                    <h4>${cfg.name}</h4>
-                    <div class="input-row">
-                        <div class="setting-item"><label>預測下注 (元/碰)</label><input type="number" id="cfg-unitbet-${key}" value="${cfg.unitBet}" step="0.5" oninput="onUnitBetChange('${key}')" disabled></div>
-                        <div class="setting-item"><label>牌面本金</label><input type="number" id="cfg-cost-${key}" value="${cfg.totalCost}" disabled></div>
-                    </div>
-                    <div class="input-row">
-                        <div class="setting-item"><label>退水 (%)</label><input type="number" id="cfg-rebate-${key}" value="${cfg.rebate}" disabled></div>
-                        <div class="setting-item"><label>${labelPrize}</label><input type="number" id="cfg-prize-${key}" value="${cfg.unitPrize}" disabled></div>
-                    </div>
-                    ${getPredictionHtml(analysis)}
-                </div>
-            `;
-        });
-
-        container.innerHTML = html;
-        document.getElementById('btn-save').style.display = 'none';
-        document.getElementById('lock-status').innerText = "🔒 已鎖定(0000)";
-        document.getElementById('lock-status').style.color = "var(--danger-color)";
-    }
-
-    function renderDashboard() {
-        let container = document.getElementById('dashboard-content');
-        if(!container) return;
-        let html = '';
-        
-        ['tt-1800', 'tt-9000', '539-1800', '539-9000'].forEach(key => {
-            let a = analyzeSpace(key);
-            if (!a.cfg || a.totalDraws === 0) return;
-            
-            let status = "";
-            let cssClass = "";
-            let isNeg = a.netProfit < 0;
-            let recBet = isNeg ? 1.5 : 1.0;
-            
-            if (a.zScore >= 1.5 && a.EV > 0) {
-                status = `🎯 無情狙擊 👉 <span style="color:#a7f3d0;">建議下注 <strong>${recBet}倍</strong></span>`;
-                cssClass = "cold";
-            } else if (a.zScore >= 0.5 && a.EV > 0) {
-                status = `🟢 紀律佈局 👉 <span style="color:#a7f3d0;">建議下注 <strong>${recBet}倍</strong></span>`;
-                cssClass = "cold";
-            } else if (a.latestIsWin) {
-                status = `🔥 動能追擊 👉 <span style="color:#fde68a;">建議下注 <strong>${isNeg?1.0:0.5}倍</strong></span>`;
-                cssClass = "hot";
-            } else {
-                status = `❄️ 銀行家否決 👉 <span style="color:#cbd5e1;">建議下注 <strong>0倍 (空手)</strong></span>`;
-            }
-
-            html += `
-                <div class="dash-card ${cssClass}">
-                    <h4>${a.cfg.name}</h4>
-                    <div style="font-weight:bold; font-size:13px;">${status}</div>
-                </div>
-            `;
-        });
-        container.innerHTML = html;
     }
 
     function renderLedgerSummary() {
@@ -755,14 +573,76 @@
             });
         });
 
-        let netProfit = totalPrize - totalCost;
-        let profitColor = netProfit > 0 ? '#059669' : (netProfit < 0 ? '#dc2626' : '#64748b');
+        // 1. 計算全局真實總損益
+        let globalNetProfit = totalPrize - totalCost;
+        let profitColor = globalNetProfit > 0 ? '#059669' : (globalNetProfit < 0 ? '#dc2626' : '#64748b');
+        let isLoss = globalNetProfit < 0;
+        let lossAmount = isLoss ? Math.abs(globalNetProfit) : 0;
 
         document.getElementById('ledger-count').innerText = `${totalCount} 期`;
         document.getElementById('ledger-cost').innerText = `$${Math.round(totalCost).toLocaleString()}`;
         document.getElementById('ledger-prize').innerText = `$${Math.round(totalPrize).toLocaleString()}`;
-        document.getElementById('ledger-profit').innerText = `${netProfit >= 0 ? '+$' : '-$'}${Math.abs(Math.round(netProfit)).toLocaleString()}`;
+        document.getElementById('ledger-profit').innerText = `${globalNetProfit >= 0 ? '+$' : '-$'}${Math.abs(Math.round(globalNetProfit)).toLocaleString()}`;
         document.getElementById('ledger-profit').style.color = profitColor;
+
+        // 2. 跨盤口動態回本演算法 (4 個空間)
+        let recHtml = '';
+        ['tt-1800', 'tt-9000', '539-1800', '539-9000'].forEach(key => {
+            let a = analyzeSpace(key);
+            if (!a.cfg || a.totalDraws === 0) return;
+
+            let recBet = 0;
+            let statusText = '';
+            let reasonText = '';
+            let cardStyle = '';
+
+            // 判斷邏輯
+            if (a.zScore >= 0.5 && a.EV > 0) {
+                // 綠燈進場：精算回本倍數
+                let unitNetWin = a.minPrize - a.costPerRound;
+                let targetBet = 1.0;
+                if (isLoss && unitNetWin > 0) {
+                    let needed = lossAmount / unitNetWin;
+                    targetBet = Math.min(Math.ceil((1 + needed) * 2) / 2, 3.0); // 四捨五入到 0.5，最高鎖死 3倍防破產
+                }
+                recBet = targetBet;
+                let level = a.zScore >= 1.5 ? '🔥 S級狙擊' : '🟢 A級佈局';
+                statusText = `${level} 👉 建議: ${recBet} 倍`;
+                cardStyle = 'background:#ecfdf5; border-color:#a7f3d0;';
+                reasonText = isLoss
+                    ? `跨盤總虧損 $${Math.round(lossAmount)}。此盤口達進場優勢 (Z=${a.zScore.toFixed(2)})，放大倍數至 ${recBet} 倍可加速填補虧損。`
+                    : `此盤口達進場優勢 (Z=${a.zScore.toFixed(2)})，目前整體獲利中，維持標準 ${recBet} 倍穩健套利。`;
+            } else if (a.latestIsWin) {
+                // 黃燈動能
+                recBet = isLoss ? 1.0 : 0.5; 
+                statusText = `🟡 動能追擊 👉 建議: ${recBet} 倍`;
+                cardStyle = 'background:#fffbeb; border-color:#fcd34d;';
+                reasonText = isLoss
+                    ? `剛開出具連莊動能。為填補整體虧損，可適度用 ${recBet} 倍順勢追擊，一斷即停。`
+                    : `剛開出具連莊動能，用獲利輕倉 ${recBet} 倍順勢衝浪。`;
+            } else {
+                // 紅燈觀望
+                recBet = 0;
+                statusText = `🔴 銀行家否決 👉 建議: 0 倍`;
+                cardStyle = 'background:#fef2f2; border-color:#fca5a5;';
+                reasonText = `此區間處於常態雜訊 (連槓 ${a.losingStreak} 期)。期望值為負，絕對不要在這裡盲目凹單回本！`;
+            }
+
+            recHtml += `
+                <div style="padding:12px; border:2px solid; border-radius:8px; ${cardStyle} line-height:1.5;">
+                    <div style="font-weight:900; font-size:13px; color:#0f172a; margin-bottom:6px; display:flex; justify-content:space-between; align-items:center;">
+                        <span>${a.cfg.name}</span>
+                        <span style="font-size:12px; font-weight:bold;">${statusText}</span>
+                    </div>
+                    <div style="font-size:11.5px; color:#334155;">
+                        ${reasonText}
+                    </div>
+                </div>
+            `;
+        });
+
+        let recContainer = document.getElementById('ledger-recommendations-container');
+        if(recContainer) recContainer.innerHTML = recHtml;
     }
 
     window.unlockSettings = function() {
