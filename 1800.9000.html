@@ -323,7 +323,7 @@
 
     let currentSpace = 'arena';
 
-    // 參數初始化：移除容易混淆的 totalCost，統一用 basePuffs
+    // 參數初始化
     let spaceConfigs = {
         'tt-1800': { name: '天天樂 1800碰', unitBet: 1, basePuffs: 1800, rebate: 37, unitPrize: 570, type: '1800' },
         'tt-9000': { name: '天天樂 9000碰', unitBet: 1, basePuffs: 9000, rebate: 50, unitPrize: 8000, type: '9000' },
@@ -393,9 +393,24 @@
         }
     }
 
-    window.onUnitBetChange = function(key) {
+    window.updateConfigDisplay = function(key) {
         let unitBet = parseFloat(document.getElementById(`cfg-unitbet-${key}`).value) || 0;
-        document.getElementById(`cfg-cost-${key}`).value = unitBet * spaceConfigs[key].basePuffs;
+        let basePuffs = spaceConfigs[key].basePuffs;
+        let rebate = parseFloat(document.getElementById(`cfg-rebate-${key}`).value) || 0;
+        let unitPrize = parseFloat(document.getElementById(`cfg-prize-${key}`).value) || 0;
+        
+        let costInput = document.getElementById(`cfg-cost-${key}`);
+        if(costInput) costInput.value = unitBet * basePuffs;
+
+        let realCost = unitBet * basePuffs * (1 - rebate / 100);
+        let winPuffs = spaceConfigs[key].type === '1800' ? 3 : 2;
+        let totalPrize = unitBet * winPuffs * unitPrize;
+        let netProfit = totalPrize - realCost;
+
+        let elRealCost = document.getElementById(`display-realcost-${key}`);
+        let elNetProfit = document.getElementById(`display-netprofit-${key}`);
+        if(elRealCost) elRealCost.innerText = `$${Math.round(realCost).toLocaleString()}`;
+        if(elNetProfit) elNetProfit.innerText = `+$${Math.round(netProfit).toLocaleString()}`;
     }
 
     function analyzeRadar(gameType) {
@@ -533,7 +548,6 @@
         }
     }
 
-    // ★ 核心分析：精準的 1800/9000 成本與彩金換算
     function analyzeSpace(key) {
         let cfg = spaceConfigs[key] || { type: '1800', unitBet: 1, basePuffs: 1800, rebate: 0, unitPrize: 0, name: '' };
         let rawData = spaceData[key] || [];
@@ -602,7 +616,6 @@
         let mcMaxLossStreak = Math.ceil(Math.log(0.01) / Math.log(1 - P_Win_Calc));
         if(!isFinite(mcMaxLossStreak) || isNaN(mcMaxLossStreak)) mcMaxLossStreak = 0;
 
-        // 【精準換算】：以使用者設定的 cfg.unitBet 計算一次標準進場的成本與彩金
         let costPerRound = Number(cfg.unitBet) * Number(cfg.basePuffs) * (1 - Number(cfg.rebate) / 100);
         let minPrize = cfg.type === '1800' ? 3 * Number(cfg.unitPrize) * Number(cfg.unitBet) : 2 * Number(cfg.unitPrize) * Number(cfg.unitBet);
         let EV = (bayesProb * minPrize) - ((1 - bayesProb) * costPerRound);
@@ -614,7 +627,7 @@
         };
     }
 
-    // 模塊1：客觀的巨頭分析面板 (不含個人回本情緒)
+    // 模塊1：客觀的巨頭分析面板
     function getPredictionHtml(analysis) {
         let { cfg, totalDraws, latestIsWin, continuousHits, losingStreak, expectedLosing, modelA_Prob, P_Win_Given_Win, P_Win_Given_Lose, EV, zScore, bayesProb, mcMaxLossStreak, costPerRound } = analysis;
         
@@ -719,16 +732,31 @@
                 let cfg = analysis.cfg;
                 let labelPrize = cfg.type === '1800' ? '三星單碰(元)' : '四星單碰(元)';
 
+                let realCost = cfg.unitBet * cfg.basePuffs * (1 - cfg.rebate / 100);
+                let winPuffs = cfg.type === '1800' ? 3 : 2;
+                let totalPrize = cfg.unitBet * winPuffs * cfg.unitPrize;
+                let netProfit = totalPrize - realCost;
+
                 html += `
                     <div class="space-config-card">
                         <h4>${cfg.name}</h4>
                         <div class="input-row">
-                            <div class="setting-item"><label>預測下注 (元/碰)</label><input type="number" id="cfg-unitbet-${key}" value="${cfg.unitBet}" step="0.1" oninput="onUnitBetChange('${key}')" disabled></div>
+                            <div class="setting-item"><label>預測下注 (元/碰)</label><input type="number" id="cfg-unitbet-${key}" value="${cfg.unitBet}" step="0.1" oninput="updateConfigDisplay('${key}')" disabled></div>
                             <div class="setting-item"><label>牌面本金 (元)</label><input type="number" id="cfg-cost-${key}" value="${cfg.unitBet * cfg.basePuffs}" disabled></div>
                         </div>
                         <div class="input-row">
-                            <div class="setting-item"><label>退水 (%)</label><input type="number" id="cfg-rebate-${key}" value="${cfg.rebate}" disabled></div>
-                            <div class="setting-item"><label>${labelPrize}</label><input type="number" id="cfg-prize-${key}" value="${cfg.unitPrize}" disabled></div>
+                            <div class="setting-item"><label>退水 (%)</label><input type="number" id="cfg-rebate-${key}" value="${cfg.rebate}" oninput="updateConfigDisplay('${key}')" disabled></div>
+                            <div class="setting-item"><label>${labelPrize}</label><input type="number" id="cfg-prize-${key}" value="${cfg.unitPrize}" oninput="updateConfigDisplay('${key}')" disabled></div>
+                        </div>
+                        <div style="background:#f1f5f9; padding:8px; border-radius:6px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; border: 1px solid #cbd5e1;">
+                            <div style="text-align:center; flex:1; border-right: 1px solid #cbd5e1;">
+                                <div style="font-size:10px; color:#64748b; font-weight:bold;">真實單期成本</div>
+                                <div style="font-size:14px; font-weight:900; color:#475569; font-family:monospace;" id="display-realcost-${key}">$${Math.round(realCost).toLocaleString()}</div>
+                            </div>
+                            <div style="text-align:center; flex:1;">
+                                <div style="font-size:10px; color:#64748b; font-weight:bold;">過關單期淨利</div>
+                                <div style="font-size:14px; font-weight:900; color:#059669; font-family:monospace;" id="display-netprofit-${key}">+$${Math.round(netProfit).toLocaleString()}</div>
+                            </div>
                         </div>
                         ${getPredictionHtml(analysis)}
                     </div>
@@ -761,7 +789,6 @@
                 let status = "";
                 let cssClass = "";
                 
-                // 客觀看板，不帶策略倍數，僅顯示標準倍數
                 if (a.zScore >= 1.5 && a.EV > 0) {
                     status = `🎯 無情狙擊 👉 <span style="color:#a7f3d0;">強勢進場 1 元/碰</span>`;
                     cssClass = "cold";
@@ -788,14 +815,13 @@
         }
     }
 
-    // 模塊2：實戰回本建議 (依照三大策略動態調整倍數，支援 0.1 級別)
+    // 模塊2：實戰回本建議 (依照三大策略動態調整)
     window.renderLedgerSummary = function() {
         try {
             let totalCount = 0;
             let totalCost = 0;
             let totalPrize = 0;
 
-            // 1. 計算全局真實總損益 (真實下注 * 真實基數)
             Object.keys(spaceData).forEach(key => {
                 let cfg = spaceConfigs[key];
                 let list = spaceData[key] || [];
@@ -835,7 +861,6 @@
             let strategySelect = document.getElementById('ledger-strategy');
             let strategy = strategySelect ? strategySelect.value : 'moderate';
 
-            // 2. 跨盤口動態回本演算法 (4 個空間)
             let recHtml = '';
             ['tt-1800', 'tt-9000', '539-1800', '539-9000'].forEach(key => {
                 let a = analyzeSpace(key);
@@ -847,13 +872,10 @@
                 let cardStyle = '';
 
                 // 計算該盤口下 1 元/碰 時，過關一次的淨利潤
-                // 1800: 3碰*570 - 1800*0.63 = 1710 - 1134 = 576
-                // 9000: 2碰*8000 - 9000*0.50 = 16000 - 4500 = 11500
                 let unitCost = a.cfg.basePuffs * (1 - a.cfg.rebate / 100);
                 let unitPrizeTotal = a.cfg.type === '1800' ? 3 * a.cfg.unitPrize : 2 * a.cfg.unitPrize;
                 let unitNetWin = unitPrizeTotal - unitCost; 
 
-                // 精算打平所需的最少單位數
                 let exactNeeded = (isLoss && unitNetWin > 0) ? (lossAmount / unitNetWin) : 0;
 
                 if (a.zScore >= 0.5 && a.EV > 0) {
@@ -867,9 +889,9 @@
                     } else if (strategy === 'moderate') {
                         // 🎯 精準打平微利 (0.1 單位精算)
                         if (isLoss) {
-                            targetBet = Math.ceil(exactNeeded * 10) / 10; // 逢 0.1 進位
-                            if (targetBet * unitNetWin <= lossAmount) targetBet += 0.1; // 確保一定有微利
-                            recBet = Math.min(targetBet, 2.0); // 最高鎖死 2 倍防破產
+                            targetBet = Math.ceil(exactNeeded * 10) / 10; 
+                            if (targetBet * unitNetWin <= lossAmount) targetBet += 0.1; 
+                            recBet = Math.min(targetBet, 2.0); 
                             recBet = parseFloat(recBet.toFixed(1)); 
                             
                             let expectWin = recBet * unitNetWin;
@@ -887,8 +909,8 @@
                     } else if (strategy === 'aggressive') {
                         // 📈 擴大獲利激進
                         if (isLoss) {
-                            targetBet = Math.ceil(exactNeeded * 10) / 10 + 0.2; // 稍微多壓一點加速
-                            recBet = Math.min(targetBet, 3.0); // 上限 3倍
+                            targetBet = Math.ceil(exactNeeded * 10) / 10 + 0.2; 
+                            recBet = Math.min(targetBet, 3.0); 
                             recBet = parseFloat(recBet.toFixed(1));
                             reasonText = `[📈 擴大獲利] 虧損 $${Math.round(lossAmount)}。盤面優勢極高，火力放大至 <strong>${recBet.toFixed(1)} 元/碰</strong> 強力反擊！`;
                         } else {
@@ -901,7 +923,6 @@
                     cardStyle = 'background:#ecfdf5; border-color:#a7f3d0;';
 
                 } else if (a.latestIsWin) {
-                    // 動能追擊
                     if (strategy === 'conservative') {
                         recBet = 0.2;
                         reasonText = `[🛡️ 保本防禦] 盤面具連莊熱度。用極小單位 <strong>${recBet.toFixed(1)} 元/碰</strong> 試水溫，一斷即停。`;
@@ -915,7 +936,6 @@
                     statusText = `🟡 動能追擊 👉 建議: ${recBet.toFixed(1)} 元/碰`;
                     cardStyle = 'background:#fffbeb; border-color:#fcd34d;';
                 } else {
-                    // 觀望
                     recBet = 0;
                     statusText = `🔴 銀行家否決 👉 建議: 0 元/碰`;
                     cardStyle = 'background:#fef2f2; border-color:#fca5a5;';
@@ -999,7 +1019,7 @@
     }
 
     window.editRecordBet = async function(id, curBet) {
-        let input = prompt(`請輸入此期的真實下注金額 (元/碰，0 = 觀望沒買)：`, curBet);
+        let input = prompt(`請輸入此期的真實下注金額 (元/碰，0 = 空手沒買)：`, curBet);
         if (input === null) return; 
         let newBet = parseFloat(input);
         if (isNaN(newBet) || newBet < 0) return alert("請輸入大於或等於 0 的數字！");
