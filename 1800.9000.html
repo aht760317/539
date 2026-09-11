@@ -109,7 +109,7 @@
         .col-prob-item .col-val { font-weight: 900; font-size: 13px; color: #0284c7; }
         .col-prob-item.danger-col .col-val { color: #dc2626; }
         
-        /* 🔥 六大巨頭儀表板 (UI全新優化 - 綠色達標/淡紅不達標) */
+        /* 🔥 六大巨頭儀表板 */
         .ai-prediction-box { margin-top: auto; padding: 12px; background: linear-gradient(to bottom, #ffffff, #f8fafc); border: 2px solid #e2e8f0; border-radius: 10px; font-size: 12px; }
         .ai-prediction-box h5 { color: #0f172a; margin: 0; font-size: 13px; font-weight: 900; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid #cbd5e1; padding-bottom: 6px; }
         
@@ -130,7 +130,7 @@
         
         .strategy-box { margin-top: 10px; padding: 10px; border-radius: 8px; text-align: center; font-weight: 900; font-size: 13px; line-height: 1.5; }
         .strategy-box h6 { font-size:14px; margin:0 0 6px 0; }
-        .risk-warning-box { font-size:11px; padding:6px; background:rgba(255,255,255,0.8); border-radius:4px; color:#1e293b; text-align:left; font-weight:bold; margin-top:6px; border-left: 3px solid currentColor; }
+        .risk-warning-box { font-size:11.5px; padding:8px; background:rgba(255,255,255,0.8); border-radius:4px; color:#1e293b; text-align:left; margin-top:6px; border-left: 4px solid currentColor; line-height:1.5; }
 
         /* 實單記帳看板 */
         .ledger-stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 12px; }
@@ -315,7 +315,6 @@
             </div>
             <div class="form-group">
                 <label>實際下注 (元/碰, 0=觀望沒下)</label>
-                <!-- 限制只能輸入整數 step="1" -->
                 <input type="number" id="ledger-bet" step="1" min="0" value="1">
             </div>
         </div>
@@ -730,7 +729,7 @@
         };
     }
 
-    // 模塊1：客觀的巨頭儀表板 (UI全新優化 - 綠色達標/淡紅不達標)
+    // 模塊1：客觀的巨頭儀表板 (UI全新優化 - 綠色達標/淡紅不達標) + 【六大指標綜合描述】
     function getPredictionHtml(analysis) {
         let { cfg, totalDraws, latestIsWin, continuousHits, losingStreak, expectedLosing, modelA_Prob, P_Win_Given_Win, P_Win_Given_Lose, EV, zScore, bayesProb, mcMaxLossStreak, costPerRound, baseP_Threshold } = analysis;
         
@@ -744,32 +743,37 @@
         let evVal = EV > 0 ? `+${Number(EV).toFixed(0)}` : Number(EV).toFixed(0);
 
         // ★ 六大巨頭單獨達標邏輯 (綠色 or 淡紅)
-        let c1 = modelA_Prob > baseP_Threshold ? 'highlight' : 'danger';
+        let passLaplace = modelA_Prob > baseP_Threshold;
+        let passBayes = bayesProb > baseP_Threshold;
+        let passMC = losingStreak >= expectedLosing;
+
+        let c1 = passLaplace ? 'highlight' : 'danger';
         let c2 = latestIsWin ? 'highlight' : 'danger';
-        let c3 = bayesProb > baseP_Threshold ? 'highlight' : 'danger';
+        let c3 = passBayes ? 'highlight' : 'danger';
         let c4 = zScore >= 0.5 ? 'highlight' : 'danger';
-        let c5 = losingStreak >= expectedLosing ? 'highlight' : 'danger'; // 超過平均連槓代表風險釋放
+        let c5 = passMC ? 'highlight' : 'danger'; 
         let c6 = EV > 0 ? 'highlight' : 'danger';
 
         let consensusTitle = "";
         let consensusDesc = "";
         let consensusColor = "";
 
+        // ★ 六維綜合描述 (替代舊版只顯示單一指標的缺點)
         if (zScore >= 1.5 && EV > 0) {
-            consensusTitle = "🟢 S級狙擊 (強勢進場)";
-            consensusDesc = `Z-Score 高達 ${Number(zScore).toFixed(2)}，突破冰點。此為絕對套利點，大莊家建議：【進場平推 1 單位】。`;
+            consensusTitle = "🟢 S級狙擊 (六大巨頭強烈共識)";
+            consensusDesc = `【綜合評估】①數學家與③贏家皆確認勝率反彈，且④偏離度(Z=${Number(zScore).toFixed(2)})突破冰點達極端值，配合⑤壓力完全釋放與⑥期望值大幅轉正。大莊家決議：【進場平推 1 單位】。`;
             consensusColor = "background:#ecfdf5; color:#065f46; border: 2px solid #10b981;";
         } else if (zScore >= 0.5 && EV > 0) {
-            consensusTitle = "🟢 A級佈局 (標準進場)";
-            consensusDesc = `Z-Score 突破 0.5。已脫離常態雜訊，大莊家建議：【標準進場 1 單位】。`;
+            consensusTitle = "🟢 A級佈局 (多維指標共振)";
+            consensusDesc = `【綜合評估】④偏離度(Z=${Number(zScore).toFixed(2)})已脫離常態雜訊區，結合${passBayes?'③贏家真實勝率達標':'基礎機率回穩'}，且⑥確認具備正期望值套利空間。大莊家決議：【標準進場 1 單位】。`;
             consensusColor = "background:#f0fdf4; color:#15803d; border: 2px solid #86efac;";
         } else if (latestIsWin) {
-            consensusTitle = "🟡 動能追擊 (順勢衝浪)";
-            consensusDesc = `上一期剛過關，資金有熱度。大莊家建議：【順勢跟進 1 單位】。`;
+            consensusTitle = "🟡 動能追擊 (投機家主導)";
+            consensusDesc = `【綜合評估】②投機家捕捉到短線連莊熱度！雖然長線指標尚未回穩，但可利用獲利資金進行【順勢跟進 0.5 單位】，斷莊即停。`;
             consensusColor = "background:#fffbeb; color:#b45309; border: 2px solid #f59e0b;";
         } else {
-             consensusTitle = "🔴 銀行家否決 (空手觀望)";
-             consensusDesc = `常態雜訊中，期望值為負。大莊家建議：【嚴格觀望 0 單位】。`;
+             consensusTitle = "🔴 銀行家否決 (指標全面示警禁入)";
+             consensusDesc = `【綜合評估】六大指標全面示警：④偏離度不足且⑥期望值為負。在負期望值下盲目下注等於送錢，大莊家決議：【嚴格觀望 0 單位】。`;
              consensusColor = "background:#fef2f2; color:#b91c1c; border: 2px solid #ef4444;";
         }
 
@@ -807,7 +811,7 @@
 
                 <div class="strategy-box" style="${consensusColor}">
                     <h6>${consensusTitle}</h6>
-                    <div style="font-size:11px; font-weight:normal; margin-top:4px;">${consensusDesc}</div>
+                    <div style="font-size:11.5px; font-weight:bold; margin-top:4px; text-align:left; color:#1e293b;">${consensusDesc}</div>
                 </div>
             </div>
         `;
@@ -826,7 +830,7 @@
 
                 let histCost = 0;
                 let histPrize = 0;
-                let list = getFilteredData(key); // 使用過濾後的年份資料
+                let list = getFilteredData(key); 
                 list.forEach(item => {
                     let myBet = item.myBet !== undefined ? parseFloat(item.myBet) : 0;
                     if (myBet > 0) {
@@ -920,7 +924,7 @@
         }
     }
 
-    // 模塊2：實戰回本建議 (組頭整數限制版)
+    // 模塊2：實戰回本建議 (六大巨頭綜合診斷 + 組頭整數限制版)
     window.renderLedgerSummary = function() {
         try {
             let totalCount = 0;
@@ -975,49 +979,54 @@
                 let reasonText = '';
                 let cardStyle = '';
 
-                // 計算該盤口下 1 元/碰 時，過關一次的淨利潤
                 let unitCost = a.cfg.basePuffs * (1 - a.cfg.rebate / 100);
                 let unitPrizeTotal = a.cfg.type === '1800' ? 3 * a.cfg.unitPrize : 2 * a.cfg.unitPrize;
                 let unitNetWin = unitPrizeTotal - unitCost; 
-
-                // ★ 無條件進位精算 (整數)
                 let exactNeeded = (isLoss && unitNetWin > 0) ? (lossAmount / unitNetWin) : 0;
 
+                // ★ 先產生「巨頭綜合診斷」文字
+                let expertDiagnosis = "";
+                if (a.zScore >= 1.5 && a.EV > 0) {
+                    expertDiagnosis = `【巨頭診斷】①③勝率反轉、④偏離極端(Z=${Number(a.zScore).toFixed(2)})、⑥期望值大幅>0，S級套利點浮現。`;
+                } else if (a.zScore >= 0.5 && a.EV > 0) {
+                    expertDiagnosis = `【巨頭診斷】④偏離度脫離雜訊(Z=${Number(a.zScore).toFixed(2)})且⑥期望值>0，A級佈局點確認。`;
+                } else if (a.latestIsWin) {
+                    expertDiagnosis = `【巨頭診斷】②投機家確認連莊熱度，短線動能浮現。`;
+                } else {
+                    expertDiagnosis = `【巨頭診斷】④偏離度不足且⑥期望值為負，六大指標全面示警禁入。`;
+                }
+
+                // ★ 再套入「資金配置策略」
                 if (a.zScore >= 0.5 && a.EV > 0) {
                     let level = a.zScore >= 1.5 ? 'S' : 'A';
                     let targetBet = 1;
 
                     if (strategy === 'conservative') {
-                        // 🛡️ 絕對保本防禦 (鎖死 1 倍)
                         recBet = 1;
-                        reasonText = `[🛡️ 保本防禦] 綠燈進場，嚴格鎖死在 <strong>${recBet} 元/碰</strong>，活著最重要。`;
+                        reasonText = `${expertDiagnosis}<br>【資金配置】[🛡️ 保本防禦] 嚴格鎖死在 <strong>${recBet} 元/碰</strong>，活著最重要。`;
                     } else if (strategy === 'moderate') {
-                        // 🎯 精準打平微利 (無條件進位，上限 2 倍)
                         if (isLoss) {
                             targetBet = Math.ceil(exactNeeded); 
-                            recBet = Math.min(targetBet, 2); // 最高鎖死 2倍
-                            
+                            recBet = Math.min(targetBet, 2); 
                             let expectWin = recBet * unitNetWin;
                             let expectNet = expectWin - lossAmount;
-                            
                             if (recBet < targetBet) {
-                                reasonText = `[🎯 打平微利] 跨盤總虧損 $${Math.round(lossAmount)}。精算需 ${targetBet} 單位打平，為保護本金，強制降為安全上限 <strong>${recBet} 元/碰</strong>，分次打平。`;
+                                reasonText = `${expertDiagnosis}<br>【資金配置】[🎯 打平微利] 跨盤總虧損 $${Math.round(lossAmount)}。為保護本金，強制降為安全上限 <strong>${recBet} 元/碰</strong> 分次打平。`;
                             } else {
-                                reasonText = `[🎯 打平微利] 總虧損 $${Math.round(lossAmount)}。精算只需 <strong>${recBet} 元/碰</strong> 即可打平。過關不但回本，還能倒賺 $${Math.round(expectNet)}！`;
+                                reasonText = `${expertDiagnosis}<br>【資金配置】[🎯 打平微利] 總虧損 $${Math.round(lossAmount)}。精算下注 <strong>${recBet} 元/碰</strong>，過關回本且倒賺 $${Math.round(expectNet)}！`;
                             }
                         } else {
                             recBet = 1;
-                            reasonText = `[🎯 打平微利] 目前整體獲利中。維持低風險 <strong>${recBet} 元/碰</strong> 穩健提款。`;
+                            reasonText = `${expertDiagnosis}<br>【資金配置】[🎯 打平微利] 目前整體獲利中。維持低風險 <strong>${recBet} 元/碰</strong> 穩健提款。`;
                         }
                     } else if (strategy === 'aggressive') {
-                        // 📈 擴大獲利激進 (加碼 1 倍，上限 3 倍)
                         if (isLoss) {
                             targetBet = Math.ceil(exactNeeded) + 1; 
-                            recBet = Math.min(targetBet, 3); // 上限 3倍
-                            reasonText = `[📈 擴大獲利] 虧損 $${Math.round(lossAmount)}。盤面優勢極高，火力放大至 <strong>${recBet} 元/碰</strong> 強力反擊！`;
+                            recBet = Math.min(targetBet, 3); 
+                            reasonText = `${expertDiagnosis}<br>【資金配置】[📈 擴大獲利] 虧損 $${Math.round(lossAmount)}。火力放大至 <strong>${recBet} 元/碰</strong> 強力反擊！`;
                         } else {
                             recBet = level === 'S' ? 2 : 1;
-                            reasonText = `[📈 擴大獲利] 目前已有營利。趁勝追擊，加碼至 <strong>${recBet} 元/碰</strong> 擴大戰果。`;
+                            reasonText = `${expertDiagnosis}<br>【資金配置】[📈 擴大獲利] 目前已有營利。趁勝加碼至 <strong>${recBet} 元/碰</strong> 擴大戰果。`;
                         }
                     }
 
@@ -1025,16 +1034,15 @@
                     cardStyle = 'background:#ecfdf5; border-color:#a7f3d0;';
 
                 } else if (a.latestIsWin) {
-                    // 動能追擊 (整數倍數)
                     if (strategy === 'conservative') {
                         recBet = 1;
-                        reasonText = `[🛡️ 保本防禦] 盤面具連莊熱度。用最小單位 <strong>${recBet} 元/碰</strong> 試水溫，一斷即停。`;
+                        reasonText = `${expertDiagnosis}<br>【資金配置】[🛡️ 保本防禦] 盤面具熱度。用最小單位 <strong>${recBet} 元/碰</strong> 試水溫，一斷即停。`;
                     } else if (strategy === 'moderate') {
                         recBet = 1;
-                        reasonText = `[🎯 打平微利] 剛開出有動能。為保本不盲目重倉追擊，僅用 <strong>${recBet} 元/碰</strong> 摸底。`;
+                        reasonText = `${expertDiagnosis}<br>【資金配置】[🎯 打平微利] 為保本不盲目重倉，僅用 <strong>${recBet} 元/碰</strong> 摸底。`;
                     } else {
                         recBet = 2;
-                        reasonText = `[📈 擴大獲利] 連莊熱區確認！用 <strong>${recBet} 元/碰</strong> 強勢跟單，斷莊立刻斬倉。`;
+                        reasonText = `${expertDiagnosis}<br>【資金配置】[📈 擴大獲利] 用 <strong>${recBet} 元/碰</strong> 強勢跟單，斷莊立刻斬倉。`;
                     }
                     statusText = `🟡 動能追擊 👉 建議: ${recBet} 元/碰`;
                     cardStyle = 'background:#fffbeb; border-color:#fcd34d;';
@@ -1042,7 +1050,7 @@
                     recBet = 0;
                     statusText = `🔴 銀行家否決 👉 建議: 0 元/碰`;
                     cardStyle = 'background:#fef2f2; border-color:#fca5a5;';
-                    reasonText = `[絕對防禦] 期望值為負。就算再想回本也 <strong>絕對不能下注</strong>，一毛錢都不要給莊家！`;
+                    reasonText = `${expertDiagnosis}<br>【資金配置】[絕對防禦] 就算再想回本也 <strong>絕對不能下注</strong>，一毛錢都不要給莊家！`;
                 }
 
                 recHtml += `
