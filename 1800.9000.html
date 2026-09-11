@@ -3,13 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>⚡ 雙核心量化操盤系統 | 終極獵人版</title>
+    <title>⚡ 天天樂 & 五三九 雙核心量化操盤系統 (終極完全體)</title>
     <style>
-        /* ==========================================
-           1. 全局變數與基礎設定 (Variables & Reset)
-           ========================================== */
         :root {
-            --bg-color: #f1f5f9; 
+            --bg-color: #f8fafc; 
             --panel-bg: #ffffff;
             --panel-border: #e2e8f0;
             --text-main: #0f172a;
@@ -20,221 +17,212 @@
             --danger-color: #dc2626;
             --purple-color: #7c3aed;
             --orange-color: #ea580c;
-            --ball-size: 26px;
+            --ball-size: 28px;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Microsoft JhengHei", sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background-color: var(--bg-color); color: var(--text-main); padding: 10px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+        body { background-color: var(--bg-color); color: var(--text-main); padding: 8px; line-height: 1.5; }
         .container { max-width: 1200px; margin: 0 auto; }
 
-        /* ==========================================
-           2. 頂部導航與狀態列 (Header & Status)
-           ========================================== */
         header { 
-            background: linear-gradient(135deg, #ffffff, #f8fafc); border: 1px solid #cbd5e1;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03); padding: 16px; border-radius: 12px; margin-bottom: 12px; text-align: center; 
+            background: linear-gradient(135deg, #ffffff, #f0f9ff); border: 1px solid #bae6fd;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); padding: 12px; border-radius: 12px; margin-bottom: 12px; text-align: center; 
         }
         header h1 { 
-            font-size: clamp(18px, 4vw, 24px); letter-spacing: 0.5px;
-            background: linear-gradient(90deg, var(--primary-color), var(--purple-color)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            font-weight: 900; margin-bottom: 8px;
+            font-size: clamp(16px, 4vw, 22px); letter-spacing: 0.5px;
+            background: linear-gradient(90deg, #0284c7, #7c3aed); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            font-weight: 900; margin-bottom: 4px;
         }
         .cloud-badge { 
-            display: inline-flex; align-items: center; gap: 6px; background: #ecfdf5; border: 1px solid #a7f3d0;
-            padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; color: #065f46; box-shadow: 0 2px 4px rgba(16,185,129,0.1);
+            display: inline-flex; align-items: center; gap: 4px; background: #ecfdf5; border: 1px solid #a7f3d0;
+            padding: 2px 8px; border-radius: 20px; font-size: 10px; font-weight: bold; color: #065f46; 
         }
-        .dot { width: 8px; height: 8px; border-radius: 50%; background: #10b981; box-shadow: 0 0 6px #10b981; animation: pulse 2s infinite; }
-        @keyframes pulse { 0% { transform: scale(0.95); opacity: 0.8; } 50% { transform: scale(1.1); opacity: 1; box-shadow: 0 0 10px #10b981; } 100% { transform: scale(0.95); opacity: 0.8; } }
+        .dot { width: 6px; height: 6px; border-radius: 50%; background: #10b981; box-shadow: 0 0 4px #10b981; }
 
         .year-filter-bar {
-            background: linear-gradient(to right, #0f172a, #1e293b); color: #fff; padding: 12px; border-radius: 10px; margin-bottom: 16px;
-            display: flex; justify-content: center; align-items: center; gap: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            background: #1e293b; color: #fff; padding: 10px; border-radius: 8px; margin-bottom: 14px;
+            display: flex; justify-content: center; align-items: center; gap: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
         .year-filter-bar select {
-            padding: 6px 16px; font-size: 14px; font-weight: bold; border-radius: 6px; border: 2px solid #3b82f6;
-            background: #020617; color: #60a5fa; cursor: pointer; outline: none; transition: 0.2s;
+            padding: 6px 12px; font-size: 14px; font-weight: bold; border-radius: 6px; border: 2px solid #3b82f6;
+            background: #0f172a; color: #60a5fa; cursor: pointer; outline: none;
         }
-        .year-filter-bar select:hover { border-color: #60a5fa; background: #0f172a; }
 
-        /* ==========================================
-           3. 核心選單按鈕 (Space Switcher)
-           ========================================== */
-        .mode-switcher { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 16px; }
-        @media (min-width: 768px) { .mode-switcher { grid-template-columns: repeat(4, 1fr); } }
+        .mode-switcher { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin-bottom: 14px; }
+        @media (min-width: 768px) { .mode-switcher { grid-template-columns: repeat(3, 1fr); } }
         @media (min-width: 1024px) { .mode-switcher { grid-template-columns: repeat(7, 1fr); } } 
         
         .mode-btn { 
-            padding: 10px 4px; border: 1.5px solid #cbd5e1; background: #fff; color: #475569; 
-            font-size: 13px; font-weight: 900; border-radius: 8px; cursor: pointer; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); text-align: center; white-space: nowrap; box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            padding: 8px 4px; border: 1.5px solid #cbd5e1; background: #fff; color: #475569; 
+            font-size: 12px; font-weight: 800; border-radius: 8px; cursor: pointer; transition: 0.2s; text-align: center; white-space: nowrap;
         }
-        .mode-btn:hover { background: #f8fafc; transform: translateY(-1px); box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .mode-btn.active { border-color: var(--primary-color); background: var(--primary-color); color: #fff; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3); transform: translateY(-1px); }
-        .mode-btn.arena-btn.active { border-color: var(--purple-color); background: linear-gradient(135deg, #7c3aed, #6d28d9); box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3); }
-        .mode-btn.ledger-btn.active { border-color: var(--success-color); background: linear-gradient(135deg, #059669, #047857); box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3); }
-        .mode-btn.single-btn.active { border-color: var(--orange-color); background: linear-gradient(135deg, var(--orange-color), #c2410c); box-shadow: 0 4px 12px rgba(234, 88, 12, 0.3); color:#fff; }
+        .mode-btn.active { border-color: var(--primary-color); background: var(--primary-color); color: #fff; box-shadow: 0 2px 8px rgba(2, 132, 199, 0.3); }
+        .mode-btn.arena-btn.active { border-color: var(--purple-color); background: var(--purple-color); box-shadow: 0 2px 8px rgba(124, 58, 237, 0.3); }
+        .mode-btn.ledger-btn.active { border-color: var(--success-color); background: var(--success-color); box-shadow: 0 2px 8px rgba(5, 150, 105, 0.3); }
+        .mode-btn.single-btn.active { border-color: var(--orange-color); background: var(--orange-color); box-shadow: 0 2px 8px rgba(234, 88, 12, 0.3); color:#fff; }
 
-        /* ==========================================
-           4. 基礎面板設計 (Panels & Grids)
-           ========================================== */
-        .panel { background: var(--panel-bg); padding: 16px; border-radius: 12px; border: 1px solid var(--panel-border); margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); animation: fadeIn 0.4s ease-in-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-        .panel-title { font-size: 15px; font-weight: 900; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f1f5f9; padding-bottom: 10px; color: var(--text-main); }
+        .panel { background: var(--panel-bg); padding: 14px; border-radius: 12px; border: 1px solid var(--panel-border); margin-bottom: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .panel-title { font-size: 14px; font-weight: 900; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px; color: var(--text-main); }
 
-        .form-row { display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; }
-        @media (min-width: 768px) { .form-row { flex-direction: row; } }
-        .form-group label { display:block; font-size: 11px; font-weight: 800; color: #334155; margin-bottom: 4px; }
-        .form-group input, .form-group select { width: 100%; padding: 8px 10px; border: 1.5px solid #cbd5e1; border-radius: 8px; font-size: 13px; font-family: monospace; font-weight:bold; outline:none; transition:0.2s; }
-        .form-group input:focus, .form-group select:focus { border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(2,132,199,0.1); }
+        .guide-box { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px; margin-bottom: 14px; font-size: 12px; line-height: 1.6; }
+        .guide-box h4 { margin-bottom: 8px; color: #0f172a; font-size: 14px; display: flex; align-items: center; gap: 6px; cursor: pointer; }
+        .guide-grid { display: grid; grid-template-columns: 1fr; gap: 8px; margin-top: 10px; display: none; }
+        .guide-item { background: #fff; padding: 8px; border-radius: 6px; border-left: 4px solid var(--primary-color); box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+        .guide-item strong { color: var(--primary-color); }
+        .guide-target { color: var(--success-color); font-weight: 900; font-size: 11px; margin-top: 4px; display: block; }
+
+        .setting-grid { display: grid; grid-template-columns: 1fr; gap: 14px; align-items: stretch; }
+        @media (min-width: 900px) { .setting-grid { grid-template-columns: repeat(2, 1fr); } } 
+
+        .space-config-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px; display: flex; flex-direction: column; }
+        .space-config-card h4 { font-size: 13px; font-weight: 900; color: var(--purple-color); margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+        .setting-item label { display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 2px; font-weight: bold; }
+        .setting-item input { width: 100%; padding: 6px 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; font-family: monospace; font-weight: bold; }
+        .setting-item input:disabled { background: #f1f5f9; color: #94a3b8; border-color:#e2e8f0; }
         
-        textarea { width: 100%; height: 100px; padding: 10px; border: 1.5px solid #cbd5e1; border-radius: 8px; font-family: monospace; font-size: 13px; margin-bottom: 10px; outline:none; transition:0.2s;}
-        textarea:focus { border-color: var(--purple-color); box-shadow: 0 0 0 3px rgba(124,58,237,0.1); }
+        .action-bar { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+        .action-bar input { padding: 8px; border: 1.5px solid #cbd5e1; border-radius: 6px; flex: 1; min-width: 120px; font-size: 13px; font-weight: bold; }
         
-        .btn-main { background: linear-gradient(135deg, #0284c7, #2563eb); color: white; border: none; padding: 12px; font-size: 14px; font-weight: 900; border-radius: 8px; cursor: pointer; width: 100%; transition: 0.2s; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
-        .btn-main:hover { transform: translateY(-1px); box-shadow: 0 4px 10px rgba(0,0,0,0.15); filter: brightness(1.05); }
-        .btn-main:active { transform: translateY(1px); }
-
-        /* ==========================================
-           5. 大數據戰情看板 (Stats Grids)
-           ========================================== */
-        .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 16px; animation: fadeIn 0.4s ease-in-out; }
-        @media (min-width: 768px) { .stats-grid { grid-template-columns: repeat(3, 1fr); } }
-        @media (min-width: 1024px) { .stats-grid { grid-template-columns: repeat(6, 1fr); } }
-        .stat-item { background: #fff; padding: 14px; border-radius: 10px; text-align: center; border: 1px solid #e2e8f0; display: flex; flex-direction: column; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.02); transition:0.2s; }
-        .stat-item:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-        .stat-item h3 { font-size: 12px; color: #64748b; margin-bottom: 6px; font-weight:900;}
-        .stat-item p { font-size: 18px; font-weight: 900; font-family: monospace; margin:0;}
-
-        /* ==========================================
-           6. 歷史戰績表 (Data Table)
-           ========================================== */
-        .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 10px; border: 1px solid #e2e8f0; background: #fff; max-height: 600px; overflow-y: auto; }
-        table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 13px; min-width: 750px; }
-        /* 凍結表頭優化 */
-        th { background: #f8fafc; padding: 12px 8px; border-bottom: 2px solid #cbd5e1; color: #334155; white-space: nowrap; position: sticky; top: 0; z-index: 10; font-weight:900; }
-        td { padding: 10px 8px; border-bottom: 1px solid #e2e8f0; text-align: center; vertical-align: middle; transition: background 0.15s; }
-        tr:hover td { background: #f1f5f9; }
-        
-        .badge { padding: 4px 8px; border-radius: 6px; font-weight: 900; font-size: 11px; display:inline-block; }
-        .bg-green { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
-        .bg-red { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
-        .bg-yellow { background: #fef9c3; color: #854d0e; border: 1px solid #fef08a; }
-
-        .num-container { display: flex; gap: 4px; justify-content: center; flex-wrap: wrap; }
-        .num-ball { width: var(--ball-size); height: var(--ball-size); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 900; font-family: monospace; background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #78350f; border: 1.5px solid #b45309; box-shadow: inset 0 2px 4px rgba(255,255,255,0.3), 0 1px 2px rgba(0,0,0,0.1); }
-
-        .btn-tbl-action { background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 6px; padding: 4px 8px; cursor: pointer; font-size: 11px; font-weight: 900; color:#475569; transition:0.2s; }
-        .btn-tbl-action:hover { background: #e2e8f0; color:#0f172a; }
-
-        /* ==========================================
-           7. 決策矩陣專屬 UI (Arena & Radar & Giants)
-           ========================================== */
-        .strategy-dashboard { background: linear-gradient(135deg, #1e1b4b, #312e81); color: #fff; padding: 18px; border-radius: 12px; margin-bottom: 16px; box-shadow: 0 6px 15px rgba(49, 46, 129, 0.4); }
-        .strategy-dashboard h3 { font-size: 16px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 8px; }
-        .dashboard-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+        .strategy-dashboard { background: linear-gradient(135deg, #1e1b4b, #312e81); color: #fff; padding: 16px; border-radius: 12px; margin-bottom: 14px; box-shadow: 0 4px 12px rgba(49, 46, 129, 0.4); }
+        .strategy-dashboard h3 { font-size: 15px; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 6px; }
+        .dashboard-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
         @media (min-width: 768px) { .dashboard-grid { grid-template-columns: repeat(2, 1fr); } }
-        .dash-card { background: rgba(255,255,255,0.08); border-radius: 10px; padding: 12px; border: 1px solid rgba(255,255,255,0.15); font-size: 13px; backdrop-filter: blur(4px); }
-        .dash-card h4 { color: #a5b4fc; font-size: 13px; margin-bottom: 6px; }
+        .dash-card { background: rgba(255,255,255,0.1); border-radius: 8px; padding: 10px; border: 1px solid rgba(255,255,255,0.1); font-size: 12px; }
+        .dash-card h4 { color: #a5b4fc; font-size: 12px; margin-bottom: 4px; }
 
-        .ai-prediction-box { margin-top: auto; padding: 14px; background: linear-gradient(to bottom, #ffffff, #f8fafc); border: 2px solid #e2e8f0; border-radius: 10px; font-size: 12px; }
-        .ai-prediction-box h5 { color: #0f172a; margin: 0; font-size: 14px; font-weight: 900; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid #cbd5e1; padding-bottom: 8px; margin-bottom:10px; }
+        .radar-panel { background: linear-gradient(135deg, #fef2f2, #fff1f2); border: 2px dashed #fca5a5; border-radius: 12px; padding: 14px; margin-bottom: 14px; box-shadow: 0 4px 10px rgba(220, 38, 38, 0.08); }
+        .radar-panel h3 { font-size: 15px; color: #991b1b; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid #fecaca; padding-bottom: 6px; }
+        .radar-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        @media (min-width: 768px) { .radar-grid { grid-template-columns: repeat(2, 1fr); } }
+        .radar-card { background: #ffffff; border: 1px solid #fca5a5; border-radius: 8px; padding: 12px; font-size: 12px; line-height: 1.5; }
+        .radar-card h4 { color: #dc2626; font-size: 13px; font-weight: 900; margin-bottom: 6px; display:flex; justify-content:space-between; align-items:center;}
+        .radar-highlight { color: #b91c1c; font-weight: 900; font-size: 14px; }
         
-        .giant-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 10px; }
-        .giant-card { background: #f1f5f9; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 8px; text-align: center; transition: 0.2s; }
-        .giant-card .g-title { font-size: 11px; color: #475569; font-weight: 900; margin-bottom: 4px; }
-        .giant-card .g-val { font-size: 14px; font-weight: 900; color: #0f172a; }
+        .col-prob-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 8px 0; }
+        .col-prob-item { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 6px 8px; font-size: 11px; text-align: center; }
+        .col-prob-item.danger-col { background: #fff1f2; border-color: #fca5a5; }
+        .col-prob-item .col-title { font-weight: bold; color: #475569; margin-bottom: 2px; }
+        .col-prob-item.danger-col .col-title { color: #dc2626; }
+        .col-prob-item .col-val { font-weight: 900; font-size: 13px; color: #0284c7; }
+        .col-prob-item.danger-col .col-val { color: #dc2626; }
         
-        .giant-card.highlight { background: #ecfdf5; border-color: #10b981; box-shadow: 0 2px 6px rgba(16, 185, 129, 0.15); }
+        .ai-prediction-box { margin-top: auto; padding: 12px; background: linear-gradient(to bottom, #ffffff, #f8fafc); border: 2px solid #e2e8f0; border-radius: 10px; font-size: 12px; }
+        .ai-prediction-box h5 { color: #0f172a; margin: 0; font-size: 13px; font-weight: 900; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid #cbd5e1; padding-bottom: 6px; }
+        
+        .giant-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin: 10px 0; }
+        .giant-card { background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px; text-align: center; transition: 0.2s; }
+        .giant-card .g-title { font-size: 10px; color: #475569; font-weight: bold; margin-bottom: 2px; }
+        .giant-card .g-val { font-size: 13px; font-weight: 900; color: #0f172a; }
+        
+        .giant-card.highlight { background: #ecfdf5; border-color: #34d399; box-shadow: 0 2px 4px rgba(16, 185, 129, 0.1); }
         .giant-card.highlight .g-title { color: #065f46; }
         .giant-card.highlight .g-val { color: #059669; }
         
-        .giant-card.danger { background: #fef2f2; border-color: #ef4444; box-shadow: 0 2px 6px rgba(239, 68, 68, 0.15); }
+        .giant-card.danger { background: #fef2f2; border-color: #fca5a5; box-shadow: 0 2px 4px rgba(220, 38, 38, 0.05); }
         .giant-card.danger .g-title { color: #991b1b; }
         .giant-card.danger .g-val { color: #dc2626; }
+        
+        .strategy-box { margin-top: 10px; padding: 10px; border-radius: 8px; text-align: center; font-weight: 900; font-size: 13px; line-height: 1.5; }
+        .strategy-box h6 { font-size:14px; margin:0 0 6px 0; }
 
-        .strategy-box { margin-top: 12px; padding: 12px; border-radius: 8px; text-align: center; font-weight: 900; font-size: 14px; line-height: 1.5; }
-        .strategy-box h6 { font-size:15px; margin:0 0 6px 0; }
-
-        .radar-panel { background: linear-gradient(135deg, #fef2f2, #fff1f2); border: 2px dashed #fca5a5; border-radius: 12px; padding: 16px; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(220, 38, 38, 0.08); }
-        .radar-panel h3 { font-size: 16px; color: #991b1b; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #fecaca; padding-bottom: 8px; }
-        .radar-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
-        @media (min-width: 768px) { .radar-grid { grid-template-columns: repeat(2, 1fr); } }
-        .radar-card { background: #ffffff; border: 1.5px solid #fca5a5; border-radius: 10px; padding: 14px; font-size: 13px; line-height: 1.6; }
-        .radar-card h4 { color: #dc2626; font-size: 14px; font-weight: 900; margin-bottom: 8px; display:flex; justify-content:space-between; align-items:center;}
-        .radar-highlight { color: #b91c1c; font-weight: 900; font-size: 15px; }
-
-        /* ==========================================
-           8. 獵人實戰回本引擎專區 (Ledger)
-           ========================================== */
-        .ledger-stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 14px; }
+        .ledger-stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 12px; }
         @media (min-width: 768px) { .ledger-stats-grid { grid-template-columns: repeat(4, 1fr); } }
-        .ledger-stat-card { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 10px; padding: 12px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
-        .ledger-stat-card h4 { font-size: 12px; color: #64748b; margin-bottom: 6px; font-weight:900;}
-        .ledger-stat-card p { font-size: 18px; font-weight: 900; font-family: monospace; margin: 0; }
+        .ledger-stat-card { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px; text-align: center; }
+        .ledger-stat-card h4 { font-size: 11px; color: #64748b; margin-bottom: 4px; }
+        .ledger-stat-card p { font-size: 16px; font-weight: 900; font-family: monospace; margin: 0; }
+
+        .rec-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 10px; }
+        @media (min-width: 768px) { .rec-grid { grid-template-columns: repeat(2, 1fr); } }
+
+        .form-row { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
+        @media (min-width: 768px) { .form-row { flex-direction: row; } }
+        .form-group label { font-size: 11px; font-weight: 800; color: #334155; margin-bottom: 2px; }
+        .form-group input, .form-group select { width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; font-family: monospace; }
+        
+        textarea { width: 100%; height: 80px; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-family: monospace; font-size: 12px; margin-bottom: 8px; }
+        .btn-main { background: linear-gradient(135deg, #0284c7, #2563eb); color: white; border: none; padding: 10px; font-size: 13px; font-weight: 900; border-radius: 8px; cursor: pointer; width: 100%; }
+
+        .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 14px; }
+        @media (min-width: 768px) { .stats-grid { grid-template-columns: repeat(3, 1fr); } }
+        @media (min-width: 1024px) { .stats-grid { grid-template-columns: repeat(6, 1fr); } }
+        .stat-item { background: #fff; padding: 12px; border-radius: 8px; text-align: center; border: 1px solid #e2e8f0; display: flex; flex-direction: column; justify-content: center; }
+        .stat-item h3 { font-size: 11px; color: #64748b; margin-bottom: 4px; font-weight:bold;}
+        .stat-item p { font-size: 16px; font-weight: 900; font-family: monospace; margin:0;}
+
+        .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 8px; border: 1px solid #e2e8f0; max-height: 600px; overflow-y: auto; background:#fff;}
+        table { width: 100%; border-collapse: separate; border-spacing:0; font-size: 12px; min-width: 700px; }
+        th { background: #f8fafc; padding: 10px 4px; border-bottom: 2px solid #cbd5e1; color: #475569; white-space: nowrap; position: sticky; top: 0; z-index: 10;}
+        td { padding: 8px 4px; border-bottom: 1px solid #e2e8f0; text-align: center; vertical-align: middle; }
+        tr:hover td { background: #f1f5f9; }
+        
+        .badge { padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 11px; }
+        .bg-green { background: #dcfce7; color: #166534; }
+        .bg-red { background: #fee2e2; color: #991b1b; }
+        .bg-yellow { background: #fef9c3; color: #854d0e; }
+
+        .num-container { display: flex; gap: 3px; justify-content: center; flex-wrap: wrap; }
+        .num-ball { width: var(--ball-size); height: var(--ball-size); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 900; font-family: monospace; }
+        .draw-ball { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #78350f; border: 1px solid #b45309; }
+
+        .btn-tbl-action { background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 4px; padding: 2px 6px; cursor: pointer; font-size: 11px; font-weight: bold; }
+        .btn-tbl-action:hover { background: #e2e8f0; }
 
         /* ==========================================
-           9. 終極單碼 AI 透視專區 (Single Ball Quant Terminal)
+           單碼量化透視專區樣式 (Clean UI)
            ========================================== */
-        .single-ball-dashboard { background: linear-gradient(135deg, #1f2937, #0f172a); color: #fff; padding: 20px; border-radius: 12px; border: 1px solid #334155; margin-bottom: 16px; box-shadow: 0 8px 25px rgba(0,0,0,0.3); animation: fadeIn 0.5s ease-out; }
-        .single-ball-dashboard h3 { margin-bottom: 16px; font-size: 18px; display: flex; align-items: center; gap: 10px; color: #f97316; border-bottom: 1px solid #334155; padding-bottom: 10px;}
+        .sb-dash-header { display: flex; align-items: center; gap: 10px; font-size: 16px; font-weight: 900; color: var(--orange-color); border-bottom: 2px solid #f1f5f9; padding-bottom: 10px; margin-bottom: 14px; }
+        .sb-ball-circle { width: 30px; height: 30px; border-radius: 50%; background: var(--orange-color); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 16px; box-shadow: 0 2px 6px rgba(234,88,12,0.3); }
         
-        .sb-prob-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 16px;}
+        .sb-prob-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 14px;}
         @media (min-width: 768px) { .sb-prob-grid { grid-template-columns: repeat(5, 1fr); } }
-        .sb-prob-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 12px; text-align: center; backdrop-filter: blur(4px); transition:0.2s; }
-        .sb-prob-card:hover { background: rgba(255,255,255,0.1); transform:translateY(-2px); }
-        .sb-prob-card h4 { font-size: 12px; color: #94a3b8; margin-bottom: 6px; font-weight: 900;}
-        .sb-prob-card p { font-size: 18px; font-weight: 900; margin: 0; color: #38bdf8;}
-        .sb-prob-card p.hot { color: #f87171; text-shadow: 0 0 8px rgba(248,113,113,0.5); }
-        .sb-prob-card p.cold { color: #818cf8; }
-
-        .sb-status-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 20px; }
-        @media (min-width: 768px) { .sb-status-grid { grid-template-columns: repeat(4, 1fr); } }
-        .sb-status-item { background: #1e293b; padding: 12px; border-radius: 10px; border-left: 5px solid #f97316; box-shadow: 0 2px 6px rgba(0,0,0,0.2); }
-        .sb-status-item h4 { font-size: 12px; color: #94a3b8; margin-bottom: 4px; font-weight:900;}
-        .sb-status-item p { font-size: 16px; font-weight: 900; margin:0; color:#fff;}
+        .sb-prob-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
+        .sb-prob-card h4 { font-size: 11px; color: #64748b; margin-bottom: 4px; font-weight: bold;}
+        .sb-prob-card p { font-size: 18px; font-weight: 900; margin: 0; color: #0f172a;}
         
-        .roster-grid { display: grid; grid-template-columns: 1fr; gap: 14px; margin-top: 20px; }
+        .accel-tag { font-size: 11px; font-weight: bold; margin-top: 4px; }
+        .accel-up { color: #dc2626; }
+        .accel-dn { color: #059669; }
+
+        .sb-trend-banner { padding: 8px 12px; border-radius: 6px; margin-bottom: 14px; font-size: 13px; font-weight: bold; text-align: center; border: 1px solid; }
+        .trend-bull { background: #fef2f2; border-color: #fca5a5; color: #b91c1c; }
+        .trend-bear { background: #ecfdf5; border-color: #6ee7b7; color: #047857; }
+
+        .roster-grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 14px; }
         @media (min-width: 768px) { .roster-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (min-width: 1024px) { .roster-grid { grid-template-columns: repeat(4, 1fr); } }
-        .roster-card { border-radius: 10px; padding: 14px; border: 1px solid #334155; background: rgba(0,0,0,0.3); box-shadow: inset 0 0 20px rgba(0,0,0,0.2); }
-        .roster-card h4 { font-size: 15px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.1); font-weight:900; text-align:center;}
-        .roster-card.s-class { box-shadow: inset 0 0 30px rgba(239, 68, 68, 0.1); }
-        .roster-card.s-class h4 { color: #f87171; border-color: rgba(248,113,113,0.3); text-shadow: 0 0 10px rgba(248,113,113,0.5); }
-        .roster-card.a-class { box-shadow: inset 0 0 30px rgba(16, 185, 129, 0.05); }
-        .roster-card.a-class h4 { color: #34d399; border-color: rgba(52,211,153,0.3); }
-        .roster-card.b-class h4 { color: #94a3b8; border-color: rgba(148,163,184,0.3); }
-        .roster-card.c-class h4 { color: #dc2626; border-color: rgba(220,38,38,0.3); }
+        .roster-card { border-radius: 8px; padding: 14px; border: 1px solid #e2e8f0; background: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .roster-card h4 { font-size: 14px; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 2px solid #f1f5f9; font-weight:900; text-align:center;}
+        .roster-card.s-class h4 { color: #dc2626; border-color: #fca5a5; }
+        .roster-card.a-class h4 { color: #059669; border-color: #6ee7b7; }
+        .roster-card.b-class h4 { color: #64748b; border-color: #cbd5e1; }
+        .roster-card.c-class h4 { color: #1e293b; border-color: #94a3b8; }
         
-        .ball-badge-wrap { display: flex; flex-wrap: wrap; gap: 8px; justify-content:center;}
-        .ball-badge { display: flex; flex-direction: column; align-items: center; background: #1e293b; border: 1.5px solid #475569; padding: 6px 8px; border-radius: 8px; min-width: 50px; transition:0.2s;}
-        .ball-badge:hover { transform:scale(1.1); z-index:2;}
-        .ball-badge .b-num { font-size: 16px; font-weight: 900; color: #fff; font-family:monospace; }
-        .ball-badge .b-prob { font-size: 11px; color: #94a3b8; font-weight:bold; margin-top:2px;}
+        .ball-badge-wrap { display: flex; flex-wrap: wrap; gap: 6px; justify-content:center;}
+        .ball-badge { display: flex; flex-direction: column; align-items: center; background: #f8fafc; border: 1px solid #cbd5e1; padding: 4px 8px; border-radius: 6px; min-width: 48px;}
+        .ball-badge .b-num { font-size: 15px; font-weight: 900; color: #0f172a; }
+        .ball-badge .b-prob { font-size: 10px; color: #64748b; font-weight:bold; }
         
-        .s-class .ball-badge { border-color: #ef4444; background: linear-gradient(to bottom, rgba(239,68,68,0.1), rgba(239,68,68,0.2)); box-shadow: 0 0 10px rgba(239,68,68,0.2); }
-        .s-class .ball-badge .b-num { color: #fca5a5; }
-        .s-class .ball-badge .b-prob { color: #f87171; }
-        .a-class .ball-badge { border-color: #10b981; background: linear-gradient(to bottom, rgba(16,185,129,0.05), rgba(16,185,129,0.15)); }
-        .a-class .ball-badge .b-num { color: #6ee7b7; }
-        .a-class .ball-badge .b-prob { color: #34d399; }
-        .c-class .ball-badge { opacity: 0.5; filter: grayscale(1); }
+        .s-class .ball-badge { border-color: #fca5a5; background: #fef2f2; box-shadow: 0 0 6px rgba(220,38,38,0.2); }
+        .s-class .ball-badge .b-num { color: #b91c1c; }
+        .a-class .ball-badge { border-color: #6ee7b7; background: #ecfdf5; }
+        .a-class .ball-badge .b-num { color: #047857; }
+        .c-class .ball-badge { opacity: 0.6; background:#e2e8f0; }
 
-        .gateway-banner { padding: 16px; border-radius: 10px; margin-bottom: 16px; font-weight: 900; font-size: 16px; text-align: center; border: 2px solid; box-shadow: 0 4px 15px rgba(0,0,0,0.2); letter-spacing:0.5px;}
-        .gateway-go { background: #ecfdf5; color: #065f46; border-color: #10b981; text-shadow:0 1px 0 rgba(255,255,255,0.5);}
-        .gateway-nogo { background: #fef2f2; color: #b91c1c; border-color: #ef4444; text-shadow:0 1px 0 rgba(255,255,255,0.5);}
+        .gateway-banner { padding: 14px; border-radius: 8px; margin-bottom: 14px; font-weight: 900; font-size: 15px; text-align: center; border: 2px solid; }
+        .gateway-go { background: #ecfdf5; color: #065f46; border-color: #10b981; }
+        .gateway-nogo { background: #fef2f2; color: #b91c1c; border-color: #ef4444; }
 
-        /* 讀取狀態遮罩 */
-        #global-loader { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.9); z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center; }
-        .loader-spinner { width: 50px; height: 50px; border: 5px solid #e2e8f0; border-top-color: var(--primary-color); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom:16px;}
+        #global-loader { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.95); z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center; transition: opacity 0.3s; }
+        .loader-spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top-color: var(--primary-color); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom:12px;}
         @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
-<!-- 全局載入遮罩 -->
 <div id="global-loader">
     <div class="loader-spinner"></div>
-    <h2 style="color:var(--text-main); font-weight:900;">☁️ 雲端數據庫同步中...</h2>
-    <p style="color:var(--text-muted); font-size:13px; font-weight:bold; margin-top:8px;">正在掛載 2007 年至今之全歷史資料</p>
+    <h2 style="color:var(--text-main); font-weight:900; font-size:18px;">☁️ 雲端數據庫同步中...</h2>
 </div>
 
 <div class="container">
@@ -256,8 +244,8 @@
         <button id="btn-539-1800" class="mode-btn" onclick="switchSpace('539-1800')">五三九 1800碰</button>
         <button id="btn-539-9000" class="mode-btn" onclick="switchSpace('539-9000')">五三九 9000碰</button>
         <button id="btn-arena" class="mode-btn arena-btn active" onclick="switchSpace('arena')">⚔️ 決策矩陣</button>
-        <button id="btn-ledger" class="mode-btn ledger-btn" onclick="switchSpace('ledger')">📝 真實下注</button>
-        <button id="btn-single-ball" class="mode-btn single-btn" onclick="switchSpace('single-ball')">🎯 單碼 AI 透視</button>
+        <button id="btn-ledger" class="mode-btn ledger-btn" onclick="switchSpace('ledger')">📝 實戰獵人</button>
+        <button id="btn-single-ball" class="mode-btn single-btn" onclick="switchSpace('single-ball')">🎯 單碼透視</button>
     </div>
 
     <!-- ========================================== -->
@@ -265,64 +253,69 @@
     <!-- ========================================== -->
     <div id="single-ball-panel" style="display:none;">
         <div class="panel">
-            <div class="panel-title">🎯 39 碼全盤量化雷達與行動閘門 (2007年全歷史對齊)</div>
-            <div style="font-size:12px; color:#64748b; margin-bottom:14px; font-weight:bold; line-height:1.6;">
-                結合生存函數 PR 值、拖牌共伴引力、BIAS 乖離率與回馬槍群聚係數，一鍵解鎖今晚能不能下柱的最終判決！
+            <div class="panel-title">🎯 39 碼全盤量化雷達與行動閘門</div>
+            <div style="font-size:11px; color:#64748b; margin-bottom:12px; font-weight:bold; line-height:1.5;">
+                結合動態加速度與多空排列，一鍵解鎖今晚能不能下柱的最終判決！
             </div>
             
-            <div class="form-row" style="background: #f8fafc; padding: 14px; border-radius: 10px; border: 1.5px solid #e2e8f0; align-items: flex-end;">
+            <div class="form-row" style="background: #f8fafc; padding: 12px; border-radius: 8px; border: 1px solid #e2e8f0; align-items: flex-end;">
                 <div class="form-group" style="flex:2;">
                     <label>🎯 選擇資料庫 (決定母體)</label>
-                    <select id="sb-input-space" style="color: var(--purple-color); font-weight:900; font-size:14px;">
-                        <option value="539-9000">📊 五三九 全資料庫 (推薦)</option>
+                    <select id="sb-input-space" style="color: var(--purple-color); font-weight:bold;">
+                        <option value="539-9000">📊 五三九 全資料庫</option>
                         <option value="tt-9000">🚀 天天樂 全資料庫</option>
                     </select>
                 </div>
                 <div class="form-group" style="flex:1;">
-                    <label>🔍 查單碼 (可留空)</label>
-                    <input type="number" id="sb-input-ball" min="1" max="39" placeholder="例: 07" style="font-size:18px; font-weight:900; text-align:center; color:#ea580c; border-color:#fdba74;">
+                    <label>🔍 查單碼 (1~39)</label>
+                    <input type="number" id="sb-input-ball" min="1" max="39" placeholder="例: 07" style="text-align:center; color:#ea580c;">
                 </div>
-                <button class="btn-main" onclick="executeSingleBallScan()" style="background: #cbd5e1; color:#1e293b; flex:1; height: 42px; box-shadow:none;">🔍 查單碼</button>
-                <button class="btn-main" onclick="scanAll39Balls()" style="background: linear-gradient(135deg, #ea580c, #c2410c); flex:2; height: 42px;">🔮 一鍵掃描 39 碼分級</button>
+                <button class="btn-main" onclick="executeSingleBallScan()" style="background: #cbd5e1; color:#1e293b; flex:1;">🔍 查詢</button>
+                <button class="btn-main" onclick="scanAll39Balls()" style="background: var(--orange-color); flex:2;">🔮 一鍵掃描 39 碼分級</button>
             </div>
         </div>
 
         <!-- 單碼查詢結果 -->
         <div id="sb-result-container" style="display:none;">
-            <div class="single-ball-dashboard">
-                <h3><span id="sb-title-ball" style="background:#fff; color:#ea580c; border-radius:50%; width:28px; height:28px; display:inline-flex; align-items:center; justify-content:center; font-weight:900; font-size:16px; margin-right:6px; box-shadow:0 0 10px rgba(255,255,255,0.2);">07</span> 號碼高維度量化透視</h3>
+            <div class="panel">
+                <div class="sb-dash-header">
+                    <div class="sb-ball-circle" id="sb-title-ball">07</div>
+                    <div>號碼動能與機率透視</div>
+                </div>
+
+                <div id="sb-trend-banner" class="sb-trend-banner" style="display:none;"></div>
+
                 <div class="sb-prob-grid">
-                    <div class="sb-prob-card"><h4>歷史總機率</h4><p id="sb-p-all">--%</p><div style="font-size:10px; color:#64748b; margin-top:4px;">(絕對基因)</div></div>
-                    <div class="sb-prob-card"><h4>生存 PR 值</h4><p id="sb-p-pr">--%</p><div style="font-size:10px; color:#64748b; margin-top:4px;">(幾何極限)</div></div>
-                    <div class="sb-prob-card"><h4>BIAS 乖離</h4><p id="sb-p-bias">--%</p><div style="font-size:10px; color:#64748b; margin-top:4px;">(動能狀態)</div></div>
-                    <div class="sb-prob-card"><h4>拖牌共伴分</h4><p id="sb-p-drag">--</p><div style="font-size:10px; color:#64748b; margin-top:4px;">(跨期引力)</div></div>
-                    <div class="sb-prob-card"><h4>回馬槍指數</h4><p id="sb-p-cluster">--</p><div style="font-size:10px; color:#64748b; margin-top:4px;">(連莊抗性)</div></div>
+                    <div class="sb-prob-card"><h4>歷史總均線</h4><p id="sb-p-all">--%</p><div style="font-size:10px; color:#64748b; margin-top:4px;">(基準值)</div></div>
+                    <div class="sb-prob-card"><h4>今年度機率</h4><p id="sb-p-year">--%</p><div style="font-size:10px; color:#64748b; margin-top:4px;">(年度趨勢)</div></div>
+                    <div class="sb-prob-card"><h4>近 100 期</h4><p id="sb-p-100">--%</p><div style="font-size:10px; color:#64748b; margin-top:4px;">(季線動能)</div></div>
+                    <div class="sb-prob-card"><h4>近 50 期</h4><p id="sb-p-50">--%</p><div style="font-size:10px; color:#64748b; margin-top:4px;">(月線動能)</div></div>
+                    <div class="sb-prob-card">
+                        <h4>近 30 期</h4><p id="sb-p-30">--%</p>
+                        <div id="sb-accel-tag" class="accel-tag"></div>
+                    </div>
                 </div>
-                <div class="sb-status-grid">
-                    <div class="sb-status-item"><h4>當前遺漏期數</h4><p id="sb-miss-curr" style="color:#fcd34d;">0 期</p></div>
-                    <div class="sb-status-item" style="border-left-color:#3b82f6;"><h4>歷史最大遺漏</h4><p id="sb-miss-max">0 期</p></div>
-                    <div class="sb-status-item" style="border-left-color:#8b5cf6;"><h4>馬可夫條件勝率</h4><p id="sb-markov">0.0%</p></div>
-                    <div class="sb-status-item" style="border-left-color:#ef4444;"><h4>極限壓力閥</h4><p id="sb-pressure">0%</p></div>
-                </div>
-                <div style="background:#020617; padding:16px; border-radius:10px; border:1px solid #334155; box-shadow: inset 0 0 20px rgba(0,0,0,0.5);">
-                    <h4 style="color:#e2e8f0; font-size:14px; margin-bottom:12px; border-bottom:1px solid #334155; padding-bottom:8px; display:flex; align-items:center; gap:6px;">🤖 單碼專屬六大巨頭診斷</h4>
+                
+                <div style="background:#f8fafc; padding:12px; border-radius:8px; border:1px solid #e2e8f0;">
+                    <h4 style="color:#0f172a; font-size:13px; margin-bottom:8px; border-bottom:2px solid #e2e8f0; padding-bottom:6px;">🤖 綜合診斷與預測</h4>
                     <div class="giant-grid" id="sb-giants-container"></div>
-                    <div id="sb-final-verdict" style="margin-top:14px; padding:12px; border-radius:8px; font-size:14px; font-weight:bold; line-height:1.6;"></div>
+                    <div id="sb-final-verdict" style="margin-top:10px;"></div>
                 </div>
             </div>
         </div>
 
         <!-- 39碼全盤分級名冊 -->
         <div id="all-balls-roster-container" style="display:none;">
-            <div class="single-ball-dashboard" style="background: linear-gradient(135deg, #0f172a, #020617); border:1px solid #1e293b;">
-                <h3 style="color:#38bdf8; font-size:20px; border-bottom-color:#1e293b;">📋 39 碼全盤分級名冊與下注閘門判決</h3>
+            <div class="panel">
+                <div class="sb-dash-header">
+                    <div class="sb-ball-circle">📋</div>
+                    <div>39 碼全盤分級名冊與大盤閘門</div>
+                </div>
                 
                 <!-- 終極大盤閘門提醒 -->
-                <div id="market-gateway-alert" class="gateway-banner gateway-nogo">
-                    ⏳ 正在計算今晚大盤總閘門...
-                </div>
+                <div id="market-gateway-alert" class="gateway-banner gateway-nogo">⏳ 正在計算今晚大盤總閘門...</div>
 
-                <div style="font-size:12px; color:#94a3b8; margin-bottom:16px; line-height:1.6; background:rgba(0,0,0,0.3); padding:10px; border-radius:8px; border-left:3px solid #38bdf8;">
+                <div style="font-size:11px; color:#64748b; margin-bottom:12px; background:#f8fafc; padding:10px; border-radius:6px; border-left:3px solid #0284c7;">
                     <strong>【下注鐵律】</strong> 選號池中必須出現 S 級，或至少 3 顆以上 A 級，系統才會放行下注。<br>
                     <strong>【強制觀望】</strong> 若大盤閘門亮紅燈（滿眼 B/C 級），今晚一律 0 元觀望，絕不送錢！
                 </div>
@@ -330,7 +323,6 @@
             </div>
         </div>
     </div>
-
 
     <!-- ========================================== -->
     <!-- 模塊：決策矩陣 (Arena) -->
@@ -340,7 +332,7 @@
         <div class="guide-grid" id="guide-content">
             <div class="guide-item"><strong>① 數學家 (物理勝率)：</strong><br>該盤口的基礎過關機率。<span class="guide-target">🎯 達標亮綠門檻：目前勝率大於遊戲基礎機率。</span></div>
             <div class="guide-item"><strong>② 資金家 (凱利配置)：</strong><br>動態計算最佳注碼比例(Fractional Kelly)，對抗破產。<span class="guide-target">🎯 達標亮綠門檻：算定配置比例 f* > 0% 。</span></div>
-            <div class="guide-item"><strong>③ 贏家 (馬可夫轉移)：</strong><br>透過馬可夫鏈，精算盤口在「目前的連敗狀態下」，歷史上的反轉勝率。<span class="guide-target">🎯 達標亮綠門檻：動態反轉勝率大於基礎機率。</span></div>
+            <div class="guide-item"><strong>③ 贏家 (馬可夫轉移)：</strong><br>精算盤口在「目前的連敗狀態下」，歷史上的反轉勝率。<span class="guide-target">🎯 達標亮綠門檻：動態反轉勝率大於基礎機率。</span></div>
             <div class="guide-item"><strong>④ 銀行家 (偏離度 Z-Score)：</strong><br>測量連槓期數偏離平均值的嚴重程度。<span class="guide-target">🎯 達標亮綠門檻：數值大於或等於 0.5。</span></div>
             <div class="guide-item"><strong>⑤ 精算家 (波動與回撤防禦)：</strong><br>監控系統理論淨值最大回撤(Max Drawdown)與亂流。<span class="guide-target">🎯 達標亮綠門檻：資金曲線未進入極端亂流。</span></div>
             <div class="guide-item"><strong>⑥ 大莊家 (數學期望值 EV)：</strong><br>下注 1 元/碰 跑長期的平均賺賠金額。<span class="guide-target">🎯 達標亮綠門檻：期望值必須大於 0。</span></div>
@@ -363,7 +355,7 @@
         <div class="action-bar">
             <input type="password" id="input-pwd" placeholder="密碼 0000">
             <button class="btn-main" onclick="unlockSettings()" style="flex:1; background:#64748b;">解鎖修改</button>
-            <button class="btn-main" id="btn-save" onclick="saveSettings()" style="display: none; flex:2; background:#0284c7;">💾 儲存並更新高數預測</button>
+            <button class="btn-main" id="btn-save" onclick="saveSettings()" style="display: none; flex:2; background:#0284c7;">💾 儲存</button>
         </div>
     </div>
 
@@ -388,7 +380,7 @@
         </div>
         <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 8px; font-weight:bold;">批次匯入之歷史紀錄，預設真實下注皆為 0 (不計入實單損益)。</div>
         <textarea id="batch-text" placeholder="格式範例:\n2026-09-10 07 09 12 15 27\n2026-09-11 01 02 03 04 05"></textarea>
-        <button class="btn-main" onclick="batchImport()" style="background: linear-gradient(135deg, #7c3aed, #4f46e5); padding:14px;">⚡ 智慧解析並批次寫入資料庫</button>
+        <button class="btn-main" onclick="batchImport()" style="background: linear-gradient(135deg, #7c3aed, #4f46e5); padding:12px;">⚡ 智慧解析並批次寫入</button>
     </div>
 
     <!-- ========================================== -->
@@ -419,7 +411,7 @@
                 <input type="number" id="ledger-bet" step="1" min="0" value="0" style="background:#eff6ff; border-color:#bfdbfe; color:#1e3a8a;">
             </div>
         </div>
-        <button class="btn-main" onclick="saveLedger()" style="background: linear-gradient(135deg, #10b981, #059669); margin-bottom:16px; padding:14px;">💰 寫入真實帳本 (立即結算損益)</button>
+        <button class="btn-main" onclick="saveLedger()" style="background: linear-gradient(135deg, #10b981, #059669); margin-bottom:16px;">💰 寫入真實帳本 (結算損益)</button>
         
         <div class="ledger-stats-grid" id="ledger-summary-container">
             <div class="ledger-stat-card"><h4>實單下注期數</h4><p id="ledger-count">0 期</p></div>
@@ -428,8 +420,8 @@
             <div class="ledger-stat-card"><h4>全局真實淨損益</h4><p id="ledger-profit" style="color:#64748b;">$0</p></div>
         </div>
 
-        <div style="margin-top:24px; border-top:2px dashed #cbd5e1; padding-top:16px;">
-            <h3 style="font-size:16px; margin-bottom:12px; color:#0f172a; display:flex; align-items:center; gap:8px;">
+        <div style="margin-top:20px; border-top:2px dashed #cbd5e1; padding-top:16px;">
+            <h3 style="font-size:15px; margin-bottom:12px; color:#0f172a; display:flex; align-items:center; gap:6px;">
                 <span>🎯 獵人式狙擊引擎 (全自動鐵律派發)</span>
             </h3>
             <div class="rec-grid" id="ledger-recommendations-container">
@@ -457,7 +449,7 @@
                 <input type="number" id="input-mybet" step="1" min="0" value="0" style="background:#ecfdf5; border-color:#a7f3d0; color:#065f46;">
             </div>
         </div>
-        <button class="btn-main" onclick="addNewRecord()" style="padding:14px; font-size:15px;">☁️ 儲存資料庫並立即結算</button>
+        <button class="btn-main" onclick="addNewRecord()">☁️ 儲存資料庫並立即結算</button>
     </div>
 
     <div class="stats-grid" id="stats-container" style="display:none;"></div>
@@ -492,7 +484,7 @@
     let currentSpace = 'arena';
     let currentYear = new Date().getFullYear();
     let selectedYear = currentYear.toString();
-    let isDataLoaded = false; // 追蹤 Firebase 是否載入完成
+    let isDataLoaded = false; 
 
     let spaceConfigs = {
         'tt-1800': { name: '天天樂 1800碰', unitBet: 1, basePuffs: 1800, rebate: 37, unitPrize: 570, type: '1800' },
@@ -503,7 +495,6 @@
 
     let spaceData = { 'tt-1800': [], 'tt-9000': [], '539-1800': [], '539-9000': [] };
 
-    // 初始化 Config
     Object.keys(spaceConfigs).forEach(key => {
         let savedCfg = localStorage.getItem(`cfg_${key}`);
         if (savedCfg) spaceConfigs[key] = { ...spaceConfigs[key], ...JSON.parse(savedCfg) };
@@ -525,9 +516,6 @@
         if(currentSpace !== 'single-ball') switchSpace(currentSpace);
     };
 
-    // ==============================================================
-    // 基礎盤口檢查邏輯
-    // ==============================================================
     function check1800(balls) {
         if (!balls || !Array.isArray(balls)) return { puffs: 0, text: "錯誤", p1:0, p2:0, p3:0 };
         let p1=0, p2=0, p3=0;
@@ -567,9 +555,6 @@
         content.style.display = (content.style.display === "none" || content.style.display === "") ? "grid" : "none";
     };
 
-    // ==============================================================
-    // 畫面切換控制中樞
-    // ==============================================================
     window.switchSpace = function(spaceKey) {
         currentSpace = spaceKey;
         document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
@@ -594,7 +579,7 @@
 
         document.getElementById('single-ball-panel').style.display = isSingleBall ? 'block' : 'none';
 
-        if(!isDataLoaded) return; // 防呆：資料未載入完成前不執行運算
+        if(!isDataLoaded) return; 
 
         if (isArena) {
             renderSettingsPanel();
@@ -603,7 +588,7 @@
         } else if (isLedger) {
             renderLedgerSummary();
         } else if (isSingleBall) {
-            // 切換至單碼頁面時不主動掃描，等待使用者操作
+            // 等待手動掃描
         } else {
             document.getElementById('batch-target-space').value = spaceKey;
             renderMain();
@@ -611,11 +596,11 @@
     };
 
     // ==============================================================
-    // 🎯 核心升級：高維度單碼因子計算引擎 (融合生存函數、拖牌、BIAS、回馬槍)
+    // 🎯 核心演算法：單碼經驗貝氏平滑與量化指標
     // ==============================================================
     function computeAdvancedBallStats(target, data, cYear) {
         let totalDraws = data.length;
-        let hitsAll = 0, hitsYear = 0, hits100 = 0, hits50 = 0, hits30 = 0, hits10 = 0, hits60 = 0;
+        let hitsAll = 0, hitsYear = 0, hits100 = 0, hits50 = 0, hits30 = 0;
         let yearTotal = 0;
         
         let currentMissing = -1; 
@@ -624,7 +609,6 @@
 
         let reversedData = [...data].reverse();
 
-        // 1. 遺漏歷史與基礎機率
         reversedData.forEach((item) => {
             let isHit = item.draw.includes(target);
             if (isHit) {
@@ -646,59 +630,26 @@
             if (idx < 100 && isHit) hits100++;
             if (idx < 50 && isHit) hits50++;
             if (idx < 30 && isHit) hits30++;
-            if (idx < 10 && isHit) hits10++;
-            if (idx < 60 && isHit) hits60++;
         });
 
-        let probAll = totalDraws > 0 ? (hitsAll / totalDraws) * 100 : 0;
+        let baseProbRatio = totalDraws > 0 ? (hitsAll / totalDraws) : 0.1282;
+        let probAll = baseProbRatio * 100;
         let probYear = yearTotal > 0 ? (hitsYear / yearTotal) * 100 : 0;
         let prob100 = (hits100 / 100) * 100;
         let prob50 = (hits50 / 50) * 100;
         let prob30 = (hits30 / 30) * 100;
 
-        // 2. 生存函數 PR 值 (Survival Analysis)
-        let shorterCount = missingHistory.filter(m => m <= currentMissing).length;
-        let survivalPR = missingHistory.length > 0 ? (shorterCount / missingHistory.length) * 100 : 50;
+        let accel = prob30 - prob50;
+        let isBull = (prob30 >= prob50 && prob50 >= prob100 && prob30 > probAll);
+        let isBear = (prob30 <= prob50 && prob50 <= prob100 && prob30 < probAll);
+        let isOverheat = prob30 > (probAll * 1.5);
 
-        // 3. 動量乖離率 BIAS
-        let freq10 = hits10 / 10;
-        let freq60 = hits60 / 60;
-        let bias = freq60 > 0 ? ((freq10 - freq60) / freq60) * 100 : 0;
+        let avgMissing = missingHistory.length > 0 ? missingHistory.reduce((a,b)=>a+b,0)/missingHistory.length : 0;
+        let variance = missingHistory.reduce((acc, val) => acc + Math.pow(val - avgMissing, 2), 0) / missingHistory.length;
+        let stdDev = Math.sqrt(variance || 1);
+        let zScore = stdDev > 0 ? (currentMissing - avgMissing) / stdDev : 0;
 
-        // 4. 跨期共伴引力 (Lag-1 Drag-Along)
-        let dragScore = 50; 
-        if (data.length > 1) {
-            let lastDraw = data[0].draw; 
-            let coOccurHits = 0;
-            let coOccurTotal = 0;
-            for (let i = 1; i < data.length; i++) {
-                let prevDraw = data[i].draw;
-                let curDraw = data[i-1].draw;
-                let overlap = lastDraw.some(n => prevDraw.includes(n));
-                if (overlap) {
-                    coOccurTotal++;
-                    if (curDraw.includes(target)) coOccurHits++;
-                }
-            }
-            if (coOccurTotal > 20) {
-                let coProb = (coOccurHits / coOccurTotal) * 100;
-                dragScore = probAll > 0 ? Math.min(100, Math.max(0, (coProb / probAll) * 50)) : 50;
-            }
-        }
-
-        // 5. 回馬槍群聚係數 (Clustering Index)
-        let clusterHits = 0;
-        let totalHitsForCluster = missingHistory.length;
-        for (let i = 0; i < reversedData.length - 2; i++) {
-            if (reversedData[i].draw.includes(target)) {
-                if (reversedData[i+1].draw.includes(target) || reversedData[i+2].draw.includes(target)) {
-                    clusterHits++;
-                }
-            }
-        }
-        let clusterIndex = totalHitsForCluster > 0 ? (clusterHits / totalHitsForCluster) * 100 : 10;
-
-        // 6. 馬可夫條件勝率
+        // 馬可夫平滑條件機率
         let markovHit = 0, markovMiss = 0, mMissTracker = 0;
         reversedData.forEach((item, idx) => {
             let isHit = item.draw.includes(target);
@@ -707,22 +658,33 @@
             }
             if (isHit) mMissTracker = 0; else mMissTracker++;
         });
-        let probMarkov = ((markovHit + 0.15) / (markovHit + markovMiss + 1)) * 100;
+        let probMarkov = ((markovHit + baseProbRatio) / (markovHit + markovMiss + 1)) * 100;
 
-        let avgMissing = missingHistory.length > 0 ? missingHistory.reduce((a,b)=>a+b,0)/missingHistory.length : 0;
-        let maxMissing = Math.max(...missingHistory, currentMissing);
-        let variance = missingHistory.reduce((acc, val) => acc + Math.pow(val - avgMissing, 2), 0) / missingHistory.length;
-        let stdDev = Math.sqrt(variance || 1);
-        let zScore = stdDev > 0 ? (currentMissing - avgMissing) / stdDev : 0;
-        let pressureRatio = maxMissing > 0 ? (currentMissing / maxMissing) * 100 : 0;
+        // 跨期共伴引力 (拖牌聯合機率)
+        let dragScoreProb = probAll;
+        if (data.length > 1) {
+            let lastDraw = data[0].draw;
+            let coOccurHits = 0, coOccurTotal = 0;
+            for (let i = 1; i < Math.min(data.length, 300); i++) {
+                let prevDraw = data[i].draw;
+                let curDraw = data[i-1].draw;
+                if (lastDraw.some(n => prevDraw.includes(n))) {
+                    coOccurTotal++;
+                    if (curDraw.includes(target)) coOccurHits++;
+                }
+            }
+            if (coOccurTotal > 15) {
+                dragScoreProb = (coOccurHits / coOccurTotal) * 100;
+            }
+        }
 
-        // 綜合預測開出率 (加權融合)
-        let nextDrawPrediction = (probMarkov * 0.35) + (prob30 * 0.25) + (survivalPR * 0.2) + (dragScore * 0.2);
+        // 綜合開出率預測 (純機率加權，完美保持在 5%~25% 尺度)
+        let nextDrawPrediction = (probMarkov * 0.35) + (prob30 * 0.35) + (dragScoreProb * 0.15) + (probAll * 0.15);
 
         return {
             probAll, probYear, prob100, prob50, prob30,
-            survivalPR, bias, dragScore, clusterIndex,
-            currentMissing, maxMissing, zScore, probMarkov, pressureRatio, nextDrawPrediction
+            accel, isBull, isBear, isOverheat,
+            currentMissing, zScore, probMarkov, nextDrawPrediction
         };
     }
 
@@ -761,67 +723,84 @@
         document.getElementById('sb-p-50').innerHTML = formatProb(stats.prob50, stats.probAll);
         document.getElementById('sb-p-30').innerHTML = formatProb(stats.prob30, stats.probAll);
         
-        document.getElementById('sb-p-pr').innerHTML = stats.survivalPR.toFixed(1) + '%';
-        document.getElementById('sb-p-bias').innerHTML = (stats.bias >= 0 ? '+' : '') + stats.bias.toFixed(1) + '%';
-        document.getElementById('sb-p-drag').innerHTML = stats.dragScore.toFixed(0);
-        document.getElementById('sb-p-cluster').innerHTML = stats.clusterIndex.toFixed(0);
+        let accelEl = document.getElementById('sb-accel-tag');
+        if (stats.accel > 0) {
+            accelEl.innerHTML = `(<span class="accel-up">+${stats.accel.toFixed(1)}%</span>)`;
+        } else {
+            accelEl.innerHTML = `(<span class="accel-dn">${stats.accel.toFixed(1)}%</span>)`;
+        }
 
-        document.getElementById('sb-miss-curr').innerText = `${stats.currentMissing} 期`;
-        document.getElementById('sb-miss-max').innerText = `${stats.maxMissing} 期`;
-        document.getElementById('sb-markov').innerText = stats.probMarkov.toFixed(1) + '%';
-        document.getElementById('sb-pressure').innerText = stats.pressureRatio.toFixed(1) + '%';
+        let trendBanner = document.getElementById('sb-trend-banner');
+        if (stats.isOverheat) {
+            trendBanner.style.display = 'block';
+            trendBanner.className = 'sb-trend-banner trend-bull';
+            trendBanner.innerHTML = '⚠️ 高檔極端過熱，嚴防均值回歸 (退潮風險)';
+        } else if (stats.isBull) {
+            trendBanner.style.display = 'block';
+            trendBanner.className = 'sb-trend-banner trend-bull';
+            trendBanner.innerHTML = '🚀 完美多頭排列 (主升段動能加速)';
+        } else if (stats.isBear) {
+            trendBanner.style.display = 'block';
+            trendBanner.className = 'sb-trend-banner trend-bear';
+            trendBanner.innerHTML = '📉 死亡空頭排列 (動能持續探底)';
+        } else {
+            trendBanner.style.display = 'none';
+        }
+
+        let p = stats.nextDrawPrediction;
+        let z = stats.zScore;
+        let isS = (p >= 18.0 && z >= 1.5);
+        let isA = (p >= 14.0 && p < 18.0);
+        let isC = (p < 11.0 || stats.currentMissing <= 1);
 
         let g1Color = stats.prob30 < stats.probAll ? 'highlight' : 'danger';
         let g1Text = stats.prob30 < stats.probAll ? '低檔補漲拉力強' : '高檔過熱需冷卻';
-        let g2Color = stats.bias > 0 ? 'highlight' : 'danger';
-        let g2Text = stats.bias > 0 ? '動能點火(強勢)' : '動能熄滅(弱勢)';
+        let g2Color = stats.accel > 0 ? 'highlight' : 'danger';
+        let g2Text = stats.accel > 0 ? `加速中 (+${stats.accel.toFixed(1)}%)` : `衰退中 (${stats.accel.toFixed(1)}%)`;
         let g3Color = stats.probMarkov > stats.probAll ? 'highlight' : 'danger';
         let g3Text = `${stats.probMarkov.toFixed(1)}% (條件勝率)`;
-        let g4Color = stats.survivalPR >= 90 ? 'highlight' : (stats.survivalPR <= 20 ? 'danger' : '');
-        let g4Text = stats.survivalPR >= 90 ? '生存極限反轉(PR≥90)' : `PR值 ${stats.survivalPR.toFixed(0)}%`;
-        let g5Color = stats.dragScore >= 60 ? 'highlight' : 'danger';
-        let g5Text = stats.dragScore >= 60 ? '強烈跨期引力' : '拖牌引力偏弱';
-        let g6Color = stats.nextDrawPrediction >= 14 ? 'highlight' : 'danger';
-        let g6Text = `${stats.nextDrawPrediction.toFixed(1)}% (綜合預測)`;
+        let g4Color = z >= 1.5 ? 'highlight' : (z <= -0.5 ? 'danger' : '');
+        let g4Text = z >= 1.5 ? `極端乾旱(Z=${z.toFixed(2)})` : `正常區間(Z=${z.toFixed(2)})`;
+        let g5Color = stats.isBull ? 'highlight' : (stats.isBear ? 'danger' : '');
+        let g5Text = stats.isBull ? '多頭排列' : (stats.isBear ? '空頭排列' : '震盪整理');
+        let g6Color = (isS || isA) ? 'highlight' : 'danger';
+        let g6Text = `${p.toFixed(1)}% (綜合預測)`;
 
         document.getElementById('sb-giants-container').innerHTML = `
-            <div class="giant-card ${g1Color}"><div class="g-title">①數學家(均值回歸)</div><div class="g-val" style="font-size:11px;">${g1Text}</div></div>
-            <div class="giant-card ${g2Color}"><div class="g-title">②資金家(BIAS乖離)</div><div class="g-val" style="font-size:11px;">${g2Text}</div></div>
+            <div class="giant-card ${g1Color}"><div class="g-title">①數學家(均值回歸)</div><div class="g-val">${g1Text}</div></div>
+            <div class="giant-card ${g2Color}"><div class="g-title">②資金家(動態加速)</div><div class="g-val">${g2Text}</div></div>
             <div class="giant-card ${g3Color}"><div class="g-title">③贏家(馬可夫慣性)</div><div class="g-val">${g3Text}</div></div>
-            <div class="giant-card ${g4Color}"><div class="g-title">④銀行家(生存PR值)</div><div class="g-val" style="font-size:11px;">${g4Text}</div></div>
-            <div class="giant-card ${g5Color}"><div class="g-title">⑤精算家(拖牌引力)</div><div class="g-val" style="font-size:11px;">${g5Text}</div></div>
+            <div class="giant-card ${g4Color}"><div class="g-title">④銀行家(Z-Score)</div><div class="g-val">${g4Text}</div></div>
+            <div class="giant-card ${g5Color}"><div class="g-title">⑤精算家(多空生命線)</div><div class="g-val">${g5Text}</div></div>
             <div class="giant-card ${g6Color}"><div class="g-title">⑥大莊家(下期預測)</div><div class="g-val">${g6Text}</div></div>
         `;
 
         let verdictTitle, verdictDesc, verdictColor;
-        let p = stats.nextDrawPrediction;
-        let z = stats.zScore;
-
-        if (p >= 18 && z >= 1.5) {
+        if (isS) {
             verdictTitle = "🔥 S 級 (極端爆發 / 必選主力)";
-            verdictDesc = `【診斷】六大維度共振！生存 PR 逼近極限且預測開出率高達 ${p.toFixed(1)}%。絕對的主力進場牌！`;
-            verdictColor = "background: rgba(239, 68, 68, 0.2); color: #fca5a5; border: 1px solid #ef4444; box-shadow: 0 0 15px rgba(239, 68, 68, 0.3);";
-        } else if (p >= 14 && p < 18) {
+            verdictDesc = `【診斷】極其罕見的高勝率買點！均線多頭且具備極端 Z-Score (${z.toFixed(2)})。主力下注，強烈推薦！`;
+            verdictColor = "background:#fef2f2; color:#b91c1c; border:1px solid #fca5a5; padding:10px; border-radius:6px; font-weight:bold;";
+        } else if (isA) {
             verdictTitle = "🟢 A 級 (優質候選 / 穩定佈局)";
-            verdictDesc = `【診斷】開出率 ${p.toFixed(1)}%，明顯優於大盤均值，正期望值確立。適合做為核心副牌。`;
-            verdictColor = "background: rgba(16, 185, 129, 0.2); color: #6ee7b7; border: 1px solid #10b981;";
-        } else if (p < 11) {
+            verdictDesc = `【診斷】預測機率 ${p.toFixed(1)}%，明顯優於大盤平均，數學期望值轉正。適合做為核心副牌佈局。`;
+            verdictColor = "background:#ecfdf5; color:#047857; border:1px solid #6ee7b7; padding:10px; border-radius:6px; font-weight:bold;";
+        } else if (isC) {
             verdictTitle = "🔴 C 級 (極端危險 / 嚴格剔除)";
-            verdictDesc = `【診斷】預測開出率僅 ${p.toFixed(1)}%。動能熄滅且處於冷卻期。一律不碰，直接剃除！`;
-            verdictColor = "background: rgba(220, 38, 38, 0.2); color: #f87171; border: 1px solid #b91c1c;";
+            verdictDesc = `【診斷】開出率不足或處於冷卻期。一律不碰，直接剔除！`;
+            verdictColor = "background:#f1f5f9; color:#475569; border:1px solid #cbd5e1; padding:10px; border-radius:6px; font-weight:bold;";
         } else {
             verdictTitle = "⚪ B 級 (溫和盤整 / 中性觀望)";
-            verdictDesc = `【診斷】開出率 ${p.toFixed(1)}%。不強也不弱的隨機雜訊區間。不主動下注。`;
-            verdictColor = "background: rgba(148, 163, 184, 0.2); color: #cbd5e1; border: 1px solid #64748b;";
+            verdictDesc = `【診斷】隨機雜訊區間。不強也不弱，無數學優勢。不主動下注。`;
+            verdictColor = "background:#ffffff; color:#64748b; border:1px solid #e2e8f0; padding:10px; border-radius:6px; font-weight:bold;";
         }
 
         let verdictDiv = document.getElementById('sb-final-verdict');
-        verdictDiv.style = verdictColor + " margin-top:14px; padding:12px; border-radius:8px; font-size:14px; font-weight:bold; line-height:1.6;";
-        verdictDiv.innerHTML = `<div style="font-size:15px; margin-bottom:6px;">${verdictTitle}</div><div style="font-size:12px; font-weight:normal;">${verdictDesc}</div>`;
+        verdictDiv.style = verdictColor;
+        verdictDiv.innerHTML = `<div style="font-size:14px; margin-bottom:4px;">${verdictTitle}</div><div style="font-size:12px; font-weight:normal;">${verdictDesc}</div>`;
     };
 
     // ==============================================================
-    // 🎯 2. 一鍵掃描 39 碼全盤分級與「下注閘門」判決
+    // 🎯 2. 一鍵掃描 39 碼全盤分級與大盤閘門判決
     // ==============================================================
     window.scanAll39Balls = function() {
         let spaceKey = document.getElementById('sb-input-space').value;
@@ -835,7 +814,6 @@
         let cYear = new Date().getFullYear().toString();
         let sClass = [], aClass = [], bClass = [], cClass = [];
 
-        // 執行 39 次量子掃描
         for (let target = 1; target <= 39; target++) {
             let stats = computeAdvancedBallStats(target, data, cYear);
             let p = stats.nextDrawPrediction;
@@ -844,17 +822,19 @@
             let ballStr = String(target).padStart(2, '0');
             let obj = { ball: ballStr, prob: p.toFixed(1), z: isNaN(z) ? 0 : z.toFixed(2) };
 
-            if (p >= 18 && z >= 1.5) sClass.push(obj);
-            else if (p >= 14 && p < 18) aClass.push(obj);
-            else if (p < 11) cClass.push(obj);
+            let isS = (p >= 18.0 && z >= 1.5);
+            let isA = (p >= 14.0 && p < 18.0);
+            let isC = (p < 11.0 || stats.currentMissing <= 1);
+
+            if (isS) sClass.push(obj);
+            else if (isA) aClass.push(obj);
+            else if (isC) cClass.push(obj);
             else bClass.push(obj);
         }
 
-        // 排序：機率由高到低
         let sortDesc = (a, b) => b.prob - a.prob;
         sClass.sort(sortDesc); aClass.sort(sortDesc); bClass.sort(sortDesc); cClass.sort(sortDesc);
 
-        // 🌟 終極大盤閘門邏輯判定：必須有至少 1 顆 S 級，或至少 3 顆 A 級
         let canBet = (sClass.length >= 1 || aClass.length >= 3);
         let gatewayAlert = document.getElementById('market-gateway-alert');
         
@@ -872,13 +852,13 @@
             <div class="roster-card s-class">
                 <h4>🔥 S 級 (${sClass.length} 顆)</h4>
                 <div class="ball-badge-wrap">
-                    ${sClass.length > 0 ? sClass.map(renderBadge).join('') : '<span style="color:#64748b; font-size:12px;">(目前無)</span>'}
+                    ${sClass.length > 0 ? sClass.map(renderBadge).join('') : '<span style="color:#94a3b8; font-size:12px; font-weight:bold; margin-top:8px;">(極度稀有，目前無)</span>'}
                 </div>
             </div>
             <div class="roster-card a-class">
                 <h4>🟢 A 級 (${aClass.length} 顆)</h4>
                 <div class="ball-badge-wrap">
-                    ${aClass.length > 0 ? aClass.map(renderBadge).join('') : '<span style="color:#64748b; font-size:12px;">(目前無)</span>'}
+                    ${aClass.length > 0 ? aClass.map(renderBadge).join('') : '<span style="color:#94a3b8; font-size:12px; font-weight:bold; margin-top:8px;">(目前無優質號碼)</span>'}
                 </div>
             </div>
             <div class="roster-card b-class">
@@ -996,9 +976,9 @@
                     <div class="radar-card">
                         <h4>
                             <span>📡 ${r.gameName} 偏態監控 (3顆以上)</span>
-                            <span style="font-size:11px; color:#64748b;">目前大盤連漏 ${r.tripleLosingStreak} 期</span>
+                            <span style="font-size:11px; color:#64748b;">目前連漏 ${r.tripleLosingStreak} 期</span>
                         </h4>
-                        <div style="margin-bottom:8px;">大盤偏態爆發機率：<span class="radar-highlight">${(r.tripleNextProb * 100).toFixed(1)}%</span></div>
+                        <div style="margin-bottom:8px;">大盤爆發機率：<span class="radar-highlight">${(r.tripleNextProb * 100).toFixed(1)}%</span></div>
                         <div class="col-prob-grid">
                             <div class="col-prob-item ${getClass(r.colProbs.q1)}"><div class="col-title">第1柱(01-09)</div><div class="col-val">${(r.colProbs.q1 * 100).toFixed(1)}%</div></div>
                             <div class="col-prob-item ${getClass(r.colProbs.q2)}"><div class="col-title">第2柱(10-19)</div><div class="col-val">${(r.colProbs.q2 * 100).toFixed(1)}%</div></div>
@@ -1006,7 +986,7 @@
                             <div class="col-prob-item ${getClass(r.colProbs.q4)}"><div class="col-title">第4柱(30-39)</div><div class="col-val">${(r.colProbs.q4 * 100).toFixed(1)}%</div></div>
                         </div>
                         <div style="margin-top:8px; padding:8px; background:#fff1f2; border:1px solid #fecaca; border-radius:6px; color:#b91c1c; font-size:12px;">
-                            ⚠️ <strong>最危險(憋最久未開)區域：</strong><br>${r.dangerColsText}
+                            ⚠️ <strong>最危險區域：</strong><br>${r.dangerColsText}
                         </div>
                     </div>
                 `;
@@ -1014,7 +994,6 @@
             container.innerHTML = html;
         } catch(e) {
             console.error("Radar Error:", e);
-            container.innerHTML = `<div style="color:red; font-size:12px;">雷達掃描失敗。</div>`;
         }
     }
 
@@ -1085,12 +1064,12 @@
 
         let currentDrawdown = peakTheoretical - theoreticalEquity;
         let empWinRate = totalDraws > 0 ? (wins / totalDraws) : baseP_Threshold;
-        let markovProb = (markovW + baseP_Threshold) / (markovW + markovL + 1);
+        let markovProb = ((markovW + baseP_Threshold) / (markovW + markovL + 1));
         let bayesProb = (markovProb * 0.7) + (empWinRate * 0.3);
 
         let expectedLosing = cfg.type === '1800' ? 6 : 3;
         let stdDev = cfg.type === '1800' ? 2 : 1.5; 
-        let zScore = (losingStreak - expectedLosing) / stdDev;
+        let zScore = stdDev > 0 ? (losingStreak - expectedLosing) / stdDev : 0;
 
         let oddsB = costPerRound > 0 ? (netWin / costPerRound) : 0;
         let fullKelly = oddsB > 0 ? ((bayesProb * oddsB) - (1 - bayesProb)) / oddsB : 0;
@@ -1143,11 +1122,11 @@
 
         if (isTurbulent) {
             consensusTitle = "🟡 亂流防禦 (波動率限制)";
-            consensusDesc = `【風控啟動】偵測到市場進入高回撤深水區。為避免資金斷鍊，強制壓制。大莊家決議：【降級防禦 1 單位或觀望】。`;
+            consensusDesc = `【風控啟動】偵測到大盤進入高回撤深水區。大莊家決議：【降級防禦 1 單位或觀望】。`;
             consensusColor = "background:#fffbeb; color:#b45309; border: 2px solid #f59e0b;";
         } else if (passZ && zScore >= 1.5 && passEV && passKelly) {
             consensusTitle = "🟢 S級狙擊 (多維動態共識)";
-            consensusDesc = `【綜合評估】馬可夫鏈捕捉到反轉慣性，Z-Score達極端值(${Number(zScore).toFixed(2)})。大莊家決議：【重擊進場 2~3 單位】。`;
+            consensusDesc = `【綜合評估】馬可夫反轉慣性確立，Z-Score 達極端值(${Number(zScore).toFixed(2)})。大莊家決議：【重擊進場 2~3 單位】。`;
             consensusColor = "background:#ecfdf5; color:#065f46; border: 2px solid #10b981;";
         } else if (passZ && passEV && passKelly) {
             consensusTitle = "🟢 A級佈局 (穩定套利區)";
@@ -1155,7 +1134,7 @@
             consensusColor = "background:#f0fdf4; color:#15803d; border: 2px solid #86efac;";
         } else {
              consensusTitle = "🔴 銀行家否決 (系統嚴格風控)";
-             consensusDesc = `【綜合評估】負期望值或凱利值 < 0。大莊家決議：【嚴格觀望 0 單位】。`;
+             consensusDesc = `【綜合評估】負期望值或凱利值小於零。大莊家決議：【嚴格觀望 0 單位】。`;
              consensusColor = "background:#fef2f2; color:#b91c1c; border: 2px solid #ef4444;";
         }
 
@@ -1311,30 +1290,29 @@
                 let expertDiagnosis = "";
                 let passZ = a.zScore >= 0.5;
 
-                // 🌟 獵人式狙擊打法鐵律核心
                 if (a.isTurbulent) {
-                    expertDiagnosis = `【風控啟動】偵測到市場進入高回撤深水區。`;
+                    expertDiagnosis = `【風控啟動】偵測到大盤進入高回撤深水區。`;
                     recBet = 0; statusText = `🟡 亂流迴避 👉 強制: 0 元/碰`; cardStyle = 'background:#fffbeb; border-color:#fcd34d;';
                     reasonText = `${expertDiagnosis}<br>【獵人鐵律】亂流區勝率極度不穩，嚴格禁止出手，強制 <strong>0 元</strong> 觀望保本。`;
                 } else if (a.zScore >= 1.5 && a.EV > 0 && a.fracKelly > 0) {
                     expertDiagnosis = `【巨頭診斷】馬可夫反轉機率飆高、④偏離極端(Z=${Number(a.zScore).toFixed(2)})、凱利公式核准。`;
                     recBet = 2; 
-                    statusText = `🔥 S級狙擊 👉 強制: ${recBet} 元/碰`; cardStyle = 'background:#ecfdf5; border-color:#10b981; box-shadow:0 2px 10px rgba(16,185,129,0.2)';
-                    reasonText = `${expertDiagnosis}<br>【獵人鐵律】信號升級至S級！嚴格執行 <strong>${recBet} 元/碰</strong> 狙擊。兩期之內無論輸贏，或燈號熄滅，硬性停損歸零重來！`;
+                    statusText = `🔥 S級狙擊 👉 強制: ${recBet} 元/碰`; cardStyle = 'background:#ecfdf5; border-color:#10b981; box-shadow:0 2px 10px rgba(16,185,129,0.15)';
+                    reasonText = `${expertDiagnosis}<br>【獵人鐵律】信號升級至S級！嚴格執行 <strong>${recBet} 元/碰</strong> 狙擊。兩期內無論輸贏，硬性停損歸零！`;
                 } else if (passZ && a.EV > 0 && a.fracKelly > 0) {
                     expertDiagnosis = `【巨頭診斷】④偏離度脫離雜訊且期望值與凱利皆大於0，A級佈局點確認。`;
                     recBet = 1; 
                     statusText = `🟢 A級佈局 👉 強制: ${recBet} 元/碰`; cardStyle = 'background:#f0fdf4; border-color:#86efac;';
-                    reasonText = `${expertDiagnosis}<br>【獵人鐵律】首次全綠燈！嚴格執行 <strong>${recBet} 元/碰</strong> 試單。若槓龜且下一期未升級S級，立即斷開停損。`;
+                    reasonText = `${expertDiagnosis}<br>【獵人鐵律】首次全綠燈！嚴格執行 <strong>${recBet} 元/碰</strong> 試單。若槓龜且下一期未升級，立即斷開停損。`;
                 } else {
                     expertDiagnosis = `【巨頭診斷】未達六大巨頭全綠燈標準。`;
                     recBet = 0; 
                     statusText = `🔴 徹底觀望 👉 強制: 0 元/碰`; cardStyle = 'background:#fef2f2; border-color:#fca5a5;';
-                    reasonText = `${expertDiagnosis}<br>【獵人鐵律】徹底放棄平推試水！只要有任何一盞燈沒亮，一律 <strong>0 元</strong> 觀望，絕不在弱勢區耗損本金。`;
+                    reasonText = `${expertDiagnosis}<br>【獵人鐵律】徹底放棄平推試水！只要有任何一盞燈沒亮，一律 <strong>0 元</strong> 觀望，絕不耗損本金。`;
                 }
 
                 recHtml += `
-                    <div style="padding:14px; border:2px solid; border-radius:10px; ${cardStyle} line-height:1.6;">
+                    <div style="padding:14px; border:1.5px solid; border-radius:10px; ${cardStyle} line-height:1.6;">
                         <div style="font-weight:900; font-size:14px; color:#0f172a; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
                             <span>${a.cfg.name}</span>
                             <span style="font-size:13px; font-weight:900; color:#dc2626;">${statusText}</span>
@@ -1406,9 +1384,6 @@
         } catch(e) { alert("修改下注失敗：" + e.message); }
     };
 
-    // ==============================================================
-    // Firebase 資料掛載與全域渲染 (性能優化版)
-    // ==============================================================
     onSnapshot(collection(db, "matrix_systems"), (snapshot) => {
         Object.keys(spaceData).forEach(k => spaceData[k] = []);
         snapshot.forEach(docSnap => { 
@@ -1416,7 +1391,6 @@
             if(spaceData[d.space]) spaceData[d.space].push(d); 
         });
         
-        // 隱藏 Loader
         if (!isDataLoaded) {
             isDataLoaded = true;
             let loader = document.getElementById('global-loader');
@@ -1431,7 +1405,7 @@
         } else if (currentSpace === 'ledger') {
             renderLedgerSummary();
         } else if (currentSpace === 'single-ball') {
-            // 單碼掃描頁面等待按鍵動作
+            // 等待按鈕動作
         } else {
             renderMain();
         }
@@ -1457,7 +1431,7 @@
             let thead = document.getElementById('table-head');
             
             let hypoTotalCost = 0, hypoTotalRevenue = 0, count3 = 0, count4 = 0, passCount = 0;
-            let htmlBuilder = ""; // 效能優化：字串組合一次性渲染
+            let htmlBuilder = ""; 
 
             if (cfg.type === '1800') {
                 thead.innerHTML = `<tr><th>日期</th><th>開獎號碼</th><th>(10-18)</th><th>(20-29)</th><th>(其他)</th><th>結果</th><th>真實下注</th><th>真實損益</th><th>操作</th></tr>`;
@@ -1476,20 +1450,20 @@
                     hypoTotalRevenue += res.puffs * Number(cfg.unitPrize) * 1;
 
                     let badge = res.puffs>=4 ? "bg-green" : (res.puffs>0 ? "bg-yellow" : "bg-red");
-                    let ballsHtml = item.draw.map(n => `<div class="num-ball">${String(n).padStart(2,'0')}</div>`).join('');
+                    let ballsHtml = item.draw.map(n => `<div class="num-ball draw-ball">${String(n).padStart(2,'0')}</div>`).join('');
                     let profitColor = roundProfit > 0 ? '#059669' : (roundProfit < 0 ? '#dc2626' : '#94a3b8');
                     let profitText = roundProfit > 0 ? `+${Math.round(roundProfit).toLocaleString()}` : Math.round(roundProfit).toLocaleString();
 
                     htmlBuilder += `<tr>
-                        <td style="font-weight:900;">${item.date.slice(5)}</td>
+                        <td style="font-weight:bold;">${item.date.slice(5)}</td>
                         <td><div class="num-container">${ballsHtml}</div></td>
                         <td>${res.p1} 顆</td><td>${res.p2} 顆</td><td>${res.p3} 顆</td>
                         <td><span class="badge ${badge}">${res.text}</span></td>
-                        <td style="color:#0284c7; font-weight:900; font-size:14px;">${myBet}</td>
-                        <td style="color:${profitColor}; font-weight:900; font-family:monospace; font-size:14px;">${myBet > 0 ? profitText : '-'}</td>
+                        <td style="color:#0284c7; font-weight:900;">${myBet}</td>
+                        <td style="color:${profitColor}; font-weight:900;">${myBet > 0 ? profitText : '-'}</td>
                         <td>
-                            <button class="btn-tbl-action" onclick="editRecordBet('${item.id}', ${myBet})" title="修改真實下注倍數">✏️</button>
-                            <button class="btn-tbl-action" onclick="deleteRecord('${item.id}')" style="color:#dc2626; margin-left:4px;" title="刪除">×</button>
+                            <button class="btn-tbl-action" onclick="editRecordBet('${item.id}', ${myBet})" title="修改真實下注倍數">✏️ 實單</button>
+                            <button onclick="deleteRecord('${item.id}')" style="background:none; border:none; color:red; font-size:16px; cursor:pointer; margin-left:4px;" title="刪除">×</button>
                         </td>
                     </tr>`;
                 });
@@ -1505,13 +1479,13 @@
                     <div class="stat-item"><h3>3碰 次數</h3><p style="color:#d97706;">${count3} 次</p></div>
                     <div class="stat-item"><h3>4碰 次數</h3><p style="color:#059669;">${count4} 次</p></div>
                     <div class="stat-item">
-                        <h3 style="margin-bottom:2px;">歷史均線</h3>
+                        <h3 style="margin-bottom:2px;">平均過關率</h3>
                         <p style="color:#475569;">${empRateStr}</p>
                         <div style="font-size:10px; color:#94a3b8; margin-top:4px; border-top:1px dashed #e2e8f0; padding-top:4px;">
-                            今年均線: <span style="color:#0284c7; font-weight:900;">${thisYearRateStr}</span>
+                            今年度平均: <span style="color:#0284c7; font-weight:bold;">${thisYearRateStr}</span>
                         </div>
                     </div>
-                    <div class="stat-item" style="border-color:${isDue?'#10b981':'#e2e8f0'}; background:${isDue?'#ecfdf5':'#fff'}; box-shadow:${isDue?'0 0 10px rgba(16,185,129,0.2)':''}">
+                    <div class="stat-item" style="border-color:${isDue?'#34d399':'#e2e8f0'}; background:${isDue?'#ecfdf5':'#fff'};">
                         <h3 style="color:${isDue?'#065f46':'#64748b'};">當前反轉機率</h3>
                         <p style="color:${isDue?'#059669':'#0f172a'};">${curRateStr} ${isDue?'🔥':''}</p>
                     </div>
@@ -1519,7 +1493,7 @@
                 `;
 
             } else {
-                thead.innerHTML = `<tr><th>日期</th><th>開獎號碼</th><th>(01-09)</th><th>(10-19)</th><th>(20-29)</th><th>(30-39)</th><th>結果</th><th>真實下注</th><th>真實損益</th><th>操作</th></tr>`;
+                thead.innerHTML = `<tr><th>日期</th><th>開獎號碼</th><th>第1柱(01-09)</th><th>第2柱(10-19)</th><th>第3柱(20-29)</th><th>第4柱(30-39)</th><th>結果</th><th>真實下注</th><th>真實損益</th><th>操作</th></tr>`;
                 data.forEach(item => {
                     if (!item.draw || !Array.isArray(item.draw)) return;
                     let res = check9000(item.draw);
@@ -1534,20 +1508,20 @@
                     hypoTotalRevenue += res.puffs * Number(cfg.unitPrize) * 1;
 
                     let badge = res.pass ? "bg-green" : "bg-red";
-                    let ballsHtml = item.draw.map(n => `<div class="num-ball">${String(n).padStart(2,'0')}</div>`).join('');
+                    let ballsHtml = item.draw.map(n => `<div class="num-ball draw-ball">${String(n).padStart(2,'0')}</div>`).join('');
                     let profitColor = roundProfit > 0 ? '#059669' : (roundProfit < 0 ? '#dc2626' : '#94a3b8');
                     let profitText = roundProfit > 0 ? `+${Math.round(roundProfit).toLocaleString()}` : Math.round(roundProfit).toLocaleString();
 
                     htmlBuilder += `<tr>
-                        <td style="font-weight:900;">${item.date.slice(5)}</td>
+                        <td style="font-weight:bold;">${item.date.slice(5)}</td>
                         <td><div class="num-container">${ballsHtml}</div></td>
                         <td>${res.q1} 顆</td><td>${res.q2} 顆</td><td>${res.q3} 顆</td><td>${res.q4} 顆</td>
                         <td><span class="badge ${badge}">${res.text}</span></td>
-                        <td style="color:#0284c7; font-weight:900; font-size:14px;">${myBet}</td>
-                        <td style="color:${profitColor}; font-weight:900; font-family:monospace; font-size:14px;">${myBet > 0 ? profitText : '-'}</td>
+                        <td style="color:#0284c7; font-weight:900;">${myBet}</td>
+                        <td style="color:${profitColor}; font-weight:900;">${myBet > 0 ? profitText : '-'}</td>
                         <td>
-                            <button class="btn-tbl-action" onclick="editRecordBet('${item.id}', ${myBet})" title="修改真實下注倍數">✏️</button>
-                            <button class="btn-tbl-action" onclick="deleteRecord('${item.id}')" style="color:#dc2626; margin-left:4px;" title="刪除">×</button>
+                            <button class="btn-tbl-action" onclick="editRecordBet('${item.id}', ${myBet})" title="修改真實下注倍數">✏️ 實單</button>
+                            <button onclick="deleteRecord('${item.id}')" style="background:none; border:none; color:red; font-size:16px; cursor:pointer; margin-left:4px;" title="刪除">×</button>
                         </td>
                     </tr>`;
                 });
@@ -1561,24 +1535,22 @@
 
                 document.getElementById('stats-container').innerHTML = `
                     <div class="stat-item"><h3>區間總期數</h3><p>${data.length} 期</p></div>
-                    <div class="stat-item"><h3>中獎 (過)</h3><p style="color:#059669;">${passCount} 次</p></div>
-                    <div class="stat-item"><h3>未中 (斷柱)</h3><p style="color:#dc2626;">${failCount} 次</p></div>
+                    <div class="stat-item"><h3>中獎次數 (過)</h3><p style="color:#059669;">${passCount} 次</p></div>
+                    <div class="stat-item"><h3>未中次數 (斷柱)</h3><p style="color:#dc2626;">${failCount} 次</p></div>
                     <div class="stat-item">
-                        <h3 style="margin-bottom:2px;">歷史均線</h3>
+                        <h3 style="margin-bottom:2px;">平均過關率</h3>
                         <p style="color:#475569;">${empRateStr}</p>
                         <div style="font-size:10px; color:#94a3b8; margin-top:4px; border-top:1px dashed #e2e8f0; padding-top:4px;">
-                            今年均線: <span style="color:#0284c7; font-weight:900;">${thisYearRateStr}</span>
+                            今年度平均: <span style="color:#0284c7; font-weight:bold;">${thisYearRateStr}</span>
                         </div>
                     </div>
-                    <div class="stat-item" style="border-color:${isDue?'#10b981':'#e2e8f0'}; background:${isDue?'#ecfdf5':'#fff'}; box-shadow:${isDue?'0 0 10px rgba(16,185,129,0.2)':''}">
+                    <div class="stat-item" style="border-color:${isDue?'#34d399':'#e2e8f0'}; background:${isDue?'#ecfdf5':'#fff'};">
                         <h3 style="color:${isDue?'#065f46':'#64748b'};">當前反轉機率</h3>
                         <p style="color:${isDue?'#059669':'#0f172a'};">${curRateStr} ${isDue?'🔥':''}</p>
                     </div>
                     <div class="stat-item"><h3>理論總營利 (均注1元)</h3><p style="color:${hypoNetProfit>=0?'#059669':'#dc2626'}">${hypoNetProfit>=0?'+$':'-$'}${Math.abs(Math.round(hypoNetProfit)).toLocaleString()}</p></div>
                 `;
             }
-            
-            // 一次性渲染表格
             tbody.innerHTML = htmlBuilder;
         } catch(e) {
             console.error("Main Table Error:", e);
@@ -1591,9 +1563,9 @@
         let myBet = parseFloat(document.getElementById('input-mybet').value);
         if(isNaN(myBet) || myBet < 0) myBet = 0;
 
-        if(!date || !ballsStr) return alert("⚠️ 請輸入完整的開獎日期與開獎號碼！");
+        if(!date || !ballsStr) return alert("請輸入開獎日期與開獎號碼！");
         let nums = ballsStr.match(/\d+/g);
-        if(!nums || nums.length !== 5) return alert("⚠️ 開獎號碼必須剛好 5 個數字！");
+        if(!nums || nums.length !== 5) return alert("開獎號碼必須剛好 5 個數字！");
         let draw = nums.map(n=>parseInt(n)).sort((a,b)=>a-b);
         
         if (draw[0] < 1 || draw[4] > 39) return alert("❌ 開獎號碼必須介於 01 到 39 之間！");
@@ -1602,7 +1574,7 @@
         let id = `${currentSpace}_${date}`;
         try {
             await setDoc(doc(db, "matrix_systems", id), { id: id, space: currentSpace, date: date, draw: draw, myBet: myBet });
-            alert(`✅ 儲存成功！開獎紀錄與實單已同步至雲端。`);
+            alert(`✅ 儲存成功！開獎紀錄與實單已新增。`);
             document.getElementById('input-balls').value = '';
         } catch(e) { alert("儲存失敗：" + e.message); }
     };
@@ -1631,8 +1603,7 @@
             }
         });
         
-        if(records.length === 0) return alert("⚠️ 找不到符合格式的資料，請檢查匯入格式。");
-        
+        if(records.length === 0) return alert("沒有抓到正確的格式喔！");
         let targetName = spaceConfigs[targetSpace].name;
         let confirmMsg = `準備匯入 ${records.length} 筆資料至【${targetName}】`;
         if (skipCount > 0) confirmMsg += `\n(已自動跳過 ${skipCount} 筆號碼異常或超出範圍的資料)`;
@@ -1655,6 +1626,9 @@
 
     document.getElementById('input-date').value = new Date().toISOString().split('T')[0];
     document.getElementById('ledger-date').value = new Date().toISOString().split('T')[0];
+    
+    // 預設切換至 Arena 面板
+    switchSpace('arena');
 </script>
 
 </body>
