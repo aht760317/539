@@ -94,10 +94,12 @@
         /* 🔥 六維預測版面 */
         .ai-prediction-box { margin-top: auto; padding: 12px; background: linear-gradient(to bottom, #ffffff, #f8fafc); border: 2px solid #e2e8f0; border-radius: 10px; font-size: 12px; }
         .ai-prediction-box h5 { color: #0f172a; margin: 0 0 10px 0; font-size: 13px; font-weight: 900; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid #cbd5e1; padding-bottom: 6px;}
-        .ai-row { display: flex; justify-content: space-between; margin-bottom: 6px; font-weight: bold; border-bottom: 1px dashed #e2e8f0; padding-bottom: 4px; align-items: center;}
-        .ai-row:last-child { border-bottom: none; margin-bottom:0;}
+        .ai-row { display: flex; flex-direction: column; margin-bottom: 6px; border-bottom: 1px dashed #e2e8f0; padding-bottom: 6px; }
+        .ai-row-header { display: flex; justify-content: space-between; font-weight: bold; align-items: center; width: 100%; }
+        .ai-row-desc { font-size: 10.5px; color: #64748b; font-weight: normal; margin-top: 3px; line-height: 1.3; }
+        
         .strategy-box { margin-top: 10px; padding: 10px; border-radius: 8px; text-align: center; font-weight: 900; font-size: 13px; line-height: 1.5; }
-        .strategy-box h6 { font-size:14px; margin:0 0 4px 0; }
+        .strategy-box h6 { font-size:14px; margin:0 0 6px 0; }
 
         /* 實單記帳看板 */
         .ledger-stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 12px; }
@@ -311,16 +313,13 @@
         let isLedger = (spaceKey === 'ledger');
         let isSpace = (!isArena && !isLedger);
 
-        // 控制 Arena 版面
         document.getElementById('arena-settings-panel').style.display = isArena ? 'block' : 'none';
         document.getElementById('batch-input-panel').style.display = isArena ? 'block' : 'none';
         document.getElementById('global-strategy').style.display = isArena ? 'block' : 'none';
         document.getElementById('radar-panel').style.display = isArena ? 'block' : 'none';
         
-        // 控制獨立的 Ledger (記帳) 版面
         document.getElementById('actual-bet-panel').style.display = isLedger ? 'block' : 'none';
 
-        // 控制 個別空間版面
         document.getElementById('single-input-panel').style.display = isSpace ? 'block' : 'none';
         document.getElementById('stats-container').style.display = isSpace ? 'grid' : 'none';
         document.getElementById('history-panel').style.display = isSpace ? 'block' : 'none';
@@ -343,39 +342,31 @@
     }
 
     function analyzeRadar(gameType) {
-        // 分別讀取完全獨立的資料：天天樂讀取 'tt-9000'，五三九讀取 '539-9000'
         let spaceKey = gameType + '-9000';
         let data = [...(spaceData[spaceKey] || [])].sort((a, b) => new Date(b.date) - new Date(a.date));
         
         let totalDraws = 0;
         let tripleWins = 0; 
         let tripleLosingStreak = 0;
-        let hitTripleBefore = false;
         
         let colHits = { q1: 0, q2: 0, q3: 0, q4: 0 };
-        let colStreaks = { q1: 0, q2: 0, q3: 0, q4: 0 };
-        let colFound = { q1: false, q2: false, q3: false, q4: false };
 
-        let reversedData = [...data].reverse();
-        for (let i = 0; i < reversedData.length; i++) {
-            if (!reversedData[i].date.startsWith('2026')) break;
-            
-            let balls = reversedData[i].draw;
+        // ★ 修正：從最新(index 0)往回看，只要看到有3顆，連漏就停止計算
+        for (let i = 0; i < data.length; i++) {
+            if (!data[i].date.startsWith('2026')) continue;
+            let balls = data[i].draw;
             let q1=0, q2=0, q3=0, q4=0;
             balls.forEach(n => { if(n<=9) q1++; else if(n<=19) q2++; else if(n<=29) q3++; else q4++; });
             let isTripleOrMore = (q1>=3 || q2>=3 || q3>=3 || q4>=3); 
 
-            if (!hitTripleBefore) {
-                if (!isTripleOrMore) tripleLosingStreak++;
-                else hitTripleBefore = true;
+            if (!isTripleOrMore) {
+                tripleLosingStreak++;
+            } else {
+                break; // 找到最近一次出 3 顆的了，停止計數
             }
-
-            if (!colFound.q1) { if (q1 < 3) colStreaks.q1++; else colFound.q1 = true; }
-            if (!colFound.q2) { if (q2 < 3) colStreaks.q2++; else colFound.q2 = true; }
-            if (!colFound.q3) { if (q3 < 3) colStreaks.q3++; else colFound.q3 = true; }
-            if (!colFound.q4) { if (q4 < 3) colStreaks.q4++; else colFound.q4 = true; }
         }
 
+        // 歷史總體機率統計
         data.forEach(item => {
             if (!item.date.startsWith('2026')) return;
             totalDraws++;
@@ -421,7 +412,6 @@
         if(!container) return;
         let html = '';
         
-        // 分別跑 天天樂 ('tt') 和 五三九 ('539')
         ['tt', '539'].forEach(type => {
             let r = analyzeRadar(type);
             if(r.totalDraws < 5) {
@@ -436,7 +426,7 @@
                 <div class="radar-card">
                     <h4>
                         <span>📡 ${r.gameName} 偏態監控 (3顆以上)</span>
-                        <span style="font-size:11px; color:#64748b;">連漏 ${r.tripleLosingStreak} 期未出</span>
+                        <span style="font-size:11px; color:#64748b;">目前連漏 ${r.tripleLosingStreak} 期</span>
                     </h4>
                     
                     <div style="margin-bottom:6px;">
@@ -474,20 +464,17 @@
 
     function analyzeSpace(key) {
         let cfg = spaceConfigs[key];
-        let data = [...(spaceData[key] || [])].sort((a, b) => new Date(a.date) - new Date(b.date)); 
+        let data = [...(spaceData[key] || [])].sort((a, b) => new Date(b.date) - new Date(a.date)); 
         
         let totalDraws = 0, wins = 0;
-        let WW = 0, WL = 0, LW = 0, LL = 0; 
-        let prevWasWin = null;
-        
         let latestIsWin = false;
         let continuousHits = 0; 
         let losingStreak = 0;
 
-        let reversedData = [...data].reverse();
-        for (let i = 0; i < reversedData.length; i++) {
-            if (!reversedData[i].date.startsWith('2026')) break;
-            let balls = reversedData[i].draw;
+        // ★ 修正：從最新(index 0)精準計算目前的連莊/連漏期數
+        for (let i = 0; i < data.length; i++) {
+            if (!data[i].date.startsWith('2026')) continue;
+            let balls = data[i].draw;
             let res = cfg.type === '1800' ? check1800(balls) : check9000(balls);
             let isWin = (cfg.type === '1800' && res.puffs >= 3) || (cfg.type === '9000' && res.pass);
             
@@ -497,11 +484,16 @@
             } else {
                 if (latestIsWin && isWin) continuousHits++;
                 else if (!latestIsWin && !isWin) losingStreak++;
-                else { break; }
+                else break; 
             }
         }
 
-        data.forEach(item => {
+        // 馬可夫鍊與長期勝率需要從舊到新跑
+        let WW = 0, WL = 0, LW = 0, LL = 0; 
+        let prevWasWin = null;
+        let reversedData = [...data].reverse();
+
+        reversedData.forEach(item => {
             if (!item.date.startsWith('2026')) return;
             totalDraws++;
             let res = cfg.type === '1800' ? check1800(item.draw) : check9000(item.draw);
@@ -526,6 +518,7 @@
         let bayesProb = latestIsWin ? ((P_Win_Given_Win * P_Win) / ((P_Win_Given_Win * P_Win) + ((1 - P_Win_Given_Lose) * (1 - P_Win)))) : P_Win;
         if(isNaN(bayesProb)) bayesProb = P_Win;
 
+        // 計算 Z-Score
         let expectedLosing = cfg.type === '1800' ? 6 : 3;
         let stdDev = cfg.type === '1800' ? 2 : 1.5; 
         let zScore = (losingStreak - expectedLosing) / stdDev;
@@ -541,38 +534,42 @@
         return { 
             cfg, totalDraws, latestIsWin, continuousHits, losingStreak, 
             modelA_Prob, P_Win_Given_Win, P_Win_Given_Lose, EV, costPerRound, minPrize, requiredMulti,
-            zScore, bayesProb, mcMaxLossStreak
+            zScore, bayesProb, mcMaxLossStreak, expectedLosing
         };
     }
 
     function getPredictionHtml(analysis) {
-        let { cfg, totalDraws, latestIsWin, continuousHits, losingStreak, modelA_Prob, P_Win_Given_Win, P_Win_Given_Lose, EV, requiredMulti, zScore, bayesProb, mcMaxLossStreak, costPerRound } = analysis;
+        let { cfg, totalDraws, latestIsWin, continuousHits, losingStreak, expectedLosing, modelA_Prob, P_Win_Given_Win, P_Win_Given_Lose, EV, requiredMulti, zScore, bayesProb, mcMaxLossStreak, costPerRound } = analysis;
         
         if (totalDraws < 5) return `<div class="ai-prediction-box" style="text-align:center; color:#94a3b8; padding:20px;">⏳ 歷史數據不足，請先匯入開獎紀錄</div>`;
 
         let adviceLaplace = `平滑預測勝率 ${(modelA_Prob * 100).toFixed(1)}%`;
         let markovState = latestIsWin ? `連莊機率 ${(P_Win_Given_Win*100).toFixed(1)}%` : `反彈機率 ${(P_Win_Given_Lose*100).toFixed(1)}%`;
         let adviceBayes = `動態勝率更新 ${(bayesProb*100).toFixed(1)}%`;
-        let adviceZ = zScore > 1 ? `偏離常態 (Z=${zScore.toFixed(1)}) 👉 強烈買進` : `常態波動內 (Z=${zScore.toFixed(1)})`;
+        let adviceZ = zScore > 1 ? `極端偏態 (Z=${zScore.toFixed(1)}) 👉 買進` : `常態波動內 (Z=${zScore.toFixed(1)})`;
         let adviceMC = `最大回撤壓力約 ${mcMaxLossStreak} 期`;
 
         let consensusTitle = "";
         let consensusDesc = "";
         let consensusColor = "";
+        let oppCostText = "";
 
         if (EV > 0 && zScore > 0.5) {
             let act = requiredMulti > 1 ? `保本倍投 ${requiredMulti} 倍` : `平推 1 倍`;
             consensusTitle = "🔥 S級量化指令：果斷狙擊";
-            consensusDesc = `EV 為正，且 Z-Score 偏離常態底端。建議：【${act}】。`;
+            consensusDesc = `目前連漏 ${losingStreak} 期。Z-Score與EV雙重視角確認極端偏態，貝氏機率看漲。<br>👉 建議：【${act}】。`;
             consensusColor = "background:#ecfdf5; color:#065f46; border: 2px solid #6ee7b7;";
+            oppCostText = `💸 機會成本警示：若不出手，等同放棄均值回歸帶來的 $${Math.round(EV)} 數學套利空間。`;
         } else if (latestIsWin) {
             consensusTitle = "⚠️ B級動能指令：輕倉試探";
-            consensusDesc = `剛開出，符合連莊熱區，但期望值較低。建議：【縮碼 0.5倍】試探。`;
+            consensusDesc = `剛開出。馬可夫鏈顯示具連莊動能，但Kelly期望值未達絕對優勢。<br>👉 建議：【縮碼 0.5 倍】順勢摸摸看。`;
             consensusColor = "background:#fffbeb; color:#b45309; border: 2px solid #fcd34d;";
+            oppCostText = `⚖️ 機會成本警示：盈虧比不佳，盲目下滿注將承受高達 $${Math.round(costPerRound)} 的回撤風險。`;
         } else {
              consensusTitle = "❄️ 絕對防禦指令：空手觀望";
-             consensusDesc = `未達統計學顯著進場標準，下注形同送錢。建議：【鎖死資金】。`;
+             consensusDesc = `目前僅漏 ${losingStreak} 期 (該玩法平均漏值為 ${expectedLosing} 期)。未達統計學偏離度，下注形同送錢給莊家。<br>👉 建議：【鎖死資金】絕不出手。`;
              consensusColor = "background:#f1f5f9; color:#475569; border: 2px solid #cbd5e1;";
+             oppCostText = `🛡️ 機會成本警示：強行進場將白白耗損 $${Math.round(costPerRound)}，導致真正極端偏態來臨時無本金可打。`;
         }
 
         return `
@@ -580,33 +577,59 @@
                 <h5>🤖 六維量化交易引擎 (華爾街模組)</h5>
                 
                 <div class="ai-row">
-                    <span style="color:#047857;">① Laplace 均值回歸：</span>
-                    <span style="color:#0f172a; font-size:11px;">${adviceLaplace}</span>
+                    <div class="ai-row-header">
+                        <span style="color:#047857;">① Laplace 均值回歸：</span>
+                        <span style="color:#0f172a; font-size:11px;">${adviceLaplace}</span>
+                    </div>
+                    <div class="ai-row-desc">衡量長期基礎勝率，過濾短期波動，找出該玩法的物理極限。</div>
                 </div>
+                
                 <div class="ai-row">
-                    <span style="color:#047857;">② Markov 馬可夫鏈：</span>
-                    <span style="color:#0f172a; font-size:11px;">${markovState}</span>
+                    <div class="ai-row-header">
+                        <span style="color:#047857;">② Markov 馬可夫鏈：</span>
+                        <span style="color:#0f172a; font-size:11px;">${markovState}</span>
+                    </div>
+                    <div class="ai-row-desc">捕捉相鄰兩期的狀態轉移，判定目前是「連莊趨勢」還是「斷龍反轉」。</div>
                 </div>
+                
                 <div class="ai-row">
-                    <span style="color:#047857;">③ Bayes 貝氏動態機率：</span>
-                    <span style="color:#0f172a; font-size:11px;">${adviceBayes}</span>
+                    <div class="ai-row-header">
+                        <span style="color:#047857;">③ Bayes 貝氏動態機率：</span>
+                        <span style="color:#0f172a; font-size:11px;">${adviceBayes}</span>
+                    </div>
+                    <div class="ai-row-desc">融合歷史勝率與最新開獎狀態，動態校正出的「真實即時勝率」。</div>
                 </div>
+                
                 <div class="ai-row">
-                    <span style="color:#047857;">④ Z-Score 偏離度：</span>
-                    <span style="color:#0f172a; font-size:11px;">${adviceZ}</span>
+                    <div class="ai-row-header">
+                        <span style="color:#047857;">④ Z-Score 偏離度：</span>
+                        <span style="color:#0f172a; font-size:11px;">${adviceZ}</span>
+                    </div>
+                    <div class="ai-row-desc">衡量當前連漏期數偏離平均值的程度。Z<0代表極度正常，>1代表極端偏態隨時爆發。</div>
                 </div>
+                
                 <div class="ai-row">
-                    <span style="color:#047857;">⑤ Monte Carlo 模擬：</span>
-                    <span style="color:#0f172a; font-size:11px;">${adviceMC}</span>
+                    <div class="ai-row-header">
+                        <span style="color:#047857;">⑤ Monte Carlo 模擬：</span>
+                        <span style="color:#0f172a; font-size:11px;">${adviceMC}</span>
+                    </div>
+                    <div class="ai-row-desc">模擬極端運氣下的最大連輸期數，用於準備「破產防禦本金」。</div>
                 </div>
-                <div class="ai-row">
-                    <span style="color:var(--text-muted);">⑥ Kelly EV 期望值：</span>
-                    <span style="color:${EV>0?'#059669':'#dc2626'};">${EV>0?'+':''}${EV.toFixed(0)} 元</span>
+                
+                <div class="ai-row" style="border-bottom:none;">
+                    <div class="ai-row-header">
+                        <span style="color:var(--text-muted);">⑥ Kelly EV 期望值：</span>
+                        <span style="color:${EV>0?'#059669':'#dc2626'};">${EV>0?'+':''}${EV.toFixed(0)} 元</span>
+                    </div>
+                    <div class="ai-row-desc">單次下注的數學期望利潤。正值代表長線必勝，負值為送錢謬誤。</div>
                 </div>
 
                 <div class="strategy-box" style="${consensusColor}">
                     <h6>${consensusTitle}</h6>
-                    ${consensusDesc}
+                    <div style="margin-bottom:8px;">${consensusDesc}</div>
+                    <div style="font-size:11px; padding:6px; background:rgba(255,255,255,0.6); border-radius:4px; color:inherit; text-align:left; font-weight:bold;">
+                        ${oppCostText}
+                    </div>
                 </div>
             </div>
         `;
