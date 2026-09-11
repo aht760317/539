@@ -38,7 +38,6 @@
         }
         .dot { width: 6px; height: 6px; border-radius: 50%; background: #10b981; box-shadow: 0 0 4px #10b981; }
 
-        /* 年度篩選器 */
         .year-filter-bar {
             background: #1e293b; color: #fff; padding: 10px; border-radius: 8px; margin-bottom: 14px;
             display: flex; justify-content: center; align-items: center; gap: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
@@ -63,7 +62,6 @@
         .panel { background: var(--panel-bg); padding: 14px; border-radius: 12px; border: 1px solid var(--panel-border); margin-bottom: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
         .panel-title { font-size: 14px; font-weight: 900; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px; color: var(--text-main); }
 
-        /* 巨頭說明書 */
         .guide-box { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px; margin-bottom: 14px; font-size: 12px; line-height: 1.6; }
         .guide-box h4 { margin-bottom: 8px; color: #0f172a; font-size: 14px; display: flex; align-items: center; gap: 6px; cursor: pointer; }
         .guide-grid { display: grid; grid-template-columns: 1fr; gap: 8px; margin-top: 10px; display: none; }
@@ -84,7 +82,6 @@
         .action-bar { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
         .action-bar input { padding: 8px; border: 1.5px solid #cbd5e1; border-radius: 6px; flex: 1; min-width: 120px; font-size: 13px; font-weight: bold; }
         
-        /* 策略儀表板 */
         .strategy-dashboard { background: linear-gradient(135deg, #1e1b4b, #312e81); color: #fff; padding: 16px; border-radius: 12px; margin-bottom: 14px; box-shadow: 0 4px 12px rgba(49, 46, 129, 0.4); }
         .strategy-dashboard h3 { font-size: 15px; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 6px; }
         .dashboard-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
@@ -92,7 +89,6 @@
         .dash-card { background: rgba(255,255,255,0.1); border-radius: 8px; padding: 10px; border: 1px solid rgba(255,255,255,0.1); font-size: 12px; }
         .dash-card h4 { color: #a5b4fc; font-size: 12px; margin-bottom: 4px; }
 
-        /* 🚨 偏態雷達看板 */
         .radar-panel { background: linear-gradient(135deg, #fef2f2, #fff1f2); border: 2px dashed #fca5a5; border-radius: 12px; padding: 14px; margin-bottom: 14px; box-shadow: 0 4px 10px rgba(220, 38, 38, 0.08); }
         .radar-panel h3 { font-size: 15px; color: #991b1b; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid #fecaca; padding-bottom: 6px; }
         .radar-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
@@ -109,7 +105,6 @@
         .col-prob-item .col-val { font-weight: 900; font-size: 13px; color: #0284c7; }
         .col-prob-item.danger-col .col-val { color: #dc2626; }
         
-        /* 🔥 六大巨頭儀表板 */
         .ai-prediction-box { margin-top: auto; padding: 12px; background: linear-gradient(to bottom, #ffffff, #f8fafc); border: 2px solid #e2e8f0; border-radius: 10px; font-size: 12px; }
         .ai-prediction-box h5 { color: #0f172a; margin: 0; font-size: 13px; font-weight: 900; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid #cbd5e1; padding-bottom: 6px; }
         
@@ -128,9 +123,7 @@
         
         .strategy-box { margin-top: 10px; padding: 10px; border-radius: 8px; text-align: center; font-weight: 900; font-size: 13px; line-height: 1.5; }
         .strategy-box h6 { font-size:14px; margin:0 0 6px 0; }
-        .risk-warning-box { font-size:11.5px; padding:8px; background:rgba(255,255,255,0.8); border-radius:4px; color:#1e293b; text-align:left; margin-top:6px; border-left: 4px solid currentColor; line-height:1.5; }
 
-        /* 實單記帳看板 */
         .ledger-stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 12px; }
         @media (min-width: 768px) { .ledger-stats-grid { grid-template-columns: repeat(4, 1fr); } }
         .ledger-stat-card { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px; text-align: center; }
@@ -148,7 +141,6 @@
         textarea { width: 100%; height: 80px; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-family: monospace; font-size: 12px; margin-bottom: 8px; }
         .btn-main { background: linear-gradient(135deg, #0284c7, #2563eb); color: white; border: none; padding: 10px; font-size: 13px; font-weight: 900; border-radius: 8px; cursor: pointer; width: 100%; }
 
-        /* 修改：6宮格統計數據 */
         .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 14px; }
         @media (min-width: 768px) { .stats-grid { grid-template-columns: repeat(3, 1fr); } }
         @media (min-width: 1024px) { .stats-grid { grid-template-columns: repeat(6, 1fr); } }
@@ -182,12 +174,10 @@
         <div class="cloud-badge"><div class="dot"></div> Firebase 雲端同步中</div>
     </header>
 
-    <!-- ★ 無限未來作戰年度切換引擎 -->
     <div class="year-filter-bar">
         <label>📅 作戰年度切換：</label>
         <select id="global-year-filter" onchange="applyYearFilter()">
             <option value="all">所有歷史年度</option>
-            <!-- JS 動態生成 -->
         </select>
     </div>
 
@@ -200,10 +190,7 @@
         <button id="btn-ledger" class="mode-btn ledger-btn" onclick="switchSpace('ledger')">📝 真實下注 (實戰回本策略)</button>
     </div>
 
-    <!-- ========================================== -->
     <!-- 模塊 1：決策矩陣 (Arena) -->
-    <!-- ========================================== -->
-    
     <div class="guide-box" id="arena-guide" style="display:none;">
         <h4 onclick="toggleGuide()">📖 六大巨頭指標說明書 (點擊展開/收合) <span>▼</span></h4>
         <div class="guide-grid" id="guide-content">
@@ -225,7 +212,7 @@
             </div>
             <div class="guide-item">
                 <strong>⑤ 精算家 (破產壓力)：</strong><br>連槓期數是否已達到平均值，代表風險釋放。
-                <span class="guide-target">🎯 達標亮綠門檻：目前連槓期數 $\ge$ 理論預期連槓期數。</span>
+                <span class="guide-target">🎯 達標亮綠門檻：目前連槓期數 ≥ 理論預期連槓期數。</span>
             </div>
             <div class="guide-item">
                 <strong>⑥ 大莊家 (數學期望值 EV)：</strong><br>下注 1 元/碰 跑長期的平均賺賠金額。
@@ -278,10 +265,7 @@
         <button class="btn-main" onclick="batchImport()" style="background: linear-gradient(135deg, #7c3aed, #4f46e5);">⚡ 智慧解析並匯入</button>
     </div>
 
-
-    <!-- ========================================== -->
     <!-- 模塊 2：真實下注 (Ledger) -->
-    <!-- ========================================== -->
     <div class="panel" id="actual-bet-panel" style="display:none;">
         <div class="panel-title">📝 我的真實下注記帳與損益中樞</div>
         <div style="font-size:11px; color:#64748b; margin-bottom:10px; font-weight:bold;">
@@ -325,7 +309,6 @@
             <div class="ledger-stat-card"><h4>全局真實淨損益</h4><p id="ledger-profit" style="color:#64748b;">$0</p></div>
         </div>
 
-        <!-- 🎯 跨盤口智能回本引擎 -->
         <div style="margin-top:20px; border-top:2px dashed #cbd5e1; padding-top:14px;">
             <h3 style="font-size:15px; margin-bottom:10px; color:#0f172a; display:flex; align-items:center; gap:6px;">
                 <span>🎯 跨盤口智能回本引擎 (實戰動態下注建議)</span>
@@ -336,9 +319,7 @@
         </div>
     </div>
 
-    <!-- ========================================== -->
     <!-- 各空間專屬歷史版面 -->
-    <!-- ========================================== -->
     <div class="panel" id="single-input-panel" style="display:none;">
         <div class="panel-title">📝 單筆開獎與實單填寫</div>
         <div class="form-row">
@@ -347,18 +328,18 @@
                 <input type="date" id="input-date">
             </div>
             <div class="form-group" style="flex: 2;">
-                <label>5 碼號碼 (逗號/空格)</label>
+                <label>5 碼號碼 (1~39, 空格分隔)</label>
                 <input type="text" id="input-balls" placeholder="例: 06 07 14 28 33">
             </div>
             <div class="form-group" style="flex: 1;">
                 <label>真實下注 (元/碰)</label>
+                <!-- 加入 input-mybet，預設為 1 -->
                 <input type="number" id="input-mybet" step="1" min="0" value="1" style="background:#ecfdf5; border-color:#a7f3d0; color:#065f46;">
             </div>
         </div>
         <button class="btn-main" onclick="addNewRecord()">☁️ 儲存並結算</button>
     </div>
 
-    <!-- ★ 新增 6宮格數據看板 (歷史過關率 vs 當前爆發機率) -->
     <div class="stats-grid" id="stats-container" style="display:none;"></div>
 
     <div class="panel" id="history-panel" style="display:none;">
@@ -420,7 +401,7 @@
     window.applyYearFilter = function() {
         selectedYear = document.getElementById('global-year-filter').value;
         switchSpace(currentSpace);
-    }
+    };
 
     function check1800(balls) {
         if (!balls || !Array.isArray(balls)) return { puffs: 0, text: "錯誤", p1:0, p2:0, p3:0 };
@@ -433,12 +414,16 @@
         return { puffs, text: puffs>0?`${puffs}碰`:"未中獎", p1, p2, p3 };
     }
     
+    // 【優化】修正 9000碰 的明確邊界劃分 (防呆)
     function check9000(balls) {
         if (!balls || !Array.isArray(balls)) return { pass: false, puffs: 0, text: "錯誤", q1:0, q2:0, q3:0, q4:0 };
         let q1=0, q2=0, q3=0, q4=0;
         balls.forEach(n => { 
             let num = Number(n);
-            if(num<=9) q1++; else if(num<=19) q2++; else if(num<=29) q3++; else q4++; 
+            if(num>=1 && num<=9) q1++; 
+            else if(num>=10 && num<=19) q2++; 
+            else if(num>=20 && num<=29) q3++; 
+            else if(num>=30 && num<=39) q4++; 
         });
         let pass = (q1>0 && q2>0 && q3>0 && q4>0);
         return { pass, puffs: pass?2:0, text: pass?"過關":"斷柱", q1, q2, q3, q4 };
@@ -460,7 +445,7 @@
         } else {
             content.style.display = "none";
         }
-    }
+    };
 
     window.switchSpace = function(spaceKey) {
         currentSpace = spaceKey;
@@ -493,8 +478,9 @@
             document.getElementById('batch-target-space').value = spaceKey;
             renderMain();
         }
-    }
+    };
 
+    // 此函式負責在輸入改變時即時更新畫面顯示
     window.updateConfigDisplay = function(key) {
         let unitBet = parseFloat(document.getElementById(`cfg-unitbet-${key}`).value) || 0;
         let basePuffs = spaceConfigs[key].basePuffs;
@@ -513,7 +499,7 @@
         let elNetProfit = document.getElementById(`display-netprofit-${key}`);
         if(elRealCost) elRealCost.innerText = `$${Math.round(realCost).toLocaleString()}`;
         if(elNetProfit) elNetProfit.innerText = `+$${Math.round(netProfit).toLocaleString()}`;
-    }
+    };
 
     function analyzeRadar(gameType) {
         let spaceKey = gameType + '-9000';
@@ -532,9 +518,13 @@
             if (!balls || !Array.isArray(balls)) continue;
 
             let q1=0, q2=0, q3=0, q4=0;
+            // 【優化】加入嚴格的邊界檢查 (防呆)
             balls.forEach(n => { 
                 let num = Number(n);
-                if(num<=9) q1++; else if(num<=19) q2++; else if(num<=29) q3++; else q4++; 
+                if(num>=1 && num<=9) q1++; 
+                else if(num>=10 && num<=19) q2++; 
+                else if(num>=20 && num<=29) q3++; 
+                else if(num>=30 && num<=39) q4++; 
             });
 
             if(q1>=3) colHits.q1++;
@@ -829,11 +819,12 @@
                 });
                 let histProfit = histPrize - histCost;
 
+                // 【優化】修正 oninput="updateConfigDisplay('${key}')" 解決 onUnitBetChange 報錯問題
                 html += `
                     <div class="space-config-card">
                         <h4>${cfg.name}</h4>
                         <div class="input-row">
-                            <div class="setting-item"><label>預測下注 (元/碰)</label><input type="number" id="cfg-unitbet-${key}" value="${cfg.unitBet}" step="1" oninput="onUnitBetChange('${key}')" disabled></div>
+                            <div class="setting-item"><label>預測下注 (元/碰)</label><input type="number" id="cfg-unitbet-${key}" value="${cfg.unitBet}" step="1" oninput="updateConfigDisplay('${key}')" disabled></div>
                             <div class="setting-item"><label>牌面本金 (元)</label><input type="number" id="cfg-cost-${key}" value="${cfg.unitBet * cfg.basePuffs}" disabled></div>
                         </div>
                         <div class="input-row">
@@ -909,7 +900,6 @@
         }
     }
 
-    // 模塊2：實戰回本建議
     window.renderLedgerSummary = function() {
         try {
             let totalCount = 0;
@@ -1058,7 +1048,7 @@
         } catch(e) {
             console.error("Ledger Error:", e);
         }
-    }
+    };
 
     window.unlockSettings = function() {
         if (document.getElementById('input-pwd').value === "0000") {
@@ -1074,12 +1064,12 @@
         } else {
             alert("密碼錯誤！請輸入 0000");
         }
-    }
+    };
 
     window.saveSettings = function() {
         ['tt-1800', 'tt-9000', '539-1800', '539-9000'].forEach(key => {
             spaceConfigs[key].unitBet = parseFloat(document.getElementById(`cfg-unitbet-${key}`).value) || spaceConfigs[key].unitBet;
-            spaceConfigs[key].totalCost = parseFloat(document.getElementById(`cfg-cost-${key}`).value) || spaceConfigs[key].totalCost;
+            spaceConfigs[key].totalCost = parseFloat(document.getElementById(`cfg-cost-${key}`).value) || (spaceConfigs[key].unitBet * spaceConfigs[key].basePuffs);
             spaceConfigs[key].rebate = parseFloat(document.getElementById(`cfg-rebate-${key}`).value) || spaceConfigs[key].rebate;
             spaceConfigs[key].unitPrize = parseFloat(document.getElementById(`cfg-prize-${key}`).value) || spaceConfigs[key].unitPrize;
             localStorage.setItem(`cfg_${key}`, JSON.stringify(spaceConfigs[key]));
@@ -1089,7 +1079,7 @@
         renderRadar();
         renderLedgerSummary();
         alert("設定儲存成功！");
-    }
+    };
 
     window.saveLedger = async function() {
         let date = document.getElementById('ledger-date').value;
@@ -1112,7 +1102,7 @@
         } catch(e) {
             alert("寫入帳本失敗：" + e.message);
         }
-    }
+    };
 
     window.editRecordBet = async function(id, curBet) {
         let input = prompt(`請輸入此期的真實下注金額 (元/碰，0 = 空手沒買)：`, curBet);
@@ -1126,11 +1116,14 @@
         } catch(e) {
             alert("修改下注失敗：" + e.message);
         }
-    }
+    };
 
     onSnapshot(collection(db, "matrix_systems"), (snapshot) => {
         Object.keys(spaceData).forEach(k => spaceData[k] = []);
-        snapshot.forEach(docSnap => { let d = docSnap.data(); if(spaceData[d.space]) spaceData[d.space].push(d); });
+        snapshot.forEach(docSnap => { 
+            let d = docSnap.data(); 
+            if(spaceData[d.space]) spaceData[d.space].push(d); 
+        });
         
         if (currentSpace === 'arena') {
             renderSettingsPanel();
@@ -1200,11 +1193,10 @@
                     `);
                 });
 
-                // 6宮格戰情面板 (1800碰)
                 let analysis = analyzeSpace(currentSpace);
                 let empRateStr = (analysis.empWinRate * 100).toFixed(1) + '%';
                 let curRateStr = (analysis.modelA_Prob * 100).toFixed(1) + '%';
-                let isDue = analysis.modelA_Prob > analysis.empWinRate; // 爆發機率 > 平均機率
+                let isDue = analysis.modelA_Prob > analysis.empWinRate;
 
                 let hypoNetProfit = hypoTotalRevenue - hypoTotalCost;
 
@@ -1261,11 +1253,10 @@
                     `);
                 });
 
-                // 6宮格戰情面板 (9000碰)
                 let analysis = analyzeSpace(currentSpace);
                 let empRateStr = (analysis.empWinRate * 100).toFixed(1) + '%';
                 let curRateStr = (analysis.modelA_Prob * 100).toFixed(1) + '%';
-                let isDue = analysis.modelA_Prob > analysis.empWinRate; // 爆發機率 > 平均機率
+                let isDue = analysis.modelA_Prob > analysis.empWinRate;
 
                 let failCount = data.length - passCount;
                 let hypoNetProfit = hypoTotalRevenue - hypoTotalCost;
@@ -1290,42 +1281,71 @@
     window.addNewRecord = async function() {
         let date = document.getElementById('input-date').value;
         let ballsStr = document.getElementById('input-balls').value.trim();
+        // 【優化】精準抓取實單倍數
+        let myBet = parseFloat(document.getElementById('input-mybet').value);
+        if(isNaN(myBet) || myBet < 0) myBet = 0;
 
         if(!date || !ballsStr) return alert("請輸入開獎日期與開獎號碼！");
         let nums = ballsStr.match(/\d+/g);
         if(!nums || nums.length !== 5) return alert("開獎號碼必須剛好 5 個數字！");
         let draw = nums.map(n=>parseInt(n)).sort((a,b)=>a-b);
+        
+        // 【優化】加入 1~39 的號碼防呆機制與不重複限制
+        if (draw[0] < 1 || draw[4] > 39) return alert("❌ 開獎號碼必須介於 01 到 39 之間！");
+        if (new Set(draw).size !== 5) return alert("❌ 號碼不可重複輸入！");
 
         let id = `${currentSpace}_${date}`;
         try {
-            await setDoc(doc(db, "matrix_systems", id), { id: id, space: currentSpace, date: date, draw: draw });
-            alert(`✅ 儲存成功！開獎紀錄已新增。`);
+            await setDoc(doc(db, "matrix_systems", id), { 
+                id: id, 
+                space: currentSpace, 
+                date: date, 
+                draw: draw,
+                myBet: myBet // 成功寫入資料庫
+            });
+            alert(`✅ 儲存成功！開獎紀錄與實單已新增。`);
             document.getElementById('input-balls').value = '';
         } catch(e) {
             alert("儲存失敗：" + e.message);
         }
-    }
+    };
 
     window.deleteRecord = async function(id) {
         if(confirm("確定刪除此筆開獎紀錄？")) await deleteDoc(doc(db, "matrix_systems", id));
-    }
+    };
 
     window.batchImport = async function() {
         let targetSpace = document.getElementById('batch-target-space').value;
         let lines = document.getElementById('batch-text').value.trim().split('\n');
         let records = [];
+        let skipCount = 0;
+
         lines.forEach(line => {
             let matchDate = line.match(/^(\d{4}[-/]\d{1,2}[-/]\d{1,2})/);
             if(matchDate) {
                 let date = matchDate[1].replace(/\//g, '-');
                 let nums = line.substring(matchDate[0].length).match(/\b(0?[1-9]|[1-3][0-9])\b/g);
-                if(nums && nums.length >= 5) records.push({ id: `${targetSpace}_${date}`, space: targetSpace, date, draw: nums.slice(0,5).map(n=>parseInt(n)).sort((a,b)=>a-b), myBet: 0 });
+                
+                if(nums && nums.length >= 5) {
+                    let draw = nums.slice(0,5).map(n=>parseInt(n)).sort((a,b)=>a-b);
+                    // 【優化】批次匯入同樣加入嚴格的範圍與重複驗證
+                    if(draw[0] >= 1 && draw[4] <= 39 && new Set(draw).size === 5) {
+                        records.push({ id: `${targetSpace}_${date}`, space: targetSpace, date, draw: draw, myBet: 0 });
+                    } else {
+                        skipCount++;
+                    }
+                }
             }
         });
+        
         if(records.length === 0) return alert("沒有抓到正確的格式喔！");
         
         let targetName = spaceConfigs[targetSpace].name;
-        if (!confirm(`準備匯入 ${records.length} 筆資料至【${targetName}】，確定？`)) return;
+        let confirmMsg = `準備匯入 ${records.length} 筆資料至【${targetName}】`;
+        if (skipCount > 0) confirmMsg += `\n(已自動跳過 ${skipCount} 筆號碼異常或超出範圍的資料)`;
+        confirmMsg += `，確定繼續？`;
+        
+        if (!confirm(confirmMsg)) return;
 
         try {
             const CHUNK_SIZE = 100;
@@ -1340,7 +1360,7 @@
         } catch(e) {
             alert("寫入失敗：" + e.message);
         }
-    }
+    };
 
     document.getElementById('input-date').value = new Date().toISOString().split('T')[0];
     document.getElementById('ledger-date').value = new Date().toISOString().split('T')[0];
