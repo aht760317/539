@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>天天樂 & 五三九 雙核心量化操盤系統</title>
+    <title>天天樂 & 五三九 雙核心量化操盤系統 (動態凱利升級版)</title>
     <style>
         :root {
             --bg-color: #f8fafc; 
@@ -196,27 +196,27 @@
         <div class="guide-grid" id="guide-content">
             <div class="guide-item">
                 <strong>① 數學家 (物理勝率)：</strong><br>該盤口的基礎過關機率。
-                <span class="guide-target">🎯 達標亮綠門檻：目前勝率必須大於遊戲基礎機率。</span>
+                <span class="guide-target">🎯 達標亮綠門檻：目前勝率大於遊戲基礎機率。</span>
             </div>
             <div class="guide-item">
-                <strong>② 投機家 (連莊動能)：</strong><br>抓短線熱度，觀察上一期是否過關。
-                <span class="guide-target">🎯 達標亮綠門檻：上一期剛中獎 (顯示連中動能)。</span>
+                <strong>② 資金家 (凱利配置)：</strong><br>動態計算最佳注碼比例(Fractional Kelly)，對抗破產。
+                <span class="guide-target">🎯 達標亮綠門檻：算定配置比例 f* > 0% (代表具備正向數學優勢)。</span>
             </div>
             <div class="guide-item">
-                <strong>③ 贏家 (貝氏)：</strong><br>結合歷史與現狀，動態修正後的當下實際勝率。
-                <span class="guide-target">🎯 達標亮綠門檻：修正後勝率大於基礎機率。</span>
+                <strong>③ 贏家 (馬可夫轉移)：</strong><br>透過馬可夫鏈，精算盤口在「目前的連敗狀態下」，歷史上的反轉勝率。
+                <span class="guide-target">🎯 達標亮綠門檻：動態反轉勝率大於基礎機率。</span>
             </div>
             <div class="guide-item">
-                <strong>④ 銀行家 (偏離度 Z-Score)：</strong><br>測量連槓期數偏離平均值的嚴重程度。<br><span style="color:#dc2626;">(決定是否進場的核心！)</span>
-                <span class="guide-target">🎯 達標亮綠門檻：數值大於或等於 0.5。低於 0.5 會亮紅燈警告。</span>
+                <strong>④ 銀行家 (偏離度 Z-Score)：</strong><br>測量連槓期數偏離平均值的嚴重程度。
+                <span class="guide-target">🎯 達標亮綠門檻：數值大於或等於 0.5。</span>
             </div>
             <div class="guide-item">
-                <strong>⑤ 精算家 (破產壓力)：</strong><br>連槓期數是否已達到平均值，代表風險釋放。
-                <span class="guide-target">🎯 達標亮綠門檻：目前連槓期數 ≥ 理論預期連槓期數。</span>
+                <strong>⑤ 精算家 (波動與回撤防禦)：</strong><br>監控系統理論淨值最大回撤(Max Drawdown)與亂流。
+                <span class="guide-target">🎯 達標亮綠門檻：資金曲線位於安全水域，未進入極端亂流。</span>
             </div>
             <div class="guide-item">
                 <strong>⑥ 大莊家 (數學期望值 EV)：</strong><br>下注 1 元/碰 跑長期的平均賺賠金額。
-                <span class="guide-target">🎯 達標亮綠門檻：數值必須大於 0 (+ 元) 才能下注。負數絕對亮紅燈！</span>
+                <span class="guide-target">🎯 達標亮綠門檻：期望值必須大於 0。</span>
             </div>
         </div>
     </div>
@@ -392,7 +392,6 @@
         if(!select) return;
         select.innerHTML = '<option value="all">所有歷史年度</option>';
         let maxYear = currentYear + 5; 
-        // 【優化】支援到 2007 年
         for(let y = maxYear; y >= 2007; y--) { 
             select.innerHTML += `<option value="${y}" ${y === currentYear ? 'selected' : ''}>${y} 年度</option>`;
         }
@@ -415,7 +414,6 @@
         return { puffs, text: puffs>0?`${puffs}碰`:"未中獎", p1, p2, p3 };
     }
     
-    // 【優化】修正 9000碰 的明確邊界劃分 (防呆)
     function check9000(balls) {
         if (!balls || !Array.isArray(balls)) return { pass: false, puffs: 0, text: "錯誤", q1:0, q2:0, q3:0, q4:0 };
         let q1=0, q2=0, q3=0, q4=0;
@@ -481,7 +479,6 @@
         }
     };
 
-    // 此函式負責在輸入改變時即時更新畫面顯示
     window.updateConfigDisplay = function(key) {
         let unitBet = parseFloat(document.getElementById(`cfg-unitbet-${key}`).value) || 0;
         let basePuffs = spaceConfigs[key].basePuffs;
@@ -519,7 +516,6 @@
             if (!balls || !Array.isArray(balls)) continue;
 
             let q1=0, q2=0, q3=0, q4=0;
-            // 【優化】加入嚴格的邊界檢查 (防呆)
             balls.forEach(n => { 
                 let num = Number(n);
                 if(num>=1 && num<=9) q1++; 
@@ -641,6 +637,7 @@
         let continuousHits = 0; 
         let losingStreak = 0;
 
+        // 計算當前狀態
         for (let i = 0; i < data.length; i++) {
             let balls = data[i].draw;
             if (!balls || !Array.isArray(balls) || balls.length === 0) continue;
@@ -658,11 +655,23 @@
             }
         }
 
-        let WW = 0, WL = 0, LW = 0, LL = 0; 
-        let prevWasWin = null;
         let reversedData = [...data].reverse();
+        
+        // --- 模型參數設定 ---
+        let baseP_Threshold = cfg.type === '1800' ? 0.15 : 0.25;
+        let costPerRound = Number(cfg.unitBet) * Number(cfg.basePuffs) * (1 - Number(cfg.rebate) / 100);
+        let minPrize = cfg.type === '1800' ? 3 * Number(cfg.unitPrize) * Number(cfg.unitBet) : 2 * Number(cfg.unitPrize) * Number(cfg.unitBet);
+        let netWin = minPrize - costPerRound;
 
-        reversedData.forEach(item => {
+        // --- 理論資金曲線、波動率與馬可夫鏈記憶計算 ---
+        let theoreticalEquity = 0;
+        let peakTheoretical = 0;
+        let maxDrawdown = 0;
+        
+        let markovW = 0, markovL = 0;
+        let tempStreak = 0;
+
+        reversedData.forEach((item, idx) => {
             let balls = item.draw;
             if (!balls || !Array.isArray(balls) || balls.length === 0) return;
 
@@ -670,94 +679,113 @@
             let isWin = (cfg.type === '1800' && res.puffs >= 3) || (cfg.type === '9000' && res.pass);
             
             if (isWin) wins++;
-            if (prevWasWin !== null) {
-                if(prevWasWin && isWin) WW++;
-                if(prevWasWin && !isWin) WL++;
-                if(!prevWasWin && isWin) LW++;
-                if(!prevWasWin && !isWin) LL++;
+
+            // 1. 資金曲線與最大回撤
+            theoreticalEquity += (isWin ? netWin : -costPerRound);
+            if (theoreticalEquity > peakTheoretical) peakTheoretical = theoreticalEquity;
+            let dd = peakTheoretical - theoreticalEquity;
+            if (dd > maxDrawdown) maxDrawdown = dd;
+
+            // 2. 馬可夫鏈：歷史上在「跟目前一樣的連敗次數」下，下一期發生什麼事？
+            if (idx > 0) { 
+                if (tempStreak === losingStreak) {
+                    if (isWin) markovW++; else markovL++;
+                }
             }
-            prevWasWin = isWin;
+
+            if (isWin) tempStreak = 0;
+            else tempStreak++;
         });
 
-        let baseP_Threshold = cfg.type === '1800' ? 0.15 : 0.25;
-        let empWinRate = totalDraws > 0 ? (wins / totalDraws) : baseP_Threshold;
-        let P_Win = empWinRate; 
-        let modelA_Prob = Math.min(P_Win + (losingStreak * 0.10), 0.99);
-
-        let P_Win_Given_Win = (WW + WL > 0) ? (WW / (WW + WL)) : 0;
-        let P_Win_Given_Lose = (LW + LL > 0) ? (LW / (LW + LL)) : 0;
+        let currentDrawdown = peakTheoretical - theoreticalEquity;
         
-        let bayesProb = latestIsWin ? ((P_Win_Given_Win * P_Win) / ((P_Win_Given_Win * P_Win) + ((1 - P_Win_Given_Lose) * (1 - P_Win)))) : P_Win;
-        if(isNaN(bayesProb)) bayesProb = P_Win;
+        // 數學家基礎機率
+        let empWinRate = totalDraws > 0 ? (wins / totalDraws) : baseP_Threshold;
+        
+        // 馬可夫動態機率 (搭配 Laplace Smoothing 避免零樣本錯誤)
+        let markovProb = (markovW + baseP_Threshold) / (markovW + markovL + 1);
+        
+        // 贏家：貝氏機率融合
+        let bayesProb = (markovProb * 0.7) + (empWinRate * 0.3);
 
+        // 銀行家：Z-Score
         let expectedLosing = cfg.type === '1800' ? 6 : 3;
         let stdDev = cfg.type === '1800' ? 2 : 1.5; 
         let zScore = (losingStreak - expectedLosing) / stdDev;
 
-        let P_Win_Calc = Math.max(0.01, Math.min(0.99, P_Win));
-        let mcMaxLossStreak = Math.ceil(Math.log(0.01) / Math.log(1 - P_Win_Calc));
-        if(!isFinite(mcMaxLossStreak) || isNaN(mcMaxLossStreak)) mcMaxLossStreak = 0;
+        // 資金家：凱利公式
+        let oddsB = costPerRound > 0 ? (netWin / costPerRound) : 0;
+        let fullKelly = oddsB > 0 ? ((bayesProb * oddsB) - (1 - bayesProb)) / oddsB : 0;
+        let fracKelly = Math.max(0, fullKelly * 0.3); // 30% 分數凱利防止破產
 
-        let costPerRound = Number(cfg.unitBet) * Number(cfg.basePuffs) * (1 - Number(cfg.rebate) / 100);
-        let minPrize = cfg.type === '1800' ? 3 * Number(cfg.unitPrize) * Number(cfg.unitBet) : 2 * Number(cfg.unitPrize) * Number(cfg.unitBet);
+        // 亂流防禦機制判定 (Drawdown Penalty)
+        let isTurbulent = false;
+        if (maxDrawdown > costPerRound * 5 && currentDrawdown >= maxDrawdown * 0.8) {
+            isTurbulent = true; // 當前回撤逼近歷史最深水區的80%
+        }
+
         let EV = (bayesProb * minPrize) - ((1 - bayesProb) * costPerRound);
         
         return { 
             cfg, totalDraws, latestIsWin, continuousHits, losingStreak, 
-            modelA_Prob, P_Win_Given_Win, P_Win_Given_Lose, EV, costPerRound, minPrize,
-            zScore, bayesProb, mcMaxLossStreak, expectedLosing, baseP_Threshold, empWinRate
+            empWinRate, markovProb, bayesProb, zScore, EV, 
+            fracKelly, currentDrawdown, isTurbulent,
+            expectedLosing, baseP_Threshold, costPerRound
         };
     }
 
     function getPredictionHtml(analysis) {
-        let { cfg, totalDraws, latestIsWin, continuousHits, losingStreak, expectedLosing, modelA_Prob, P_Win_Given_Win, P_Win_Given_Lose, EV, zScore, bayesProb, mcMaxLossStreak, costPerRound, baseP_Threshold } = analysis;
+        let { cfg, totalDraws, latestIsWin, losingStreak, expectedLosing, empWinRate, bayesProb, zScore, EV, fracKelly, currentDrawdown, isTurbulent, baseP_Threshold } = analysis;
         
         if (totalDraws < 5) return `<div class="ai-prediction-box" style="text-align:center; color:#94a3b8; padding:20px;">⏳ 歷史數據不足，請先匯入開獎紀錄</div>`;
 
-        let adviceLaplace = `${(modelA_Prob * 100).toFixed(1)}%`;
-        let markovState = latestIsWin ? `${(P_Win_Given_Win*100).toFixed(1)}% (連中)` : `${(P_Win_Given_Lose*100).toFixed(1)}% (反轉)`;
-        let adviceBayes = `${(bayesProb*100).toFixed(1)}%`;
+        let adviceLaplace = `${(empWinRate * 100).toFixed(1)}%`;
+        let adviceKelly = fracKelly > 0 ? `f* ${(fracKelly * 100).toFixed(1)}%` : `0% (禁入)`;
+        let adviceMarkov = `${(bayesProb * 100).toFixed(1)}%`;
         let adviceZ = `Z = ${Number(zScore).toFixed(2)}`;
-        let adviceMC = `${losingStreak} / ${expectedLosing} 期`; 
+        let adviceMC = `DD: $${Math.round(currentDrawdown)}`; 
         let evVal = EV > 0 ? `+${Number(EV).toFixed(0)}` : Number(EV).toFixed(0);
 
-        let passLaplace = modelA_Prob > baseP_Threshold;
-        let passBayes = bayesProb > baseP_Threshold;
-        let passMC = losingStreak >= expectedLosing;
+        let passLaplace = empWinRate > baseP_Threshold;
+        let passKelly = fracKelly > 0;
+        let passMarkov = bayesProb > baseP_Threshold;
+        let passZ = zScore >= 0.5;
+        let passDD = !isTurbulent; 
+        let passEV = EV > 0;
 
         let c1 = passLaplace ? 'highlight' : 'danger';
-        let c2 = latestIsWin ? 'highlight' : 'danger';
-        let c3 = passBayes ? 'highlight' : 'danger';
-        let c4 = zScore >= 0.5 ? 'highlight' : 'danger';
-        let c5 = passMC ? 'highlight' : 'danger'; 
-        let c6 = EV > 0 ? 'highlight' : 'danger';
+        let c2 = passKelly ? 'highlight' : 'danger';
+        let c3 = passMarkov ? 'highlight' : 'danger';
+        let c4 = passZ ? 'highlight' : 'danger';
+        let c5 = passDD ? 'highlight' : 'danger'; 
+        let c6 = passEV ? 'highlight' : 'danger';
 
         let consensusTitle = "";
         let consensusDesc = "";
         let consensusColor = "";
 
-        if (zScore >= 1.5 && EV > 0) {
-            consensusTitle = "🟢 S級狙擊 (六大巨頭強烈共識)";
-            consensusDesc = `【綜合評估】①數學家與③贏家皆確認勝率反彈，且④偏離度突破冰點達極端值(Z=${Number(zScore).toFixed(2)})，配合⑤壓力完全釋放與⑥期望值大幅轉正。大莊家決議：【進場平推 1 單位】。`;
-            consensusColor = "background:#ecfdf5; color:#065f46; border: 2px solid #10b981;";
-        } else if (zScore >= 0.5 && EV > 0) {
-            consensusTitle = "🟢 A級佈局 (多維指標共振)";
-            consensusDesc = `【綜合評估】④偏離度已脫離常態雜訊區(Z=${Number(zScore).toFixed(2)})，結合${passBayes?'③贏家真實勝率達標':'基礎機率回穩'}，且⑥確認具備正期望值套利空間。大莊家決議：【標準進場 1 單位】。`;
-            consensusColor = "background:#f0fdf4; color:#15803d; border: 2px solid #86efac;";
-        } else if (latestIsWin) {
-            consensusTitle = "🟡 動能追擊 (投機家主導)";
-            consensusDesc = `【綜合評估】②投機家捕捉到短線連莊熱度！雖然長線指標尚未回穩，但可利用獲利資金進行【順勢跟進 0.5 單位】，斷莊即停。`;
+        if (isTurbulent) {
+            consensusTitle = "🟡 亂流防禦 (波動率限制)";
+            consensusDesc = `【風控啟動】偵測到市場進入高回撤深水區 (最大回撤率極高)。為避免資金斷鍊，強制壓制凱利值。大莊家決議：【降級防禦 1 單位或觀望】。`;
             consensusColor = "background:#fffbeb; color:#b45309; border: 2px solid #f59e0b;";
+        } else if (passZ && zScore >= 1.5 && passEV && passKelly) {
+            consensusTitle = "🟢 S級狙擊 (多維動態共識)";
+            consensusDesc = `【綜合評估】馬可夫鏈捕捉到反轉慣性，Z-Score達極端值(${Number(zScore).toFixed(2)})。凱利公式精算最佳安全倉位為 ${(fracKelly*100).toFixed(1)}%。大莊家決議：【重擊進場 2~3 單位】。`;
+            consensusColor = "background:#ecfdf5; color:#065f46; border: 2px solid #10b981;";
+        } else if (passZ && passEV && passKelly) {
+            consensusTitle = "🟢 A級佈局 (穩定套利區)";
+            consensusDesc = `【綜合評估】系統脫離回撤亂流，期望值轉正。依據凱利資金管理，建議動用 ${(fracKelly*100).toFixed(1)}% 倉位。大莊家決議：【標準進場 1 單位】。`;
+            consensusColor = "background:#f0fdf4; color:#15803d; border: 2px solid #86efac;";
         } else {
-             consensusTitle = "🔴 銀行家否決 (指標全面示警禁入)";
-             consensusDesc = `【綜合評估】六大指標全面示警：④偏離度不足且⑥期望值為負。在負期望值下盲目下注等於送錢，大莊家決議：【嚴格觀望 0 單位】。`;
+             consensusTitle = "🔴 銀行家否決 (系統嚴格風控)";
+             consensusDesc = `【綜合評估】負期望值或凱利值 < 0。盲目下注將導致長期破產。大莊家決議：【嚴格觀望 0 單位】。`;
              consensusColor = "background:#fef2f2; color:#b91c1c; border: 2px solid #ef4444;";
         }
 
         return `
             <div class="ai-prediction-box">
                 <h5>🤖 六大巨頭客觀決策矩陣</h5>
-                <div style="font-size: 10px; color: #64748b; margin-bottom: 6px;">(純機率運算，不含個人損益情緒)</div>
+                <div style="font-size: 10px; color: #64748b; margin-bottom: 6px;">(動態凱利與馬可夫演算法驅動)</div>
                 
                 <div class="giant-grid">
                     <div class="giant-card ${c1}">
@@ -765,12 +793,12 @@
                         <div class="g-val">${adviceLaplace}</div>
                     </div>
                     <div class="giant-card ${c2}">
-                        <div class="g-title">② 投機家(動能)</div>
-                        <div class="g-val">${markovState}</div>
+                        <div class="g-title">② 資金家(凱利)</div>
+                        <div class="g-val">${adviceKelly}</div>
                     </div>
                     <div class="giant-card ${c3}">
-                        <div class="g-title">③ 贏家(貝氏)</div>
-                        <div class="g-val">${adviceBayes}</div>
+                        <div class="g-title">③ 贏家(馬可夫)</div>
+                        <div class="g-val">${adviceMarkov}</div>
                     </div>
                     <div class="giant-card ${c4}">
                         <div class="g-title">④ 銀行家(偏離)</div>
@@ -820,7 +848,6 @@
                 });
                 let histProfit = histPrize - histCost;
 
-                // 【優化】修正 oninput="updateConfigDisplay('${key}')" 解決 onUnitBetChange 報錯問題
                 html += `
                     <div class="space-config-card">
                         <h4>${cfg.name}</h4>
@@ -875,15 +902,15 @@
                 let status = "";
                 let cssClass = "";
                 
-                if (a.zScore >= 1.5 && a.EV > 0) {
-                    status = `🎯 無情狙擊 👉 <span style="color:#a7f3d0;">強勢進場 1 元/碰</span>`;
+                if (a.isTurbulent) {
+                    status = `🟡 亂流防禦 👉 <span style="color:#fde68a;">降級防禦 1 元/碰</span>`;
+                    cssClass = "hot";
+                } else if (a.zScore >= 1.5 && a.EV > 0 && a.fracKelly > 0) {
+                    status = `🎯 無情狙擊 👉 <span style="color:#a7f3d0;">強勢進場 2~3 元/碰</span>`;
                     cssClass = "cold";
-                } else if (a.zScore >= 0.5 && a.EV > 0) {
+                } else if (a.zScore >= 0.5 && a.EV > 0 && a.fracKelly > 0) {
                     status = `🟢 紀律佈局 👉 <span style="color:#a7f3d0;">標準進場 1 元/碰</span>`;
                     cssClass = "cold";
-                } else if (a.latestIsWin) {
-                    status = `🔥 動能追擊 👉 <span style="color:#fde68a;">順勢跟進 1 元/碰</span>`;
-                    cssClass = "hot";
                 } else {
                     status = `❄️ 銀行家否決 👉 <span style="color:#cbd5e1;">空手觀望 0 元/碰</span>`;
                 }
@@ -955,25 +982,30 @@
                 let reasonText = '';
                 let cardStyle = '';
 
-                let unitCost = a.cfg.basePuffs * (1 - a.cfg.rebate / 100);
+                let unitCost = a.costPerRound;
                 let unitPrizeTotal = a.cfg.type === '1800' ? 3 * a.cfg.unitPrize : 2 * a.cfg.unitPrize;
                 let unitNetWin = unitPrizeTotal - unitCost; 
                 let exactNeeded = (isLoss && unitNetWin > 0) ? (lossAmount / unitNetWin) : 0;
 
                 let expertDiagnosis = "";
-                let passBayes = a.bayesProb > a.baseP_Threshold;
+                let passZ = a.zScore >= 0.5;
 
-                if (a.zScore >= 1.5 && a.EV > 0) {
-                    expertDiagnosis = `【巨頭診斷】①③勝率反轉、④偏離極端(Z=${Number(a.zScore).toFixed(2)})、⑥期望值大幅>0，S級套利點浮現。`;
-                } else if (a.zScore >= 0.5 && a.EV > 0) {
-                    expertDiagnosis = `【巨頭診斷】④偏離度脫離雜訊(Z=${Number(a.zScore).toFixed(2)})且⑥期望值>0，A級佈局點確認。`;
-                } else if (a.latestIsWin) {
-                    expertDiagnosis = `【巨頭診斷】②投機家確認連莊熱度，短線動能浮現。`;
+                if (a.isTurbulent) {
+                    expertDiagnosis = `【風控啟動】偵測到市場進入高回撤深水區。`;
+                } else if (a.zScore >= 1.5 && a.EV > 0 && a.fracKelly > 0) {
+                    expertDiagnosis = `【巨頭診斷】馬可夫反轉機率飆高、④偏離極端(Z=${Number(a.zScore).toFixed(2)})、凱利公式算出最佳倉位。S級套利點浮現。`;
+                } else if (passZ && a.EV > 0 && a.fracKelly > 0) {
+                    expertDiagnosis = `【巨頭診斷】④偏離度脫離雜訊(Z=${Number(a.zScore).toFixed(2)})且凱利公式大於0，A級佈局點確認。`;
                 } else {
-                    expertDiagnosis = `【巨頭診斷】④偏離度不足且⑥期望值為負，六大指標全面示警禁入。`;
+                    expertDiagnosis = `【巨頭診斷】負期望值或凱利值小於零，指標全面示警禁入。`;
                 }
 
-                if (a.zScore >= 0.5 && a.EV > 0) {
+                if (a.isTurbulent) {
+                    recBet = 1;
+                    statusText = `🟡 亂流防禦 👉 建議: ${recBet} 元/碰`;
+                    cardStyle = 'background:#fffbeb; border-color:#fcd34d;';
+                    reasonText = `${expertDiagnosis}<br>【資金配置】亂流區嚴格禁止重擊，強制降級為 <strong>${recBet} 元/碰</strong> 試單防禦。`;
+                } else if (passZ && a.EV > 0 && a.fracKelly > 0) {
                     let level = a.zScore >= 1.5 ? 'S' : 'A';
                     let targetBet = 1;
 
@@ -989,7 +1021,7 @@
                             if (recBet < targetBet) {
                                 reasonText = `${expertDiagnosis}<br>【資金配置】[🎯 打平微利] 跨盤總虧損 $${Math.round(lossAmount)}。為保護本金，強制降為安全上限 <strong>${recBet} 元/碰</strong> 分次打平。`;
                             } else {
-                                reasonText = `${expertDiagnosis}<br>【資金配置】[🎯 打平微利] 總虧損 $${Math.round(lossAmount)}。精算下注 <strong>${recBet} 元/碰</strong>，過關回本且倒賺 $${Math.round(expectNet)}！`;
+                                reasonText = `${expertDiagnosis}<br>【資金配置】[🎯 打平微利] 總虧損 $${Math.round(lossAmount)}。凱利核准下注 <strong>${recBet} 元/碰</strong>，過關回本且倒賺 $${Math.round(expectNet)}！`;
                             }
                         } else {
                             recBet = 1;
@@ -999,34 +1031,20 @@
                         if (isLoss) {
                             targetBet = Math.ceil(exactNeeded) + 1; 
                             recBet = Math.min(targetBet, 3); 
-                            reasonText = `${expertDiagnosis}<br>【資金配置】[📈 擴大獲利] 虧損 $${Math.round(lossAmount)}。火力放大至 <strong>${recBet} 元/碰</strong> 強力反擊！`;
+                            reasonText = `${expertDiagnosis}<br>【資金配置】[📈 擴大獲利] 虧損 $${Math.round(lossAmount)}。凱利高優勢，火力放大至 <strong>${recBet} 元/碰</strong> 強力反擊！`;
                         } else {
-                            recBet = level === 'S' ? 2 : 1;
-                            reasonText = `${expertDiagnosis}<br>【資金配置】[📈 擴大獲利] 目前已有營利。趁勝加碼至 <strong>${recBet} 元/碰</strong> 擴大戰果。`;
+                            recBet = level === 'S' ? 3 : 2;
+                            reasonText = `${expertDiagnosis}<br>【資金配置】[📈 擴大獲利] 趁勝加碼至 <strong>${recBet} 元/碰</strong> 擴大戰果。`;
                         }
                     }
 
                     statusText = `${level === 'S' ? '🔥 S級狙擊' : '🟢 A級佈局'} 👉 建議: ${recBet} 元/碰`;
                     cardStyle = 'background:#ecfdf5; border-color:#a7f3d0;';
-
-                } else if (a.latestIsWin) {
-                    if (strategy === 'conservative') {
-                        recBet = 1;
-                        reasonText = `${expertDiagnosis}<br>【資金配置】[🛡️ 保本防禦] 盤面具熱度。用最小單位 <strong>${recBet} 元/碰</strong> 試水溫，一斷即停。`;
-                    } else if (strategy === 'moderate') {
-                        recBet = 1;
-                        reasonText = `${expertDiagnosis}<br>【資金配置】[🎯 打平微利] 為保本不盲目重倉，僅用 <strong>${recBet} 元/碰</strong> 摸底。`;
-                    } else {
-                        recBet = 2;
-                        reasonText = `${expertDiagnosis}<br>【資金配置】[📈 擴大獲利] 用 <strong>${recBet} 元/碰</strong> 強勢跟單，斷莊立刻斬倉。`;
-                    }
-                    statusText = `🟡 動能追擊 👉 建議: ${recBet} 元/碰`;
-                    cardStyle = 'background:#fffbeb; border-color:#fcd34d;';
                 } else {
                     recBet = 0;
                     statusText = `🔴 銀行家否決 👉 建議: 0 元/碰`;
                     cardStyle = 'background:#fef2f2; border-color:#fca5a5;';
-                    reasonText = `${expertDiagnosis}<br>【資金配置】[絕對防禦] 就算再想回本也 <strong>絕對不能下注</strong>，一毛錢都不要給莊家！`;
+                    reasonText = `${expertDiagnosis}<br>【資金配置】[絕對防禦] 沒有數學優勢，<strong>一毛錢都不要給莊家！</strong>`;
                 }
 
                 recHtml += `
@@ -1144,7 +1162,6 @@
             let cfg = spaceConfigs[currentSpace];
             let data = getFilteredData(currentSpace);
             
-            // 【優化】獨立計算今年度 (currentYear) 的平均過關率
             let thisYearData = (spaceData[currentSpace] || []).filter(x => x && x.date && String(x.date).startsWith(currentYear.toString()));
             let thisYearWins = 0;
             thisYearData.forEach(item => {
@@ -1207,12 +1224,11 @@
 
                 let analysis = analyzeSpace(currentSpace);
                 let empRateStr = (analysis.empWinRate * 100).toFixed(1) + '%';
-                let curRateStr = (analysis.modelA_Prob * 100).toFixed(1) + '%';
-                let isDue = analysis.modelA_Prob > analysis.empWinRate;
+                let curRateStr = (analysis.bayesProb * 100).toFixed(1) + '%';
+                let isDue = analysis.bayesProb > analysis.empWinRate;
 
                 let hypoNetProfit = hypoTotalRevenue - hypoTotalCost;
 
-                // 【優化】加入今年度平均的排版
                 document.getElementById('stats-container').innerHTML = `
                     <div class="stat-item"><h3>區間總期數</h3><p>${data.length} 期</p></div>
                     <div class="stat-item"><h3>3碰 次數</h3><p style="color:#d97706;">${count3} 次</p></div>
@@ -1225,7 +1241,7 @@
                         </div>
                     </div>
                     <div class="stat-item" style="border-color:${isDue?'#34d399':'#e2e8f0'}; background:${isDue?'#ecfdf5':'#fff'};">
-                        <h3 style="color:${isDue?'#065f46':'#64748b'};">當前爆發機率</h3>
+                        <h3 style="color:${isDue?'#065f46':'#64748b'};">當前反轉機率</h3>
                         <p style="color:${isDue?'#059669':'#0f172a'};">${curRateStr} ${isDue?'🔥':''}</p>
                     </div>
                     <div class="stat-item"><h3>理論總營利 (均注1元)</h3><p style="color:${hypoNetProfit>=0?'#059669':'#dc2626'}">${hypoNetProfit>=0?'+$':'-$'}${Math.abs(Math.round(hypoNetProfit)).toLocaleString()}</p></div>
@@ -1274,13 +1290,12 @@
 
                 let analysis = analyzeSpace(currentSpace);
                 let empRateStr = (analysis.empWinRate * 100).toFixed(1) + '%';
-                let curRateStr = (analysis.modelA_Prob * 100).toFixed(1) + '%';
-                let isDue = analysis.modelA_Prob > analysis.empWinRate;
+                let curRateStr = (analysis.bayesProb * 100).toFixed(1) + '%';
+                let isDue = analysis.bayesProb > analysis.empWinRate;
 
                 let failCount = data.length - passCount;
                 let hypoNetProfit = hypoTotalRevenue - hypoTotalCost;
 
-                // 【優化】加入今年度平均的排版
                 document.getElementById('stats-container').innerHTML = `
                     <div class="stat-item"><h3>區間總期數</h3><p>${data.length} 期</p></div>
                     <div class="stat-item"><h3>中獎次數 (過)</h3><p style="color:#059669;">${passCount} 次</p></div>
@@ -1293,7 +1308,7 @@
                         </div>
                     </div>
                     <div class="stat-item" style="border-color:${isDue?'#34d399':'#e2e8f0'}; background:${isDue?'#ecfdf5':'#fff'};">
-                        <h3 style="color:${isDue?'#065f46':'#64748b'};">當前爆發機率</h3>
+                        <h3 style="color:${isDue?'#065f46':'#64748b'};">當前反轉機率</h3>
                         <p style="color:${isDue?'#059669':'#0f172a'};">${curRateStr} ${isDue?'🔥':''}</p>
                     </div>
                     <div class="stat-item"><h3>理論總營利 (均注1元)</h3><p style="color:${hypoNetProfit>=0?'#059669':'#dc2626'}">${hypoNetProfit>=0?'+$':'-$'}${Math.abs(Math.round(hypoNetProfit)).toLocaleString()}</p></div>
@@ -1307,7 +1322,6 @@
     window.addNewRecord = async function() {
         let date = document.getElementById('input-date').value;
         let ballsStr = document.getElementById('input-balls').value.trim();
-        // 【優化】精準抓取實單倍數
         let myBet = parseFloat(document.getElementById('input-mybet').value);
         if(isNaN(myBet) || myBet < 0) myBet = 0;
 
@@ -1316,7 +1330,6 @@
         if(!nums || nums.length !== 5) return alert("開獎號碼必須剛好 5 個數字！");
         let draw = nums.map(n=>parseInt(n)).sort((a,b)=>a-b);
         
-        // 【優化】加入 1~39 的號碼防呆機制與不重複限制
         if (draw[0] < 1 || draw[4] > 39) return alert("❌ 開獎號碼必須介於 01 到 39 之間！");
         if (new Set(draw).size !== 5) return alert("❌ 號碼不可重複輸入！");
 
@@ -1327,7 +1340,7 @@
                 space: currentSpace, 
                 date: date, 
                 draw: draw,
-                myBet: myBet // 成功寫入資料庫
+                myBet: myBet 
             });
             alert(`✅ 儲存成功！開獎紀錄與實單已新增。`);
             document.getElementById('input-balls').value = '';
@@ -1354,7 +1367,6 @@
                 
                 if(nums && nums.length >= 5) {
                     let draw = nums.slice(0,5).map(n=>parseInt(n)).sort((a,b)=>a-b);
-                    // 【優化】批次匯入同樣加入嚴格的範圍與重複驗證
                     if(draw[0] >= 1 && draw[4] <= 39 && new Set(draw).size === 5) {
                         records.push({ id: `${targetSpace}_${date}`, space: targetSpace, date, draw: draw, myBet: 0 });
                     } else {
