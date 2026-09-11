@@ -39,16 +39,16 @@
         .dot { width: 6px; height: 6px; border-radius: 50%; background: #10b981; box-shadow: 0 0 4px #10b981; }
 
         .mode-switcher { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin-bottom: 14px; }
-        @media (min-width: 768px) { .mode-switcher { grid-template-columns: repeat(5, 1fr); } }
+        @media (min-width: 768px) { .mode-switcher { grid-template-columns: repeat(3, 1fr); } }
+        @media (min-width: 1024px) { .mode-switcher { grid-template-columns: repeat(6, 1fr); } }
         
         .mode-btn { 
             padding: 8px 4px; border: 1.5px solid #cbd5e1; background: #fff; color: #475569; 
             font-size: 12px; font-weight: 800; border-radius: 8px; cursor: pointer; transition: 0.2s; text-align: center; white-space: nowrap;
         }
         .mode-btn.active { border-color: var(--primary-color); background: var(--primary-color); color: #fff; box-shadow: 0 2px 8px rgba(2, 132, 199, 0.3); }
-        .mode-btn.arena-btn { grid-column: 1 / -1; } 
-        @media (min-width: 768px) { .mode-btn.arena-btn { grid-column: auto; } }
         .mode-btn.arena-btn.active { border-color: var(--purple-color); background: var(--purple-color); box-shadow: 0 2px 8px rgba(124, 58, 237, 0.3); }
+        .mode-btn.ledger-btn.active { border-color: var(--success-color); background: var(--success-color); box-shadow: 0 2px 8px rgba(5, 150, 105, 0.3); }
 
         .panel { background: var(--panel-bg); padding: 14px; border-radius: 12px; border: 1px solid var(--panel-border); margin-bottom: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
         .panel-title { font-size: 14px; font-weight: 900; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px; color: var(--text-main); }
@@ -82,20 +82,12 @@
         .radar-card { background: #ffffff; border: 1px solid #fca5a5; border-radius: 8px; padding: 12px; font-size: 12px; line-height: 1.5; }
         .radar-card h4 { color: #dc2626; font-size: 13px; font-weight: 900; margin-bottom: 6px; display:flex; justify-content:space-between; align-items:center;}
         .radar-highlight { color: #b91c1c; font-weight: 900; font-size: 14px; }
-        .col-prob-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 8px 0; }
-        .col-prob-item { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 6px 8px; font-size: 11px; }
-        .col-prob-item.danger-col { background: #fff1f2; border-color: #fca5a5; }
-        .col-prob-item .col-title { font-weight: bold; color: #475569; margin-bottom: 2px; }
-        .col-prob-item.danger-col .col-title { color: #dc2626; }
-        .col-prob-item .col-val { font-weight: 900; font-size: 13px; color: #0284c7; }
-        .col-prob-item.danger-col .col-val { color: #dc2626; }
         
         /* 🔥 六維預測版面 */
         .ai-prediction-box { margin-top: auto; padding: 12px; background: linear-gradient(to bottom, #ffffff, #f8fafc); border: 2px solid #e2e8f0; border-radius: 10px; font-size: 12px; }
         .ai-prediction-box h5 { color: #0f172a; margin: 0 0 10px 0; font-size: 13px; font-weight: 900; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid #cbd5e1; padding-bottom: 6px;}
         .ai-row { display: flex; justify-content: space-between; margin-bottom: 6px; font-weight: bold; border-bottom: 1px dashed #e2e8f0; padding-bottom: 4px; align-items: center;}
         .ai-row:last-child { border-bottom: none; margin-bottom:0;}
-        .ai-row.new-model { background: #f0fdf4; padding: 6px; border-radius: 6px; border-bottom: 1px solid #bbf7d0; margin-bottom: 6px;}
         .strategy-box { margin-top: 10px; padding: 10px; border-radius: 8px; text-align: center; font-weight: 900; font-size: 13px; line-height: 1.5; }
         .strategy-box h6 { font-size:14px; margin:0 0 4px 0; }
 
@@ -151,10 +143,11 @@
         <button id="btn-tt-9000" class="mode-btn" onclick="switchSpace('tt-9000')">天天樂 9000碰</button>
         <button id="btn-539-1800" class="mode-btn" onclick="switchSpace('539-1800')">五三九 1800碰</button>
         <button id="btn-539-9000" class="mode-btn" onclick="switchSpace('539-9000')">五三九 9000碰</button>
-        <button id="btn-arena" class="mode-btn arena-btn active" onclick="switchSpace('arena')">⚔️ 華爾街科技擂台 (設定/記帳)</button>
+        <button id="btn-arena" class="mode-btn arena-btn active" onclick="switchSpace('arena')">⚔️ AI 科技擂台 (設定/分析)</button>
+        <button id="btn-ledger" class="mode-btn ledger-btn" onclick="switchSpace('ledger')">📝 我的真實下注記帳</button>
     </div>
 
-    <!-- 💡 全局戰略看板 -->
+    <!-- 💡 全局戰略看板 (Arena) -->
     <div id="global-strategy" class="strategy-dashboard" style="display:none;">
         <h3>💡 莊家全局戰略總覽 (純機率進場決策)</h3>
         <div class="dashboard-grid" id="dashboard-content">
@@ -162,7 +155,7 @@
         </div>
     </div>
 
-    <!-- 📝 我的真實下注記帳與損益中樞 -->
+    <!-- 📝 我的真實下注記帳與損益中樞 (Ledger - 獨立第6區塊) -->
     <div class="panel" id="actual-bet-panel" style="display:none;">
         <div class="panel-title">📝 我的真實下注記帳與損益中樞</div>
         <div style="font-size:11px; color:#64748b; margin-bottom:10px; font-weight:bold;">
@@ -197,7 +190,7 @@
         </div>
     </div>
 
-    <!-- 集中參數設定 & 頂級預測 -->
+    <!-- 集中參數設定 & 頂級預測 (Arena) -->
     <div class="panel" id="arena-settings-panel">
         <div class="panel-title">
             <span>⚙️ 盤口參數與【六維量化交易引擎】</span>
@@ -211,7 +204,7 @@
         </div>
     </div>
 
-    <!-- 🚨 獨立偏態雷達 (修正公式) -->
+    <!-- 🚨 獨立偏態雷達 (Arena) -->
     <div id="radar-panel" class="radar-panel" style="display:none;">
         <h3>🚨 極端偏態雷達 (同柱 3顆以上 斷柱預警)</h3>
         <div class="radar-grid" id="radar-content">
@@ -219,7 +212,7 @@
         </div>
     </div>
 
-    <!-- 歷史匯入 -->
+    <!-- 歷史匯入 (Arena) -->
     <div class="panel" id="batch-input-panel">
         <div class="panel-title">📋 歷史開獎批次匯入</div>
         <div class="form-group" style="margin-bottom: 8px;">
@@ -236,6 +229,7 @@
         <button class="btn-main" onclick="batchImport()" style="background: linear-gradient(135deg, #7c3aed, #4f46e5);">⚡ 智慧解析並匯入</button>
     </div>
 
+    <!-- 各空間專屬版面 -->
     <div class="panel" id="single-input-panel" style="display:none;">
         <div class="panel-title">📝 單筆開獎與實單填寫</div>
         <div class="form-row">
@@ -306,20 +300,28 @@
         document.getElementById(`btn-${spaceKey}`).classList.add('active');
 
         let isArena = (spaceKey === 'arena');
+        let isLedger = (spaceKey === 'ledger');
+        let isSpace = (!isArena && !isLedger);
+
+        // 控制 Arena 版面
         document.getElementById('arena-settings-panel').style.display = isArena ? 'block' : 'none';
         document.getElementById('batch-input-panel').style.display = isArena ? 'block' : 'none';
         document.getElementById('global-strategy').style.display = isArena ? 'block' : 'none';
-        document.getElementById('actual-bet-panel').style.display = isArena ? 'block' : 'none';
         document.getElementById('radar-panel').style.display = isArena ? 'block' : 'none';
         
-        document.getElementById('single-input-panel').style.display = !isArena ? 'block' : 'none';
-        document.getElementById('stats-container').style.display = !isArena ? 'grid' : 'none';
-        document.getElementById('history-panel').style.display = !isArena ? 'block' : 'none';
+        // 控制獨立的 Ledger (記帳) 版面
+        document.getElementById('actual-bet-panel').style.display = isLedger ? 'block' : 'none';
+
+        // 控制 個別空間版面
+        document.getElementById('single-input-panel').style.display = isSpace ? 'block' : 'none';
+        document.getElementById('stats-container').style.display = isSpace ? 'grid' : 'none';
+        document.getElementById('history-panel').style.display = isSpace ? 'block' : 'none';
 
         if (isArena) {
             renderSettingsPanel();
             renderDashboard();
             renderRadar();
+        } else if (isLedger) {
             renderLedgerSummary();
         } else {
             document.getElementById('batch-target-space').value = spaceKey;
@@ -332,13 +334,12 @@
         document.getElementById(`cfg-cost-${key}`).value = unitBet * spaceConfigs[key].basePuffs;
     }
 
-    // 🚨 修正後的偏態雷達分析 (整體偏態歷史發生率 + 回歸加權)
     function analyzeRadar(gameType) {
         let spaceKey = gameType + '-9000';
         let data = [...(spaceData[spaceKey] || [])].sort((a, b) => new Date(b.date) - new Date(a.date));
         
         let totalDraws = 0;
-        let tripleWins = 0; // 整體發生同柱 3顆以上的次數
+        let tripleWins = 0; 
         let tripleLosingStreak = 0;
         let hitTripleBefore = false;
         
@@ -353,7 +354,7 @@
             let balls = reversedData[i].draw;
             let q1=0, q2=0, q3=0, q4=0;
             balls.forEach(n => { if(n<=9) q1++; else if(n<=19) q2++; else if(n<=29) q3++; else q4++; });
-            let isTripleOrMore = (q1>=3 || q2>=3 || q3>=3 || q4>=3); // 3顆以上含4,5
+            let isTripleOrMore = (q1>=3 || q2>=3 || q3>=3 || q4>=3); 
 
             if (!hitTripleBefore) {
                 if (!isTripleOrMore) tripleLosingStreak++;
@@ -380,18 +381,13 @@
             if (q4>=3) colHits.q4++;
         });
 
-        // 修正：總體偏態率不應該用加的，而是直接拿歷史發生次數除以總期數
-        // 理論值約 8% ~ 10% 之間
         let baseOverallTripleProb = totalDraws > 0 ? (tripleWins / totalDraws) : 0.08;
-        
-        // 加入均值回歸拉力：連續沒出越久，機率逐漸上升
         let tripleNextProb = Math.min(baseOverallTripleProb + (tripleLosingStreak * 0.005), 0.95);
 
-        // 各柱單獨機率 (找出最危險的)
         let colProbs = {};
         ['q1', 'q2', 'q3', 'q4'].forEach(k => {
             let empRate = totalDraws > 0 ? (colHits[k] / totalDraws) : 0.02;
-            colProbs[k] = empRate; // 單純用歷史比例找尋哪一柱最會出事
+            colProbs[k] = empRate; 
         });
 
         let maxProb = Math.max(colProbs.q1, colProbs.q2, colProbs.q3, colProbs.q4);
@@ -443,7 +439,6 @@
         container.innerHTML = html;
     }
 
-    // 🏆 六維量化分析引擎 (Z-Score, Bayes, Monte Carlo 加入)
     function analyzeSpace(key) {
         let cfg = spaceConfigs[key];
         let data = [...(spaceData[key] || [])].sort((a, b) => new Date(a.date) - new Date(b.date)); 
@@ -489,35 +484,23 @@
             prevWasWin = isWin;
         });
 
-        // 1. Laplace (平滑均值)
         let P_Win = totalDraws > 0 ? (wins / totalDraws) : (cfg.type === '1800' ? 0.15 : 0.25);
         let modelA_Prob = Math.min(P_Win + (losingStreak * 0.10), 0.99);
 
-        // 2. Markov Chain
         let P_Win_Given_Win = (WW + WL > 0) ? (WW / (WW + WL)) : 0;
         let P_Win_Given_Lose = (LW + LL > 0) ? (LW / (LW + LL)) : 0;
         
-        // 3. Bayes Theorem (動態更新先驗機率)
-        // P(A|B) = P(B|A) * P(A) / P(B)
-        // 簡單呈現貝氏勝率 (融合歷史與近期狀態)
         let bayesProb = latestIsWin ? ((P_Win_Given_Win * P_Win) / ((P_Win_Given_Win * P_Win) + ((1 - P_Win_Given_Lose) * (1 - P_Win)))) : P_Win;
         if(isNaN(bayesProb)) bayesProb = P_Win;
 
-        // 4. Z-Score (計算偏離標準差程度)
-        // 假設平均漏值次數 M, 當前漏值 L, Z = (L - M) / StdDev
-        // 粗估：1800碰均漏約 6期, 9000碰均漏約 3期
         let expectedLosing = cfg.type === '1800' ? 6 : 3;
         let stdDev = cfg.type === '1800' ? 2 : 1.5; 
         let zScore = (losingStreak - expectedLosing) / stdDev;
 
-        // 5. Monte Carlo Simulation (壓力測試推演)
-        // 粗算：最大回撤期數 = 以目前勝率，連續虧損的機率達極端值 1% 時所需的期數
         let mcMaxLossStreak = Math.ceil(Math.log(0.01) / Math.log(1 - P_Win));
 
-        // 6. Kelly EV
         let costPerRound = cfg.totalCost * (1 - cfg.rebate / 100);
         let minPrize = cfg.type === '1800' ? 3 * cfg.unitPrize * cfg.unitBet : 2 * cfg.unitPrize * cfg.unitBet;
-        // 用貝氏修正後的機率來算真實期望值
         let EV = (bayesProb * minPrize) - ((1 - bayesProb) * costPerRound);
         
         let requiredMulti = Math.max(Math.ceil((losingStreak * costPerRound) / (minPrize - costPerRound)), 1);
@@ -530,14 +513,26 @@
     }
 
     function getPredictionHtml(analysis) {
-        let { cfg, totalDraws, latestIsWin, continuousHits, losingStreak, EV, requiredMulti, zScore, bayesProb, mcMaxLossStreak, costPerRound } = analysis;
+        let { cfg, totalDraws, latestIsWin, continuousHits, losingStreak, modelA_Prob, P_Win_Given_Win, P_Win_Given_Lose, EV, requiredMulti, zScore, bayesProb, mcMaxLossStreak, costPerRound } = analysis;
         
         if (totalDraws < 5) return `<div class="ai-prediction-box" style="text-align:center; color:#94a3b8; padding:20px;">⏳ 歷史數據不足，請先匯入開獎紀錄</div>`;
 
-        let adviceZ = zScore > 1 ? `偏離常態 (Z=${zScore.toFixed(1)}) 👉 強烈買進信號` : `處於常態波動內 (Z=${zScore.toFixed(1)})`;
-        let adviceBayes = `貝氏動態勝率更新為 ${(bayesProb*100).toFixed(1)}%`;
-        let adviceMC = `蒙地卡羅壓力測試：最大回撤約 ${mcMaxLossStreak} 期`;
+        // ① Laplace 均值回歸
+        let adviceLaplace = `平滑預測勝率 ${(modelA_Prob * 100).toFixed(1)}%`;
+        
+        // ② Markov 馬可夫鏈
+        let markovState = latestIsWin ? `連莊機率 ${(P_Win_Given_Win*100).toFixed(1)}%` : `反彈機率 ${(P_Win_Given_Lose*100).toFixed(1)}%`;
+        
+        // ③ Bayes 貝氏定理
+        let adviceBayes = `動態勝率更新 ${(bayesProb*100).toFixed(1)}%`;
+        
+        // ④ Z-Score 標準差
+        let adviceZ = zScore > 1 ? `偏離常態 (Z=${zScore.toFixed(1)}) 👉 強烈買進` : `常態波動內 (Z=${zScore.toFixed(1)})`;
+        
+        // ⑤ Monte Carlo 壓力測試
+        let adviceMC = `最大回撤壓力約 ${mcMaxLossStreak} 期`;
 
+        // ⑥ 綜合策略評斷
         let consensusTitle = "";
         let consensusDesc = "";
         let consensusColor = "";
@@ -560,22 +555,32 @@
         return `
             <div class="ai-prediction-box">
                 <h5>🤖 六維量化交易引擎 (華爾街模組)</h5>
-                <div class="ai-row new-model">
-                    <span style="color:#047857;">Z-Score 標準分數：</span>
-                    <span style="color:#0f172a; font-size:11px;">${adviceZ}</span>
+                
+                <div class="ai-row">
+                    <span style="color:#047857;">① Laplace 均值回歸：</span>
+                    <span style="color:#0f172a; font-size:11px;">${adviceLaplace}</span>
                 </div>
-                <div class="ai-row new-model">
-                    <span style="color:#047857;">Bayes 貝氏定理：</span>
+                <div class="ai-row">
+                    <span style="color:#047857;">② Markov 馬可夫鏈：</span>
+                    <span style="color:#0f172a; font-size:11px;">${markovState}</span>
+                </div>
+                <div class="ai-row">
+                    <span style="color:#047857;">③ Bayes 貝氏動態機率：</span>
                     <span style="color:#0f172a; font-size:11px;">${adviceBayes}</span>
                 </div>
-                <div class="ai-row new-model">
-                    <span style="color:#047857;">Monte Carlo 壓力測試：</span>
+                <div class="ai-row">
+                    <span style="color:#047857;">④ Z-Score 偏離度：</span>
+                    <span style="color:#0f172a; font-size:11px;">${adviceZ}</span>
+                </div>
+                <div class="ai-row">
+                    <span style="color:#047857;">⑤ Monte Carlo 模擬：</span>
                     <span style="color:#0f172a; font-size:11px;">${adviceMC}</span>
                 </div>
                 <div class="ai-row">
-                    <span style="color:var(--text-muted);">Kelly EV (期望利潤)：</span>
+                    <span style="color:var(--text-muted);">⑥ Kelly EV 期望值：</span>
                     <span style="color:${EV>0?'#059669':'#dc2626'};">${EV>0?'+':''}${EV.toFixed(0)} 元</span>
                 </div>
+
                 <div class="strategy-box" style="${consensusColor}">
                     <h6>${consensusTitle}</h6>
                     ${consensusDesc}
@@ -734,7 +739,6 @@
         }
     }
 
-    // ✏️ 快速修改單筆實單下注倍數
     window.editRecordBet = async function(id, curBet) {
         let input = prompt(`請輸入此期的真實下注倍數 (0 = 空手沒買)：`, curBet);
         if (input === null) return; 
@@ -757,6 +761,7 @@
             renderSettingsPanel();
             renderDashboard();
             renderRadar();
+        } else if (currentSpace === 'ledger') {
             renderLedgerSummary();
         } else {
             renderMain();
@@ -777,7 +782,7 @@
     }
 
     function renderMain() {
-        if(currentSpace === 'arena') return;
+        if(currentSpace === 'arena' || currentSpace === 'ledger') return;
         let cfg = spaceConfigs[currentSpace];
         let data = [...(spaceData[currentSpace]||[])].sort((a,b)=>new Date(b.date)-new Date(a.date));
         
@@ -785,8 +790,9 @@
         let thead = document.getElementById('table-head');
         tbody.innerHTML = '';
         
-        let myTotalCost = 0;
-        let myTotalRevenue = 0;
+        // 理論的均注（每期都下一元）營利
+        let hypoTotalCost = 0;
+        let hypoTotalRevenue = 0;
 
         if (cfg.type === '1800') {
             let count3 = 0;
@@ -798,13 +804,17 @@
                 if (res.puffs === 3) count3++;
                 if (res.puffs === 4) count4++;
 
+                // 計算 真實記帳損益 (表格顯示用)
                 let myBet = item.myBet !== undefined ? parseFloat(item.myBet) : 0;
-                let drawCost = myBet * cfg.totalCost * (1 - cfg.rebate / 100);
-                let drawPrize = res.puffs * cfg.unitPrize * myBet;
-                let roundProfit = drawPrize - drawCost;
+                let realDrawCost = myBet * cfg.totalCost * (1 - cfg.rebate / 100);
+                let realDrawPrize = res.puffs * cfg.unitPrize * myBet;
+                let roundProfit = realDrawPrize - realDrawCost;
 
-                myTotalCost += drawCost;
-                myTotalRevenue += drawPrize;
+                // 計算 理論全部下1倍的損益 (統計區塊用)
+                let hypoDrawCost = 1 * cfg.totalCost * (1 - cfg.rebate / 100);
+                let hypoDrawPrize = res.puffs * cfg.unitPrize * 1;
+                hypoTotalCost += hypoDrawCost;
+                hypoTotalRevenue += hypoDrawPrize;
 
                 let badge = res.puffs>=4 ? "bg-green" : (res.puffs>0 ? "bg-yellow" : "bg-red");
                 let ballsHtml = item.draw.map(n => `<div class="num-ball draw-ball">${String(n).padStart(2,'0')}</div>`).join('');
@@ -828,13 +838,14 @@
                 `);
             });
 
-            let netProfit = myTotalRevenue - myTotalCost;
+            // 計算理論淨利潤
+            let hypoNetProfit = hypoTotalRevenue - hypoTotalCost;
 
             document.getElementById('stats-container').innerHTML = `
                 <div class="stat-item"><h3>總期數</h3><p>${data.length} 期</p></div>
                 <div class="stat-item"><h3>3碰 次數</h3><p style="color:#d97706;">${count3} 次</p></div>
                 <div class="stat-item"><h3>4碰 次數</h3><p style="color:#059669;">${count4} 次</p></div>
-                <div class="stat-item"><h3>真實總營利</h3><p style="color:${netProfit>=0?'#059669':'#dc2626'}">${netProfit>=0?'+$':'-$'}${Math.abs(Math.round(netProfit)).toLocaleString()}</p></div>
+                <div class="stat-item"><h3>理論總營利 (均注1倍)</h3><p style="color:${hypoNetProfit>=0?'#059669':'#dc2626'}">${hypoNetProfit>=0?'+$':'-$'}${Math.abs(Math.round(hypoNetProfit)).toLocaleString()}</p></div>
             `;
 
         } else {
@@ -845,13 +856,17 @@
                 let res = check9000(item.draw);
                 if (res.pass) passCount++;
 
+                // 計算 真實記帳損益 (表格顯示用)
                 let myBet = item.myBet !== undefined ? parseFloat(item.myBet) : 0;
-                let drawCost = myBet * cfg.totalCost * (1 - cfg.rebate / 100);
-                let drawPrize = res.puffs * cfg.unitPrize * myBet;
-                let roundProfit = drawPrize - drawCost;
+                let realDrawCost = myBet * cfg.totalCost * (1 - cfg.rebate / 100);
+                let realDrawPrize = res.puffs * cfg.unitPrize * myBet;
+                let roundProfit = realDrawPrize - realDrawCost;
 
-                myTotalCost += drawCost;
-                myTotalRevenue += drawPrize;
+                // 計算 理論全部下1倍的損益 (統計區塊用)
+                let hypoDrawCost = 1 * cfg.totalCost * (1 - cfg.rebate / 100);
+                let hypoDrawPrize = res.puffs * cfg.unitPrize * 1;
+                hypoTotalCost += hypoDrawCost;
+                hypoTotalRevenue += hypoDrawPrize;
 
                 let badge = res.pass ? "bg-green" : "bg-red";
                 let ballsHtml = item.draw.map(n => `<div class="num-ball draw-ball">${String(n).padStart(2,'0')}</div>`).join('');
@@ -876,13 +891,15 @@
             });
 
             let failCount = data.length - passCount;
-            let netProfit = myTotalRevenue - myTotalCost;
+            
+            // 計算理論淨利潤
+            let hypoNetProfit = hypoTotalRevenue - hypoTotalCost;
 
             document.getElementById('stats-container').innerHTML = `
                 <div class="stat-item"><h3>總期數</h3><p>${data.length} 期</p></div>
                 <div class="stat-item"><h3>中獎次數 (過)</h3><p style="color:#059669;">${passCount} 次</p></div>
                 <div class="stat-item"><h3>未中次數 (斷柱)</h3><p style="color:#dc2626;">${failCount} 次</p></div>
-                <div class="stat-item"><h3>真實總營利</h3><p style="color:${netProfit>=0?'#059669':'#dc2626'}">${netProfit>=0?'+$':'-$'}${Math.abs(Math.round(netProfit)).toLocaleString()}</p></div>
+                <div class="stat-item"><h3>理論總營利 (均注1倍)</h3><p style="color:${hypoNetProfit>=0?'#059669':'#dc2626'}">${hypoNetProfit>=0?'+$':'-$'}${Math.abs(Math.round(hypoNetProfit)).toLocaleString()}</p></div>
             `;
         }
     }
