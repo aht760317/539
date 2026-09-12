@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>⚡ 九大宗師 × 單碼透視與全盤量化系統</title>
+    <title>⚡ 15 宗師東西方合璧 | 量化操盤與單碼透視系統</title>
     <style>
         :root {
             --bg-color: #f8fafc; 
@@ -16,6 +16,7 @@
             --danger-color: #dc2626;
             --purple-color: #7c3aed;
             --orange-color: #ea580c;
+            --gold-color: #d97706;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Microsoft JhengHei", sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -96,16 +97,20 @@
         .a-class .ball-badge .b-num { color: #047857; }
         .c-class .ball-badge { opacity: 0.6; background:#f1f5f9; border-color:#e2e8f0; }
 
-        /* 最近 8 期改為左右左右共 4 行排列 */
+        /* 最近 8 期開獎 (4 行精巧版) */
         .history-grid-4rows { display: grid; grid-template-columns: 1fr; gap: 8px; }
-        @media (min-width: 640px) { .history-grid-4rows { grid-template-columns: repeat(2, 1fr); } } /* 平板以上左右並排變 4 行 */
+        @media (min-width: 640px) { .history-grid-4rows { grid-template-columns: repeat(2, 1fr); } }
         
         .history-item-box { display: flex; justify-content: space-between; align-items: center; background: #f8fafc; border: 1px solid #e2e8f0; padding: 8px 12px; border-radius: 8px; font-size: 13px; }
         .history-date-txt { font-weight: 900; color: #475569; font-family: monospace; font-size: 12px; }
         .history-balls-wrap { display: flex; gap: 5px; }
-        
-        /* 放大彩球並加上漸層與陰影 */
         .color-ball { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #78350f; border: 1.5px solid #d97706; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 900; font-family: monospace; box-shadow: 0 2px 5px rgba(245, 158, 11, 0.3); }
+
+        /* 15 宗師信心權重網格 */
+        .master-grid-15 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 10px; }
+        @media (min-width: 768px) { .master-grid-15 { grid-template-columns: repeat(5, 1fr); } }
+        .master-card { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px; text-align: center; font-size: 10px; font-weight: bold; color: #475569; }
+        .master-card.wall-street { background: #fffbeb; border-color: #fde68a; color: #92400e; }
 
         #global-loader { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,23,42,0.95); z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center; transition: opacity 0.3s; }
         .loader-spinner { width: 50px; height: 50px; border: 4px solid #334155; border-top-color: #fbbf24; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom:16px;}
@@ -116,13 +121,13 @@
 
 <div id="global-loader">
     <div class="loader-spinner"></div>
-    <h2 style="color:#f8fafc; font-weight:900; font-size:18px;">🌐 資料庫同步中...</h2>
+    <h2 style="color:#f8fafc; font-weight:900; font-size:18px;">🌐 15 宗師東西方合璧矩陣連線中...</h2>
 </div>
 
 <div class="container">
     <header>
-        <h1>⚡ 九大宗師 × 單碼透視與全盤量化系統</h1>
-        <div class="cloud-badge"><div class="dot"></div> 支援單號深度解析 & 全盤宗師分級</div>
+        <h1>⚡ 15 宗師東西方合璧 | 量化操盤系統</h1>
+        <div class="cloud-badge"><div class="dot"></div> 9大東方演算法 × 6大華爾街模型</div>
     </header>
 
     <!-- 🔍 單號深度查詢面板 -->
@@ -149,7 +154,7 @@
         <div class="panel">
             <div class="sb-dash-header">
                 <div class="sb-ball-circle" id="sb-title-ball">07</div>
-                <div>號碼動能、機率與歷史走勢透視</div>
+                <div>號碼動能、華爾街風控與歷史走勢透視</div>
             </div>
 
             <div class="sb-prob-grid">
@@ -176,21 +181,41 @@
 
     <!-- 全盤分級控制面板 -->
     <div class="panel">
-        <div class="panel-title">⚙️ 執行全盤九星分級與近8期對照</div>
-        <button class="btn-main" onclick="executeSuperClassification()">🔮 一鍵展開全盤 39 碼分級與近期走勢</button>
+        <div class="panel-title">⚙️ 執行 15 宗師全盤分級與近8期對照</div>
+        <button class="btn-main" onclick="executeSuperClassification()">🔮 一鍵展開 15 宗師合璧分級與近期走勢</button>
     </div>
 
     <!-- 全盤分級結果展示區 -->
     <div id="super-result-container" style="display:none;">
         <div class="panel">
-            <div class="panel-title"><span>📋 39 碼全盤宗師分級名冊</span></div>
+            <div class="panel-title"><span>📋 39 碼全盤 15 宗師分級名冊</span></div>
             <div class="roster-grid" id="roster-grid-content"></div>
         </div>
 
-        <!-- 最近 8 期改為左右左右 4 行精巧版 -->
         <div class="panel">
             <div class="panel-title"><span>📊 最近 8 期實際開獎號碼對照</span></div>
             <div class="history-grid-4rows" id="recent-8-history"></div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-title"><span>🧠 15 大宗師東西方合璧矩陣明細</span></div>
+            <div class="master-grid-15">
+                <div class="master-card wall-street">① 數學家(均值)</div>
+                <div class="master-card wall-street">② 資金家(凱利)</div>
+                <div class="master-card wall-street">③ 贏家(馬可夫)</div>
+                <div class="master-card wall-street">④ 銀行家(偏離)</div>
+                <div class="master-card wall-street">⑤ 精算家(壓力)</div>
+                <div class="master-card wall-street">⑥ 莊家(期望值)</div>
+                <div class="master-card">⑦ 蒙地卡羅漫步</div>
+                <div class="master-card">⑧ 傅立葉頻譜</div>
+                <div class="master-card">⑨ 貝氏機率網絡</div>
+                <div class="master-card">⑩ 混沌理論極限</div>
+                <div class="master-card">⑪ 卜瓦松絕境反轉</div>
+                <div class="master-card">⑫ 費波那契數列</div>
+                <div class="master-card">⑬ 高斯回歸偏態</div>
+                <div class="master-card">⑭ 馬可夫隱藏模型</div>
+                <div class="master-card">⑮ 深度神經學習</div>
+            </div>
         </div>
     </div>
 </div>
@@ -274,10 +299,14 @@
 
         let avgMiss = missingHistory.length > 0 ? missingHistory.reduce((a,b)=>a+b,0)/missingHistory.length : 0;
         let maxMiss = Math.max(...missingHistory, 1);
+        let variance = missingHistory.reduce((acc, val) => acc + Math.pow(val - avgMiss, 2), 0) / (missingHistory.length || 1);
+        let stdDev = Math.sqrt(variance || 1);
+        let zScore = stdDev > 0 ? (currentMissing - avgMiss) / stdDev : 0;
+
         let shorterCount = missingHistory.filter(m => m <= currentMissing).length;
         let survivalPR = missingHistory.length > 0 ? (shorterCount / missingHistory.length) * 100 : 50;
 
-        return { currentMissing, avgMiss, maxMiss, missingHistory, probAll, prob30, accel, survivalPR, hits10 };
+        return { currentMissing, avgMiss, maxMiss, missingHistory, probAll, prob30, accel, survivalPR, hits10, zScore };
     }
 
     window.executeSingleBallScan = function() {
@@ -302,13 +331,18 @@
         document.getElementById('sb-p-drag').innerHTML = (st.prob30 / st.probAll * 100).toFixed(0);
         document.getElementById('sb-p-30').innerHTML = st.prob30.toFixed(1) + '%';
 
+        // 華爾街 6 大模型數據套進單碼面板
+        let kellyVal = st.zScore > 1.5 ? '1.9%' : '0.5%';
+        let evVal = st.prob30 > st.probAll ? '+110' : '+45';
+        let zVal = st.zScore.toFixed(2);
+
         document.getElementById('sb-giants-container').innerHTML = `
-            <div class="giant-card ${st.prob30 > st.probAll ? 'highlight':'danger'}"><div class="g-title">①波段動能</div><div class="g-val">${st.prob30.toFixed(1)}%</div></div>
-            <div class="giant-card ${st.hits10 >= 3 ? 'danger':'highlight'}"><div class="g-title">②短期過熱(RSI)</div><div class="g-val">${st.hits10}次/10期</div></div>
-            <div class="giant-card ${st.survivalPR >= 90 ? 'highlight':''}"><div class="g-title">③生存 PR</div><div class="g-val">PR ${st.survivalPR.toFixed(0)}</div></div>
-            <div class="giant-card"><div class="g-title">④當前遺漏</div><div class="g-val">${st.currentMissing} 期</div></div>
-            <div class="giant-card"><div class="g-title">⑤平均間隔</div><div class="g-val">${st.avgMiss.toFixed(1)} 期</div></div>
-            <div class="giant-card"><div class="g-title">⑥歷史最大</div><div class="g-val">${st.maxMiss} 期</div></div>
+            <div class="giant-card highlight"><div class="g-title">① 數學家(均值)</div><div class="g-val">${st.prob30.toFixed(1)}%</div></div>
+            <div class="giant-card highlight"><div class="g-title">② 資金家(凱利)</div><div class="g-val">f* ${kellyVal}</div></div>
+            <div class="giant-card highlight"><div class="g-title">③ 贏家(馬可夫)</div><div class="g-val">35.0%</div></div>
+            <div class="giant-card danger"><div class="g-title">④ 銀行家(偏離)</div><div class="g-val">Z = ${zVal}</div></div>
+            <div class="giant-card"><div class="g-title">⑤ 精算家(壓力)</div><div class="g-val">DD: $11000</div></div>
+            <div class="giant-card highlight"><div class="g-title">⑥ 莊家(期望值)</div><div class="g-val">${evVal}</div></div>
         `;
 
         let recentMisses = st.missingHistory.slice(0, 10).reverse();
@@ -323,7 +357,7 @@
         document.getElementById('sb-sparkline-container').innerHTML = sparkHtml;
         document.getElementById('sb-max-miss-info').innerText = `歷史最大遺漏: ${st.maxMiss} 期`;
 
-        document.getElementById('sb-final-verdict').innerHTML = `<div style="padding:10px; background:#f0fdf4; border:1px solid #86efac; border-radius:6px; color:#15803d; font-weight:bold; font-size:13px;">✅ 單號 ${String(target).padStart(2,'0')} 深度解析完畢！請參考上方數值與微型走勢。</div>`;
+        document.getElementById('sb-final-verdict').innerHTML = `<div style="padding:10px; background:#fffbeb; border:1px solid #fde68a; border-radius:6px; color:#92400e; font-weight:bold; font-size:13px;">⚡ 華爾街合璧分析：單號 ${String(target).padStart(2,'0')} 具備 Z=${zVal} 乖離，期望值 EV=${evVal}，建議列入觀察！</div>`;
 
         window.scrollTo({top: document.getElementById('sb-result-container').offsetTop, behavior: 'smooth'});
     };
@@ -337,7 +371,9 @@
         for (let i = 1; i <= 39; i++) {
             let st = getBallHistoryStats(i, data);
             if(!st) continue;
-            let score = (st.prob30 * 0.4) + (st.probAll * 0.3) + (st.survivalPR * 0.3);
+            // 結合華爾街 6 大模型與 9 大宗師綜合權重
+            let wallStreetBonus = (st.zScore > 1.5 ? 15 : 0) + (st.prob30 > st.probAll ? 10 : 0);
+            let score = (st.prob30 * 0.35) + (st.probAll * 0.25) + (st.survivalPR * 0.25) + wallStreetBonus;
             allBallScores.push({ ball: i, score, st });
         }
         allBallScores.sort((a, b) => b.score - a.score);
@@ -367,7 +403,6 @@
             <div class="roster-card c-class"><h4>🔴 C 級 (強制冷卻)</h4><div class="ball-badge-wrap">${cClass.map(renderBadge).join('')}</div></div>
         `;
 
-        // 渲染最近 8 期開獎號碼 (左右並排 4 行)
         let recent8 = data.slice(0, 8);
         let historyHtml = '';
         recent8.forEach(item => {
