@@ -197,7 +197,7 @@
 <div class="container">
     <header>
         <h1>⚡ 天天樂 & 五三九 雙核心量化操盤系統 ⚡</h1>
-        <div class="cloud-badge"><div class="dot"></div> Firebase 極速引擎 (終極演算法防禦修復版)</div>
+        <div class="cloud-badge"><div class="dot"></div> Firebase 極速引擎 (終極防禦校正版)</div>
     </header>
 
     <div class="year-filter-bar">
@@ -214,14 +214,13 @@
         <button id="btn-539-9000" class="mode-btn" onclick="switchSpace('539-9000')">五三九 9000碰</button>
         <button id="btn-arena" class="mode-btn arena-btn active" onclick="switchSpace('arena')">⚔️ 決策矩陣</button>
         <button id="btn-ledger" class="mode-btn ledger-btn" onclick="switchSpace('ledger')">📝 實戰獵人</button>
-        <!-- 外連分析站 -->
         <a href="https://aht760317.github.io/539/01-39.html" target="_blank" class="mode-btn single-btn">🎯 單碼必贏</a>
         <a href="https://aht760317.github.io/539/index5.html" target="_blank" class="mode-btn" style="border-color: #059669; color: #059669; text-decoration: none; display: flex; justify-content: center; align-items: center;">📊 五三九分析</a>
         <a href="https://aht760317.github.io/539/index4.html" target="_blank" class="mode-btn" style="border-color: #0284c7; color: #0284c7; text-decoration: none; display: flex; justify-content: center; align-items: center;">🚀 天天樂分析</a>
     </div>
 
     <!-- ========================================== -->
-    <!-- 🧮 新增：數學公式白皮書 (點擊展開) -->
+    <!-- 🧮 數學公式白皮書 (點擊展開) -->
     <!-- ========================================== -->
     <div class="panel formula-box" id="formula-guide" style="display:none;">
         <h4 onclick="toggleFormula()">
@@ -259,6 +258,9 @@
         </div>
     </div>
 
+    <!-- ========================================== -->
+    <!-- 模塊：決策矩陣 (Arena) -->
+    <!-- ========================================== -->
     <div id="global-strategy" class="strategy-dashboard" style="display:none;">
         <h3>💡 六大專家會診看板 (嚴格機率進場決策)</h3>
         <div class="dashboard-grid" id="dashboard-content">
@@ -528,7 +530,7 @@
     };
 
     // ==============================================================
-    // 🎯 🚨 雷達運算與渲染 (真實機率校正)
+    // 🎯 🚨 雷達運算與渲染 (精準機率校正)
     // ==============================================================
     function analyzeRadar(gameType) {
         let spaceKey = gameType + '-9000';
@@ -632,7 +634,7 @@
 
 
     // ==============================================================
-    // 🎯 六大專家核心運算 (數學修正與凱利、馬可夫平滑升級)
+    // 🎯 六大專家核心運算 (附帶 Z 範疇安全閥與真實機率修復)
     // ==============================================================
     function analyzeSpace(key) {
         let cfg = spaceConfigs[key] || { type: '1800', unitBet: 1, basePuffs: 1800, rebate: 0, unitPrize: 0, name: '' };
@@ -1013,10 +1015,10 @@
     });
 
     // ==============================================================
-    // 🎯 歷史數據 6 宮格精準面板
+    // 🎯 修改：補齊 6 宮格 (包含總期數、中獎、未中、均值、連槓與機率)
     // ==============================================================
     function renderMain() {
-        if(currentSpace === 'arena' || currentSpace === 'ledger') return;
+        if(currentSpace === 'arena' || currentSpace === 'ledger' || currentSpace === 'single-ball') return;
         
         let cfg = spaceConfigs[currentSpace];
         let data = getFilteredData(currentSpace);
@@ -1049,6 +1051,7 @@
         let tbody = document.getElementById('result-tbody');
         let thead = document.getElementById('table-head');
         
+        // 算出該區間的總過關與未過關次數
         let wins = 0;
         let htmlBuilder = ""; 
 
@@ -1084,6 +1087,7 @@
         let zScoreStr = a ? a.zScore.toFixed(2) : '--';
         let losingStreakStr = a ? a.losingStreak : '--';
         
+        // 🎯 把 6 宮格精準塞入：總期數、中獎、沒中、均值、連槓與Z值、下期開盤機率
         document.getElementById('stats-container').innerHTML = `
             <div class="stat-item"><h3>區間總期數</h3><p>${data.length} 期</p></div>
             <div class="stat-item"><h3>中獎 (過關)</h3><p style="color:#059669;">${wins} 次</p></div>
