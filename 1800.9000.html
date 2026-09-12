@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>⚡ 雙核心量化操盤系統 | 18公式精算頂規版</title>
+    <title>⚡ 雙核心量化操盤系統 | 終極實戰疊加版</title>
     <style>
         /* ==========================================
            1. 全局變數與基礎字體設定
@@ -78,15 +78,23 @@
         .panel { background: var(--panel-bg); padding: 14px; border-radius: 12px; border: 1px solid var(--panel-border); margin-bottom: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
         .panel-title { font-size: 14px; font-weight: 900; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px; color: var(--text-main); }
         
+        .formula-box { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px; margin-bottom: 14px; font-size: 12px; line-height: 1.6; }
+        .formula-box h4 { margin-bottom: 0; color: #0f172a; font-size: 14px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; font-weight: 900; }
+        .formula-content { display: none; margin-top: 12px; border-top: 1px dashed #cbd5e1; padding-top: 12px; color: #334155; }
+        .formula-item { background: #fff; padding: 10px; border-radius: 6px; border-left: 4px solid var(--primary-color); box-shadow: 0 1px 2px rgba(0,0,0,0.05); margin-bottom: 8px; }
+        .formula-item strong { color: var(--primary-color); font-size: 13px; }
+        .formula-item code { background: #f1f5f9; padding: 2px 6px; border-radius: 4px; color: #b91c1c; font-family: monospace; font-weight: bold; }
+
         .form-row { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
         @media (min-width: 768px) { .form-row { flex-direction: row; } }
         .form-group label { display: block; font-size: 11px; font-weight: 800; color: #334155; margin-bottom: 2px; }
         .form-group input, .form-group select { width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; font-family: monospace; font-weight: bold; outline:none; transition: 0.2s; }
+        textarea { width: 100%; height: 80px; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-family: monospace; font-size: 12px; margin-bottom: 8px; outline:none; }
         .btn-main { background: linear-gradient(135deg, #0284c7, #2563eb); color: white; border: none; padding: 10px; font-size: 13px; font-weight: 900; border-radius: 8px; cursor: pointer; width: 100%; transition: 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
         .btn-main:active { transform: translateY(1px); }
 
         /* ==========================================
-           5. 決策面板專區與 18大指標
+           5. 決策面板專區
            ========================================== */
         .setting-grid { display: grid; grid-template-columns: 1fr; gap: 14px; align-items: stretch; }
         @media (min-width: 900px) { .setting-grid { grid-template-columns: repeat(2, 1fr); } } 
@@ -99,32 +107,13 @@
         .action-bar { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
         .action-bar input { padding: 8px; border: 1.5px solid #cbd5e1; border-radius: 6px; flex: 1; min-width: 120px; font-size: 13px; font-weight: bold; }
         
-        .ai-prediction-box { margin-top: auto; padding: 12px; background: linear-gradient(to bottom, #ffffff, #f8fafc); border: 2px solid #e2e8f0; border-radius: 10px; font-size: 12px; }
-        .ai-prediction-box h5 { color: #0f172a; margin: 0; font-size: 14px; font-weight: 900; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid #cbd5e1; padding-bottom: 8px; }
-        
-        /* 決策結論框 */
-        .strategy-box { margin: 12px 0; padding: 12px; border-radius: 8px; text-align: center; font-weight: 900; font-size: 13px; line-height: 1.5; }
-        .strategy-box h6 { font-size:16px; margin:0 0 6px 0; }
-        .strategy-box .tomorrow-prob { font-size:14px; margin-top:6px; color:#1e293b; background: rgba(255,255,255,0.5); padding:4px; border-radius:4px;}
+        .strategy-dashboard { background: linear-gradient(135deg, #1e1b4b, #312e81); color: #fff; padding: 16px; border-radius: 12px; margin-bottom: 14px; box-shadow: 0 4px 12px rgba(49, 46, 129, 0.4); }
+        .strategy-dashboard h3 { font-size: 15px; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 6px; }
+        .dashboard-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        @media (min-width: 768px) { .dashboard-grid { grid-template-columns: repeat(2, 1fr); } }
+        .dash-card { background: rgba(255,255,255,0.1); border-radius: 8px; padding: 10px; border: 1px solid rgba(255,255,255,0.1); font-size: 12px; }
+        .dash-card h4 { color: #a5b4fc; font-size: 12px; margin-bottom: 4px; }
 
-        /* 18指標展開按鈕與網格 */
-        .btn-toggle-18 { width: 100%; background: #e2e8f0; color: #334155; border: 1px dashed #94a3b8; padding: 8px; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; transition: 0.2s; margin-top: 8px; }
-        .btn-toggle-18:hover { background: #cbd5e1; color: #0f172a; }
-        .grid-18 { display: none; grid-template-columns: repeat(2, 1fr); gap: 6px; margin-top: 10px; border-top: 1px dashed #cbd5e1; padding-top: 10px; }
-        @media (min-width: 768px) { .grid-18 { grid-template-columns: repeat(3, 1fr); } }
-        .g-item { background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px; text-align: center; transition: 0.2s; display: flex; flex-direction: column; justify-content: center;}
-        .g-item .g-t { font-size: 10px; color: #475569; font-weight: bold; margin-bottom: 2px; }
-        .g-item .g-v { font-size: 12px; font-weight: 900; color: #0f172a; font-family: monospace; }
-        .g-item.hl { background: #ecfdf5; border-color: #34d399; }
-        .g-item.hl .g-t { color: #065f46; }
-        .g-item.hl .g-v { color: #059669; }
-        .g-item.dg { background: #fef2f2; border-color: #fca5a5; }
-        .g-item.dg .g-t { color: #991b1b; }
-        .g-item.dg .g-v { color: #dc2626; }
-
-        /* ==========================================
-           6. 其他共用模塊 (雷達、表格、實戰記帳)
-           ========================================== */
         .radar-panel { background: linear-gradient(135deg, #fef2f2, #fff1f2); border: 2px dashed #fca5a5; border-radius: 12px; padding: 14px; margin-bottom: 14px; box-shadow: 0 4px 10px rgba(220, 38, 38, 0.08); }
         .radar-panel h3 { font-size: 15px; color: #991b1b; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid #fecaca; padding-bottom: 6px; }
         .radar-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
@@ -141,6 +130,27 @@
         .col-prob-item .col-val { font-weight: 900; font-size: 13px; color: #0284c7; }
         .col-prob-item.danger-col .col-val { color: #dc2626; }
 
+        .ai-prediction-box { margin-top: auto; padding: 12px; background: linear-gradient(to bottom, #ffffff, #f8fafc); border: 2px solid #e2e8f0; border-radius: 10px; font-size: 12px; }
+        .ai-prediction-box h5 { color: #0f172a; margin: 0; font-size: 13px; font-weight: 900; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid #cbd5e1; padding-bottom: 6px; }
+        .giant-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin: 10px 0; }
+        @media (min-width: 768px) { .giant-grid { grid-template-columns: repeat(3, 1fr); } }
+        .giant-card { background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px; text-align: center; transition: 0.2s; display: flex; flex-direction: column; justify-content: center;}
+        .giant-card .g-title { font-size: 10px; color: #475569; font-weight: bold; margin-bottom: 2px; }
+        .giant-card .g-val { font-size: 13px; font-weight: 900; color: #0f172a; }
+        
+        .giant-card.highlight { background: #ecfdf5; border-color: #34d399; box-shadow: 0 2px 4px rgba(16, 185, 129, 0.1); }
+        .giant-card.highlight .g-title { color: #065f46; }
+        .giant-card.highlight .g-val { color: #059669; }
+        .giant-card.danger { background: #fef2f2; border-color: #fca5a5; box-shadow: 0 2px 4px rgba(220, 38, 38, 0.05); }
+        .giant-card.danger .g-title { color: #991b1b; }
+        .giant-card.danger .g-val { color: #dc2626; }
+        
+        .strategy-box { margin-top: 10px; padding: 10px; border-radius: 8px; text-align: center; font-weight: 900; font-size: 13px; line-height: 1.5; }
+        .strategy-box h6 { font-size:14px; margin:0 0 6px 0; }
+
+        /* ==========================================
+           6. 實戰獵人與數據表格
+           ========================================== */
         .ledger-stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 12px; }
         @media (min-width: 768px) { .ledger-stats-grid { grid-template-columns: repeat(4, 1fr); } }
         .ledger-stat-card { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px; text-align: center; }
@@ -161,6 +171,7 @@
         th { background: #f8fafc; padding: 10px 4px; border-bottom: 2px solid #cbd5e1; color: #475569; white-space: nowrap; position: sticky; top: 0; z-index: 10; font-weight: 900; }
         td { padding: 8px 4px; border-bottom: 1px solid #e2e8f0; text-align: center; vertical-align: middle; }
         tr:hover td { background: #f1f5f9; }
+        
         .badge { padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 11px; }
         .bg-green { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0;}
         .bg-red { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca;}
@@ -186,7 +197,7 @@
 <div class="container">
     <header>
         <h1>⚡ 天天樂 & 五三九 雙核心量化操盤系統 ⚡</h1>
-        <div class="cloud-badge"><div class="dot"></div> Firebase 極速引擎 (18大公式精算防禦版)</div>
+        <div class="cloud-badge"><div class="dot"></div> Firebase 極速引擎 (終極防禦校正版)</div>
     </header>
 
     <div class="year-filter-bar">
@@ -203,17 +214,55 @@
         <button id="btn-539-9000" class="mode-btn" onclick="switchSpace('539-9000')">五三九 9000碰</button>
         <button id="btn-arena" class="mode-btn arena-btn active" onclick="switchSpace('arena')">⚔️ 決策矩陣</button>
         <button id="btn-ledger" class="mode-btn ledger-btn" onclick="switchSpace('ledger')">📝 實戰獵人</button>
-        <!-- 外連分析站 -->
         <a href="https://aht760317.github.io/539/01-39.html" target="_blank" class="mode-btn single-btn">🎯 單碼必贏</a>
         <a href="https://aht760317.github.io/539/index5.html" target="_blank" class="mode-btn" style="border-color: #059669; color: #059669; text-decoration: none; display: flex; justify-content: center; align-items: center;">📊 五三九分析</a>
         <a href="https://aht760317.github.io/539/index4.html" target="_blank" class="mode-btn" style="border-color: #0284c7; color: #0284c7; text-decoration: none; display: flex; justify-content: center; align-items: center;">🚀 天天樂分析</a>
     </div>
 
     <!-- ========================================== -->
+    <!-- 🧮 數學公式白皮書 (點擊展開) -->
+    <!-- ========================================== -->
+    <div class="panel formula-box" id="formula-guide" style="display:none;">
+        <h4 onclick="toggleFormula()">
+            <span>🧮 系統底層數學公式與參數運算說明 (點擊展開)</span>
+            <span id="formula-icon">▼</span>
+        </h4>
+        <div id="formula-content" class="formula-content">
+            <div class="formula-item">
+                <strong>① 物理大盤勝率 (Combinatorics)</strong><br>
+                利用排列組合 $C(39, 5)$ 精算物理極限機率：<br>
+                1800碰 (中三星即過關)：<code>P(Win) ≈ 55.36%</code>，過關時平均中 <code>3.5576</code> 碰。<br>
+                9000碰 (四柱均中)：<code>P(Win) ≈ 27.36%</code>，過關時固定中 <code>2.0</code> 碰。
+            </div>
+            <div class="formula-item">
+                <strong>② 幾何 Z-Score 偏離度模型 (Banker)</strong><br>
+                連槓期數服從幾何分佈。平均值 <code>μ = (1-p)/p</code>，標準差 <code>σ = sqrt(1-p)/p</code>。<br>
+                公式：<code>Z = (連槓期數 - μ) / σ</code>。<br>
+                為防堵模型產生極端幻覺，系統強制將 Z-Score 封頂於 <code>[-3.0, 3.0]</code> 安全區間。
+            </div>
+            <div class="formula-item">
+                <strong>③ 貝氏馬可夫動態機率 (Winner)</strong><br>
+                融合短中長均線與乖離動能：<code>P_bayes = (MA30 * 0.4) + (MA120 * 0.4) + (MA500 * 0.2) + (Z * 0.015)</code>。<br>
+                設定物理天花板：動態勝率絕對不允許超過基礎物理勝率的 <code>1.4倍</code>。
+            </div>
+            <div class="formula-item">
+                <strong>④ 大莊家期望值 (EV)</strong><br>
+                精確扣除每一期固定沉沒成本：<code>EV = (P_bayes * 平均中獎彩金) - 總下注成本</code>。<br>
+                EV > 0 系統才會認定該盤口具備真實獲利優勢。
+            </div>
+            <div class="formula-item">
+                <strong>⑤ 自適應凱利配置 (Financier)</strong><br>
+                公式：<code>f* = (P * (b+1) - 1) / b</code>，其中賠率 <code>b = (平均彩金 - 成本) / 成本</code>。<br>
+                動態回撤防禦：偵測資金曲線 (Max Drawdown)，若進入深水亂流區，強制將注碼比例縮減至 <code>2%</code> 以防破產。
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
     <!-- 模塊：決策矩陣 (Arena) -->
     <!-- ========================================== -->
     <div id="global-strategy" class="strategy-dashboard" style="display:none;">
-        <h3>💡 獵人戰情室 (18大公式精算進場決策)</h3>
+        <h3>💡 六大專家會診看板 (嚴格機率進場決策)</h3>
         <div class="dashboard-grid" id="dashboard-content">
             <div style="text-align:center; padding:10px;">資料運算中...</div>
         </div>
@@ -256,6 +305,7 @@
                 <option value="539-9000">🚀 五三九 9000碰</option>
             </select>
         </div>
+        <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 8px; font-weight:bold;">批次匯入之歷史紀錄，預設真實下注皆為 0 (不計入實單損益)。</div>
         <textarea id="batch-text" placeholder="格式範例:\n2026-09-10 07 09 12 15 27\n2026-09-11 01 02 03 04 05"></textarea>
         <button class="btn-main" onclick="batchImport()" style="background: linear-gradient(135deg, #7c3aed, #4f46e5); padding:10px;">⚡ 極速平行批次寫入</button>
     </div>
@@ -396,11 +446,16 @@
         switchSpace(currentSpace);
     };
 
-    // UI: Toggle 18 Formulas Grid
-    window.toggle18Formulas = function(key) {
-        let grid = document.getElementById(`grid-18-${key}`);
-        if(grid) {
-            grid.style.display = (grid.style.display === "none" || grid.style.display === "") ? "grid" : "none";
+    // UI: Toggle Formula Box
+    window.toggleFormula = function() {
+        let content = document.getElementById('formula-content');
+        let icon = document.getElementById('formula-icon');
+        if (content.style.display === "none" || content.style.display === "") {
+            content.style.display = "block";
+            icon.innerText = "▲";
+        } else {
+            content.style.display = "none";
+            icon.innerText = "▼";
         }
     };
 
@@ -452,7 +507,7 @@
         document.getElementById('batch-input-panel').style.display = isArena ? 'block' : 'none';
         document.getElementById('global-strategy').style.display = isArena ? 'block' : 'none';
         document.getElementById('radar-panel').style.display = isArena ? 'block' : 'none';
-        document.getElementById('arena-guide').style.display = isArena ? 'block' : 'none';
+        document.getElementById('formula-guide').style.display = isArena ? 'block' : 'none';
         
         document.getElementById('actual-bet-panel').style.display = isLedger ? 'block' : 'none';
 
@@ -475,7 +530,7 @@
     };
 
     // ==============================================================
-    // 🎯 🚨 雷達運算與渲染 (真實機率校正)
+    // 🎯 🚨 雷達運算與渲染 (精準機率校正)
     // ==============================================================
     function analyzeRadar(gameType) {
         let spaceKey = gameType + '-9000';
@@ -579,7 +634,7 @@
 
 
     // ==============================================================
-    // 🎯 18大指標核心運算 (數學修正與凱利、馬可夫平滑升級)
+    // 🎯 六大專家核心運算 (附帶 Z 範疇安全閥與真實機率修復)
     // ==============================================================
     function analyzeSpace(key) {
         let cfg = spaceConfigs[key] || { type: '1800', unitBet: 1, basePuffs: 1800, rebate: 0, unitPrize: 0, name: '' };
@@ -590,19 +645,17 @@
         let wins = 0;
         let latestIsWin = false;
         let losingStreak = 0;
-        let missingHistory = [];
-        let tempMiss = 0;
 
-        let wins30 = 0, wins120 = 0, wins500 = 0, wins14 = 0;
+        let wins30 = 0, wins120 = 0, wins500 = 0;
         let theoreticalEquity = 0;
         let peakTheoretical = 0;
         let maxDrawdown = 0;
         
-        // 【1】 物理基礎機率 (P_base)
-        let P_base = cfg.type === '1800' ? 0.5536 : 0.2736;
+        // 💡 物理學真實期望機率校正 (採用排列組合 C(39,5) 理論極限值)
+        let baseP_Threshold = cfg.type === '1800' ? 0.5536 : 0.2736;
         let costPerRound = Number(cfg.unitBet) * Number(cfg.basePuffs) * (1 - Number(cfg.rebate) / 100);
         
-        // 1800 碰真實期望獎金校正 (贏的時候平均會中 3.5576 碰)
+        // 💡 1800 碰真實期望獎金校正 (贏的時候平均會中 3.5576 碰，而不是 3 碰)
         let expectedPrizePuffs = cfg.type === '1800' ? 3.5576 : 2.0;
         let avgPrizeWhenWin = expectedPrizePuffs * Number(cfg.unitPrize) * Number(cfg.unitBet);
 
@@ -615,20 +668,12 @@
             let res = cfg.type === '1800' ? check1800(balls) : check9000(balls);
             let isWin = (cfg.type === '1800' && res.puffs >= 3) || (cfg.type === '9000' && res.pass);
             
-            // 資金淨值追蹤
+            // 理論淨值採用新的真實期望碰數來計算
             let roundPnL = isWin ? (avgPrizeWhenWin - costPerRound) : -costPerRound;
             theoreticalEquity += roundPnL;
             if (theoreticalEquity > peakTheoretical) peakTheoretical = theoreticalEquity;
             let dd = peakTheoretical - theoreticalEquity;
             if (dd > maxDrawdown) maxDrawdown = dd;
-
-            // 遺漏紀錄
-            if (isWin) {
-                missingHistory.push(tempMiss);
-                tempMiss = 0;
-            } else {
-                tempMiss++;
-            }
         });
 
         for (let i = 0; i < data.length; i++) {
@@ -639,7 +684,6 @@
             let isWin = (cfg.type === '1800' && res.puffs >= 3) || (cfg.type === '9000' && res.pass);
             
             if (isWin) wins++;
-            if (i < 14 && isWin) wins14++;
             if (i < 30 && isWin) wins30++;
             if (i < 120 && isWin) wins120++;
             if (i < 500 && isWin) wins500++;
@@ -654,69 +698,67 @@
             }
         }
 
-        // 【2~5】 均線與經驗勝率
-        let P_emp = totalDraws > 0 ? (wins / totalDraws) : P_base;
-        let MA30 = Math.min(totalDraws, 30) > 0 ? wins30 / Math.min(totalDraws, 30) : 0;
-        let MA120 = Math.min(totalDraws, 120) > 0 ? wins120 / Math.min(data.length, 120) : 0;
-        let MA500 = Math.min(totalDraws, 500) > 0 ? wins500 / Math.min(data.length, 500) : 0;
+        let ma30 = Math.min(data.length, 30) > 0 ? wins30 / Math.min(data.length, 30) : 0;
+        let ma120 = Math.min(data.length, 120) > 0 ? wins120 / Math.min(data.length, 120) : 0;
+        let ma500 = Math.min(data.length, 500) > 0 ? wins500 / Math.min(data.length, 500) : 0;
 
-        // 【6~7】 動能與震盪
-        let Accel = MA30 - MA120;
-        let RSI_14 = Math.min(totalDraws, 14) > 0 ? (wins14 / Math.min(totalDraws, 14)) * 100 : 50;
+        let empWinRate = totalDraws > 0 ? (wins / totalDraws) : baseP_Threshold;
 
-        // 【8~12】 極限偏離度
-        let M_cur = losingStreak;
-        let M_avg = (1 - P_base) / P_base;
-        let Std_geom = Math.sqrt(1 - P_base) / P_base;
-        let rawZ = Std_geom > 0 ? (M_cur - M_avg) / Std_geom : 0;
-        let Z_Score = Math.max(-3.0, Math.min(rawZ, 3.0));
-        let shorterCount = missingHistory.filter(m => m <= M_cur).length;
-        let PR_surv = missingHistory.length > 0 ? (shorterCount / missingHistory.length) * 100 : 50;
+        // 💡 幾何分佈理論 Z-Score 基礎計算 (採用物理基準勝率而非經驗勝率，避免失真)
+        let geomMean = (1 - baseP_Threshold) / baseP_Threshold;
+        let geomStd = Math.sqrt(1 - baseP_Threshold) / baseP_Threshold;
+        let rawZ = geomStd > 0 ? (losingStreak - geomMean) / geomStd : 0;
 
-        // 【13~14】 高階機率預測
-        let markovHit = 0, markovMiss = 0, mMissTracker = 0;
-        reversedData.forEach((item, idx) => {
-            let isWin = (cfg.type === '1800' && check1800(item.draw).puffs >= 3) || (cfg.type === '9000' && check9000(item.draw).pass);
-            if (idx > 0 && mMissTracker === M_cur) {
-                if (isWin) markovHit++; else markovMiss++;
-            }
-            if (isWin) mMissTracker = 0; else mMissTracker++;
-        });
-        let P_markov = ((markovHit + P_base * 5) / (markovHit + markovMiss + 5));
+        // 🚨 關鍵安全閥：強制將 Z-Score 封頂在真實的物理區間 [-3.0 ~ 3.0] 之間，絕不允許出現 60 或 94 的幻覺數字！
+        let zScore = Math.max(-3.0, Math.min(rawZ, 3.0));
 
-        let maxAllowedProb = P_base * 1.4;
-        let rawBayes = (MA30 * 0.3) + (MA120 * 0.2) + (MA500 * 0.1) + (P_markov * 0.4); 
-        if (Z_Score >= 1.0) rawBayes += (Z_Score * 0.015); 
-        let P_bayes = Math.min(rawBayes, maxAllowedProb);
+        // 💡 馬可夫平滑機率安全校正 (限制最高不超過基礎勝率的 1.4 倍)
+        let maxAllowedProb = baseP_Threshold * 1.4;
+        let bayesProb = (ma30 * 0.4) + (ma120 * 0.4) + (ma500 * 0.2); 
+        if (zScore >= 1.0) bayesProb += (zScore * 0.015); 
+        bayesProb = Math.min(bayesProb, maxAllowedProb);
 
-        // 【15~18】 資金賠率與風控
-        let O_fair = P_bayes > 0 ? (1 / P_bayes) : 999;
-        let O_act = costPerRound > 0 ? (avgPrizeWhenWin / costPerRound) : 0;
-        let EV = (P_bayes * avgPrizeWhenWin) - costPerRound;
+        let EV = (bayesProb * avgPrizeWhenWin) - costPerRound;
 
         let currentDrawdown = peakTheoretical - theoreticalEquity;
-        let b_kelly = costPerRound > 0 ? ((avgPrizeWhenWin - costPerRound) / costPerRound) : 0; 
-        let fullKelly = b_kelly > 0 ? ((P_bayes * (b_kelly + 1) - 1) / b_kelly) : 0;
+        let b = costPerRound > 0 ? ((avgPrizeWhenWin - costPerRound) / costPerRound) : 0; 
+        let fullKelly = b > 0 ? ((bayesProb * (b + 1) - 1) / b) : 0;
         let isTurbulent = (maxDrawdown > costPerRound * 5 && currentDrawdown >= maxDrawdown * 0.75);
         let kellyScale = isTurbulent ? 0.02 : (currentDrawdown > maxDrawdown * 0.5 ? 0.08 : 0.20);
-        let Kelly = Math.max(0, fullKelly * kellyScale);
+        let fracKelly = Math.max(0, fullKelly * kellyScale);
 
         return { 
-            cfg, totalDraws, costPerRound, currentDrawdown, isTurbulent,
-            P_base, P_emp, MA30, MA120, MA500, Accel, RSI_14, M_cur, M_avg, Std_geom, Z_Score, PR_surv,
-            P_markov, P_bayes, O_fair, O_act, EV, Kelly
+            cfg, totalDraws, losingStreak, ma30, ma120, ma500, empWinRate, bayesProb, zScore, EV, costPerRound,
+            fracKelly, currentDrawdown, isTurbulent, baseP_Threshold
         };
     }
 
-    // 🚨 1800/9000 碰 UI 生成 (包含 18 項公式與最終預測)
+    // 🚨 復活：1800/9000 碰六大專家 UI 生成 (具備真實否決權)
     function getPredictionHtml(analysis) {
         if (!analysis || analysis.totalDraws < 5) return `<div class="ai-prediction-box" style="text-align:center; color:#94a3b8; padding:20px;">⏳ 歷史數據不足</div>`;
 
-        let a = analysis;
+        let { cfg, losingStreak, empWinRate, ma30, ma120, ma500, bayesProb, zScore, EV, fracKelly, currentDrawdown, isTurbulent, baseP_Threshold } = analysis;
         
-        let passZ = (a.Z_Score >= 0.8 && a.Z_Score <= 3.0); 
-        let passDD = !a.isTurbulent; 
-        let passEV = a.EV > 0; 
+        let adviceLaplace = `${(empWinRate * 100).toFixed(1)}%`;
+        let adviceKelly = fracKelly > 0 ? `f* ${(fracKelly * 100).toFixed(1)}%` : `0% (禁入)`;
+        let adviceMarkov = `${(bayesProb * 100).toFixed(1)}%`;
+        let adviceZ = `Z = ${Number(zScore).toFixed(2)}`;
+        let adviceMC = `DD: $${Math.round(currentDrawdown)}`; 
+        let evVal = EV > 0 ? `+${Number(EV).toFixed(0)}` : Number(EV).toFixed(0);
+
+        let passLaplace = empWinRate > baseP_Threshold * 0.9;
+        let passKelly = fracKelly > 0;
+        let passMarkov = bayesProb > baseP_Threshold;
+        let passZ = (zScore >= 0.8 && zScore <= 3.0); 
+        let passDD = !isTurbulent; 
+        let passEV = EV > 0; // 期望值必須大於 0
+
+        let c1 = passLaplace ? 'highlight' : 'danger';
+        let c2 = passKelly ? 'highlight' : 'danger';
+        let c3 = passMarkov ? 'highlight' : 'danger';
+        let c4 = passZ ? 'highlight' : 'danger';
+        let c5 = passDD ? 'highlight' : 'danger'; 
+        let c6 = passEV ? 'highlight' : 'danger';
 
         let consensusTitle = "", consensusDesc = "", consensusColor = "";
 
@@ -725,15 +767,15 @@
             consensusTitle = "🔴 銀行家否決 (期望值為負)";
             consensusDesc = `【風控否決】長期期望值 EV 為負數，盤口無數學優勢。強制 0 倍空手！`;
             consensusColor = "background:#fef2f2; color:#b91c1c; border: 2px solid #fecaca;";
-        } else if (!passDD) {
+        } else if (isTurbulent) {
             consensusTitle = "🟡 亂流防禦 (波動率限制)";
             consensusDesc = `【回撤警告】資金曲線進入深水區亂流。大莊決議：降級防禦或 0 倍觀望。`;
             consensusColor = "background:#fffbeb; color:#b45309; border: 2px solid #fcd34d;";
-        } else if (passZ && a.Z_Score >= 1.5 && a.Kelly > 0) {
+        } else if (passZ && zScore >= 1.5 && passEV && passKelly) {
             consensusTitle = "🔥 黃金狙擊 (健康乖離 Z>1.5)";
             consensusDesc = `【精準打擊】三線多頭且偏離度達標。核准 2 倍火力狙擊回歸！`;
             consensusColor = "background:#ecfdf5; color:#065f46; border: 2px solid #6ee7b7;";
-        } else if (a.MA30 >= a.MA120 && a.Kelly > 0) {
+        } else if (ma30 >= ma120 && passEV && passKelly) {
             consensusTitle = "🟢 標準多頭佈局";
             consensusDesc = `【常態區】均線多頭且 EV>0。核准 1 倍標準注碼平推。`;
             consensusColor = "background:#f0fdf4; color:#15803d; border: 2px solid #a7f3d0;";
@@ -743,37 +785,21 @@
             consensusColor = "background:#f8fafc; color:#64748b; border: 2px solid #e2e8f0;";
         }
 
-        let k = a.cfg.type === '1800' ? (a.cfg.name.includes('tt')?'tt-1800':'539-1800') : (a.cfg.name.includes('tt')?'tt-9000':'539-9000');
-
         return `
             <div class="ai-prediction-box">
-                <div class="strategy-box" style="${consensusColor} margin-top:0;">
+                <h5>🤖 六大專家客觀決策矩陣</h5>
+                <div style="font-size: 10px; color: #64748b; margin-bottom: 6px;">(自適應凱利與幾何 Z-Score 審慎驅動)</div>
+                <div class="giant-grid">
+                    <div class="giant-card ${c1}"><div class="g-title">① 數學家(均值)</div><div class="g-val">${adviceLaplace}</div></div>
+                    <div class="giant-card ${c2}"><div class="g-title">② 資金家(凱利)</div><div class="g-val">${adviceKelly}</div></div>
+                    <div class="giant-card ${c3}"><div class="g-title">③ 贏家(馬可夫)</div><div class="g-val">${adviceMarkov}</div></div>
+                    <div class="giant-card ${c4}"><div class="g-title">④ 銀行家(偏離)</div><div class="g-val">${adviceZ}</div></div>
+                    <div class="giant-card ${c5}"><div class="g-title">⑤ 精算家(壓力)</div><div class="g-val">${adviceMC}</div></div>
+                    <div class="giant-card ${c6}"><div class="g-title">⑥ 莊家(期望值)</div><div class="g-val">${evVal}</div></div>
+                </div>
+                <div class="strategy-box" style="${consensusColor}">
                     <h6>${consensusTitle}</h6>
                     <div style="font-size:11.5px; font-weight:bold; margin-top:4px; text-align:left; color:#1e293b;">${consensusDesc}</div>
-                    <div class="tomorrow-prob">🎯 下期開盤預測：<strong>${(a.P_bayes * 100).toFixed(1)}%</strong> | 精準賠率：<strong>${a.O_act.toFixed(2)} 倍</strong></div>
-                </div>
-                
-                <button onclick="toggle18Formulas('${k}')" class="btn-toggle-18">📊 展開/收合 18大指標精算矩陣</button>
-                
-                <div id="grid-18-${k}" class="grid-18">
-                    <div class="g-item"><div class="g-t">1. 物理基準($P_{base}$)</div><div class="g-v">${(a.P_base*100).toFixed(2)}%</div></div>
-                    <div class="g-item"><div class="g-t">2. 歷史勝率($P_{emp}$)</div><div class="g-v">${(a.P_emp*100).toFixed(1)}%</div></div>
-                    <div class="g-item"><div class="g-t">3. 短期($MA_{30}$)</div><div class="g-v">${(a.MA30*100).toFixed(1)}%</div></div>
-                    <div class="g-item"><div class="g-t">4. 中期($MA_{120}$)</div><div class="g-v">${(a.MA120*100).toFixed(1)}%</div></div>
-                    <div class="g-item"><div class="g-t">5. 長期($MA_{500}$)</div><div class="g-v">${(a.MA500*100).toFixed(1)}%</div></div>
-                    <div class="g-item ${a.Accel>0?'hl':'dg'}"><div class="g-t">6. 動能加速度</div><div class="g-v">${a.Accel>0?'+':''}${(a.Accel*100).toFixed(1)}%</div></div>
-                    <div class="g-item"><div class="g-t">7. RSI 震盪(14期)</div><div class="g-v">${a.RSI_14.toFixed(1)}</div></div>
-                    <div class="g-item"><div class="g-t">8. 當前連槓($M_{cur}$)</div><div class="g-v">${a.M_cur} 期</div></div>
-                    <div class="g-item"><div class="g-t">9. 平均遺漏($M_{avg}$)</div><div class="g-v">${a.M_avg.toFixed(1)} 期</div></div>
-                    <div class="g-item"><div class="g-t">10. 幾何標準差($\sigma$)</div><div class="g-v">${a.Std_geom.toFixed(2)}</div></div>
-                    <div class="g-item ${a.Z_Score>=1.5?'hl':(a.Z_Score<0?'dg':'')}"><div class="g-t">11. 偏離度(Z-Score)</div><div class="g-v">${a.Z_Score.toFixed(2)}</div></div>
-                    <div class="g-item"><div class="g-t">12. 生存極限(PR)</div><div class="g-v">${a.PR_surv.toFixed(1)}</div></div>
-                    <div class="g-item"><div class="g-t">13. 馬可夫($P_{markov}$)</div><div class="g-v">${(a.P_markov*100).toFixed(1)}%</div></div>
-                    <div class="g-item hl"><div class="g-t">14. 綜合預測($P_{bayes}$)</div><div class="g-v">${(a.P_bayes*100).toFixed(1)}%</div></div>
-                    <div class="g-item"><div class="g-t">15. 合理賠率($O_{fair}$)</div><div class="g-v">${a.O_fair.toFixed(2)}</div></div>
-                    <div class="g-item ${a.O_act>a.O_fair?'hl':'dg'}"><div class="g-t">16. 真實賠率($O_{act}$)</div><div class="g-v">${a.O_act.toFixed(2)}</div></div>
-                    <div class="g-item ${a.EV>0?'hl':'dg'}"><div class="g-t">17. 期望值(EV)</div><div class="g-v">${a.EV>0?'+':''}${a.EV.toFixed(0)}</div></div>
-                    <div class="g-item ${a.Kelly>0?'hl':'dg'}"><div class="g-t">18. 凱利配置($f^*$)</div><div class="g-v">${(a.Kelly*100).toFixed(1)}%</div></div>
                 </div>
             </div>
         `;
@@ -821,10 +847,10 @@
                 
                 if (a.EV <= 0 || a.isTurbulent) {
                     status = `🔴 專家否決 👉 <span style="color:#fca5a5;">0 倍空手</span>`;
-                } else if (a.Z_Score >= 1.5 && a.EV > 0) {
+                } else if (a.zScore >= 1.5 && a.EV > 0) {
                     status = `🔥 黃金狙擊 👉 <span style="color:#a7f3d0;">強勢 2 倍</span>`;
                     cssClass = "cold";
-                } else if (a.MA30 >= a.MA120 && a.EV > 0) {
+                } else if (a.ma30 >= a.ma120 && a.EV > 0) {
                     status = `🟢 標準多頭 👉 <span style="color:#a7f3d0;">平推 1 倍</span>`;
                     cssClass = "cold";
                 } else {
@@ -854,21 +880,22 @@
 
             let statusText = '', reasonText = '', cardStyle = '';
             
+            // 💡 嚴格實戰派發指引：必須 EV>0 且符合區間才給予綠燈
             if (a.EV <= 0 || a.isTurbulent) {
                 statusText = `🔴 專家否決 👉 0 倍`; 
-                cardStyle = 'background:#fef2f2; border-color:#fecaca;'; 
+                cardStyle = 'background:#fef2f2; border-color:#fecaca;'; // 淡紅
                 reasonText = `期望值為負或處於亂流期。專家聯合否決，強制 0 元空手保本。`;
-            } else if (a.Z_Score >= 1.5 && a.EV > 0) {
+            } else if (a.zScore >= 1.5 && a.EV > 0) {
                 statusText = `🔥 黃金狙擊 👉 2 倍`; 
-                cardStyle = 'background:#ecfdf5; border-color:#6ee7b7; box-shadow:0 2px 10px rgba(16,185,129,0.1)'; 
+                cardStyle = 'background:#ecfdf5; border-color:#6ee7b7; box-shadow:0 2px 10px rgba(16,185,129,0.1)'; // 淡綠
                 reasonText = `極度乖離且期望值為正。核准以 2 倍火力狙擊回歸！`;
-            } else if (a.MA30 >= a.MA120 && a.EV > 0) {
+            } else if (a.ma30 >= a.ma120 && a.EV > 0) {
                 statusText = `🟢 標準多頭 👉 1 倍`; 
-                cardStyle = 'background:#ecfdf5; border-color:#6ee7b7;'; 
+                cardStyle = 'background:#ecfdf5; border-color:#6ee7b7;'; // 淡綠
                 reasonText = `均線多頭且期望值正向。核准 1 倍標準注碼平推。`;
             } else {
                 statusText = `🔴 條件不足 👉 0 倍`; 
-                cardStyle = 'background:#fef2f2; border-color:#fecaca;'; 
+                cardStyle = 'background:#fef2f2; border-color:#fecaca;'; // 淡紅
                 reasonText = `未達專家全綠燈共識。強制 0 元觀望，絕不出手。`;
             }
 
@@ -884,6 +911,7 @@
         });
         document.getElementById('ledger-recommendations-container').innerHTML = recHtml;
 
+        // 計算真實損益
         let totalCount = 0, totalCost = 0, totalPrize = 0;
         Object.keys(spaceData).forEach(key => {
             let cfg = spaceConfigs[key];
@@ -986,12 +1014,16 @@
         }, 500);
     });
 
+    // ==============================================================
+    // 🎯 修改：補齊 6 宮格 (包含總期數、中獎、未中、均值、連槓與機率)
+    // ==============================================================
     function renderMain() {
-        if(currentSpace === 'arena' || currentSpace === 'ledger') return;
+        if(currentSpace === 'arena' || currentSpace === 'ledger' || currentSpace === 'single-ball') return;
         
         let cfg = spaceConfigs[currentSpace];
         let data = getFilteredData(currentSpace);
         
+        // 修正：不受年份下拉選單影響的真實歷史母體
         let allRawList = [...(spaceData[currentSpace] || [])].sort((a, b) => new Date(b.date) - new Date(a.date));
         
         let recent500 = allRawList.slice(0, 500);
@@ -1019,6 +1051,7 @@
         let tbody = document.getElementById('result-tbody');
         let thead = document.getElementById('table-head');
         
+        // 算出該區間的總過關與未過關次數
         let wins = 0;
         let htmlBuilder = ""; 
 
@@ -1054,6 +1087,7 @@
         let zScoreStr = a ? a.zScore.toFixed(2) : '--';
         let losingStreakStr = a ? a.losingStreak : '--';
         
+        // 🎯 把 6 宮格精準塞入：總期數、中獎、沒中、均值、連槓與Z值、下期開盤機率
         document.getElementById('stats-container').innerHTML = `
             <div class="stat-item"><h3>區間總期數</h3><p>${data.length} 期</p></div>
             <div class="stat-item"><h3>中獎 (過關)</h3><p style="color:#059669;">${wins} 次</p></div>
