@@ -16,12 +16,11 @@
             --danger-color: #dc2626;
             --purple-color: #7c3aed;
             --orange-color: #ea580c;
-            --gold-color: #d97706;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Microsoft JhengHei", sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background-color: var(--bg-color); color: var(--text-main); padding: 8px; line-height: 1.5; }
-        .container { max-width: 1200px; margin: 0 auto; }
+        .container { max-width: 1200px; margin: 0 auto; padding-bottom: 40px; }
 
         header { 
             background: linear-gradient(135deg, #0f172a, #1e293b); border: 1px solid #334155;
@@ -117,6 +116,24 @@
         .history-balls-wrap { display: flex; gap: 5px; }
         .color-ball { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #78350f; border: 1.5px solid #d97706; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 900; font-family: monospace; box-shadow: 0 2px 5px rgba(245, 158, 11, 0.3); }
 
+        /* 系統說明書 (預設縮合) */
+        .guide-box { background: #1e293b; color: #f8fafc; border-radius: 12px; padding: 16px; margin-top: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+        .guide-box h3 { display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-size: 15px; font-weight: 900; color: #fbbf24; border-bottom: 1px solid #334155; padding-bottom: 10px; margin-bottom: 0; }
+        .guide-box h3:hover { color: #fcd34d; }
+        .guide-content { display: none; margin-top: 14px; animation: fadeIn 0.3s ease; }
+        
+        .doc-section { margin-bottom: 16px; }
+        .doc-section h4 { color: #38bdf8; font-size: 14px; margin-bottom: 8px; border-left: 3px solid #0ea5e9; padding-left: 6px; }
+        .doc-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        @media (min-width: 768px) { .doc-grid { grid-template-columns: repeat(2, 1fr); } }
+        
+        .doc-card { background: #0f172a; border: 1px solid #334155; padding: 12px; border-radius: 8px; }
+        .doc-card .title { font-size: 13px; font-weight: 900; color: #fbbf24; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;}
+        .doc-card .formula { font-family: monospace; color: #a7f3d0; font-size: 11px; margin-bottom: 6px; background: rgba(0,0,0,0.3); padding: 4px; border-radius: 4px; border-left: 2px solid #10b981; }
+        .doc-card .desc { font-size: 12px; color: #94a3b8; line-height: 1.5; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+
         #global-loader { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,23,42,0.95); z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center; transition: opacity 0.3s; }
         .loader-spinner { width: 50px; height: 50px; border: 4px solid #334155; border-top-color: #fbbf24; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom:16px;}
         @keyframes spin { to { transform: rotate(360deg); } }
@@ -204,6 +221,102 @@
             <div class="history-grid-4rows" id="recent-8-history"></div>
         </div>
     </div>
+
+    <!-- 📖 15 宗師系統說明書 (預設隱藏) -->
+    <div class="guide-box">
+        <h3 onclick="toggleDoc()">📖 15 宗師量化矩陣運算白皮書 (點擊展開/收合) <span>▼</span></h3>
+        <div class="guide-content" id="doc-content">
+            
+            <div class="doc-section">
+                <h4>🏛️ 華爾街 6 大量化風控模型 (西方體系)</h4>
+                <div class="doc-grid">
+                    <div class="doc-card">
+                        <div class="title">① 數學家 (拉普拉斯平滑均值)</div>
+                        <div class="formula">P = (Hits + 1) / (N + 2)</div>
+                        <div class="desc">傳統機率易受極端值干擾。導入 Laplace Smoothing 處理稀疏數據，避免機率歸零，提供最平穩的基礎期望值定錨。</div>
+                    </div>
+                    <div class="doc-card">
+                        <div class="title">② 資金家 (凱利公式)</div>
+                        <div class="formula">f* = p - [ (1 - p) / b ]</div>
+                        <div class="desc">華爾街倉位管理聖經。b 為賠率(4.3)，p 為勝率。當算出的 f* 為正數，代表此號碼具備長期投資優勢；若為負數則強制觀望。</div>
+                    </div>
+                    <div class="doc-card">
+                        <div class="title">③ 贏家 (馬可夫轉移狀態)</div>
+                        <div class="formula">P(Hit|Miss_k)</div>
+                        <div class="desc">不看總勝率，只看「在目前槓了 K 期的狀態下，歷史上反轉開出的機率」。精準捕捉該號碼在特定遺漏狀態的爆發動能。</div>
+                    </div>
+                    <div class="doc-card">
+                        <div class="title">④ 銀行家 (Z-Score 乖離率)</div>
+                        <div class="formula">Z = (CurrentMiss - μ) / σ</div>
+                        <div class="desc">測量當前遺漏期數偏離歷史平均(μ)有幾個標準差(σ)。Z > 1.5 代表進入深水區(極限反轉點)，Z < -1.0 代表過熱。</div>
+                    </div>
+                    <div class="doc-card">
+                        <div class="title">⑤ 精算家 (最大回撤 Drawdown)</div>
+                        <div class="formula">MDD = Max(Peak - CurrentEquity)</div>
+                        <div class="desc">模擬單壓此號碼的歷史淨值曲線。MDD 代表歷史上經歷過最慘烈的資金連續失血。用來評估抗壓性與凹單極限。</div>
+                    </div>
+                    <div class="doc-card">
+                        <div class="title">⑥ 莊家 (單注期望值 EV)</div>
+                        <div class="formula">EV = (P × Profit) - ((1-P) × Cost)</div>
+                        <div class="desc">賭場與莊家賴以生存的核心指標。將近 30 期勝率代入賠率計算，EV 為正才代表這是一筆長線穩賺不賠的交易。</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="doc-section">
+                <h4>⛩️ 東方 9 大量化收斂模型 (玄學與數學交集)</h4>
+                <div class="doc-grid">
+                    <div class="doc-card">
+                        <div class="title">⑦ 蒙地卡羅動能 (均線黃金交叉)</div>
+                        <div class="formula">IF (Prob_10 > Prob_All) -> Score+</div>
+                        <div class="desc">動量投資派。當短期(10期)勝率強勢穿越長期總勝率，視為籌碼集中、主力進駐，賦予高額動能分數。</div>
+                    </div>
+                    <div class="doc-card">
+                        <div class="title">⑧ 傅立葉頻譜 (規律共振)</div>
+                        <div class="formula">Check Symmetrical Miss Gaps</div>
+                        <div class="desc">分析號碼開出的「頻率」。若近期遺漏期數呈現對稱（如：隔3期、隔5期、隔3期），判定為主力畫線的共振點。</div>
+                    </div>
+                    <div class="doc-card">
+                        <div class="title">⑨ 貝氏條件機率 (生存者偏差)</div>
+                        <div class="formula">P = 1 / (Total(Miss > Current) + 1)</div>
+                        <div class="desc">在歷史紀錄中，有多少次槓得比現在還久？次數越少，代表該號碼越接近其「生存極限」，隨時會爆發。</div>
+                    </div>
+                    <div class="doc-card">
+                        <div class="title">⑩ 混沌極限理論</div>
+                        <div class="formula">Trigger IF |Z-Score| > 1.8</div>
+                        <div class="desc">市場常態屬隨機漫步，但當 Z-Score 突破臨界值，系統將進入「混沌邊緣」，此時發生反轉的機率呈現非線性暴增。</div>
+                    </div>
+                    <div class="doc-card">
+                        <div class="title">⑪ 卜瓦松絕境反轉</div>
+                        <div class="formula">CurrentMiss >= (MaxMiss * 0.8)</div>
+                        <div class="desc">專抓極端罕見事件。當號碼遺漏期數逼近歷史最高遺漏紀錄的 80% 時，啟動強力反彈加分。</div>
+                    </div>
+                    <div class="doc-card">
+                        <div class="title">⑫ 費波那契數列 (黃金分割)</div>
+                        <div class="formula">Miss ∈ [1, 2, 3, 5, 8, 13, 21, 34]</div>
+                        <div class="desc">大自然的黃金密碼。許多時間序列的反轉點，容易落在費波那契數列的天數上，作為神秘的支撐位判定。</div>
+                    </div>
+                    <div class="doc-card">
+                        <div class="title">⑬ 高斯回歸偏態</div>
+                        <div class="formula">Skew = Prob_10 - Prob_30</div>
+                        <div class="desc">測量機率分佈的傾斜度。正偏態代表近期爆發力度遠超波段均值，是抓取連莊或短線強勢股的核心。</div>
+                    </div>
+                    <div class="doc-card">
+                        <div class="title">⑭ 馬可夫隱藏狀態 (HMM)</div>
+                        <div class="formula">Detect Latent State (Overheated)</div>
+                        <div class="desc">防追高機制。即使勝率再高，若判定目前處於「過熱崩盤前夕（10期內狂開3次以上）」，將嚴格扣分打入冷宮。</div>
+                    </div>
+                    <div class="doc-card">
+                        <div class="title">⑮ 深度神經擬合 (複合指標)</div>
+                        <div class="formula">Weighted Σ (M1, M3, Prob30)</div>
+                        <div class="desc">將拉普拉斯定錨、馬可夫狀態與波段均值，進行多層次權重融合，作為系統防禦雜訊的最終壓艙石。</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
 </div>
 
 <script type="module">
@@ -226,6 +339,12 @@
 
     let spaceData = { 'tt-9000': [], '539-9000': [] };
     let isDataLoaded = false; 
+
+    // 文件區塊開關
+    window.toggleDoc = function() {
+        let content = document.getElementById('doc-content');
+        content.style.display = (content.style.display === "none" || content.style.display === "") ? "block" : "none";
+    };
 
     onSnapshot(collection(db, "matrix_systems"), (snapshot) => {
         snapshot.docChanges().forEach((change) => {
@@ -251,7 +370,7 @@
         }
     });
 
-    // 核心資料與 15 模型計算引擎
+    // 核心資料與 15 模型真實計算引擎
     function compute15Masters(target, data) {
         let N = data.length;
         if(N === 0) return null;
@@ -260,7 +379,6 @@
         let tempMiss = 0;
         let hits = 0, hits10 = 0, hits30 = 0, hits50 = 0;
         
-        // 用於計算最大回撤 (假設單次成本 100, 淨利 430)
         let eqCurve = [0];
         let peak = 0, maxDD = 0;
 
@@ -271,7 +389,7 @@
             if (isHit) {
                 missingHistory.push(tempMiss);
                 tempMiss = 0;
-                let newEq = eqCurve[eqCurve.length-1] + 430;
+                let newEq = eqCurve[eqCurve.length-1] + 430; 
                 eqCurve.push(newEq);
                 if (newEq > peak) peak = newEq;
             } else {
@@ -304,15 +422,12 @@
         let stdDev = Math.sqrt(variance || 1);
         
         // 華爾街指標 6 巨頭
-        // M1: 數學家 (拉普拉斯平滑均值)
-        let m1_Laplace = (hits + 1) / (N + 2);
+        let m1_Laplace = (hits + 1) / (N + 2); // Laplace
         
-        // M2: 資金家 (凱利公式) f* = p - q/b. b = 430/100 = 4.3
-        let b_odds = 4.3; 
-        let m2_Kelly = prob30 - ((1 - prob30) / b_odds);
+        let b_odds = 4.3; // 430/100
+        let m2_Kelly = prob30 - ((1 - prob30) / b_odds); // Kelly
         if (m2_Kelly < 0) m2_Kelly = 0;
 
-        // M3: 贏家 (馬可夫轉移狀態)
         let mHit=0, mMiss=0, trk=0;
         reversed.forEach((item, idx) => {
             let isHit = item.draw.includes(target);
@@ -321,47 +436,31 @@
             }
             if(isHit) trk=0; else trk++;
         });
-        let m3_Markov = (mHit + (probAll*5)) / (mHit + mMiss + 5);
+        let m3_Markov = (mHit + (probAll*5)) / (mHit + mMiss + 5); // Markov smoothed
 
-        // M4: 銀行家 (Z-Score 乖離)
-        let m4_ZScore = stdDev > 0 ? (currentMiss - avgMiss) / stdDev : 0;
+        let m4_ZScore = stdDev > 0 ? (currentMiss - avgMiss) / stdDev : 0; // Z-Score
+        let m5_DD = maxDD; // Drawdown
+        let m6_EV = (prob30 * 430) - ((1 - prob30) * 100); // EV
 
-        // M5: 精算家 (最大回撤 Drawdown)
-        let m5_DD = maxDD;
-
-        // M6: 莊家 (期望值 EV)
-        let m6_EV = (prob30 * 430) - ((1 - prob30) * 100);
-
-        // 東方量化 9 巨頭 (轉換為 0-100 分數機制)
-        // M7: 蒙地卡羅漫步 (波段動能交叉)
-        let m7 = prob10 > probAll ? 85 : 45;
-        // M8: 傅立葉頻譜 (節奏共振)
-        let m8 = 40;
+        // 東方量化 9 巨頭 (0-100分)
+        let m7 = prob10 > probAll ? 85 : 45; // Monte Carlo Momentum
+        let m8 = 40; // Fourier Resonance
         if (missingHistory.length >= 2) {
             if (currentMiss === missingHistory[missingHistory.length-1]) m8 = 95;
             else if (currentMiss === missingHistory[missingHistory.length-2]) m8 = 80;
         }
-        // M9: 貝氏條件網絡
         let totalOverMiss = missingHistory.filter(x => x >= currentMiss).length;
-        let m9 = totalOverMiss > 0 ? (1 / (totalOverMiss + 1)) * 100 : 99;
-        // M10: 混沌理論 (Z分數極限)
-        let m10 = (m4_ZScore > 2.0 || m4_ZScore < -1.5) ? 90 : 40;
-        // M11: 卜瓦松反轉 (逼近最大遺漏)
-        let m11 = currentMiss >= (maxMiss * 0.8) ? 95 : 30;
-        // M12: 費波那契數列 (神奇共鳴)
-        let m12 = [1,2,3,5,8,13,21,34].includes(currentMiss) ? 85 : 35;
-        // M13: 高斯偏態 (近期爆發率)
-        let m13 = (prob10 - prob30) > 0 ? 75 : 45;
-        // M14: HMM 隱藏狀態 (抓取過熱崩盤點)
-        let m14 = hits10 >= 3 ? 15 : (hits10 === 0 && currentMiss > 3 ? 85 : 55);
-        // M15: 深度神經擬合 (複合指標)
-        let m15 = (m1_Laplace*0.3 + m3_Markov*0.4 + prob30*0.3) * 100;
+        let m9 = totalOverMiss > 0 ? (1 / (totalOverMiss + 1)) * 100 : 99; // Bayesian survival
+        let m10 = (m4_ZScore > 2.0 || m4_ZScore < -1.5) ? 90 : 40; // Chaos limit
+        let m11 = currentMiss >= (maxMiss * 0.8) ? 95 : 30; // Poisson reversion
+        let m12 = [1,2,3,5,8,13,21,34].includes(currentMiss) ? 85 : 35; // Fibonacci
+        let m13 = (prob10 - prob30) > 0 ? 75 : 45; // Gaussian Skewness
+        let m14 = hits10 >= 3 ? 15 : (hits10 === 0 && currentMiss > 3 ? 85 : 55); // HMM Overheat
+        let m15 = (m1_Laplace*0.3 + m3_Markov*0.4 + prob30*0.3) * 100; // Deep Neural
 
-        // 計算生存 PR
         let shorterCount = missingHistory.filter(m => m <= currentMiss).length;
         let survivalPR = missingHistory.length > 0 ? (shorterCount / missingHistory.length) * 100 : 50;
 
-        // 計算綜合防禦總分 (影響 S/A/B/C)
         let finalScore = (m1_Laplace*100 * 0.1) + (m2_Kelly*100 * 0.15) + (m3_Markov*100 * 0.15) + 
                          (m4_ZScore > 1.5 ? 10 : 0) + (m6_EV > 0 ? 10 : 0) + 
                          (m7*0.05) + (m8*0.08) + (m9*0.05) + (m10*0.04) + (m11*0.08) + (m12*0.02) + (m13*0.05) + (m14*0.03) + (m15*0.05);
@@ -396,14 +495,14 @@
         document.getElementById('sb-p-drag').innerHTML = st.maxMiss + ' 期';
         document.getElementById('sb-p-30').innerHTML = (st.prob30*100).toFixed(1) + '%';
 
-        // 動態生成 15 宮格 (前6華爾街, 後9東方)
+        // 15 宮格帶入真實數據
         document.getElementById('sb-giants-container').innerHTML = `
-            <div class="giant-card wall-street"><div class="g-title">① 數學家(拉普拉斯)</div><div class="g-val">${(st.m1_Laplace*100).toFixed(1)}%</div></div>
+            <div class="giant-card wall-street"><div class="g-title">① 數學家(均值)</div><div class="g-val">${(st.m1_Laplace*100).toFixed(1)}%</div></div>
             <div class="giant-card wall-street"><div class="g-title">② 資金家(凱利)</div><div class="g-val">f* ${(st.m2_Kelly*100).toFixed(1)}%</div></div>
             <div class="giant-card wall-street"><div class="g-title">③ 贏家(馬可夫)</div><div class="g-val">${(st.m3_Markov*100).toFixed(1)}%</div></div>
-            <div class="giant-card wall-street ${st.m4_ZScore > 2 || st.m4_ZScore < -1.5 ? 'danger':''}"><div class="g-title">④ 銀行家(偏離)</div><div class="g-val">Z = ${st.m4_ZScore.toFixed(2)}</div></div>
-            <div class="giant-card wall-street"><div class="g-title">⑤ 精算家(最大回撤)</div><div class="g-val">DD $${Math.round(st.m5_DD)}</div></div>
-            <div class="giant-card wall-street ${st.m6_EV > 0 ? 'highlight':''}"><div class="g-title">⑥ 莊家(單注期望值)</div><div class="g-val">EV ${st.m6_EV > 0 ? '+':''}${Math.round(st.m6_EV)}</div></div>
+            <div class="giant-card wall-street ${st.m4_ZScore > 1.5 || st.m4_ZScore < -1.5 ? 'danger':''}"><div class="g-title">④ 銀行家(偏離)</div><div class="g-val">Z = ${st.m4_ZScore.toFixed(2)}</div></div>
+            <div class="giant-card wall-street"><div class="g-title">⑤ 精算家(壓力)</div><div class="g-val">DD $${Math.round(st.m5_DD)}</div></div>
+            <div class="giant-card wall-street ${st.m6_EV > 0 ? 'highlight':''}"><div class="g-title">⑥ 莊家(期望值)</div><div class="g-val">EV ${st.m6_EV > 0 ? '+':''}${Math.round(st.m6_EV)}</div></div>
             
             <div class="giant-card ${st.m7>60?'highlight':''}"><div class="g-title">⑦ 蒙地卡羅動能</div><div class="g-val">${st.m7.toFixed(0)} 分</div></div>
             <div class="giant-card ${st.m8>60?'highlight':''}"><div class="g-title">⑧ 傅立葉共振</div><div class="g-val">${st.m8.toFixed(0)} 分</div></div>
@@ -450,7 +549,6 @@
             let ballStr = String(item.ball).padStart(2, '0');
             let obj = { ball: ballStr, score: item.score.toFixed(1) };
             
-            // 實戰保底邏輯：保證前3名 S，4-9名 A
             if (index < 3) sClass.push(obj);
             else if (index >= 3 && index < 9) aClass.push(obj);
             else if (index >= 9 && index < 25) bClass.push(obj);
@@ -472,7 +570,6 @@
             <div class="roster-card c-class"><h4>🔴 C 級 (強制冷卻)</h4><div class="ball-badge-wrap">${cClass.map(renderBadge).join('')}</div></div>
         `;
 
-        // 最近 8 期
         let recent8 = data.slice(0, 8);
         let historyHtml = '';
         recent8.forEach(item => {
