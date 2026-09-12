@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>⚡ 雙核心量化操盤系統 | 精準演算法修復版</title>
+    <title>⚡ 雙核心量化操盤系統 | 終極實戰疊加版</title>
     <style>
         /* ==========================================
            1. 全局變數與基礎字體設定
@@ -77,6 +77,14 @@
            ========================================== */
         .panel { background: var(--panel-bg); padding: 14px; border-radius: 12px; border: 1px solid var(--panel-border); margin-bottom: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
         .panel-title { font-size: 14px; font-weight: 900; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px; color: var(--text-main); }
+        
+        .formula-box { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px; margin-bottom: 14px; font-size: 12px; line-height: 1.6; }
+        .formula-box h4 { margin-bottom: 0; color: #0f172a; font-size: 14px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; font-weight: 900; }
+        .formula-content { display: none; margin-top: 12px; border-top: 1px dashed #cbd5e1; padding-top: 12px; color: #334155; }
+        .formula-item { background: #fff; padding: 10px; border-radius: 6px; border-left: 4px solid var(--primary-color); box-shadow: 0 1px 2px rgba(0,0,0,0.05); margin-bottom: 8px; }
+        .formula-item strong { color: var(--primary-color); font-size: 13px; }
+        .formula-item code { background: #f1f5f9; padding: 2px 6px; border-radius: 4px; color: #b91c1c; font-family: monospace; font-weight: bold; }
+
         .form-row { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
         @media (min-width: 768px) { .form-row { flex-direction: row; } }
         .form-group label { display: block; font-size: 11px; font-weight: 800; color: #334155; margin-bottom: 2px; }
@@ -84,14 +92,6 @@
         textarea { width: 100%; height: 80px; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-family: monospace; font-size: 12px; margin-bottom: 8px; outline:none; }
         .btn-main { background: linear-gradient(135deg, #0284c7, #2563eb); color: white; border: none; padding: 10px; font-size: 13px; font-weight: 900; border-radius: 8px; cursor: pointer; width: 100%; transition: 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
         .btn-main:active { transform: translateY(1px); }
-
-        /* 說明書 */
-        .guide-box { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px; margin-bottom: 14px; font-size: 12px; line-height: 1.6; }
-        .guide-box h4 { margin-bottom: 8px; color: #0f172a; font-size: 14px; display: flex; align-items: center; gap: 6px; cursor: pointer; }
-        .guide-grid { display: grid; grid-template-columns: 1fr; gap: 8px; margin-top: 10px; display: none; }
-        .guide-item { background: #fff; padding: 8px; border-radius: 6px; border-left: 4px solid var(--primary-color); box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
-        .guide-item strong { color: var(--primary-color); }
-        .guide-target { color: var(--success-color); font-weight: 900; font-size: 11px; margin-top: 4px; display: block; }
 
         /* ==========================================
            5. 決策面板專區
@@ -104,6 +104,8 @@
         .setting-item label { display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 2px; font-weight: bold; }
         .setting-item input { width: 100%; padding: 6px 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; font-family: monospace; font-weight: bold; }
         .setting-item input:disabled { background: #f1f5f9; color: #94a3b8; border-color:#e2e8f0; }
+        .action-bar { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+        .action-bar input { padding: 8px; border: 1.5px solid #cbd5e1; border-radius: 6px; flex: 1; min-width: 120px; font-size: 13px; font-weight: bold; }
         
         .strategy-dashboard { background: linear-gradient(135deg, #1e1b4b, #312e81); color: #fff; padding: 16px; border-radius: 12px; margin-bottom: 14px; box-shadow: 0 4px 12px rgba(49, 46, 129, 0.4); }
         .strategy-dashboard h3 { font-size: 15px; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 6px; }
@@ -219,17 +221,41 @@
     </div>
 
     <!-- ========================================== -->
-    <!-- 模塊：決策矩陣 (Arena) -->
+    <!-- 🧮 新增：數學公式白皮書 (點擊展開) -->
     <!-- ========================================== -->
-    <div class="guide-box" id="arena-guide" style="display:none;">
-        <h4 onclick="toggleGuide()">📖 系統六大巨頭指標說明書 (點擊展開/收合) <span>▼</span></h4>
-        <div class="guide-grid" id="guide-content">
-            <div class="guide-item"><strong>① 數學家 (物理勝率)：</strong><br>該盤口的基礎組合過關機率。<span class="guide-target">🎯 達標亮綠門檻：目前勝率大於遊戲基礎機率。</span></div>
-            <div class="guide-item"><strong>② 資金家 (自適應凱利)：</strong><br>動態計算最佳注碼比例，遇回撤自動收縮。<span class="guide-target">🎯 達標亮綠門檻：算定配置比例 f* > 0% 。</span></div>
-            <div class="guide-item"><strong>③ 贏家 (馬可夫核平滑)：</strong><br>精算盤口在「目前的連敗狀態下」，歷史上的反轉勝率。<span class="guide-target">🎯 達標亮綠門檻：動態反轉勝率大於基礎機率。</span></div>
-            <div class="guide-item"><strong>④ 銀行家 (幾何分佈 Z-Score)：</strong><br>測量連槓期數偏離平均值的嚴重程度。<span class="guide-target">🎯 達標亮綠門檻：數值在 0.8 ~ 3.0 之間。</span></div>
-            <div class="guide-item"><strong>⑤ 精算家 (波動與回撤防禦)：</strong><br>監控系統理論淨值最大回撤(Max Drawdown)與亂流。<span class="guide-target">🎯 達標亮綠門檻：資金曲線未進入極端亂流。</span></div>
-            <div class="guide-item"><strong>⑥ 大莊家 (數學期望值 EV)：</strong><br>下注 1 元/碰 跑長期的平均賺賠金額。<span class="guide-target">🎯 達標亮綠門檻：期望值必須大於 0。</span></div>
+    <div class="panel formula-box" id="formula-guide" style="display:none;">
+        <h4 onclick="toggleFormula()">
+            <span>🧮 系統底層數學公式與參數運算說明 (點擊展開)</span>
+            <span id="formula-icon">▼</span>
+        </h4>
+        <div id="formula-content" class="formula-content">
+            <div class="formula-item">
+                <strong>① 物理大盤勝率 (Combinatorics)</strong><br>
+                利用排列組合 $C(39, 5)$ 精算物理極限機率：<br>
+                1800碰 (中三星即過關)：<code>P(Win) ≈ 55.36%</code>，過關時平均中 <code>3.5576</code> 碰。<br>
+                9000碰 (四柱均中)：<code>P(Win) ≈ 27.36%</code>，過關時固定中 <code>2.0</code> 碰。
+            </div>
+            <div class="formula-item">
+                <strong>② 幾何 Z-Score 偏離度模型 (Banker)</strong><br>
+                連槓期數服從幾何分佈。平均值 <code>μ = (1-p)/p</code>，標準差 <code>σ = sqrt(1-p)/p</code>。<br>
+                公式：<code>Z = (連槓期數 - μ) / σ</code>。<br>
+                為防堵模型產生極端幻覺，系統強制將 Z-Score 封頂於 <code>[-3.0, 3.0]</code> 安全區間。
+            </div>
+            <div class="formula-item">
+                <strong>③ 貝氏馬可夫動態機率 (Winner)</strong><br>
+                融合短中長均線與乖離動能：<code>P_bayes = (MA30 * 0.4) + (MA120 * 0.4) + (MA500 * 0.2) + (Z * 0.015)</code>。<br>
+                設定物理天花板：動態勝率絕對不允許超過基礎物理勝率的 <code>1.4倍</code>。
+            </div>
+            <div class="formula-item">
+                <strong>④ 大莊家期望值 (EV)</strong><br>
+                精確扣除每一期固定沉沒成本：<code>EV = (P_bayes * 平均中獎彩金) - 總下注成本</code>。<br>
+                EV > 0 系統才會認定該盤口具備真實獲利優勢。
+            </div>
+            <div class="formula-item">
+                <strong>⑤ 自適應凱利配置 (Financier)</strong><br>
+                公式：<code>f* = (P * (b+1) - 1) / b</code>，其中賠率 <code>b = (平均彩金 - 成本) / 成本</code>。<br>
+                動態回撤防禦：偵測資金曲線 (Max Drawdown)，若進入深水亂流區，強制將注碼比例縮減至 <code>2%</code> 以防破產。
+            </div>
         </div>
     </div>
 
@@ -418,6 +444,19 @@
         switchSpace(currentSpace);
     };
 
+    // UI: Toggle Formula Box
+    window.toggleFormula = function() {
+        let content = document.getElementById('formula-content');
+        let icon = document.getElementById('formula-icon');
+        if (content.style.display === "none" || content.style.display === "") {
+            content.style.display = "block";
+            icon.innerText = "▲";
+        } else {
+            content.style.display = "none";
+            icon.innerText = "▼";
+        }
+    };
+
     function check1800(balls) {
         if (!balls || !Array.isArray(balls)) return { puffs: 0, text: "錯誤", p1:0, p2:0, p3:0 };
         let p1=0, p2=0, p3=0;
@@ -452,11 +491,6 @@
         }).sort((a, b) => new Date(b.date) - new Date(a.date));
     }
 
-    window.toggleGuide = function() {
-        let content = document.getElementById('guide-content');
-        content.style.display = (content.style.display === "none" || content.style.display === "") ? "grid" : "none";
-    };
-
     window.switchSpace = function(spaceKey) {
         currentSpace = spaceKey;
         document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
@@ -471,7 +505,7 @@
         document.getElementById('batch-input-panel').style.display = isArena ? 'block' : 'none';
         document.getElementById('global-strategy').style.display = isArena ? 'block' : 'none';
         document.getElementById('radar-panel').style.display = isArena ? 'block' : 'none';
-        document.getElementById('arena-guide').style.display = isArena ? 'block' : 'none';
+        document.getElementById('formula-guide').style.display = isArena ? 'block' : 'none';
         
         document.getElementById('actual-bet-panel').style.display = isLedger ? 'block' : 'none';
 
@@ -537,7 +571,6 @@
             if (!colFound.q4) { if(q4>=3) colFound.q4 = true; else colStreaks.q4++; }
         }
 
-        // 理論上任一柱出現3顆的總機率大約 35.7% (但會造成9000碰必死)
         let baseOverallTripleProb = 0.357; 
         let tripleNextProb = Math.min(baseOverallTripleProb + (tripleLosingStreak * 0.015), 0.95);
 
@@ -599,7 +632,7 @@
 
 
     // ==============================================================
-    // 🎯 六大專家核心運算 (附帶 Z 範疇安全閥與真實機率修復)
+    // 🎯 六大專家核心運算 (數學修正與凱利、馬可夫平滑升級)
     // ==============================================================
     function analyzeSpace(key) {
         let cfg = spaceConfigs[key] || { type: '1800', unitBet: 1, basePuffs: 1800, rebate: 0, unitPrize: 0, name: '' };
@@ -616,7 +649,7 @@
         let peakTheoretical = 0;
         let maxDrawdown = 0;
         
-        // 💡 物理學真實期望機率校正
+        // 💡 物理學真實期望機率校正 (採用排列組合 C(39,5) 理論極限值)
         let baseP_Threshold = cfg.type === '1800' ? 0.5536 : 0.2736;
         let costPerRound = Number(cfg.unitBet) * Number(cfg.basePuffs) * (1 - Number(cfg.rebate) / 100);
         
@@ -868,7 +901,7 @@
                 <div style="padding:14px; border:1.5px solid; border-radius:10px; ${cardStyle} line-height:1.6;">
                     <div style="font-weight:900; font-size:14px; color:#0f172a; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
                         <span>${a.cfg.name}</span>
-                        <span style="font-size:14px; font-weight:900; color:#dc2626;">${statusText}</span>
+                        <span style="font-size:13px; font-weight:900; color:#dc2626;">${statusText}</span>
                     </div>
                     <div style="font-size:12px; color:#334155;">${reasonText}</div>
                 </div>
@@ -980,7 +1013,7 @@
     });
 
     // ==============================================================
-    // 🎯 歷史數據 6 宮格精準面板 (包含單期 3.55 碰期望獎金校正)
+    // 🎯 歷史數據 6 宮格精準面板
     // ==============================================================
     function renderMain() {
         if(currentSpace === 'arena' || currentSpace === 'ledger') return;
