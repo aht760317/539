@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>⚡ 雙核心量化操盤系統 | 終極實戰版 (全功能復活疊加版)</title>
+    <title>⚡ 雙核心量化操盤系統 | 終極實戰疊加版</title>
     <style>
         /* ==========================================
-           1. 全局變數與基礎字體設定
+           1. 全局變數與基礎字體設定 (清爽明亮專業版)
            ========================================== */
         :root {
             --bg-color: #f8fafc; 
@@ -16,6 +16,7 @@
             --text-muted: #64748b;
             --primary-color: #0284c7;
             --success-color: #059669;
+            --warning-color: #d97706;
             --danger-color: #dc2626;
             --purple-color: #7c3aed;
             --orange-color: #ea580c;
@@ -45,6 +46,7 @@
         .dot { width: 6px; height: 6px; border-radius: 50%; background: #10b981; box-shadow: 0 0 4px #10b981; animation: pulse 2s infinite; }
         @keyframes pulse { 0% { transform: scale(0.9); opacity: 0.7; } 50% { transform: scale(1.1); opacity: 1; } 100% { transform: scale(0.9); opacity: 0.7; } }
 
+        /* 年度切換器 */
         .year-filter-bar {
             background: #1e293b; color: #fff; padding: 10px; border-radius: 8px; margin-bottom: 14px;
             display: flex; justify-content: center; align-items: center; gap: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
@@ -55,7 +57,7 @@
         }
 
         /* ==========================================
-           3. 核心功能切換按鈕
+           3. 核心功能切換按鈕 (Mode Switcher)
            ========================================== */
         .mode-switcher { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin-bottom: 14px; }
         @media (min-width: 768px) { .mode-switcher { grid-template-columns: repeat(4, 1fr); } }
@@ -72,14 +74,16 @@
         .mode-btn.single-btn.active { border-color: var(--orange-color); background: var(--orange-color); box-shadow: 0 2px 8px rgba(234, 88, 12, 0.3); color:#fff; }
 
         /* ==========================================
-           4. 基礎面板與網格
+           4. 基礎面板與網格 (Panels)
            ========================================== */
         .panel { background: var(--panel-bg); padding: 14px; border-radius: 12px; border: 1px solid var(--panel-border); margin-bottom: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
         .panel-title { font-size: 14px; font-weight: 900; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px; color: var(--text-main); }
+
         .form-row { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
         @media (min-width: 768px) { .form-row { flex-direction: row; } }
         .form-group label { display: block; font-size: 11px; font-weight: 800; color: #334155; margin-bottom: 2px; }
         .form-group input, .form-group select { width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; font-family: monospace; font-weight: bold; outline:none; transition: 0.2s; }
+        
         textarea { width: 100%; height: 80px; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-family: monospace; font-size: 12px; margin-bottom: 8px; outline:none; }
         .btn-main { background: linear-gradient(135deg, #0284c7, #2563eb); color: white; border: none; padding: 10px; font-size: 13px; font-weight: 900; border-radius: 8px; cursor: pointer; width: 100%; transition: 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
         .btn-main:active { transform: translateY(1px); }
@@ -93,19 +97,22 @@
         .guide-target { color: var(--success-color); font-weight: 900; font-size: 11px; margin-top: 4px; display: block; }
 
         /* ==========================================
-           5. 決策面板專區
+           5. 決策面板專區 (Arena)
            ========================================== */
         .setting-grid { display: grid; grid-template-columns: 1fr; gap: 14px; align-items: stretch; }
         @media (min-width: 900px) { .setting-grid { grid-template-columns: repeat(2, 1fr); } } 
+
         .space-config-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px; display: flex; flex-direction: column; }
         .space-config-card h4 { font-size: 13px; font-weight: 900; color: var(--purple-color); margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
         .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
         .setting-item label { display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 2px; font-weight: bold; }
         .setting-item input { width: 100%; padding: 6px 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; font-family: monospace; font-weight: bold; }
         .setting-item input:disabled { background: #f1f5f9; color: #94a3b8; border-color:#e2e8f0; }
+        
         .action-bar { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
         .action-bar input { padding: 8px; border: 1.5px solid #cbd5e1; border-radius: 6px; flex: 1; min-width: 120px; font-size: 13px; font-weight: bold; }
         
+        /* 策略儀表板 */
         .strategy-dashboard { background: linear-gradient(135deg, #1e1b4b, #312e81); color: #fff; padding: 16px; border-radius: 12px; margin-bottom: 14px; box-shadow: 0 4px 12px rgba(49, 46, 129, 0.4); }
         .strategy-dashboard h3 { font-size: 15px; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 6px; }
         .dashboard-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
@@ -113,7 +120,7 @@
         .dash-card { background: rgba(255,255,255,0.1); border-radius: 8px; padding: 10px; border: 1px solid rgba(255,255,255,0.1); font-size: 12px; }
         .dash-card h4 { color: #a5b4fc; font-size: 12px; margin-bottom: 4px; }
 
-        /* 雷達面板 (🚨 復活) */
+        /* 雷達面板 */
         .radar-panel { background: linear-gradient(135deg, #fef2f2, #fff1f2); border: 2px dashed #fca5a5; border-radius: 12px; padding: 14px; margin-bottom: 14px; box-shadow: 0 4px 10px rgba(220, 38, 38, 0.08); }
         .radar-panel h3 { font-size: 15px; color: #991b1b; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid #fecaca; padding-bottom: 6px; }
         .radar-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
@@ -133,11 +140,13 @@
         /* 預測小方塊 */
         .ai-prediction-box { margin-top: auto; padding: 12px; background: linear-gradient(to bottom, #ffffff, #f8fafc); border: 2px solid #e2e8f0; border-radius: 10px; font-size: 12px; }
         .ai-prediction-box h5 { color: #0f172a; margin: 0; font-size: 13px; font-weight: 900; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid #cbd5e1; padding-bottom: 6px; }
+        
         .giant-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin: 10px 0; }
         @media (min-width: 768px) { .giant-grid { grid-template-columns: repeat(3, 1fr); } }
-        .giant-card { background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px; text-align: center; transition: 0.2s; display: flex; flex-direction: column; justify-content: center;}
+        .giant-card { background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px; text-align: center; transition: 0.2s; }
         .giant-card .g-title { font-size: 10px; color: #475569; font-weight: bold; margin-bottom: 2px; }
         .giant-card .g-val { font-size: 13px; font-weight: 900; color: #0f172a; }
+        
         .giant-card.highlight { background: #ecfdf5; border-color: #34d399; box-shadow: 0 2px 4px rgba(16, 185, 129, 0.1); }
         .giant-card.highlight .g-title { color: #065f46; }
         .giant-card.highlight .g-val { color: #059669; }
@@ -149,7 +158,7 @@
         .strategy-box h6 { font-size:14px; margin:0 0 6px 0; }
 
         /* ==========================================
-           6. 實戰獵人與數據表格
+           6. 實戰獵人專區 (Ledger)
            ========================================== */
         .ledger-stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 12px; }
         @media (min-width: 768px) { .ledger-stats-grid { grid-template-columns: repeat(4, 1fr); } }
@@ -159,6 +168,9 @@
         .rec-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 10px; }
         @media (min-width: 768px) { .rec-grid { grid-template-columns: repeat(2, 1fr); } }
 
+        /* ==========================================
+           7. 數據表格 (Tables)
+           ========================================== */
         .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 14px; }
         @media (min-width: 768px) { .stats-grid { grid-template-columns: repeat(3, 1fr); } }
         @media (min-width: 1024px) { .stats-grid { grid-template-columns: repeat(6, 1fr); } }
@@ -166,6 +178,7 @@
         .stat-item h3 { font-size: 11px; color: #64748b; margin-bottom: 4px; font-weight:bold;}
         .stat-item p { font-size: 16px; font-weight: 900; font-family: monospace; margin:0;}
 
+        /* 表格固定表頭 (優化版) */
         .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 8px; border: 1px solid #e2e8f0; max-height: 500px; overflow-y: auto; background:#fff;}
         table { width: 100%; border-collapse: separate; border-spacing:0; font-size: 12px; min-width: 700px; }
         th { background: #f8fafc; padding: 10px 4px; border-bottom: 2px solid #cbd5e1; color: #475569; white-space: nowrap; position: sticky; top: 0; z-index: 10; font-weight: 900; }
@@ -179,11 +192,12 @@
 
         .num-container { display: flex; gap: 3px; justify-content: center; flex-wrap: wrap; }
         .num-ball { width: var(--ball-size); height: var(--ball-size); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 900; font-family: monospace; background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #78350f; border: 1px solid #b45309; }
+
         .btn-tbl-action { background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 4px; padding: 2px 6px; cursor: pointer; font-size: 11px; font-weight: bold; }
         .btn-tbl-action:hover { background: #e2e8f0; }
 
         /* ==========================================
-           7. 單碼透視 (配額制專屬介面)
+           8. 單碼量化透視專區與名冊 (Clean UI)
            ========================================== */
         .sb-dash-header { display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 900; color: var(--text-main); border-bottom: 2px solid #f1f5f9; padding-bottom: 8px; margin-bottom: 12px; }
         .sb-ball-circle { width: 28px; height: 28px; border-radius: 50%; background: var(--orange-color); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 14px; font-family: monospace; }
@@ -202,6 +216,7 @@
         .trend-bull { background: #fef2f2; border-color: #fca5a5; color: #b91c1c; } 
         .trend-bear { background: #ecfdf5; border-color: #6ee7b7; color: #047857; } 
 
+        /* 名冊列表樣式 */
         .roster-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 14px; }
         @media (min-width: 768px) { .roster-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (min-width: 1024px) { .roster-grid { grid-template-columns: repeat(4, 1fr); } }
@@ -218,16 +233,19 @@
         .ball-badge .b-num { font-size: 14px; font-weight: 900; color: #0f172a; font-family: monospace;}
         .ball-badge .b-prob { font-size: 10px; color: #64748b; font-weight:bold; margin-top:2px;}
         
+        /* 嚴格分級視覺區隔 */
         .s-class .ball-badge { border-color: #fca5a5; background: #fef2f2; }
         .s-class .ball-badge .b-num { color: #b91c1c; }
         .a-class .ball-badge { border-color: #6ee7b7; background: #ecfdf5; }
         .a-class .ball-badge .b-num { color: #047857; }
         .c-class .ball-badge { opacity: 0.6; background:#f1f5f9; border-color:#e2e8f0; }
 
+        /* 終極大盤閘門 */
         .gateway-banner { padding: 12px; border-radius: 8px; margin-bottom: 12px; font-weight: 900; font-size: 14px; text-align: center; border: 2px solid; }
-        .gateway-go { background: #dcfce7; color: #166534; border-color: #86efac; box-shadow: 0 4px 10px rgba(22, 101, 52, 0.1); }
-        .gateway-nogo { background: #fee2e2; color: #991b1b; border-color: #fca5a5; }
+        .gateway-go { background: #ecfdf5; color: #065f46; border-color: #10b981; }
+        .gateway-nogo { background: #fef2f2; color: #b91c1c; border-color: #ef4444; }
 
+        /* Loader */
         #global-loader { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.95); z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center; transition: opacity 0.3s; }
         .loader-spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top-color: var(--primary-color); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom:12px;}
         @keyframes spin { to { transform: rotate(360deg); } }
@@ -243,7 +261,7 @@
 <div class="container">
     <header>
         <h1>⚡ 天天樂 & 五三九 雙核心量化操盤系統 ⚡</h1>
-        <div class="cloud-badge"><div class="dot"></div> Firebase 極速引擎 (全功能復活疊加版)</div>
+        <div class="cloud-badge"><div class="dot"></div> Firebase 終極快取獵人引擎</div>
     </header>
 
     <div class="year-filter-bar">
@@ -264,14 +282,13 @@
     </div>
 
     <!-- ========================================== -->
-    <!-- 模塊：單碼 AI 透視 (配額制嚴格版 + 三大微觀標準) -->
+    <!-- 模塊：單碼 AI 透視 & 39碼全盤雷達 -->
     <!-- ========================================== -->
     <div id="single-ball-panel" style="display:none;">
         <div class="panel">
-            <div class="panel-title">🎯 單車戰區：單碼微觀透視與名額配額制</div>
+            <div class="panel-title">🎯 39 碼全盤量化雷達與行動閘門 (極度嚴格版)</div>
             <div style="font-size:11px; color:#64748b; margin-bottom:12px; font-weight:bold; line-height:1.5;">
-                【核心升級】導入 RSI 震盪防禦、板塊連動引力、等距跳期節奏。<br>
-                【配額鐵律】S級限額 1~2 名(未達標則從缺)；A級限額第 3~5 名；近 2 期內剛開出且無節奏者，強制打入 C 級冷宮。
+                利用全歷史大數據進行極限收斂運算。S級與A級信號採用地獄級標準(含RSI與節奏過濾)，將雜訊徹底濾除，確保選出的號碼都是具備極高爆發潛力的強勢主力！
             </div>
             
             <div class="form-row" style="background: #f8fafc; padding: 12px; border-radius: 8px; border: 1px solid #e2e8f0; align-items: flex-end;">
@@ -291,29 +308,34 @@
             </div>
         </div>
 
+        <!-- 39碼全盤分級名冊 -->
         <div id="all-balls-roster-container" style="display:none;">
             <div class="panel">
                 <div class="sb-dash-header">
                     <div class="sb-ball-circle" style="font-size:14px;">📋</div>
-                    <div>全盤分級名冊與單車獨立閘門</div>
+                    <div>39 碼全盤分級名冊與單車閘門</div>
                 </div>
                 
-                <div id="market-gateway-alert" class="gateway-banner gateway-nogo">⏳ 正在計算單車閘門...</div>
+                <div id="market-gateway-alert" class="gateway-banner gateway-nogo">⏳ 正在計算單車大盤總閘門...</div>
 
-                <div style="font-size:11px; color:#475569; margin-bottom:12px; background:#f8fafc; padding:10px; border-radius:6px; border-left:3px solid var(--orange-color); line-height:1.5;">
-                    <strong>【單車放行條件】</strong> 名冊中只要產出至少 1 顆 S 級，或 2 顆 A 級，單車戰區即刻亮綠燈。此閘門與 9000 碰完全獨立！<br>
+                <div style="font-size:11px; color:#475569; margin-bottom:12px; background:#f8fafc; padding:10px; border-radius:6px; border-left:3px solid var(--primary-color); line-height:1.5;">
+                    <strong>【單車下注鐵律】</strong> 選號池中必須產出至少 1 顆 S 級，或 2 顆 A 級，單車戰區才會放行下注。<br>
+                    <strong>【強制觀望】</strong> 若大盤閘門亮紅燈（滿眼 B/C 級），單車一律 0 元觀望！<br>
                     <span style="color:var(--orange-color); font-weight:900;">💡 點擊下方號碼可直接查看「單碼深度透視」！</span>
                 </div>
                 <div class="roster-grid" id="roster-grid-content"></div>
             </div>
         </div>
 
+        <!-- 單碼查詢結果 -->
         <div id="sb-result-container" style="display:none;">
             <div class="panel">
                 <div class="sb-dash-header">
                     <div class="sb-ball-circle" id="sb-title-ball">07</div>
-                    <div>號碼動能與微觀機率透視</div>
+                    <div>號碼動能與機率透視</div>
                 </div>
+
+                <div id="sb-trend-banner" class="sb-trend-banner" style="display:none;"></div>
 
                 <div class="sb-prob-grid">
                     <div class="sb-prob-card"><h4>歷史總均線</h4><p id="sb-p-all">--%</p><div style="font-size:10px; color:#64748b; margin-top:4px;">(基準值)</div></div>
@@ -327,7 +349,7 @@
                 </div>
                 
                 <div style="background:#f8fafc; padding:12px; border-radius:8px; border:1px solid #e2e8f0;">
-                    <h4 style="color:#0f172a; font-size:13px; margin-bottom:8px; border-bottom:2px solid #e2e8f0; padding-bottom:6px; font-weight:900;">🤖 單碼專屬六大巨頭診斷 (含微觀三大標準)</h4>
+                    <h4 style="color:#0f172a; font-size:13px; margin-bottom:8px; border-bottom:2px solid #e2e8f0; padding-bottom:6px; font-weight:900;">🤖 單碼專屬六大巨頭診斷 (含三大微觀指標)</h4>
                     <div class="giant-grid" id="sb-giants-container"></div>
                     <div id="sb-final-verdict" style="margin-top:10px;"></div>
                 </div>
@@ -337,7 +359,7 @@
 
 
     <!-- ========================================== -->
-    <!-- 模塊：決策矩陣 (大盤組合 Arena) -->
+    <!-- 模塊：決策矩陣 (Arena) -->
     <!-- ========================================== -->
     <div class="guide-box" id="arena-guide" style="display:none;">
         <h4 onclick="toggleGuide()">📖 系統六大巨頭指標說明書 (點擊展開/收合) <span>▼</span></h4>
@@ -358,29 +380,26 @@
         </div>
     </div>
 
+    <div class="panel" id="arena-settings-panel" style="display:none;">
+        <div class="panel-title">
+            <span>⚙️ 盤口參數與【大盤階梯派發矩陣】</span>
+            <span id="lock-status" style="color:var(--danger-color); font-size:11px;">🔒 已鎖定(0000)</span>
+        </div>
+        <!-- 💡 在此處已經把累積投入成本與歷史總營利區塊乾淨刪除 -->
+        <div class="setting-grid" id="setting-inputs"></div>
+        <div class="action-bar">
+            <input type="password" id="input-pwd" placeholder="密碼 0000">
+            <button class="btn-main" onclick="unlockSettings()" style="flex:1; background:#64748b;">解鎖修改</button>
+            <button class="btn-main" id="btn-save" onclick="saveSettings()" style="display: none; flex:2; background:#0284c7;">💾 儲存</button>
+        </div>
+    </div>
+
     <!-- 🚨 復活：極端偏態雷達 -->
     <div id="radar-panel" class="radar-panel" style="display:none;">
         <h3>🚨 極端偏態雷達 (同柱 3顆以上 斷柱預警)</h3>
         <div style="font-size:11px; color:#64748b; margin-bottom:10px; font-weight:bold;">(已套用「連漏期數加權冷卻」：剛開過 3 顆的柱別機率將大幅衰減)</div>
         <div class="radar-grid" id="radar-content">
             <div style="text-align:center; padding:10px;">資料掃描中...</div>
-        </div>
-    </div>
-
-    <div class="panel" id="arena-settings-panel" style="display:none;">
-        <div class="panel-title">
-            <span>⚙️ 大盤組合戰區：三線共振與【動態階梯矩陣】</span>
-            <span id="lock-status" style="color:var(--danger-color); font-size:11px;">🔒 已鎖定(0000)</span>
-        </div>
-        <div style="font-size:11px; color:#475569; margin-bottom:12px; line-height:1.5;">
-            【階梯加碼鐵律】本階段為保守累積資本期。<br>
-            正常 Z-Score (0~1.5) 佈局 1 倍；極端偏離 Z-Score (>1.5) 亮 S 級燈狙擊 2 倍；若遇黑天鵝連續深水區 Z-Score (>2.5) 直接熔斷 0 倍保本！
-        </div>
-        <div class="setting-grid" id="setting-inputs"></div>
-        <div class="action-bar">
-            <input type="password" id="input-pwd" placeholder="密碼 0000">
-            <button class="btn-main" onclick="unlockSettings()" style="flex:1; background:#64748b;">解鎖修改</button>
-            <button class="btn-main" id="btn-save" onclick="saveSettings()" style="display: none; flex:2; background:#0284c7;">💾 儲存</button>
         </div>
     </div>
 
@@ -395,6 +414,7 @@
                 <option value="539-9000">🚀 五三九 9000碰</option>
             </select>
         </div>
+        <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 8px; font-weight:bold;">批次匯入之歷史紀錄，預設真實下注皆為 0 (不計入實單損益)。</div>
         <textarea id="batch-text" placeholder="格式範例:\n2026-09-10 07 09 12 15 27\n2026-09-11 01 02 03 04 05"></textarea>
         <button class="btn-main" onclick="batchImport()" style="background: linear-gradient(135deg, #7c3aed, #4f46e5); padding:10px;">⚡ 極速平行批次寫入</button>
     </div>
@@ -404,6 +424,10 @@
     <!-- ========================================== -->
     <div class="panel" id="actual-bet-panel" style="display:none;">
         <div class="panel-title">📝 獵人實戰記帳與資金中樞</div>
+        <div style="font-size:12px; color:#b91c1c; margin-bottom:12px; font-weight:bold; background:#fef2f2; padding:10px; border-radius:8px; border-left:4px solid #ef4444; line-height:1.5;">
+            ⚠️ 系統已徹底拔除人工選擇策略功能！資金派發將由「獵人鐵律」全權進行風險防禦與風控，請嚴格遵守建議注碼！
+        </div>
+
         <div class="form-row">
             <div class="form-group" style="flex:1;">
                 <label>開獎日期</label>
@@ -434,7 +458,7 @@
 
         <div style="margin-top:20px; border-top:2px dashed #cbd5e1; padding-top:14px;">
             <h3 style="font-size:14px; margin-bottom:10px; color:#0f172a; display:flex; align-items:center; gap:6px;">
-                <span>🎯 大盤組合戰區 - 鐵律派發指引</span>
+                <span>🎯 大盤戰區獵人派發指引</span>
             </h3>
             <div class="rec-grid" id="ledger-recommendations-container">
                 <div style="text-align:center; padding:16px; color:#94a3b8; font-weight:bold;">系統運算中...</div>
@@ -479,6 +503,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    // 升級 Firebase 引入：加入本地快取與多頁籤支援
     import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager, collection, doc, setDoc, deleteDoc, writeBatch, onSnapshot, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -491,6 +516,7 @@
     };
 
     const app = initializeApp(firebaseConfig);
+    // 啟動快取機制，大幅減少讀取額度消耗
     const db = initializeFirestore(app, {
         localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() })
     });
@@ -597,10 +623,12 @@
             if (isArena) {
                 renderSettingsPanel();
                 renderDashboard();
-                renderRadar(); // 🚨 雷達顯示復活
+                renderRadar(); // 🚨 雷達顯示確保在此呼叫
             } else if (isLedger) {
                 renderLedgerSummary();
-            } else if (!isSingleBall) {
+            } else if (isSingleBall) {
+                // 等待操作
+            } else {
                 document.getElementById('batch-target-space').value = spaceKey;
                 renderMain();
             }
@@ -1176,6 +1204,8 @@
             if(!analysis) return;
             let cfg = analysis.cfg;
             let labelPrize = cfg.type === '1800' ? '三星單碰(元)' : '四星單碰(元)';
+            
+            // 💡 只有這裡把累積成本/歷史損益刪除，其他六宮格全部保留
             html += `
                 <div class="space-config-card">
                     <h4>${cfg.name}</h4>
