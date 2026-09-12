@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>⚡ 雙核心量化操盤系統 | 終極實戰版</title>
+    <title>⚡ 雙核心量化操盤系統 | 終極實戰版 (效能演算法升級)</title>
     <style>
         /* ==========================================
            1. 全局變數與基礎字體設定 (清爽明亮專業版)
@@ -261,7 +261,7 @@
 <div class="container">
     <header>
         <h1>⚡ 天天樂 & 五三九 雙核心量化操盤系統 ⚡</h1>
-        <div class="cloud-badge"><div class="dot"></div> Firebase 終極獵人引擎上線</div>
+        <div class="cloud-badge"><div class="dot"></div> Firebase 終極快取獵人引擎</div>
     </header>
 
     <div class="year-filter-bar">
@@ -286,9 +286,9 @@
     <!-- ========================================== -->
     <div id="single-ball-panel" style="display:none;">
         <div class="panel">
-            <div class="panel-title">🎯 39 碼全盤量化雷達與行動閘門 (最高精度版)</div>
+            <div class="panel-title">🎯 39 碼全盤量化雷達與行動閘門 (最高精度嚴格版)</div>
             <div style="font-size:11px; color:#64748b; margin-bottom:12px; font-weight:bold; line-height:1.5;">
-                利用全歷史大數據進行極限收斂運算。結合動態加速度與多空排列，一鍵解鎖今晚能不能下柱的最終判決！
+                利用全歷史大數據進行極限收斂運算。S級信號極端嚴格，必須同時滿足「生存極限(PR≥96) + 偏離極端(Z≥2.0) + 短期加速」才會亮燈！
             </div>
             
             <div class="form-row" style="background: #f8fafc; padding: 12px; border-radius: 8px; border: 1px solid #e2e8f0; align-items: flex-end;">
@@ -365,9 +365,9 @@
         <h4 onclick="toggleGuide()">📖 系統六大巨頭指標說明書 (點擊展開/收合) <span>▼</span></h4>
         <div class="guide-grid" id="guide-content">
             <div class="guide-item"><strong>① 數學家 (物理勝率)：</strong><br>該盤口的基礎過關機率。<span class="guide-target">🎯 達標亮綠門檻：目前勝率大於遊戲基礎機率。</span></div>
-            <div class="guide-item"><strong>② 資金家 (凱利配置)：</strong><br>動態計算最佳注碼比例(Fractional Kelly)，對抗破產。<span class="guide-target">🎯 達標亮綠門檻：算定配置比例 f* > 0% 。</span></div>
-            <div class="guide-item"><strong>③ 贏家 (馬可夫轉移)：</strong><br>精算盤口在「目前的連敗狀態下」，歷史上的反轉勝率。<span class="guide-target">🎯 達標亮綠門檻：動態反轉勝率大於基礎機率。</span></div>
-            <div class="guide-item"><strong>④ 銀行家 (偏離度 Z-Score)：</strong><br>測量連槓期數偏離平均值的嚴重程度。<span class="guide-target">🎯 達標亮綠門檻：數值大於或等於 0.5。</span></div>
+            <div class="guide-item"><strong>② 資金家 (自適應凱利)：</strong><br>動態計算最佳注碼比例，遇回撤自動收縮。<span class="guide-target">🎯 達標亮綠門檻：算定配置比例 f* > 0% 。</span></div>
+            <div class="guide-item"><strong>③ 贏家 (馬可夫核平滑)：</strong><br>精算盤口在「目前的連敗狀態下」，歷史上的反轉勝率。<span class="guide-target">🎯 達標亮綠門檻：動態反轉勝率大於基礎機率。</span></div>
+            <div class="guide-item"><strong>④ 銀行家 (幾何分佈 Z-Score)：</strong><br>測量連槓期數偏離平均值的嚴重程度。<span class="guide-target">🎯 達標亮綠門檻：數值大於或等於 0.5。</span></div>
             <div class="guide-item"><strong>⑤ 精算家 (波動與回撤防禦)：</strong><br>監控系統理論淨值最大回撤(Max Drawdown)與亂流。<span class="guide-target">🎯 達標亮綠門檻：資金曲線未進入極端亂流。</span></div>
             <div class="guide-item"><strong>⑥ 大莊家 (數學期望值 EV)：</strong><br>下注 1 元/碰 跑長期的平均賺賠金額。<span class="guide-target">🎯 達標亮綠門檻：期望值必須大於 0。</span></div>
         </div>
@@ -414,7 +414,7 @@
         </div>
         <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 8px; font-weight:bold;">批次匯入之歷史紀錄，預設真實下注皆為 0 (不計入實單損益)。</div>
         <textarea id="batch-text" placeholder="格式範例:\n2026-09-10 07 09 12 15 27\n2026-09-11 01 02 03 04 05"></textarea>
-        <button class="btn-main" onclick="batchImport()" style="background: linear-gradient(135deg, #7c3aed, #4f46e5); padding:10px;">⚡ 智慧批次寫入</button>
+        <button class="btn-main" onclick="batchImport()" style="background: linear-gradient(135deg, #7c3aed, #4f46e5); padding:10px;">⚡ 極速平行批次寫入</button>
     </div>
 
     <!-- ========================================== -->
@@ -501,7 +501,8 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, doc, setDoc, deleteDoc, writeBatch, onSnapshot, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    // 升級 Firebase 引入：加入本地快取與多頁籤支援
+    import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager, collection, doc, setDoc, deleteDoc, writeBatch, onSnapshot, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyC9A3HggBSJg2RJJpHEb10Fkf4S6cNqgmE",
@@ -513,7 +514,10 @@
     };
 
     const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+    // 啟動快取機制，大幅減少讀取額度消耗
+    const db = initializeFirestore(app, {
+        localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() })
+    });
 
     let currentSpace = 'arena';
     let currentYear = new Date().getFullYear();
@@ -613,7 +617,6 @@
 
         document.getElementById('single-ball-panel').style.display = isSingleBall ? 'block' : 'none';
 
-        // 確保資料載入完成才進行運算渲染
         if (isDataLoaded) {
             if (isArena) {
                 renderSettingsPanel();
@@ -622,7 +625,7 @@
             } else if (isLedger) {
                 renderLedgerSummary();
             } else if (isSingleBall) {
-                // 單碼頁面保留，等待手動按鈕
+                // 等待操作
             } else {
                 document.getElementById('batch-target-space').value = spaceKey;
                 renderMain();
@@ -634,7 +637,6 @@
     // 🎯 核心演算法：單碼經驗貝氏平滑與四大新指標
     // ==============================================================
     function computeAdvancedBallStats(target, data, cYear) {
-        // 使用近 1500 期 (約5年) 做為運算母體，確保運算極速且最具參考價值
         let sliceData = data.slice(0, 1500); 
         let totalDraws = sliceData.length;
         if(totalDraws === 0) return null;
@@ -648,7 +650,6 @@
 
         let reversedData = [...sliceData].reverse();
 
-        // 1. 遺漏歷史與基礎機率
         reversedData.forEach((item) => {
             let isHit = item.draw.includes(target);
             if (isHit) {
@@ -674,7 +675,6 @@
             if (idx < 60 && isHit) hits60++;
         });
 
-        // 基準機率 (物理上為 5/39 = 12.82%)
         let baseProbRatio = totalDraws > 0 ? (hitsAll / totalDraws) : 0.1282;
         let probAll = baseProbRatio * 100;
         let probYear = yearTotal > 0 ? (hitsYear / yearTotal) * 100 : 0;
@@ -692,11 +692,9 @@
         let stdDev = Math.sqrt(variance || 1);
         let zScore = stdDev > 0 ? (currentMissing - avgMissing) / stdDev : 0;
 
-        // 生存函數 PR
         let shorterCount = missingHistory.filter(m => m <= currentMissing).length;
         let survivalPR = missingHistory.length > 0 ? (shorterCount / missingHistory.length) * 100 : 50;
 
-        // 拖牌引力
         let dragScoreProb = probAll;
         if (sliceData.length > 1) {
             let lastDraw = sliceData[0].draw;
@@ -714,7 +712,6 @@
             }
         }
 
-        // 經驗貝氏平滑馬可夫機率 (解決零樣本膨脹)
         let markovHit = 0, markovMiss = 0, mMissTracker = 0;
         reversedData.forEach((item, idx) => {
             let isHit = item.draw.includes(target);
@@ -723,11 +720,10 @@
             }
             if (isHit) mMissTracker = 0; else mMissTracker++;
         });
-        // 經驗貝氏平滑：加入適當的先驗權重，讓極端值回歸
         let probMarkov = ((markovHit + baseProbRatio * 5) / (markovHit + markovMiss + 5)) * 100;
 
-        // 綜合預測開出率 (純機率加權，完美保持在 5%~25% 真實尺度)
-        let nextDrawPrediction = (probMarkov * 0.35) + (prob30 * 0.3) + (dragScoreProb * 0.2) + (probAll * 0.15);
+        // 優化綜合預測開出率權重：確保單純機率預測值不被扭曲
+        let nextDrawPrediction = (probMarkov * 0.40) + (prob30 * 0.30) + (dragScoreProb * 0.15) + (probAll * 0.15);
 
         return {
             probAll, probYear, prob100, prob50, prob30,
@@ -805,10 +801,10 @@
         let p = stats.nextDrawPrediction;
         let z = stats.zScore;
         
-        // 嚴格雙軌分級邏輯 (S/A/B/C)
-        let isS = (p >= 17.0) || (stats.survivalPR >= 90 && z >= 1.5);
-        let isA = (!isS) && (p >= 14.5 || (stats.survivalPR >= 80 && z >= 1.0));
-        let isC = (p < 12.0 || stats.currentMissing <= 1);
+        // 🚨 超級嚴格 S 級把關
+        let isS = (stats.survivalPR >= 96 && z >= 2.0 && stats.accel > 0) || (p >= 18.5 && z >= 1.5);
+        let isA = (!isS) && (p >= 15.0 || (stats.survivalPR >= 85 && z >= 1.2));
+        let isC = (p < 11.5 || stats.currentMissing <= 2);
 
         let g1Color = stats.prob30 < stats.probAll ? 'highlight' : 'danger';
         let g1Text = stats.prob30 < stats.probAll ? '低檔補漲拉力強' : '高檔過熱需冷卻';
@@ -816,8 +812,8 @@
         let g2Text = stats.accel > 0 ? `加速中 (+${stats.accel.toFixed(1)}%)` : `衰退中 (${stats.accel.toFixed(1)}%)`;
         let g3Color = stats.probMarkov > stats.probAll ? 'highlight' : 'danger';
         let g3Text = `${stats.probMarkov.toFixed(1)}% (條件勝率)`;
-        let g4Color = stats.survivalPR >= 90 ? 'highlight' : (stats.survivalPR <= 20 ? 'danger' : '');
-        let g4Text = stats.survivalPR >= 90 ? `生存極限(PR=${stats.survivalPR.toFixed(0)})` : `PR區間(${stats.survivalPR.toFixed(0)})`;
+        let g4Color = stats.survivalPR >= 95 ? 'highlight' : (stats.survivalPR <= 20 ? 'danger' : '');
+        let g4Text = stats.survivalPR >= 95 ? `生存極限(PR=${stats.survivalPR.toFixed(0)})` : `PR區間(${stats.survivalPR.toFixed(0)})`;
         let g5Color = dragRatio > 120 ? 'highlight' : (dragRatio < 80 ? 'danger' : '');
         let g5Text = dragRatio > 120 ? '強勢跨期引力' : '無明顯拖牌慣性';
         let g6Color = (isS || isA) ? 'highlight' : 'danger';
@@ -834,16 +830,16 @@
 
         let verdictTitle, verdictDesc, verdictColor;
         if (isS) {
-            verdictTitle = "🔥 S 級 (極端爆發 / 必選主力)";
-            verdictDesc = `【診斷】極罕見高勝率買點！極端生存 PR (${stats.survivalPR.toFixed(1)}) 或 主升段動能。主力下注，強烈推薦！`;
-            verdictColor = "background:#fef2f2; color:#b91c1c; border:1.5px solid #fca5a5;";
+            verdictTitle = "🔥 終極 S 級 (極端爆發 / 必選主力)";
+            verdictDesc = `【診斷】百年難得的發動點！達成嚴苛生存極限 (PR≥96 + Z≥2.0) 或綜合動能暴衝。強烈推薦佈局！`;
+            verdictColor = "background:#fef2f2; color:#b91c1c; border:2px solid #ef4444; box-shadow:0 0 10px rgba(239, 68, 68, 0.2);";
         } else if (isA) {
             verdictTitle = "🟢 A 級 (優質候選 / 穩定佈局)";
             verdictDesc = `【診斷】綜合開出率 ${p.toFixed(1)}%，具備正向期望值。適合做為核心副牌佈局。`;
             verdictColor = "background:#ecfdf5; color:#047857; border:1.5px solid #6ee7b7;";
         } else if (isC) {
             verdictTitle = "🔴 C 級 (極端危險 / 嚴格剔除)";
-            verdictDesc = `【診斷】開出率不足，或剛開出處於嚴格冷卻期。一律不碰，直接剔除！`;
+            verdictDesc = `【診斷】開出率不足，或剛開出仍處於強烈冷卻期。一律不碰，直接剔除！`;
             verdictColor = "background:#f1f5f9; color:#475569; border:1.5px solid #cbd5e1;";
         } else {
             verdictTitle = "⚪ B 級 (溫和盤整 / 中性觀望)";
@@ -880,10 +876,10 @@
             let ballStr = String(target).padStart(2, '0');
             let obj = { ball: ballStr, prob: p.toFixed(1), z: isNaN(z) ? 0 : z.toFixed(2) };
 
-            // 嚴格雙軌分級邏輯 (S/A/B/C)
-            let isS = (p >= 17.0) || (stats.survivalPR >= 90 && z >= 1.5);
-            let isA = (!isS) && (p >= 14.5 || (stats.survivalPR >= 80 && z >= 1.0));
-            let isC = (p < 12.0 || stats.currentMissing <= 1);
+            // 🚨 超級嚴格 S 級把關
+            let isS = (stats.survivalPR >= 96 && z >= 2.0 && stats.accel > 0) || (p >= 18.5 && z >= 1.5);
+            let isA = (!isS) && (p >= 15.0 || (stats.survivalPR >= 85 && z >= 1.2));
+            let isC = (p < 11.5 || stats.currentMissing <= 2);
 
             if (isS) sClass.push(obj);
             else if (isA) aClass.push(obj);
@@ -905,7 +901,6 @@
             gatewayAlert.innerHTML = `🔴 【大盤閘門鎖死】選號池優質號碼不足 (S級: ${sClass.length} 顆, A級: ${aClass.length} 顆) 👉 雜訊過高，強制 0 元觀望！`;
         }
 
-        // 點擊聯動功能：點擊名冊上的號碼，自動執行單碼查詢並平滑捲動到頂部
         let renderBadge = (item) => `<div class="ball-badge" title="Z-Score: ${item.z}" onclick="document.getElementById('sb-input-ball').value='${item.ball}'; executeSingleBallScan(); window.scrollTo({top: 0, behavior: 'smooth'});"><span class="b-num">${item.ball}</span><span class="b-prob">${item.prob}%</span></div>`;
 
         document.getElementById('roster-grid-content').innerHTML = `
@@ -944,16 +939,6 @@
         
         let costInput = document.getElementById(`cfg-cost-${key}`);
         if(costInput) costInput.value = unitBet * basePuffs;
-
-        let realCost = unitBet * basePuffs * (1 - rebate / 100);
-        let winPuffs = spaceConfigs[key].type === '1800' ? 3 : 2;
-        let totalPrize = unitBet * winPuffs * unitPrize;
-        let netProfit = totalPrize - realCost;
-
-        let elRealCost = document.getElementById(`display-realcost-${key}`);
-        let elNetProfit = document.getElementById(`display-netprofit-${key}`);
-        if(elRealCost) elRealCost.innerText = `$${Math.round(realCost).toLocaleString()}`;
-        if(elNetProfit) elNetProfit.innerText = `+$${Math.round(netProfit).toLocaleString()}`;
     };
 
     function analyzeRadar(gameType) {
@@ -1057,6 +1042,9 @@
         }
     }
 
+    // ==============================================================
+    // 🎯 六大巨頭核心運算 (數學修正與凱利、馬可夫平滑升級)
+    // ==============================================================
     function analyzeSpace(key) {
         let cfg = spaceConfigs[key] || { type: '1800', unitBet: 1, basePuffs: 1800, rebate: 0, unitPrize: 0, name: '' };
         let data = getFilteredData(key).slice(0, 1500);
@@ -1085,17 +1073,16 @@
         }
 
         let reversedData = [...data].reverse();
-        
         let baseP_Threshold = cfg.type === '1800' ? 0.15 : 0.25;
         let costPerRound = Number(cfg.unitBet) * Number(cfg.basePuffs) * (1 - Number(cfg.rebate) / 100);
         let minPrize = cfg.type === '1800' ? 3 * Number(cfg.unitPrize) * Number(cfg.unitBet) : 2 * Number(cfg.unitPrize) * Number(cfg.unitBet);
-        let netWin = minPrize - costPerRound;
 
         let theoreticalEquity = 0;
         let peakTheoretical = 0;
         let maxDrawdown = 0;
         
-        let markovW = 0, markovL = 0;
+        // 馬可夫轉移：引入鄰近核平滑（避免極端連槓無樣本）
+        let markovW = 0, markovTotal = 0;
         let tempStreak = 0;
 
         reversedData.forEach((item, idx) => {
@@ -1104,17 +1091,21 @@
 
             let res = cfg.type === '1800' ? check1800(balls) : check9000(balls);
             let isWin = (cfg.type === '1800' && res.puffs >= 3) || (cfg.type === '9000' && res.pass);
-            
             if (isWin) wins++;
 
-            theoreticalEquity += (isWin ? netWin : -costPerRound);
+            // 資金淨值與最大回撤追蹤
+            let roundPnL = isWin ? (minPrize - costPerRound) : -costPerRound;
+            theoreticalEquity += roundPnL;
             if (theoreticalEquity > peakTheoretical) peakTheoretical = theoreticalEquity;
             let dd = peakTheoretical - theoreticalEquity;
             if (dd > maxDrawdown) maxDrawdown = dd;
 
+            // 樣本平滑：若連槓 >= 4，納入大於等於條件以擴充樣本容量
             if (idx > 0) { 
-                if (tempStreak === losingStreak) {
-                    if (isWin) markovW++; else markovL++;
+                let matchCondition = (losingStreak >= 4) ? (tempStreak >= losingStreak - 1) : (tempStreak === losingStreak);
+                if (matchCondition) {
+                    markovTotal++;
+                    if (isWin) markovW++;
                 }
             }
 
@@ -1124,29 +1115,33 @@
 
         let currentDrawdown = peakTheoretical - theoreticalEquity;
         let empWinRate = totalDraws > 0 ? (wins / totalDraws) : baseP_Threshold;
-        let markovProb = ((markovW + baseP_Threshold * 10) / (markovW + markovL + 10));
-        let bayesProb = (markovProb * 0.6) + (empWinRate * 0.4);
 
-        let expectedLosing = cfg.type === '1800' ? 6 : 3;
-        let stdDev = cfg.type === '1800' ? 2 : 1.5; 
-        let zScore = stdDev > 0 ? (losingStreak - expectedLosing) / stdDev : 0;
+        // 貝氏平滑：以歷史經驗勝率作為強先驗 (Prior Weight = 8)
+        let markovProb = markovTotal > 0 ? ((markovW + empWinRate * 8) / (markovTotal + 8)) : empWinRate;
+        let bayesProb = (markovProb * 0.65) + (empWinRate * 0.35);
 
-        let oddsB = costPerRound > 0 ? (netWin / costPerRound) : 0;
-        let fullKelly = oddsB > 0 ? ((bayesProb * oddsB) - (1 - bayesProb)) / oddsB : 0;
-        let fracKelly = Math.max(0, fullKelly * 0.3);
+        // 幾何分佈理論標準差與平均值 (淘汰人為常數)
+        let geomMean = (1 - empWinRate) / empWinRate;
+        let geomStd = Math.sqrt(1 - empWinRate) / empWinRate;
+        let zScore = geomStd > 0 ? (losingStreak - geomMean) / geomStd : 0;
 
-        let isTurbulent = false;
-        if (maxDrawdown > costPerRound * 5 && currentDrawdown >= maxDrawdown * 0.8) {
-            isTurbulent = true; 
-        }
+        // 精確數學期望值 EV = p * W - C
+        let EV = (bayesProb * minPrize) - costPerRound;
 
-        let EV = (bayesProb * minPrize) - ((1 - bayesProb) * costPerRound);
-        
+        // 自適應凱利配置 (Adaptive Fractional Kelly)
+        let b = costPerRound > 0 ? ((minPrize - costPerRound) / costPerRound) : 0; // 淨賠率
+        let fullKelly = b > 0 ? ((bayesProb * (b + 1) - 1) / b) : 0;
+
+        // 依據回撤深度動態收縮注碼保護本金
+        let isTurbulent = (maxDrawdown > costPerRound * 5 && currentDrawdown >= maxDrawdown * 0.75);
+        let kellyScale = isTurbulent ? 0.05 : (currentDrawdown > maxDrawdown * 0.5 ? 0.15 : 0.25);
+        let fracKelly = Math.max(0, fullKelly * kellyScale);
+
         return { 
             cfg, totalDraws, latestIsWin, continuousHits, losingStreak, 
             empWinRate, markovProb, bayesProb, zScore, EV, 
             fracKelly, currentDrawdown, isTurbulent,
-            expectedLosing, baseP_Threshold, costPerRound
+            expectedLosing: geomMean.toFixed(1), baseP_Threshold, costPerRound
         };
     }
 
@@ -1201,7 +1196,7 @@
         return `
             <div class="ai-prediction-box">
                 <h5>🤖 六大巨頭客觀決策矩陣</h5>
-                <div style="font-size: 10px; color: #64748b; margin-bottom: 6px;">(動態凱利與馬可夫演算法驅動)</div>
+                <div style="font-size: 10px; color: #64748b; margin-bottom: 6px;">(自適應凱利與幾何 Z-Score 驅動)</div>
                 
                 <div class="giant-grid">
                     <div class="giant-card ${c1}"><div class="g-title">① 數學家(均值)</div><div class="g-val">${adviceLaplace}</div></div>
@@ -1446,41 +1441,52 @@
     };
 
     // ==============================================================
-    // Firebase 資料掛載與全域渲染 (性能極速版)
+    // Firebase 資料掛載與全域渲染 (加入防抖優化)
     // ==============================================================
+    let renderTimer = null;
+
     onSnapshot(collection(db, "matrix_systems"), (snapshot) => {
-        Object.keys(spaceData).forEach(k => spaceData[k] = []);
-        snapshot.forEach(docSnap => { 
-            let d = docSnap.data(); 
-            if(spaceData[d.space]) spaceData[d.space].push(d); 
+        // 1. 只處理有異動的資料，大幅節省運算資源
+        snapshot.docChanges().forEach((change) => {
+            let d = change.doc.data();
+            let spaceKey = d.space;
+
+            if (change.type === "added" || change.type === "modified") {
+                if (!spaceData[spaceKey]) spaceData[spaceKey] = [];
+                let existingIdx = spaceData[spaceKey].findIndex(x => x.id === d.id);
+                if (existingIdx > -1) {
+                    spaceData[spaceKey][existingIdx] = d;
+                } else {
+                    spaceData[spaceKey].push(d);
+                }
+            }
+            if (change.type === "removed") {
+                if (spaceData[spaceKey]) {
+                    spaceData[spaceKey] = spaceData[spaceKey].filter(x => x.id !== d.id);
+                }
+            }
         });
-        
+
         if (!isDataLoaded) {
             isDataLoaded = true;
             let loader = document.getElementById('global-loader');
             loader.style.opacity = '0';
             setTimeout(() => loader.style.display = 'none', 300);
-            
-            // 初次載入完畢，觸發一次 Arena 渲染
-            if (currentSpace === 'arena') {
-                renderSettingsPanel();
-                renderDashboard();
-                renderRadar();
-            }
-        } else {
-            // 後續更新
+        }
+
+        // 2. 防抖機制：0.5秒內若有連續多筆更新，只在最後一次更新畫面 (解決批次匯入時死機)
+        clearTimeout(renderTimer);
+        renderTimer = setTimeout(() => {
             if (currentSpace === 'arena') {
                 renderSettingsPanel();
                 renderDashboard();
                 renderRadar();
             } else if (currentSpace === 'ledger') {
                 renderLedgerSummary();
-            } else if (currentSpace === 'single-ball') {
-                // 單碼掃描頁面等待按鍵動作
-            } else {
+            } else if (currentSpace !== 'single-ball') {
                 renderMain();
             }
-        }
+        }, 500);
     });
 
     function renderMain() {
@@ -1490,6 +1496,7 @@
             let cfg = spaceConfigs[currentSpace];
             let data = getFilteredData(currentSpace);
             
+            // 今年均線
             let thisYearData = (spaceData[currentSpace] || []).filter(x => x && x.date && String(x.date).startsWith(currentYear.toString()));
             let thisYearWins = 0;
             thisYearData.forEach(item => {
@@ -1498,6 +1505,19 @@
                 if ((cfg.type === '1800' && res.puffs >= 3) || (cfg.type === '9000' && res.pass)) thisYearWins++;
             });
             let thisYearRateStr = thisYearData.length > 0 ? (thisYearWins / thisYearData.length * 100).toFixed(1) + '%' : '--%';
+
+            // 🎯 新增：近 500 期均線
+            let recent500 = data.slice(0, 500);
+            let win500 = 0;
+            recent500.forEach(item => {
+                if (!item.draw || !Array.isArray(item.draw)) return;
+                let res = cfg.type === '1800' ? check1800(item.draw) : check9000(item.draw);
+                if ((cfg.type === '1800' && res.puffs >= 3) || (cfg.type === '9000' && res.pass)) win500++;
+            });
+            let analysisObj = analyzeSpace(currentSpace);
+            let rate500 = recent500.length > 0 ? (win500 / recent500.length) : (analysisObj ? analysisObj.baseP_Threshold : 0);
+            let rate500Str = (rate500 * 100).toFixed(1) + '%';
+
 
             let tbody = document.getElementById('result-tbody');
             let thead = document.getElementById('table-head');
@@ -1540,10 +1560,8 @@
                     </tr>`;
                 });
 
-                let analysis = analyzeSpace(currentSpace);
-                let empRateStr = analysis ? (analysis.empWinRate * 100).toFixed(1) + '%' : '--%';
-                let curRateStr = analysis ? (analysis.bayesProb * 100).toFixed(1) + '%' : '--%';
-                let isDue = analysis ? analysis.bayesProb > analysis.empWinRate : false;
+                let curRateStr = analysisObj ? (analysisObj.bayesProb * 100).toFixed(1) + '%' : '--%';
+                let isDue = analysisObj ? analysisObj.bayesProb > analysisObj.empWinRate : false;
                 let hypoNetProfit = hypoTotalRevenue - hypoTotalCost;
 
                 document.getElementById('stats-container').innerHTML = `
@@ -1551,8 +1569,8 @@
                     <div class="stat-item"><h3>3碰 次數</h3><p style="color:#d97706;">${count3} 次</p></div>
                     <div class="stat-item"><h3>4碰 次數</h3><p style="color:#059669;">${count4} 次</p></div>
                     <div class="stat-item">
-                        <h3 style="margin-bottom:2px;">歷史均線</h3>
-                        <p style="color:#475569;">${empRateStr}</p>
+                        <h3 style="margin-bottom:2px;">近500期均線</h3>
+                        <p style="color:#475569;">${rate500Str}</p>
                         <div style="font-size:10px; color:#94a3b8; margin-top:4px; border-top:1px dashed #e2e8f0; padding-top:4px;">
                             今年均線: <span style="color:#0284c7; font-weight:900;">${thisYearRateStr}</span>
                         </div>
@@ -1598,10 +1616,8 @@
                     </tr>`;
                 });
 
-                let analysis = analyzeSpace(currentSpace);
-                let empRateStr = analysis ? (analysis.empWinRate * 100).toFixed(1) + '%' : '--%';
-                let curRateStr = analysis ? (analysis.bayesProb * 100).toFixed(1) + '%' : '--%';
-                let isDue = analysis ? analysis.bayesProb > analysis.empWinRate : false;
+                let curRateStr = analysisObj ? (analysisObj.bayesProb * 100).toFixed(1) + '%' : '--%';
+                let isDue = analysisObj ? analysisObj.bayesProb > analysisObj.empWinRate : false;
                 let failCount = data.length - passCount;
                 let hypoNetProfit = hypoTotalRevenue - hypoTotalCost;
 
@@ -1610,8 +1626,8 @@
                     <div class="stat-item"><h3>中獎 (過)</h3><p style="color:#059669;">${passCount} 次</p></div>
                     <div class="stat-item"><h3>未中 (斷柱)</h3><p style="color:#dc2626;">${failCount} 次</p></div>
                     <div class="stat-item">
-                        <h3 style="margin-bottom:2px;">歷史均線</h3>
-                        <p style="color:#475569;">${empRateStr}</p>
+                        <h3 style="margin-bottom:2px;">近500期均線</h3>
+                        <p style="color:#475569;">${rate500Str}</p>
                         <div style="font-size:10px; color:#94a3b8; margin-top:4px; border-top:1px dashed #e2e8f0; padding-top:4px;">
                             今年均線: <span style="color:#0284c7; font-weight:900;">${thisYearRateStr}</span>
                         </div>
@@ -1656,6 +1672,9 @@
         if(confirm("確定刪除此筆開獎紀錄？")) await deleteDoc(doc(db, "matrix_systems", id));
     };
 
+    // ==============================================================
+    // 批次匯入加速：採用大區塊與 Promise.all 平行處理
+    // ==============================================================
     window.batchImport = async function() {
         let targetSpace = document.getElementById('batch-target-space').value;
         let lines = document.getElementById('batch-text').value.trim().split('\n');
@@ -1688,13 +1707,19 @@
         if (!confirm(confirmMsg)) return;
 
         try {
-            const CHUNK_SIZE = 100;
+            const CHUNK_SIZE = 400; // 擴增批次區塊上限
+            let batchPromises = [];
+            
             for (let i = 0; i < records.length; i += CHUNK_SIZE) {
                 let chunk = records.slice(i, i + CHUNK_SIZE);
                 let batch = writeBatch(db);
                 chunk.forEach(r => batch.set(doc(db, "matrix_systems", r.id), r));
-                await batch.commit();
+                batchPromises.push(batch.commit());
             }
+            
+            // 平行非同步上傳，大幅壓縮 I/O 等待時間
+            await Promise.all(batchPromises);
+            
             alert(`🎉 成功匯入！已寫入 ${records.length} 筆資料。`);
             document.getElementById('batch-text').value = '';
         } catch(e) { alert("寫入失敗：" + e.message); }
