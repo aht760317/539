@@ -618,7 +618,7 @@
     // ==============================================================
     // 🎯 大盤組合決策 (1800/9000碰)：三線共振與階梯動態分析
     // ==============================================================
-    function analyzeSpace(key) {
+function analyzeSpace(key) {
         let cfg = spaceConfigs[key] || { type: '1800', unitBet: 1, basePuffs: 1800, rebate: 0, unitPrize: 0, name: '' };
         let data = getFilteredData(key).slice(0, 1500);
         let totalDraws = data.length;
@@ -639,10 +639,9 @@
 
         let reversedData = [...data].reverse();
         
-        // 迴圈計算資金回撤壓力
-        reversedData.forEach((item, idx) => {
+        reversedData.forEach((item) => {
             let balls = item.draw;
-            if (!balls || !Array.isArray(balls) || balls.length === 0) return;
+            if (!balls || !Array.isArray(balls)) return;
 
             let res = cfg.type === '1800' ? check1800(balls) : check9000(balls);
             let isWin = (cfg.type === '1800' && res.puffs >= 3) || (cfg.type === '9000' && res.pass);
@@ -656,7 +655,7 @@
 
         for (let i = 0; i < data.length; i++) {
             let balls = data[i].draw;
-            if (!balls || !Array.isArray(balls) || balls.length === 0) continue;
+            if (!balls || !Array.isArray(balls)) continue;
 
             let res = cfg.type === '1800' ? check1800(balls) : check9000(balls);
             let isWin = (cfg.type === '1800' && res.puffs >= 3) || (cfg.type === '9000' && res.pass);
@@ -671,13 +670,46 @@
                 if (!isWin) losingStreak++;
             } else if (!latestIsWin && !isWin) {
                 losingStreak++;
-            } else if (latestIsWin && isWin) {
-                // Ignore continuous hits in this context
             } else {
-                latestIsWin = false; // flag lock
+                latestIsWin = false;
             }
         }
 
+        let ma30 = Math.min(data.length, 30) > 0 ? wins30 / Math.min(data.length, 30) : 0;
+        let ma120 = Math.min(data.length, 120) > 0 ? wins120 / Math.min(data.length, 120) : 0;
+        let ma500 = Math.min(data.length, 500) > 0 ? wins500 / Math.min(data.length, 500) : 0;
+
+        let empWinRate = totalDraws > 0 ? (wins / totalDraws) : baseP_Threshold;
+
+        // 💡 幾何分佈理論 Z-Score 基礎計算
+        let geomMean = (1 - empWinRate) / (empWinRate || 0.1);
+        let geomStd = Math.sqrt(1 - empWinRate) / (empWinRate || 0.1);
+        let rawZ = geomStd > 0 ? (losingStreak - geomMean) / geomStd : 0;
+
+        // 🚨 關鍵安全閥：強制將 Z-Score 封頂在真實的物理區間 [-3.0 ~ 3.0] 之間，絕不允許出現 60 或 90 的幻覺數字！
+        let zScore = Math.max(-3.0, Math.min(rawZ, 3.0));
+
+        // 💡 馬可夫平滑機率安全校正 (限制最高不超過基礎勝率的 1.4 倍)
+        let maxAllowedProb = baseP_Threshold * 1.4;
+        let bayesProb = (ma30 * 0.4) + (ma120 * 0.4) + (ma500 * 0.2); 
+        if (zScore >= 1.0) bayesProb += (zScore * 0.015); 
+        bayesProb = Math.min(bayesProb, maxAllowedProb);
+
+        let EV = (bayesProb * minPrize) - costPerRound;
+
+        let currentDrawdown = peakTheoretical - theoreticalEquity;
+        let b = costPerRound > 0 ? ((minPrize - costPerRound) / costPerRound) : 0; 
+        let fullKelly = b > 0 ? ((bayesProb * (b + 1) - 1) / b) : 0;
+        let isTurbulent = (maxDrawdown > costPerRound * 5 && currentDrawdown >= maxDrawdown * 0.75);
+        let kellyScale = isTurbulent ? 0.02 : (currentDrawdown > maxDrawdown * 0.5 ? 0.08 : 0.20);
+        let fracKelly = Math.max(0, fullKelly * kellyScale);
+
+        return { 
+            cfg, totalDraws, losingStreak, ma30, ma120, ma500, empWinRate, bayesProb, zScore, EV, costPerRound,
+            fracKelly, currentDrawdown, isTurbulent, baseP_Threshold
+        };
+    }
+    
         let ma30 = Math.min(data.length, 30) > 0 ? wins30 / Math.min(data.length, 30) : 0;
         let ma120 = Math.min(data.length, 120) > 0 ? wins120 / Math.min(data.length, 120) : 0;
         let ma500 = Math.min(data.length, 500) > 0 ? wins500 / Math.min(data.length, 500) : 0;
