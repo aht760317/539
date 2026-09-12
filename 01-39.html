@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>🎯 單碼透視與 39 碼全盤量化雷達</title>
+    <title>🎯 終極單碼透視與 39 碼全盤量化雷達 (極致動能版)</title>
     <style>
         /* ==========================================
            1. 全局變數與基礎字體設定
@@ -77,7 +77,7 @@
         /* 預測小方塊 */
         .giant-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin: 10px 0; }
         @media (min-width: 768px) { .giant-grid { grid-template-columns: repeat(3, 1fr); } }
-        .giant-card { background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px; text-align: center; transition: 0.2s; }
+        .giant-card { background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px; text-align: center; transition: 0.2s; display: flex; flex-direction: column; justify-content: center; }
         .giant-card .g-title { font-size: 10px; color: #475569; font-weight: bold; margin-bottom: 2px; }
         .giant-card .g-val { font-size: 13px; font-weight: 900; color: #0f172a; }
         
@@ -87,6 +87,16 @@
         .giant-card.danger { background: #fef2f2; border-color: #fca5a5; box-shadow: 0 2px 4px rgba(220, 38, 38, 0.05); }
         .giant-card.danger .g-title { color: #991b1b; }
         .giant-card.danger .g-val { color: #dc2626; }
+        .giant-card.purple-glow { background: #faf5ff; border-color: #c084fc; box-shadow: 0 2px 6px rgba(168, 85, 247, 0.2); }
+        .giant-card.purple-glow .g-title { color: #7e22ce; }
+        .giant-card.purple-glow .g-val { color: #6b21a8; }
+
+        /* 微型圖 (Sparkline) */
+        .sparkline-wrap { display: flex; align-items: flex-end; justify-content: flex-end; gap: 4px; height: 50px; margin-top: 12px; padding-top: 12px; border-top: 1px dashed #cbd5e1; }
+        .spark-bar { width: 14px; background: #94a3b8; border-radius: 2px 2px 0 0; min-height: 2px; position:relative; cursor: crosshair; transition: 0.2s; }
+        .spark-bar:hover { background: var(--primary-color); opacity:0.8; }
+        .spark-bar:hover::after { content: attr(data-val) '期'; position: absolute; top: -22px; left: 50%; transform: translateX(-50%); font-size: 10px; background: #1e293b; color: #fff; padding: 2px 5px; border-radius: 4px; z-index: 10; white-space: nowrap; }
+        .spark-bar.current { background: var(--orange-color); box-shadow: 0 -2px 4px rgba(234, 88, 12, 0.3); }
 
         /* 名冊列表樣式 */
         .roster-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 14px; }
@@ -100,10 +110,11 @@
         .roster-card.c-class h4 { color: #334155; border-color: #e2e8f0; }
         
         .ball-badge-wrap { display: flex; flex-wrap: wrap; gap: 6px; justify-content:center;}
-        .ball-badge { display: flex; flex-direction: column; align-items: center; background: #f8fafc; border: 1px solid #cbd5e1; padding: 4px 8px; border-radius: 6px; min-width: 45px; cursor:pointer; transition:0.2s;}
+        .ball-badge { display: flex; flex-direction: column; align-items: center; background: #f8fafc; border: 1px solid #cbd5e1; padding: 4px 8px; border-radius: 6px; min-width: 45px; cursor:pointer; transition:0.2s; position:relative;}
         .ball-badge:hover { transform:scale(1.1); background:#fff; border-color:var(--primary-color); box-shadow: 0 2px 6px rgba(0,0,0,0.1); z-index: 2;}
         .ball-badge .b-num { font-size: 14px; font-weight: 900; color: #0f172a; font-family: monospace;}
         .ball-badge .b-prob { font-size: 10px; color: #64748b; font-weight:bold; margin-top:2px;}
+        .badge-dual { position: absolute; top: -6px; right: -6px; background: var(--purple-color); color: #fff; font-size: 8px; padding: 1px 4px; border-radius: 4px; font-weight: bold; box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
         
         /* 嚴格分級視覺區隔 */
         .s-class .ball-badge { border-color: #fca5a5; background: #fef2f2; }
@@ -127,25 +138,25 @@
 
 <div id="global-loader">
     <div class="loader-spinner"></div>
-    <h2 style="color:var(--text-main); font-weight:900; font-size:18px;">☁️ 歷史大數據同步中...</h2>
+    <h2 style="color:var(--text-main); font-weight:900; font-size:18px;">☁️ 雙核心歷史大數據同步中...</h2>
 </div>
 
 <div class="container">
     <header>
         <h1>🎯 獨立單碼透視與全盤量化雷達</h1>
-        <div class="cloud-badge"><div class="dot"></div> Firebase 終極快取獵人引擎</div>
+        <div class="cloud-badge"><div class="dot"></div> 雙核心共振 × 極限反彈引擎</div>
     </header>
 
     <div id="single-ball-panel">
         <div class="panel">
-            <div class="panel-title">🎯 39 碼全盤量化雷達與行動閘門 (極度嚴格版)</div>
+            <div class="panel-title">🎯 39 碼全盤量化雷達與行動閘門 (雙核共振版)</div>
             <div style="font-size:11px; color:#64748b; margin-bottom:12px; font-weight:bold; line-height:1.5;">
-                利用全歷史大數據進行極限收斂運算。S級與A級信號採用地獄級標準(含RSI與節奏過濾)，將雜訊徹底濾除，確保選出的號碼都是具備極高爆發潛力的強勢主力！
+                導入動態權重自適應與極限超跌反彈。若號碼在「天天樂」與「五三九」同時呈現強勢動能，系統將啟動【🔥雙星共振】大幅提升爆發預測率！
             </div>
             
             <div class="form-row" style="background: #f8fafc; padding: 12px; border-radius: 8px; border: 1px solid #e2e8f0; align-items: flex-end;">
                 <div class="form-group" style="flex:2;">
-                    <label>🎯 選擇資料庫 (決定母體)</label>
+                    <label>🎯 當前主戰場 (決定母體)</label>
                     <select id="sb-input-space" style="color: var(--purple-color); font-weight:bold;">
                         <option value="539-9000">📊 五三九 全資料庫 (推薦)</option>
                         <option value="tt-9000">🚀 天天樂 全資料庫</option>
@@ -172,8 +183,8 @@
 
                 <div style="font-size:11px; color:#475569; margin-bottom:12px; background:#f8fafc; padding:10px; border-radius:6px; border-left:3px solid var(--primary-color); line-height:1.5;">
                     <strong>【單車下注鐵律】</strong> 選號池中必須產出至少 1 顆 S 級，或 2 顆 A 級，單車戰區才會放行下注。<br>
-                    <strong>【強制觀望】</strong> 若大盤閘門亮紅燈（滿眼 B/C 級），單車一律 0 元觀望！<br>
-                    <span style="color:var(--orange-color); font-weight:900;">💡 點擊下方號碼可直接查看「單碼深度透視」！</span>
+                    <strong>【紫微雙星標記】</strong> 帶有 <span style="background:var(--purple-color); color:#fff; padding:1px 4px; border-radius:4px; font-size:9px;">共振</span> 標籤者，代表在另一個盤口同樣處於 A 級以上的強勢爆發期。<br>
+                    <span style="color:var(--orange-color); font-weight:900;">💡 點擊下方號碼可直接查看「單碼深度透視與微型趨勢圖」！</span>
                 </div>
                 <div class="roster-grid" id="roster-grid-content"></div>
             </div>
@@ -182,9 +193,14 @@
         <!-- 單碼查詢結果 -->
         <div id="sb-result-container" style="display:none;">
             <div class="panel">
-                <div class="sb-dash-header">
-                    <div class="sb-ball-circle" id="sb-title-ball">07</div>
-                    <div>號碼動能與機率透視</div>
+                <div class="sb-dash-header" style="justify-content: space-between;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <div class="sb-ball-circle" id="sb-title-ball">07</div>
+                        <div>號碼動能與機率透視</div>
+                    </div>
+                    <div id="dual-core-badge" style="display:none; background:var(--purple-color); color:#fff; font-size:11px; padding:4px 8px; border-radius:20px; font-weight:bold; box-shadow:0 2px 4px rgba(124,58,237,0.3);">
+                        🔥 雙核心共振啟動
+                    </div>
                 </div>
 
                 <div class="sb-prob-grid">
@@ -199,9 +215,17 @@
                 </div>
                 
                 <div style="background:#f8fafc; padding:12px; border-radius:8px; border:1px solid #e2e8f0;">
-                    <h4 style="color:#0f172a; font-size:13px; margin-bottom:8px; border-bottom:2px solid #e2e8f0; padding-bottom:6px; font-weight:900;">🤖 單碼專屬六大巨頭診斷 (含三大微觀指標)</h4>
+                    <h4 style="color:#0f172a; font-size:13px; margin-bottom:8px; border-bottom:2px solid #e2e8f0; padding-bottom:6px; font-weight:900;">🤖 演算法巨頭矩陣 (含雙核與反彈微觀指標)</h4>
                     <div class="giant-grid" id="sb-giants-container"></div>
-                    <div id="sb-final-verdict" style="margin-top:10px;"></div>
+                    
+                    <div style="margin-top:12px; font-size:12px; color:#475569; font-weight:bold; display:flex; justify-content:space-between; align-items:center;">
+                        <span>📈 近期遺漏值微型走勢 (右側為當前)</span>
+                        <span id="sb-max-miss-info" style="font-size:10px; color:#dc2626;"></span>
+                    </div>
+                    <!-- 微型圖 (Sparkline) 容器 -->
+                    <div class="sparkline-wrap" id="sb-sparkline-container"></div>
+
+                    <div id="sb-final-verdict" style="margin-top:14px;"></div>
                 </div>
             </div>
         </div>
@@ -236,7 +260,7 @@
             let d = change.doc.data();
             let spaceKey = d.space;
             
-            // 這裡只載入 9000 碰 (也就是全開獎號碼) 空間，做單碼分析
+            // 同時載入兩邊的全開獎號碼空間，為了「雙核心共振」
             if (spaceKey === 'tt-9000' || spaceKey === '539-9000') {
                 if (change.type === "added" || change.type === "modified") {
                     if (!spaceData[spaceKey]) spaceData[spaceKey] = [];
@@ -255,13 +279,12 @@
             document.getElementById('global-loader').style.opacity = '0';
             setTimeout(() => {
                 document.getElementById('global-loader').style.display = 'none';
-                // 資料載入後預設執行一次全盤掃描
                 scanAll39Balls();
             }, 300);
         }
     });
 
-    // 🎯 核心演算法：單碼預測 (含 RSI、板塊、等距節奏 三大微觀標準)
+    // 🎯 核心演算法：單碼預測 (導入動態權重與極限反彈)
     function computeAdvancedBallStats(target, data, cYear) {
         let sliceData = data.slice(0, 1500); 
         let totalDraws = sliceData.length;
@@ -301,10 +324,8 @@
 
         let baseProbRatio = totalDraws > 0 ? (hitsAll / totalDraws) : 0.1282;
         let probAll = baseProbRatio * 100;
-        let probYear = yearTotal > 0 ? (hitsYear / yearTotal) * 100 : 0;
-        let prob100 = (hits100 / 100) * 100;
-        let prob50 = (hits50 / 50) * 100;
         let prob30 = (hits30 / 30) * 100;
+        let prob50 = (hits50 / 50) * 100;
 
         let accel = prob30 - prob50;
         let avgMissing = missingHistory.length > 0 ? missingHistory.reduce((a,b)=>a+b,0)/missingHistory.length : 0;
@@ -314,6 +335,8 @@
 
         let shorterCount = missingHistory.filter(m => m <= currentMissing).length;
         let survivalPR = missingHistory.length > 0 ? (shorterCount / missingHistory.length) * 100 : 50;
+        
+        let maxMissing = Math.max(...missingHistory, 1);
 
         // 拖牌引力
         let dragScoreProb = probAll;
@@ -342,29 +365,21 @@
         });
         let probMarkov = ((markovHit + baseProbRatio * 5) / (markovHit + markovMiss + 5)) * 100;
 
-        // 1. RSI 過熱懲罰
+        // 💡 1. RSI 過熱懲罰
         let rsiPenalty = 0;
         let rsiStatus = '安全水位';
         if (hits10 >= 4) { rsiPenalty = -6.0; rsiStatus = '極度過熱 (-6%)'; }
         else if (hits10 === 3) { rsiPenalty = -2.5; rsiStatus = '高檔警戒 (-2.5%)'; }
 
-        // 2. 板塊連動引力
-        let targetSector = Math.floor(target / 10);
-        let sectorCount = (targetSector === 0) ? 9 : 10;
-        let expectedSectorHits30 = 30 * 5 * (sectorCount / 39);
-        let actualSectorHits30 = 0;
-        sliceData.slice(0, 30).forEach(d => {
-            d.draw.forEach(n => {
-                if(Math.floor(Number(n)/10) === targetSector) actualSectorHits30++;
-            });
-        });
-        let sectorMomentum = expectedSectorHits30 > 0 ? (actualSectorHits30 / expectedSectorHits30) : 1;
-        let sectorBonus = 0;
-        let sectorStatus = '板塊平穩';
-        if (sectorMomentum >= 1.25) { sectorBonus = 1.5; sectorStatus = '板塊強勢 (+1.5%)'; }
-        else if (sectorMomentum <= 0.75) { sectorBonus = -1.5; sectorStatus = '板塊冷卻 (-1.5%)'; }
+        // 💡 2. 極限超跌反彈 (Mean Reversion)
+        let extremeReversionBonus = 0;
+        let reversionStatus = '常態機率';
+        if (currentMissing >= maxMissing * 0.85 && currentMissing > 12) {
+            extremeReversionBonus = 4.0;
+            reversionStatus = '⚠️ 絕境反彈區 (+4%)';
+        }
 
-        // 3. 等距跳期 / 節奏共振
+        // 💡 3. 等距跳期 / 節奏共振
         let rhythmBonus = 0;
         let rhythmStatus = '無明顯節奏';
         if (missingHistory.length >= 3 && currentMissing > 0) {
@@ -377,14 +392,37 @@
             }
         }
 
-        let basePrediction = (probMarkov * 0.35) + (prob30 * 0.30) + (dragScoreProb * 0.15) + (probAll * 0.20);
-        let nextDrawPrediction = basePrediction + rsiPenalty + sectorBonus + rhythmBonus;
+        // 💡 4. 動態權重 (自適應防追高)
+        let wMarkov = 0.35, w30 = 0.30, wDrag = 0.15, wAll = 0.20;
+        if (hits10 <= 1) { 
+            // 處於冷卻期，降低近30期權重，拉高極限回歸(Markov)權重
+            w30 = 0.15; wMarkov = 0.45; wAll = 0.25;
+        }
+
+        let basePrediction = (probMarkov * wMarkov) + (prob30 * w30) + (dragScoreProb * wDrag) + (probAll * wAll);
+        let nextDrawPrediction = basePrediction + rsiPenalty + extremeReversionBonus + rhythmBonus;
         nextDrawPrediction = Math.max(0.1, nextDrawPrediction); 
 
         return { 
-            probAll, prob30, accel, survivalPR, dragScoreProb, currentMissing, zScore, probMarkov, 
-            rsiStatus, sectorStatus, rhythmStatus, rhythmBonus, hits10, nextDrawPrediction 
+            probAll, prob30, accel, survivalPR, dragScoreProb, currentMissing, zScore, probMarkov, maxMissing,
+            rsiStatus, reversionStatus, rhythmStatus, rhythmBonus, extremeReversionBonus, hits10, nextDrawPrediction, missingHistory
         };
+    }
+
+    // 取得另一個盤口的資料 (雙核心檢測用)
+    function checkDualCore(target, currentSpaceKey) {
+        let altSpaceKey = currentSpaceKey === '539-9000' ? 'tt-9000' : '539-9000';
+        let altData = [...(spaceData[altSpaceKey] || [])].sort((a, b) => new Date(b.date) - new Date(a.date)); 
+        if (altData.length < 100) return { isDual: false, bonus: 0 };
+        
+        let cYear = new Date().getFullYear().toString();
+        let altStats = computeAdvancedBallStats(target, altData, cYear);
+        
+        // 若另一個盤口該號碼預測率 >= 15.0 (約達 A 級邊緣)，啟動共振
+        if (altStats && altStats.nextDrawPrediction >= 15.0) {
+            return { isDual: true, bonus: 2.0 };
+        }
+        return { isDual: false, bonus: 0 };
     }
 
     // 單碼掃描 (單一號碼查詢 UI)
@@ -402,8 +440,15 @@
         let stats = computeAdvancedBallStats(target, data, new Date().getFullYear().toString());
         if(!stats) return;
 
+        // 雙核心檢測
+        let dualInfo = checkDualCore(target, spaceKey);
+        let finalPrediction = stats.nextDrawPrediction + dualInfo.bonus;
+
         document.getElementById('sb-result-container').style.display = 'block';
         document.getElementById('sb-title-ball').innerText = String(target).padStart(2, '0');
+        
+        let badgeEl = document.getElementById('dual-core-badge');
+        badgeEl.style.display = dualInfo.isDual ? 'block' : 'none';
 
         document.getElementById('sb-p-all').innerHTML = stats.probAll.toFixed(1) + '%';
         document.getElementById('sb-p-pr').innerHTML = stats.survivalPR.toFixed(1) + '%';
@@ -415,24 +460,40 @@
         if (stats.accel > 0) accelEl.innerHTML = `<span class="accel-up">+${stats.accel.toFixed(1)}%</span>`;
         else accelEl.innerHTML = `<span class="accel-dn">${stats.accel.toFixed(1)}%</span>`;
 
-        let p = stats.nextDrawPrediction;
+        let p = finalPrediction;
         let z = stats.zScore;
         
         let isS = (p >= 18.5) || (stats.survivalPR >= 96 && z >= 2.0 && stats.accel > 0) || (stats.rhythmBonus >= 3.0 && p >= 16.0);
         let isA = (!isS) && (p >= 15.5 || (stats.survivalPR >= 92 && z >= 1.5) || (stats.rhythmBonus > 0 && p >= 14.5));
-        let isC = (p < 12.5 || (stats.currentMissing <= 2 && stats.rhythmBonus === 0)); 
+        let isC = (p < 12.5 || (stats.currentMissing <= 2 && stats.rhythmBonus === 0 && stats.extremeReversionBonus === 0)); 
 
-        let rsiClass = stats.hits10 >= 3 ? 'danger' : 'highlight';
+        let rsiClass = stats.hits10 >= 3 ? 'danger' : (stats.hits10 <= 1 ? 'highlight' : '');
         let rhythmClass = stats.rhythmBonus > 0 ? 'highlight' : '';
+        let reversionClass = stats.extremeReversionBonus > 0 ? 'purple-glow' : '';
+        let dualClass = dualInfo.isDual ? 'purple-glow' : ((isS||isA)?'highlight':'danger');
 
         document.getElementById('sb-giants-container').innerHTML = `
-            <div class="giant-card ${stats.prob30 < stats.probAll ? 'highlight':'danger'}"><div class="g-title">①波段均值</div><div class="g-val">${stats.prob30.toFixed(1)}%</div></div>
-            <div class="giant-card ${rsiClass}"><div class="g-title">②RSI 震盪</div><div class="g-val">${stats.rsiStatus}</div></div>
-            <div class="giant-card ${stats.probMarkov > stats.probAll ? 'highlight':'danger'}"><div class="g-title">③贏家(馬可夫)</div><div class="g-val">${stats.probMarkov.toFixed(1)}%</div></div>
-            <div class="giant-card ${stats.survivalPR >= 95 ? 'highlight':''}"><div class="g-title">④銀行家(極限PR)</div><div class="g-val">PR ${stats.survivalPR.toFixed(0)}</div></div>
-            <div class="giant-card ${rhythmClass}"><div class="g-title">⑤精算家(板塊/節奏)</div><div class="g-val" style="font-size:11px;">${stats.sectorStatus}<br>${stats.rhythmStatus}</div></div>
-            <div class="giant-card ${(isS||isA)?'highlight':'danger'}"><div class="g-title">⑥大莊家(綜合預測)</div><div class="g-val">${p.toFixed(1)}%</div></div>
+            <div class="giant-card ${rsiClass}"><div class="g-title">①防追高(動態權重)</div><div class="g-val">${stats.rsiStatus}</div></div>
+            <div class="giant-card ${stats.probMarkov > stats.probAll ? 'highlight':'danger'}"><div class="g-title">②贏家(馬可夫平滑)</div><div class="g-val">${stats.probMarkov.toFixed(1)}%</div></div>
+            <div class="giant-card ${stats.survivalPR >= 95 ? 'highlight':''}"><div class="g-title">③銀行家(極限PR)</div><div class="g-val">PR ${stats.survivalPR.toFixed(0)}</div></div>
+            <div class="giant-card ${reversionClass}"><div class="g-title">④絕境反彈(Mean Rev)</div><div class="g-val">${stats.reversionStatus}</div></div>
+            <div class="giant-card ${rhythmClass}"><div class="g-title">⑤精算家(節奏共振)</div><div class="g-val">${stats.rhythmStatus}</div></div>
+            <div class="giant-card ${dualClass}"><div class="g-title">⑥大莊家(綜合含雙核)</div><div class="g-val">${p.toFixed(1)}%</div></div>
         `;
+
+        // 渲染 Sparkline (取最近 10 次遺漏，右側最新)
+        let recentMisses = stats.missingHistory.slice(0, 10).reverse();
+        let maxDisplayMiss = Math.max(...recentMisses, stats.currentMissing, 10);
+        let sparkHtml = '';
+        recentMisses.forEach(m => {
+            let h = Math.max((m / maxDisplayMiss) * 100, 5); // min 5% height
+            sparkHtml += `<div class="spark-bar" style="height:${h}%;" data-val="${m}"></div>`;
+        });
+        // 加入當前遺漏
+        let curH = Math.max((stats.currentMissing / maxDisplayMiss) * 100, 5);
+        sparkHtml += `<div class="spark-bar current" style="height:${curH}%;" data-val="${stats.currentMissing} (當前)"></div>`;
+        document.getElementById('sb-sparkline-container').innerHTML = sparkHtml;
+        document.getElementById('sb-max-miss-info').innerText = `歷史最大遺漏: ${stats.maxMissing} 期`;
 
         let vTitle, vDesc, vColor;
         if (isC) {
@@ -441,7 +502,7 @@
             vColor = "background:#fef2f2; color:#b91c1c; border:1.5px solid #fca5a5;";
         } else if (isS) {
             vTitle = "🔥 終極 S 級 (極端爆發)";
-            vDesc = `達成生存極限或綜合動能暴衝(包含節奏共振)。單車主將級別！`;
+            vDesc = `達成生存極限或綜合動能暴衝(包含節奏與極限反彈)。單車主將級別！`;
             vColor = "background:#ecfdf5; color:#065f46; border:2px solid #34d399;";
         } else if (isA) {
             vTitle = "🟢 A 級 (優質候選)";
@@ -472,27 +533,33 @@
 
         for (let target = 1; target <= 39; target++) {
             let stats = computeAdvancedBallStats(target, data, cYear);
-            if (stats) allStats.push({ target, stats });
+            if (stats) {
+                let dualInfo = checkDualCore(target, spaceKey);
+                stats.finalPrediction = stats.nextDrawPrediction + dualInfo.bonus;
+                stats.isDualCore = dualInfo.isDual;
+                allStats.push({ target, stats });
+            }
         }
 
-        allStats.sort((a, b) => b.stats.nextDrawPrediction - a.stats.nextDrawPrediction);
+        allStats.sort((a, b) => b.stats.finalPrediction - a.stats.finalPrediction);
 
         let sClass = [], aClass = [], bClass = [], cClass = [];
 
         allStats.forEach((item, index) => {
-            let p = item.stats.nextDrawPrediction;
+            let p = item.stats.finalPrediction;
             let z = item.stats.zScore;
             let pr = item.stats.survivalPR;
             let accel = item.stats.accel;
             let miss = item.stats.currentMissing;
             let rhythm = item.stats.rhythmBonus;
+            let revBonus = item.stats.extremeReversionBonus;
             
             let ballStr = String(item.target).padStart(2, '0');
-            let obj = { ball: ballStr, prob: p.toFixed(1), z: isNaN(z) ? 0 : z.toFixed(2) };
+            let obj = { ball: ballStr, prob: p.toFixed(1), isDual: item.stats.isDualCore };
 
             let meetsS = (p >= 18.5) || (pr >= 96 && z >= 2.0 && accel > 0) || (rhythm >= 3.0 && p >= 16.0);
             let meetsA = (p >= 15.5) || (pr >= 92 && z >= 1.5) || (rhythm > 0 && p >= 14.5);
-            let meetsC = (miss <= 2 && rhythm === 0) || (p < 12.5);
+            let meetsC = (p < 12.5 || (miss <= 2 && rhythm === 0 && revBonus === 0));
 
             if (meetsC) {
                 cClass.push(obj); 
@@ -517,7 +584,12 @@
             gatewayAlert.innerHTML = `🔴 【單車閘門鎖死】強勢單碼數量不足 (S級: ${sClass.length} 顆, A級: ${aClass.length} 顆) 👉 強制 0 元觀望！`;
         }
 
-        let renderBadge = (item) => `<div class="ball-badge" title="Z-Score: ${item.z}" onclick="document.getElementById('sb-input-ball').value='${item.ball}'; executeSingleBallScan(); window.scrollTo({top: 0, behavior: 'smooth'});"><span class="b-num">${item.ball}</span><span class="b-prob">${item.prob}%</span></div>`;
+        let renderBadge = (item) => `
+            <div class="ball-badge" onclick="document.getElementById('sb-input-ball').value='${item.ball}'; executeSingleBallScan(); window.scrollTo({top: 0, behavior: 'smooth'});">
+                ${item.isDual ? '<div class="badge-dual">共振</div>' : ''}
+                <span class="b-num">${item.ball}</span>
+                <span class="b-prob">${item.prob}%</span>
+            </div>`;
 
         document.getElementById('roster-grid-content').innerHTML = `
             <div class="roster-card s-class">
