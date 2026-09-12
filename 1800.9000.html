@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>⚡ 雙核心量化操盤系統 | 華爾街純量化版</title>
+    <title>⚡ 雙核心量化操盤系統 | 華爾街量化實戰版</title>
     <style>
         /* ==========================================
-           1. 全局變數與基礎字體設定
+           1. 全局變數與基礎字體設定 (清爽明亮專業版)
            ========================================== */
         :root {
             --bg-color: #f8fafc; 
@@ -45,6 +45,7 @@
         .dot { width: 6px; height: 6px; border-radius: 50%; background: #10b981; box-shadow: 0 0 4px #10b981; animation: pulse 2s infinite; }
         @keyframes pulse { 0% { transform: scale(0.9); opacity: 0.7; } 50% { transform: scale(1.1); opacity: 1; } 100% { transform: scale(0.9); opacity: 0.7; } }
 
+        /* 年度切換器 */
         .year-filter-bar {
             background: #1e293b; color: #fff; padding: 10px; border-radius: 8px; margin-bottom: 14px;
             display: flex; justify-content: center; align-items: center; gap: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
@@ -55,7 +56,7 @@
         }
 
         /* ==========================================
-           3. 核心功能切換按鈕
+           3. 核心功能切換按鈕 (Mode Switcher)
            ========================================== */
         .mode-switcher { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin-bottom: 14px; }
         @media (min-width: 768px) { .mode-switcher { grid-template-columns: repeat(4, 1fr); } }
@@ -73,18 +74,11 @@
         .mode-btn.single-btn:hover { background: var(--orange-color); color: #fff; box-shadow: 0 2px 8px rgba(234, 88, 12, 0.3); }
 
         /* ==========================================
-           4. 基礎面板與網格
+           4. 基礎面板與網格 (Panels)
            ========================================== */
         .panel { background: var(--panel-bg); padding: 14px; border-radius: 12px; border: 1px solid var(--panel-border); margin-bottom: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
         .panel-title { font-size: 14px; font-weight: 900; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px; color: var(--text-main); }
         
-        .formula-box { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px; margin-bottom: 14px; font-size: 12px; line-height: 1.6; }
-        .formula-box h4 { margin-bottom: 0; color: #0f172a; font-size: 14px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; font-weight: 900; }
-        .formula-content { display: none; margin-top: 12px; border-top: 1px dashed #cbd5e1; padding-top: 12px; color: #334155; }
-        .formula-item { background: #fff; padding: 10px; border-radius: 6px; border-left: 4px solid var(--primary-color); box-shadow: 0 1px 2px rgba(0,0,0,0.05); margin-bottom: 8px; }
-        .formula-item strong { color: var(--primary-color); font-size: 13px; }
-        .formula-item code { background: #f1f5f9; padding: 2px 6px; border-radius: 4px; color: #b91c1c; font-family: monospace; font-weight: bold; }
-
         .form-row { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
         @media (min-width: 768px) { .form-row { flex-direction: row; } }
         .form-group label { display: block; font-size: 11px; font-weight: 800; color: #334155; margin-bottom: 2px; }
@@ -93,20 +87,31 @@
         .btn-main { background: linear-gradient(135deg, #0284c7, #2563eb); color: white; border: none; padding: 10px; font-size: 13px; font-weight: 900; border-radius: 8px; cursor: pointer; width: 100%; transition: 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
         .btn-main:active { transform: translateY(1px); }
 
+        /* 說明書 */
+        .guide-box { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px; margin-bottom: 14px; font-size: 12px; line-height: 1.6; }
+        .guide-box h4 { margin-bottom: 8px; color: #0f172a; font-size: 14px; display: flex; align-items: center; gap: 6px; cursor: pointer; }
+        .guide-grid { display: grid; grid-template-columns: 1fr; gap: 8px; margin-top: 10px; display: none; }
+        .guide-item { background: #fff; padding: 8px; border-radius: 6px; border-left: 4px solid var(--primary-color); box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+        .guide-item strong { color: var(--primary-color); }
+        .guide-target { color: var(--success-color); font-weight: 900; font-size: 11px; margin-top: 4px; display: block; }
+
         /* ==========================================
-           5. 決策面板專區
+           5. 決策面板專區 (Arena)
            ========================================== */
         .setting-grid { display: grid; grid-template-columns: 1fr; gap: 14px; align-items: stretch; }
         @media (min-width: 900px) { .setting-grid { grid-template-columns: repeat(2, 1fr); } } 
+
         .space-config-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px; display: flex; flex-direction: column; }
         .space-config-card h4 { font-size: 13px; font-weight: 900; color: var(--purple-color); margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
         .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
         .setting-item label { display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 2px; font-weight: bold; }
         .setting-item input { width: 100%; padding: 6px 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; font-family: monospace; font-weight: bold; }
         .setting-item input:disabled { background: #f1f5f9; color: #94a3b8; border-color:#e2e8f0; }
+        
         .action-bar { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
         .action-bar input { padding: 8px; border: 1.5px solid #cbd5e1; border-radius: 6px; flex: 1; min-width: 120px; font-size: 13px; font-weight: bold; }
         
+        /* 策略儀表板 */
         .strategy-dashboard { background: linear-gradient(135deg, #1e1b4b, #312e81); color: #fff; padding: 16px; border-radius: 12px; margin-bottom: 14px; box-shadow: 0 4px 12px rgba(49, 46, 129, 0.4); }
         .strategy-dashboard h3 { font-size: 15px; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 6px; }
         .dashboard-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
@@ -114,6 +119,7 @@
         .dash-card { background: rgba(255,255,255,0.1); border-radius: 8px; padding: 10px; border: 1px solid rgba(255,255,255,0.1); font-size: 12px; }
         .dash-card h4 { color: #a5b4fc; font-size: 12px; margin-bottom: 4px; }
 
+        /* 雷達面板 */
         .radar-panel { background: linear-gradient(135deg, #fef2f2, #fff1f2); border: 2px dashed #fca5a5; border-radius: 12px; padding: 14px; margin-bottom: 14px; box-shadow: 0 4px 10px rgba(220, 38, 38, 0.08); }
         .radar-panel h3 { font-size: 15px; color: #991b1b; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid #fecaca; padding-bottom: 6px; }
         .radar-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
@@ -130,22 +136,19 @@
         .col-prob-item .col-val { font-weight: 900; font-size: 13px; color: #0284c7; }
         .col-prob-item.danger-col .col-val { color: #dc2626; }
 
+        /* 預測與量化方塊樣式 */
         .ai-prediction-box { margin-top: auto; padding: 12px; background: linear-gradient(to bottom, #ffffff, #f8fafc); border: 2px solid #e2e8f0; border-radius: 10px; font-size: 12px; }
-        .ai-prediction-box h5 { color: #0f172a; margin: 0; font-size: 14px; font-weight: 900; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid #cbd5e1; padding-bottom: 8px; }
-        
-        /* 決策結論框 */
-        .strategy-box { margin: 12px 0; padding: 12px; border-radius: 8px; text-align: center; font-weight: 900; font-size: 13px; line-height: 1.5; }
-        .strategy-box h6 { font-size:16px; margin:0 0 6px 0; }
-        .strategy-box .tomorrow-prob { font-size:14px; margin-top:6px; color:#1e293b; background: rgba(255,255,255,0.5); padding:4px; border-radius:4px;}
+        .strategy-box { margin: 0 0 10px 0; padding: 12px; border-radius: 8px; text-align: center; font-weight: 900; font-size: 13px; line-height: 1.5; }
+        .strategy-box h6 { font-size:16px; margin:0 0 4px 0; }
+        .strategy-box .tomorrow-prob { font-size:14px; margin-top:4px; color:#1e293b; background: rgba(255,255,255,0.6); padding:4px; border-radius:4px;}
 
-        /* 📊 華爾街 8大指標網格 */
-        .btn-toggle-8 { width: 100%; background: #e2e8f0; color: #334155; border: 1px dashed #94a3b8; padding: 8px; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; transition: 0.2s; margin-top: 8px; }
-        .btn-toggle-8:hover { background: #cbd5e1; color: #0f172a; }
-        .grid-8 { display: none; grid-template-columns: repeat(2, 1fr); gap: 6px; margin-top: 10px; border-top: 1px dashed #cbd5e1; padding-top: 10px; }
-        @media (min-width: 768px) { .grid-8 { grid-template-columns: repeat(4, 1fr); } }
+        /* 指標網格 */
+        .grid-metrics { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin-top: 6px; }
+        @media (min-width: 768px) { .grid-metrics { grid-template-columns: repeat(4, 1fr); } }
+        
         .g-item { background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px; text-align: center; transition: 0.2s; display: flex; flex-direction: column; justify-content: center;}
         .g-item .g-t { font-size: 10px; color: #475569; font-weight: bold; margin-bottom: 2px; }
-        .g-item .g-v { font-size: 12px; font-weight: 900; color: #0f172a; font-family: monospace; }
+        .g-item .g-v { font-size: 13px; font-weight: 900; color: #0f172a; font-family: monospace; }
         .g-item.hl { background: #ecfdf5; border-color: #34d399; }
         .g-item.hl .g-t { color: #065f46; }
         .g-item.hl .g-v { color: #059669; }
@@ -153,8 +156,12 @@
         .g-item.dg .g-t { color: #991b1b; }
         .g-item.dg .g-v { color: #dc2626; }
 
+        .btn-toggle-eastern { width: 100%; background: #f8fafc; color: #475569; border: 1.5px dashed #cbd5e1; padding: 8px; border-radius: 6px; font-size: 12px; font-weight: 800; cursor: pointer; transition: 0.2s; margin-top: 10px; }
+        .btn-toggle-eastern:hover { background: #e2e8f0; color: #0f172a; border-color: #94a3b8; }
+        .eastern-container { display: none; margin-top: 10px; border-top: 1px dashed #cbd5e1; padding-top: 10px; }
+
         /* ==========================================
-           6. 實戰獵人與數據表格
+           6. 實戰獵人專區 (Ledger)
            ========================================== */
         .ledger-stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 12px; }
         @media (min-width: 768px) { .ledger-stats-grid { grid-template-columns: repeat(4, 1fr); } }
@@ -164,6 +171,9 @@
         .rec-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 10px; }
         @media (min-width: 768px) { .rec-grid { grid-template-columns: repeat(2, 1fr); } }
 
+        /* ==========================================
+           7. 數據表格 (Tables)
+           ========================================== */
         .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 14px; }
         @media (min-width: 768px) { .stats-grid { grid-template-columns: repeat(3, 1fr); } }
         @media (min-width: 1024px) { .stats-grid { grid-template-columns: repeat(6, 1fr); } }
@@ -187,48 +197,6 @@
         .num-ball { width: var(--ball-size); height: var(--ball-size); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 900; font-family: monospace; background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #78350f; border: 1px solid #b45309; }
         .btn-tbl-action { background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 4px; padding: 2px 6px; cursor: pointer; font-size: 11px; font-weight: bold; }
         .btn-tbl-action:hover { background: #e2e8f0; }
-
-        /* ==========================================
-           7. 單碼透視 (配額制專屬介面)
-           ========================================== */
-        .sb-dash-header { display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 900; color: var(--text-main); border-bottom: 2px solid #f1f5f9; padding-bottom: 8px; margin-bottom: 12px; }
-        .sb-ball-circle { width: 28px; height: 28px; border-radius: 50%; background: var(--orange-color); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 14px; font-family: monospace; }
-        
-        .sb-prob-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 14px;}
-        @media (min-width: 768px) { .sb-prob-grid { grid-template-columns: repeat(5, 1fr); } }
-        .sb-prob-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; text-align: center; }
-        .sb-prob-card h4 { font-size: 11px; color: #64748b; margin-bottom: 4px; font-weight: bold;}
-        .sb-prob-card p { font-size: 16px; font-weight: 900; margin: 0; color: #0f172a; font-family: monospace;}
-        
-        .accel-tag { font-size: 11px; font-weight: bold; margin-top: 4px; display:inline-block; }
-        .accel-up { color: #dc2626; } 
-        .accel-dn { color: #059669; } 
-
-        .roster-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 14px; }
-        @media (min-width: 768px) { .roster-grid { grid-template-columns: repeat(2, 1fr); } }
-        @media (min-width: 1024px) { .roster-grid { grid-template-columns: repeat(4, 1fr); } }
-        .roster-card { border-radius: 8px; padding: 12px; border: 1px solid #e2e8f0; background: #fff; }
-        .roster-card h4 { font-size: 14px; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 2px solid #f1f5f9; font-weight:900; text-align:center;}
-        .roster-card.s-class h4 { color: #dc2626; border-color: #fecaca; }
-        .roster-card.a-class h4 { color: #059669; border-color: #a7f3d0; }
-        .roster-card.b-class h4 { color: #64748b; border-color: #cbd5e1; }
-        .roster-card.c-class h4 { color: #334155; border-color: #e2e8f0; }
-        
-        .ball-badge-wrap { display: flex; flex-wrap: wrap; gap: 6px; justify-content:center;}
-        .ball-badge { display: flex; flex-direction: column; align-items: center; background: #f8fafc; border: 1px solid #cbd5e1; padding: 4px 8px; border-radius: 6px; min-width: 45px; cursor:pointer; transition:0.2s;}
-        .ball-badge:hover { transform:scale(1.1); background:#fff; border-color:var(--primary-color); box-shadow: 0 2px 6px rgba(0,0,0,0.1); z-index: 2;}
-        .ball-badge .b-num { font-size: 14px; font-weight: 900; color: #0f172a; font-family: monospace;}
-        .ball-badge .b-prob { font-size: 10px; color: #64748b; font-weight:bold; margin-top:2px;}
-        
-        .s-class .ball-badge { border-color: #fca5a5; background: #fef2f2; }
-        .s-class .ball-badge .b-num { color: #b91c1c; }
-        .a-class .ball-badge { border-color: #6ee7b7; background: #ecfdf5; }
-        .a-class .ball-badge .b-num { color: #047857; }
-        .c-class .ball-badge { opacity: 0.6; background:#f1f5f9; border-color:#e2e8f0; }
-
-        .gateway-banner { padding: 12px; border-radius: 8px; margin-bottom: 12px; font-weight: 900; font-size: 14px; text-align: center; border: 2px solid; }
-        .gateway-go { background: #dcfce7; color: #166534; border-color: #86efac; box-shadow: 0 4px 10px rgba(22, 101, 52, 0.1); }
-        .gateway-nogo { background: #fee2e2; color: #991b1b; border-color: #fca5a5; }
 
         /* Loader */
         #global-loader { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.95); z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center; transition: opacity 0.3s; }
@@ -270,49 +238,22 @@
     </div>
 
     <!-- ========================================== -->
-    <!-- 🧮 數學公式白皮書 (點擊展開) -->
+    <!-- 模塊：決策矩陣 (Arena) -->
     <!-- ========================================== -->
-    <div class="panel formula-box" id="formula-guide" style="display:none;">
-        <h4 onclick="toggleFormula()">
-            <span>🧮 系統底層數學公式與參數運算說明 (點擊展開)</span>
-            <span id="formula-icon">▼</span>
-        </h4>
-        <div id="formula-content" class="formula-content">
-            <div class="formula-item">
-                <strong>① 物理大盤勝率 (Combinatorics)</strong><br>
-                利用排列組合 $C(39, 5)$ 精算物理極限機率：<br>
-                1800碰 (中三星即過關)：<code>P(Win) ≈ 55.36%</code>，過關時平均中 <code>3.5576</code> 碰。<br>
-                9000碰 (四柱均中)：<code>P(Win) ≈ 27.36%</code>，過關時固定中 <code>2.0</code> 碰。
-            </div>
-            <div class="formula-item">
-                <strong>② 幾何 Z-Score 偏離度模型 (Banker)</strong><br>
-                連槓期數服從幾何分佈。平均值 <code>μ = (1-p)/p</code>，標準差 <code>σ = sqrt(1-p)/p</code>。<br>
-                公式：<code>Z = (連槓期數 - μ) / σ</code>。<br>
-                為防堵模型產生極端幻覺，系統強制將 Z-Score 封頂於 <code>[-3.0, 3.0]</code> 安全區間。
-            </div>
-            <div class="formula-item">
-                <strong>③ 貝氏馬可夫動態機率 (Winner)</strong><br>
-                融合短中長均線與乖離動能：<code>P_bayes = (MA30 * 0.4) + (MA120 * 0.4) + (MA500 * 0.2) + (Z * 0.015)</code>。<br>
-                設定物理天花板：動態勝率絕對不允許超過基礎物理勝率的 <code>1.4倍</code>。
-            </div>
-            <div class="formula-item">
-                <strong>④ 大莊家期望值 (EV)</strong><br>
-                精確扣除每一期固定沉沒成本：<code>EV = (P_bayes * 平均中獎彩金) - 總下注成本</code>。<br>
-                EV > 0 系統才會認定該盤口具備真實獲利優勢。
-            </div>
-            <div class="formula-item">
-                <strong>⑤ 自適應凱利配置 (Financier)</strong><br>
-                公式：<code>f* = (P * (b+1) - 1) / b</code>，其中賠率 <code>b = (平均彩金 - 成本) / 成本</code>。<br>
-                動態回撤防禦：偵測資金曲線 (Max Drawdown)，若進入深水亂流區，強制將注碼比例縮減至 <code>2%</code> 以防破產。
-            </div>
+    <div class="guide-box" id="arena-guide" style="display:none;">
+        <h4 onclick="toggleGuide()">📖 系統六大巨頭指標說明書 (點擊展開/收合) <span>▼</span></h4>
+        <div class="guide-grid" id="guide-content">
+            <div class="guide-item"><strong>① 數學家 (物理勝率)：</strong><br>該盤口的基礎過關機率。<span class="guide-target">🎯 達標亮綠門檻：目前勝率大於遊戲基礎機率。</span></div>
+            <div class="guide-item"><strong>② 資金家 (自適應凱利)：</strong><br>動態計算最佳注碼比例，遇回撤自動收縮。<span class="guide-target">🎯 達標亮綠門檻：算定配置比例 f* > 0% 。</span></div>
+            <div class="guide-item"><strong>③ 贏家 (馬可夫核平滑)：</strong><br>精算盤口在「目前的連敗狀態下」，歷史上的反轉勝率。<span class="guide-target">🎯 達標亮綠門檻：動態反轉勝率大於基礎機率。</span></div>
+            <div class="guide-item"><strong>④ 銀行家 (幾何分佈 Z-Score)：</strong><br>測量連槓期數偏離平均值的嚴重程度。<span class="guide-target">🎯 達標亮綠門檻：數值大於或等於 0.5。</span></div>
+            <div class="guide-item"><strong>⑤ 精算家 (波動與回撤防禦)：</strong><br>監控系統理論淨值最大回撤(Max Drawdown)與亂流。<span class="guide-target">🎯 達標亮綠門檻：資金曲線未進入極端亂流。</span></div>
+            <div class="guide-item"><strong>⑥ 大莊家 (數學期望值 EV)：</strong><br>下注 1 元/碰 跑長期的平均賺賠金額。<span class="guide-target">🎯 達標亮綠門檻：期望值必須大於 0。</span></div>
         </div>
     </div>
 
-    <!-- ========================================== -->
-    <!-- 模塊：決策矩陣 (Arena) -->
-    <!-- ========================================== -->
     <div id="global-strategy" class="strategy-dashboard" style="display:none;">
-        <h3>💡 華爾街量化戰情室 (嚴格機率進場決策)</h3>
+        <h3>💡 華爾街量化戰情室 (純機率進場決策)</h3>
         <div class="dashboard-grid" id="dashboard-content">
             <div style="text-align:center; padding:10px;">資料運算中...</div>
         </div>
@@ -320,7 +261,7 @@
 
     <div class="panel" id="arena-settings-panel" style="display:none;">
         <div class="panel-title">
-            <span>⚙️ 盤口參數與【大盤階梯派發矩陣】</span>
+            <span>⚙️ 盤口參數與【華爾街量化決策矩陣】</span>
             <span id="lock-status" style="color:var(--danger-color); font-size:11px;">🔒 已鎖定(0000)</span>
         </div>
         <div style="font-size:11px; color:#475569; margin-bottom:12px; line-height:1.5;">
@@ -496,24 +437,22 @@
         switchSpace(currentSpace);
     };
 
-    // UI: Toggle Formula Box
-    window.toggleFormula = function() {
-        let content = document.getElementById('formula-content');
-        let icon = document.getElementById('formula-icon');
-        if (content.style.display === "none" || content.style.display === "") {
-            content.style.display = "block";
-            icon.innerText = "▲";
-        } else {
-            content.style.display = "none";
-            icon.innerText = "▼";
-        }
+    window.toggleGuide = function() {
+        let content = document.getElementById('guide-content');
+        content.style.display = (content.style.display === "none" || content.style.display === "") ? "grid" : "none";
     };
 
-    // UI: Toggle 8 Wall Street Metrics Grid
-    window.toggle8Formulas = function(key) {
-        let grid = document.getElementById(`grid-8-${key}`);
-        if(grid) {
-            grid.style.display = (grid.style.display === "none" || grid.style.display === "") ? "grid" : "none";
+    // 💡 修正：精準綁定 ID 切換東方指標展開/收合
+    window.toggleEasternMetrics = function(spaceKey) {
+        let container = document.getElementById(`eastern-box-${spaceKey}`);
+        let btn = document.getElementById(`btn-toggle-eastern-${spaceKey}`);
+        if(!container) return;
+        if(container.style.display === "none" || container.style.display === "") {
+            container.style.display = "block";
+            if(btn) btn.innerText = "▲ 收合 東方傳統 10 大指標矩陣";
+        } else {
+            container.style.display = "none";
+            if(btn) btn.innerText = "▼ 展開 東方傳統 10 大指標矩陣";
         }
     };
 
@@ -565,7 +504,7 @@
         document.getElementById('batch-input-panel').style.display = isArena ? 'block' : 'none';
         document.getElementById('global-strategy').style.display = isArena ? 'block' : 'none';
         document.getElementById('radar-panel').style.display = isArena ? 'block' : 'none';
-        document.getElementById('formula-guide').style.display = isArena ? 'block' : 'none';
+        document.getElementById('arena-guide').style.display = isArena ? 'block' : 'none';
         
         document.getElementById('actual-bet-panel').style.display = isLedger ? 'block' : 'none';
 
@@ -690,9 +629,8 @@
         }
     }
 
-
     // ==============================================================
-    // 🎯 華爾街核心運算 (附帶 Z 範疇安全閥與真實機率修復)
+    // 🎯 核心運算：華爾街 8 大量化指標 + 東方 10 大傳統指標
     // ==============================================================
     function analyzeSpace(key) {
         let cfg = spaceConfigs[key] || { type: '1800', unitBet: 1, basePuffs: 1800, rebate: 0, unitPrize: 0, name: '' };
@@ -704,17 +642,13 @@
         let latestIsWin = false;
         let losingStreak = 0;
 
-        let wins30 = 0, wins120 = 0, wins500 = 0;
-        let wins14 = 0; // RSI 14期
+        let wins14 = 0, wins30 = 0, wins120 = 0, wins500 = 0;
         let theoreticalEquity = 0;
         let peakTheoretical = 0;
         let maxDrawdown = 0;
         
-        // 💡 物理學真實期望機率校正 (採用排列組合 C(39,5) 理論極限值)
         let baseP_Threshold = cfg.type === '1800' ? 0.5536 : 0.2736;
         let costPerRound = Number(cfg.unitBet) * Number(cfg.basePuffs) * (1 - Number(cfg.rebate) / 100);
-        
-        // 💡 1800 碰真實期望獎金校正 (贏的時候平均會中 3.5576 碰)
         let expectedPrizePuffs = cfg.type === '1800' ? 3.5576 : 2.0;
         let avgPrizeWhenWin = expectedPrizePuffs * Number(cfg.unitPrize) * Number(cfg.unitBet);
 
@@ -729,7 +663,6 @@
             let res = cfg.type === '1800' ? check1800(balls) : check9000(balls);
             let isWin = (cfg.type === '1800' && res.puffs >= 3) || (cfg.type === '9000' && res.pass);
             
-            // 理論淨值採用新的真實期望碰數來計算
             let roundPnL = isWin ? (avgPrizeWhenWin - costPerRound) : -costPerRound;
             theoreticalEquity += roundPnL;
             if (theoreticalEquity > peakTheoretical) peakTheoretical = theoreticalEquity;
@@ -751,11 +684,13 @@
             let res = cfg.type === '1800' ? check1800(balls) : check9000(balls);
             let isWin = (cfg.type === '1800' && res.puffs >= 3) || (cfg.type === '9000' && res.pass);
             
-            if (isWin) wins++;
-            if (i < 14 && isWin) wins14++;
-            if (i < 30 && isWin) wins30++;
-            if (i < 120 && isWin) wins120++;
-            if (i < 500 && isWin) wins500++;
+            if (isWin) {
+                wins++;
+                if (i < 14) wins14++;
+                if (i < 30) wins30++;
+                if (i < 120) wins120++;
+                if (i < 500) wins500++;
+            }
 
             if (i === 0) {
                 latestIsWin = isWin;
@@ -775,18 +710,16 @@
 
         let empWinRate = totalDraws > 0 ? (wins / totalDraws) : baseP_Threshold;
 
-        // 💡 幾何分佈理論 Z-Score 基礎計算
+        // 幾何分佈理論 Z-Score
         let geomMean = (1 - baseP_Threshold) / baseP_Threshold;
         let geomStd = Math.sqrt(1 - baseP_Threshold) / baseP_Threshold;
         let rawZ = geomStd > 0 ? (losingStreak - geomMean) / geomStd : 0;
-
-        // 🚨 關鍵安全閥：強制將 Z-Score 封頂在真實的物理區間 [-3.0 ~ 3.0] 之間
         let zScore = Math.max(-3.0, Math.min(rawZ, 3.0));
 
         let shorterCount = missingHistory.filter(m => m <= losingStreak).length;
         let prSurv = missingHistory.length > 0 ? (shorterCount / missingHistory.length) * 100 : 50;
 
-        // 馬可夫平滑機率安全校正 (限制最高不超過基礎勝率的 1.4 倍)
+        // 馬可夫平滑機率
         let markovHit = 0, markovMiss = 0, mMissTracker = 0;
         reversedData.forEach((item, idx) => {
             let isWin = (cfg.type === '1800' && check1800(item.draw).puffs >= 3) || (cfg.type === '9000' && check9000(item.draw).pass);
@@ -812,23 +745,23 @@
 
         return { 
             cfg, totalDraws, losingStreak, ma30, ma120, ma500, empWinRate, bayesProb, zScore, EV, costPerRound,
-            fracKelly, currentDrawdown, maxDrawdown, isTurbulent, baseP_Threshold, rsi14, accel, prSurv, pMarkov
+            fracKelly, currentDrawdown, maxDrawdown, isTurbulent, baseP_Threshold, rsi14, accel, prSurv, pMarkov,
+            geomMean, geomStd
         };
     }
 
-    // 🚨 華爾街 8大指標 UI 生成 (取代原 18 指標，精準且強大)
-    function getPredictionHtml(analysis) {
+    // 🚨 渲染函式：華爾街8項固定顯示，東方10項折疊
+    function getPredictionHtml(analysis, spaceKey) {
         if (!analysis || analysis.totalDraws < 5) return `<div class="ai-prediction-box" style="text-align:center; color:#94a3b8; padding:20px;">⏳ 歷史數據不足</div>`;
 
         let a = analysis;
 
         let passZ = (a.zScore >= 0.8 && a.zScore <= 3.0); 
         let passDD = !a.isTurbulent; 
-        let passEV = a.EV > 0; // 期望值必須大於 0
+        let passEV = a.EV > 0; 
 
         let consensusTitle = "", consensusDesc = "", consensusColor = "";
 
-        // 💡 嚴格審慎派發規則：只要有一項核心指標未過，即刻否決！
         if (!passEV) {
             consensusTitle = "🔴 系統否決 (期望值為負)";
             consensusDesc = `【風控否決】長期期望值 EV 為負數，盤口無數學優勢。強制 0 倍空手！`;
@@ -851,27 +784,67 @@
             consensusColor = "background:#f8fafc; color:#64748b; border: 2px solid #e2e8f0;";
         }
 
-        let k = a.cfg.type === '1800' ? (a.cfg.name.includes('tt')?'tt-1800':'539-1800') : (a.cfg.name.includes('tt')?'tt-9000':'539-9000');
+        // 通過檢驗顏色判別 (綠色hl / 紅色dg)
+        let c_bayes = a.bayesProb > a.baseP_Threshold ? 'hl' : 'dg';
+        let c_ev = a.EV > 0 ? 'hl' : 'dg';
+        let c_kelly = a.fracKelly > 0 ? 'hl' : 'dg';
+        let c_z = passZ ? 'hl' : 'dg';
+        let c_dd = passDD ? 'hl' : 'dg';
+        let c_markov = a.pMarkov > a.baseP_Threshold ? 'hl' : 'dg';
+        let c_rsi = (a.rsi14 >= 35 && a.rsi14 <= 75) ? 'hl' : 'dg';
+        let c_accel = a.accel > 0 ? 'hl' : 'dg';
+
+        // 東方指標顏色判別
+        let c_emp = a.empWinRate >= a.baseP_Threshold ? 'hl' : 'dg';
+        let c_ma30 = a.ma30 >= a.baseP_Threshold ? 'hl' : 'dg';
+        let c_ma120 = a.ma120 >= a.baseP_Threshold ? 'hl' : 'dg';
+        let c_ma500 = a.ma500 >= a.baseP_Threshold ? 'hl' : 'dg';
+        let c_cur = a.losingStreak >= a.geomMean ? 'hl' : 'dg';
+        let c_pr = a.prSurv >= 75 ? 'hl' : 'dg';
 
         return `
             <div class="ai-prediction-box">
-                <div class="strategy-box" style="${consensusColor} margin-top:0;">
+                <!-- 決策卡片 (已移除真實賠率) -->
+                <div class="strategy-box" style="${consensusColor}">
                     <h6>${consensusTitle}</h6>
                     <div style="font-size:11.5px; font-weight:bold; margin-top:4px; text-align:left; color:#1e293b;">${consensusDesc}</div>
                     <div class="tomorrow-prob">🎯 下期開盤預測：<strong>${(a.bayesProb * 100).toFixed(1)}%</strong></div>
                 </div>
                 
-                <button onclick="toggle8Formulas('${k}')" class="btn-toggle-8">📊 展開/收合 華爾街 8 大核心量化矩陣</button>
+                <!-- 🏛️ 華爾街 8 大核心指標 (固定常駐顯示) -->
+                <div style="font-size: 11px; font-weight: 900; color: #0f172a; margin-bottom: 4px; display:flex; align-items:center; gap:4px;">
+                    <span>🏛️ 華爾街 8 大量化指標 (固定顯示)</span>
+                </div>
+                <div class="grid-metrics">
+                    <div class="g-item ${c_bayes}"><div class="g-t">1. 綜合勝率(Bayes)</div><div class="g-v">${(a.bayesProb*100).toFixed(1)}%</div></div>
+                    <div class="g-item ${c_ev}"><div class="g-t">2. 期望值(EV)</div><div class="g-v">${a.EV>0?'+':''}${a.EV.toFixed(0)}</div></div>
+                    <div class="g-item ${c_kelly}"><div class="g-t">3. 凱利配置(Kelly)</div><div class="g-v">${(a.fracKelly*100).toFixed(1)}%</div></div>
+                    <div class="g-item ${c_z}"><div class="g-t">4. 偏離度(Z-Score)</div><div class="g-v">${a.zScore.toFixed(2)}</div></div>
+                    <div class="g-item ${c_dd}"><div class="g-t">5. 資金回撤壓力</div><div class="g-v">$${Math.round(a.currentDrawdown)}</div></div>
+                    <div class="g-item ${c_markov}"><div class="g-t">6. 馬可夫反轉率</div><div class="g-v">${(a.pMarkov*100).toFixed(1)}%</div></div>
+                    <div class="g-item ${c_rsi}"><div class="g-t">7. RSI 震盪(14期)</div><div class="g-v">${a.rsi14.toFixed(1)}</div></div>
+                    <div class="g-item ${c_accel}"><div class="g-t">8. 動能加速(Accel)</div><div class="g-v">${a.accel>0?'+':''}${(a.accel*100).toFixed(1)}%</div></div>
+                </div>
+
+                <!-- ☯️ 東方傳統 10 大指標 (折疊開關) -->
+                <button id="btn-toggle-eastern-${spaceKey}" onclick="toggleEasternMetrics('${spaceKey}')" class="btn-toggle-eastern">
+                    ▼ 展開 東方傳統 10 大指標矩陣
+                </button>
                 
-                <div id="grid-8-${k}" class="grid-8">
-                    <div class="g-item hl"><div class="g-t">1. 綜合勝率(Bayes)</div><div class="g-v">${(a.bayesProb*100).toFixed(1)}%</div></div>
-                    <div class="g-item ${a.EV>0?'hl':'dg'}"><div class="g-t">2. 期望值(EV)</div><div class="g-v">${a.EV>0?'+':''}${a.EV.toFixed(0)}</div></div>
-                    <div class="g-item ${a.fracKelly>0?'hl':'dg'}"><div class="g-t">3. 凱利配置(Kelly)</div><div class="g-v">${(a.fracKelly*100).toFixed(1)}%</div></div>
-                    <div class="g-item ${a.zScore>=1.5?'hl':(a.zScore<0?'dg':'')}"><div class="g-t">4. 偏離度(Z-Score)</div><div class="g-v">${a.zScore.toFixed(2)}</div></div>
-                    <div class="g-item"><div class="g-t">5. 最大回撤(Drawdown)</div><div class="g-v">$${Math.round(a.maxDrawdown)}</div></div>
-                    <div class="g-item"><div class="g-t">6. 馬可夫(Markov)</div><div class="g-v">${(a.pMarkov*100).toFixed(1)}%</div></div>
-                    <div class="g-item"><div class="g-t">7. RSI 震盪(14期)</div><div class="g-v">${a.rsi14.toFixed(1)}</div></div>
-                    <div class="g-item ${a.accel>0?'hl':'dg'}"><div class="g-t">8. 動能加速(Accel)</div><div class="g-v">${a.accel>0?'+':''}${(a.accel*100).toFixed(1)}%</div></div>
+                <div id="eastern-box-${spaceKey}" class="eastern-container">
+                    <div style="font-size: 11px; font-weight: 900; color: #64748b; margin-bottom: 6px;">☯️ 東方傳統 10 大盤路與經驗矩陣</div>
+                    <div class="grid-metrics">
+                        <div class="g-item"><div class="g-t">1. 物理基準($P_{base}$)</div><div class="g-v">${(a.baseP_Threshold*100).toFixed(2)}%</div></div>
+                        <div class="g-item ${c_emp}"><div class="g-t">2. 大數勝率($P_{emp}$)</div><div class="g-v">${(a.empWinRate*100).toFixed(1)}%</div></div>
+                        <div class="g-item ${c_ma30}"><div class="g-t">3. 短期均線($MA_{30}$)</div><div class="g-v">${(a.ma30*100).toFixed(1)}%</div></div>
+                        <div class="g-item ${c_ma120}"><div class="g-t">4. 中期均線($MA_{120}$)</div><div class="g-v">${(a.ma120*100).toFixed(1)}%</div></div>
+                        <div class="g-item ${c_ma500}"><div class="g-t">5. 長期均線($MA_{500}$)</div><div class="g-v">${(a.ma500*100).toFixed(1)}%</div></div>
+                        <div class="g-item ${c_cur}"><div class="g-t">6. 當前連槓期數</div><div class="g-v">${a.losingStreak} 期</div></div>
+                        <div class="g-item"><div class="g-t">7. 理論平均遺漏</div><div class="g-v">${a.geomMean.toFixed(1)} 期</div></div>
+                        <div class="g-item"><div class="g-t">8. 幾何標準差($\\sigma$)</div><div class="g-v">${a.geomStd.toFixed(2)}</div></div>
+                        <div class="g-item ${c_pr}"><div class="g-t">9. 生存極限(PR值)</div><div class="g-v">${a.prSurv.toFixed(1)}%</div></div>
+                        <div class="g-item"><div class="g-t">10. 累計觀測期數</div><div class="g-v">${a.totalDraws} 期</div></div>
+                    </div>
                 </div>
             </div>
         `;
@@ -887,6 +860,7 @@
             let cfg = analysis.cfg;
             let labelPrize = cfg.type === '1800' ? '三星單碰(元)' : '四星單碰(元)';
             
+            // 💡 精準傳入 key，保證點擊 ID 完全對應
             html += `
                 <div class="space-config-card">
                     <h4>${cfg.name}</h4>
@@ -898,7 +872,7 @@
                         <div class="setting-item"><label>退水 (%)</label><input type="number" id="cfg-rebate-${key}" value="${cfg.rebate}" disabled></div>
                         <div class="setting-item"><label>${labelPrize}</label><input type="number" id="cfg-prize-${key}" value="${cfg.unitPrize}" disabled></div>
                     </div>
-                    ${getPredictionHtml(analysis)}
+                    ${getPredictionHtml(analysis, key)}
                 </div>
             `;
         });
@@ -952,7 +926,6 @@
 
             let statusText = '', reasonText = '', cardStyle = '';
             
-            // 💡 嚴格實戰派發指引
             if (a.EV <= 0 || a.isTurbulent) {
                 statusText = `🔴 系統否決 👉 0 倍`; 
                 cardStyle = 'background:#fef2f2; border-color:#fecaca;'; 
@@ -983,7 +956,6 @@
         });
         document.getElementById('ledger-recommendations-container').innerHTML = recHtml;
 
-        // 計算真實損益
         let totalCount = 0, totalCost = 0, totalPrize = 0;
         Object.keys(spaceData).forEach(key => {
             let cfg = spaceConfigs[key];
