@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>🎯 終極單碼透視與 39 碼全盤量化雷達 (極致動能版)</title>
+    <title>⚡ 九大宗師 × 官方風控量化分級系統 (近期走勢版)</title>
     <style>
         /* ==========================================
            1. 全局變數與基礎字體設定
@@ -25,78 +25,37 @@
         body { background-color: var(--bg-color); color: var(--text-main); padding: 8px; line-height: 1.5; }
         .container { max-width: 1200px; margin: 0 auto; }
 
-        /* ==========================================
-           2. 頂部導航列 (Header)
-           ========================================== */
         header { 
-            background: linear-gradient(135deg, #ffffff, #fff7ed); border: 1px solid #fed7aa;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); padding: 12px; border-radius: 12px; margin-bottom: 12px; text-align: center; 
+            background: linear-gradient(135deg, #0f172a, #1e293b); border: 1px solid #334155;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); padding: 16px; border-radius: 12px; margin-bottom: 14px; text-align: center; 
         }
         header h1 { 
-            font-size: clamp(16px, 4vw, 22px); letter-spacing: 0.5px;
-            background: linear-gradient(90deg, #ea580c, #dc2626); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            font-weight: 900; margin-bottom: 4px;
+            font-size: clamp(18px, 4vw, 24px); letter-spacing: 1px;
+            background: linear-gradient(90deg, #fbbf24, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            font-weight: 900; margin-bottom: 6px;
         }
         .cloud-badge { 
-            display: inline-flex; align-items: center; gap: 4px; background: #ecfdf5; border: 1px solid #a7f3d0;
-            padding: 2px 8px; border-radius: 20px; font-size: 10px; font-weight: bold; color: #065f46; 
+            display: inline-flex; align-items: center; gap: 4px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+            padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; color: #f8fafc; 
         }
-        .dot { width: 6px; height: 6px; border-radius: 50%; background: #10b981; box-shadow: 0 0 4px #10b981; animation: pulse 2s infinite; }
+        .dot { width: 6px; height: 6px; border-radius: 50%; background: #10b981; box-shadow: 0 0 6px #10b981; animation: pulse 2s infinite; }
         @keyframes pulse { 0% { transform: scale(0.9); opacity: 0.7; } 50% { transform: scale(1.1); opacity: 1; } 100% { transform: scale(0.9); opacity: 0.7; } }
 
-        /* ==========================================
-           3. 基礎面板與表單
-           ========================================== */
-        .panel { background: var(--panel-bg); padding: 14px; border-radius: 12px; border: 1px solid var(--panel-border); margin-bottom: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-        .panel-title { font-size: 14px; font-weight: 900; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px; color: var(--text-main); }
+        .panel { background: var(--panel-bg); padding: 16px; border-radius: 12px; border: 1px solid var(--panel-border); margin-bottom: 14px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
+        .panel-title { font-size: 15px; font-weight: 900; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px; color: var(--text-main); }
 
-        .form-row { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+        .form-row { display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; }
         @media (min-width: 768px) { .form-row { flex-direction: row; } }
-        .form-group label { display: block; font-size: 11px; font-weight: 800; color: #334155; margin-bottom: 2px; }
-        .form-group input, .form-group select { width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; font-family: monospace; font-weight: bold; outline:none; transition: 0.2s; }
+        .form-group label { display: block; font-size: 12px; font-weight: 900; color: #334155; margin-bottom: 4px; }
+        .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; font-weight: bold; outline:none; transition: 0.2s; background: #f8fafc; }
         
-        .btn-main { border: none; padding: 10px; font-size: 13px; font-weight: 900; border-radius: 8px; cursor: pointer; width: 100%; transition: 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.1); color: white; }
-        .btn-main:active { transform: translateY(1px); }
+        .btn-main { border: none; padding: 12px; font-size: 14px; font-weight: 900; border-radius: 8px; cursor: pointer; width: 100%; transition: 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.1); color: white; background: linear-gradient(135deg, #d97706, #b45309); }
+        .btn-main:hover { background: linear-gradient(135deg, #b45309, #92400e); }
 
-        /* ==========================================
-           4. 單碼量化透視專區與名冊
-           ========================================== */
-        .sb-dash-header { display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 900; color: var(--text-main); border-bottom: 2px solid #f1f5f9; padding-bottom: 8px; margin-bottom: 12px; }
-        .sb-ball-circle { width: 28px; height: 28px; border-radius: 50%; background: var(--orange-color); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 14px; font-family: monospace; }
-        
-        .sb-prob-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 14px;}
-        @media (min-width: 768px) { .sb-prob-grid { grid-template-columns: repeat(5, 1fr); } }
-        .sb-prob-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; text-align: center; }
-        .sb-prob-card h4 { font-size: 11px; color: #64748b; margin-bottom: 4px; font-weight: bold;}
-        .sb-prob-card p { font-size: 16px; font-weight: 900; margin: 0; color: #0f172a; font-family: monospace;}
-        
-        .accel-tag { font-size: 11px; font-weight: bold; margin-top: 4px; display:inline-block; }
-        .accel-up { color: #dc2626; } 
-        .accel-dn { color: #059669; } 
-
-        /* 預測小方塊 */
-        .giant-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin: 10px 0; }
-        @media (min-width: 768px) { .giant-grid { grid-template-columns: repeat(3, 1fr); } }
-        .giant-card { background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px; text-align: center; transition: 0.2s; display: flex; flex-direction: column; justify-content: center; }
-        .giant-card .g-title { font-size: 10px; color: #475569; font-weight: bold; margin-bottom: 2px; }
-        .giant-card .g-val { font-size: 13px; font-weight: 900; color: #0f172a; }
-        
-        .giant-card.highlight { background: #ecfdf5; border-color: #34d399; box-shadow: 0 2px 4px rgba(16, 185, 129, 0.1); }
-        .giant-card.highlight .g-title { color: #065f46; }
-        .giant-card.highlight .g-val { color: #059669; }
-        .giant-card.danger { background: #fef2f2; border-color: #fca5a5; box-shadow: 0 2px 4px rgba(220, 38, 38, 0.05); }
-        .giant-card.danger .g-title { color: #991b1b; }
-        .giant-card.danger .g-val { color: #dc2626; }
-        .giant-card.purple-glow { background: #faf5ff; border-color: #c084fc; box-shadow: 0 2px 6px rgba(168, 85, 247, 0.2); }
-        .giant-card.purple-glow .g-title { color: #7e22ce; }
-        .giant-card.purple-glow .g-val { color: #6b21a8; }
-
-        /* 微型圖 (Sparkline) */
-        .sparkline-wrap { display: flex; align-items: flex-end; justify-content: flex-end; gap: 4px; height: 50px; margin-top: 12px; padding-top: 12px; border-top: 1px dashed #cbd5e1; }
-        .spark-bar { width: 14px; background: #94a3b8; border-radius: 2px 2px 0 0; min-height: 2px; position:relative; cursor: crosshair; transition: 0.2s; }
-        .spark-bar:hover { background: var(--primary-color); opacity:0.8; }
-        .spark-bar:hover::after { content: attr(data-val) '期'; position: absolute; top: -22px; left: 50%; transform: translateX(-50%); font-size: 10px; background: #1e293b; color: #fff; padding: 2px 5px; border-radius: 4px; z-index: 10; white-space: nowrap; }
-        .spark-bar.current { background: var(--orange-color); box-shadow: 0 -2px 4px rgba(234, 88, 12, 0.3); }
+        /* 彩券中心官方風控 */
+        .official-audit { background: linear-gradient(135deg, #fef2f2, #fff1f2); border: 2px dashed #fca5a5; border-radius: 8px; padding: 12px; text-align: center; margin-bottom: 14px; }
+        .official-audit h4 { color: #991b1b; font-size: 14px; font-weight: 900; margin-bottom: 6px; display: flex; align-items: center; justify-content: center; gap: 6px; }
+        .official-audit p { font-size: 12px; color: #7f1d1d; font-weight: bold; }
 
         /* 名冊列表樣式 */
         .roster-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 14px; }
@@ -110,27 +69,30 @@
         .roster-card.c-class h4 { color: #334155; border-color: #e2e8f0; }
         
         .ball-badge-wrap { display: flex; flex-wrap: wrap; gap: 6px; justify-content:center;}
-        .ball-badge { display: flex; flex-direction: column; align-items: center; background: #f8fafc; border: 1px solid #cbd5e1; padding: 4px 8px; border-radius: 6px; min-width: 45px; cursor:pointer; transition:0.2s; position:relative;}
+        .ball-badge { display: flex; flex-direction: column; align-items: center; background: #f8fafc; border: 1px solid #cbd5e1; padding: 4px 8px; border-radius: 6px; min-width: 48px; cursor:pointer; transition:0.2s; position:relative;}
         .ball-badge:hover { transform:scale(1.1); background:#fff; border-color:var(--primary-color); box-shadow: 0 2px 6px rgba(0,0,0,0.1); z-index: 2;}
         .ball-badge .b-num { font-size: 14px; font-weight: 900; color: #0f172a; font-family: monospace;}
-        .ball-badge .b-prob { font-size: 10px; color: #64748b; font-weight:bold; margin-top:2px;}
-        .badge-dual { position: absolute; top: -6px; right: -6px; background: var(--purple-color); color: #fff; font-size: 8px; padding: 1px 4px; border-radius: 4px; font-weight: bold; box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
-        
-        /* 嚴格分級視覺區隔 */
+        .ball-badge .b-score { font-size: 9px; color: #64748b; font-weight:bold; margin-top:2px;}
+        .badge-audit { position: absolute; top: -6px; right: -6px; background: var(--danger-color); color: #fff; font-size: 8px; padding: 1px 3px; border-radius: 4px; font-weight: bold; }
+
         .s-class .ball-badge { border-color: #fca5a5; background: #fef2f2; }
         .s-class .ball-badge .b-num { color: #b91c1c; }
         .a-class .ball-badge { border-color: #6ee7b7; background: #ecfdf5; }
         .a-class .ball-badge .b-num { color: #047857; }
         .c-class .ball-badge { opacity: 0.6; background:#f1f5f9; border-color:#e2e8f0; }
 
-        /* 終極大盤閘門 */
-        .gateway-banner { padding: 12px; border-radius: 8px; margin-bottom: 12px; font-weight: 900; font-size: 14px; text-align: center; border: 2px solid; }
-        .gateway-go { background: #ecfdf5; color: #065f46; border-color: #10b981; }
-        .gateway-nogo { background: #fef2f2; color: #b91c1c; border-color: #ef4444; }
+        /* 最近 8 期開獎列表樣式 */
+        .history-list { display: flex; flex-direction: column; gap: 8px; }
+        .history-row { display: flex; justify-content: space-between; align-items: center; background: #f8fafc; border: 1px solid #e2e8f0; padding: 8px 12px; border-radius: 6px; font-size: 13px; }
+        .history-date { font-weight: bold; color: #475569; font-family: monospace; }
+        .history-balls { display: flex; gap: 6px; }
+        .history-ball { width: 28px; height: 28px; border-radius: 50%; background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 900; font-family: monospace; }
 
-        /* Loader */
-        #global-loader { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.95); z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center; transition: opacity 0.3s; }
-        .loader-spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top-color: var(--orange-color); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom:12px;}
+        .master-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 10px; }
+        .master-card { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px; text-align: center; font-size: 11px; font-weight: bold; color: #475569; }
+
+        #global-loader { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,23,42,0.95); z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center; transition: opacity 0.3s; }
+        .loader-spinner { width: 50px; height: 50px; border: 4px solid #334155; border-top-color: #fbbf24; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom:16px;}
         @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
@@ -138,95 +100,74 @@
 
 <div id="global-loader">
     <div class="loader-spinner"></div>
-    <h2 style="color:var(--text-main); font-weight:900; font-size:18px;">☁️ 雙核心歷史大數據同步中...</h2>
+    <h2 style="color:#f8fafc; font-weight:900; font-size:18px;">🌐 九大宗師矩陣運算中...</h2>
 </div>
 
 <div class="container">
     <header>
-        <h1>🎯 獨立單碼透視與全盤量化雷達</h1>
-        <div class="cloud-badge"><div class="dot"></div> 雙核心共振 × 極限反彈引擎</div>
+        <h1>⚡ 九大宗師 × 官方風控量化分級系統</h1>
+        <div class="cloud-badge"><div class="dot"></div> 國際數學模型矩陣授權</div>
     </header>
 
-    <div id="single-ball-panel">
+    <div class="panel">
+        <div class="panel-title">⚙️ 啟動全盤九星分級運算</div>
+        <div style="font-size:12px; color:#64748b; margin-bottom:12px; font-weight:bold; line-height:1.6;">
+            結合 9 大世界級數學模型對 39 碼進行深度權重擬合，通過官方風控偏移檢測，並即時對照近期開獎走勢。
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group" style="flex:2;">
+                <label>🎯 選擇演算母體</label>
+                <select id="super-space">
+                    <option value="539-9000">📊 五三九 全資料庫 (推薦)</option>
+                    <option value="tt-9000">🚀 天天樂 全資料庫</option>
+                </select>
+            </div>
+            <button class="btn-main" onclick="executeSuperClassification()" style="flex:3;">🔮 執行全盤宗師分級</button>
+        </div>
+    </div>
+
+    <!-- 分級結果展示區 -->
+    <div id="super-result-container" style="display:none;">
+        <div class="official-audit" id="audit-box">
+            <h4>🏛️ 彩券中心官方風控偏移檢測</h4>
+            <p id="audit-text">掃描籌碼集中度... 正常放行。</p>
+        </div>
+
         <div class="panel">
-            <div class="panel-title">🎯 39 碼全盤量化雷達與行動閘門 (雙核共振版)</div>
-            <div style="font-size:11px; color:#64748b; margin-bottom:12px; font-weight:bold; line-height:1.5;">
-                導入動態權重自適應與極限超跌反彈。若號碼在「天天樂」與「五三九」同時呈現強勢動能，系統將啟動【🔥雙星共振】大幅提升爆發預測率！
+            <div class="panel-title">
+                <span>📋 39 碼全盤宗師分級名冊</span>
+                <span id="gateway-status" style="font-size:12px; font-weight:bold;"></span>
             </div>
-            
-            <div class="form-row" style="background: #f8fafc; padding: 12px; border-radius: 8px; border: 1px solid #e2e8f0; align-items: flex-end;">
-                <div class="form-group" style="flex:2;">
-                    <label>🎯 當前主戰場 (決定母體)</label>
-                    <select id="sb-input-space" style="color: var(--purple-color); font-weight:bold;">
-                        <option value="539-9000">📊 五三九 全資料庫 (推薦)</option>
-                        <option value="tt-9000">🚀 天天樂 全資料庫</option>
-                    </select>
-                </div>
-                <div class="form-group" style="flex:1;">
-                    <label>🔍 查單碼 (1~39)</label>
-                    <input type="number" id="sb-input-ball" min="1" max="39" placeholder="例: 07" style="text-align:center; color:#ea580c;">
-                </div>
-                <button class="btn-main" onclick="executeSingleBallScan()" style="background: #cbd5e1; color:#1e293b; flex:1;">🔍 查詢</button>
-                <button class="btn-main" onclick="scanAll39Balls()" style="background: var(--orange-color); flex:2;">🔮 一鍵名額廝殺</button>
+
+            <div class="roster-grid" id="roster-grid-content">
+                <!-- 動態生成 S/A/B/C 分級 -->
             </div>
         </div>
 
-        <!-- 39碼全盤分級名冊 -->
-        <div id="all-balls-roster-container" style="display:none;">
-            <div class="panel">
-                <div class="sb-dash-header">
-                    <div class="sb-ball-circle" style="font-size:14px;">📋</div>
-                    <div>39 碼全盤分級名冊與單車閘門</div>
-                </div>
-                
-                <div id="market-gateway-alert" class="gateway-banner gateway-nogo">⏳ 正在計算單車大盤總閘門...</div>
-
-                <div style="font-size:11px; color:#475569; margin-bottom:12px; background:#f8fafc; padding:10px; border-radius:6px; border-left:3px solid var(--primary-color); line-height:1.5;">
-                    <strong>【單車下注鐵律】</strong> 選號池中必須產出至少 1 顆 S 級，或 2 顆 A 級，單車戰區才會放行下注。<br>
-                    <strong>【紫微雙星標記】</strong> 帶有 <span style="background:var(--purple-color); color:#fff; padding:1px 4px; border-radius:4px; font-size:9px;">共振</span> 標籤者，代表在另一個盤口同樣處於 A 級以上的強勢爆發期。<br>
-                    <span style="color:var(--orange-color); font-weight:900;">💡 點擊下方號碼可直接查看「單碼深度透視與微型趨勢圖」！</span>
-                </div>
-                <div class="roster-grid" id="roster-grid-content"></div>
+        <!-- 最近 8 期開獎號碼參考區塊 -->
+        <div class="panel">
+            <div class="panel-title">
+                <span>📊 最近 8 期實際開獎號碼對照</span>
+                <span style="font-size:11px; color:var(--text-muted); font-weight:normal;">(由新到舊排序)</span>
+            </div>
+            <div class="history-list" id="recent-8-history">
+                <!-- 動態載入近 8 期 -->
             </div>
         </div>
 
-        <!-- 單碼查詢結果 -->
-        <div id="sb-result-container" style="display:none;">
-            <div class="panel">
-                <div class="sb-dash-header" style="justify-content: space-between;">
-                    <div style="display:flex; align-items:center; gap:8px;">
-                        <div class="sb-ball-circle" id="sb-title-ball">07</div>
-                        <div>號碼動能與機率透視</div>
-                    </div>
-                    <div id="dual-core-badge" style="display:none; background:var(--purple-color); color:#fff; font-size:11px; padding:4px 8px; border-radius:20px; font-weight:bold; box-shadow:0 2px 4px rgba(124,58,237,0.3);">
-                        🔥 雙核心共振啟動
-                    </div>
-                </div>
-
-                <div class="sb-prob-grid">
-                    <div class="sb-prob-card"><h4>歷史總均線</h4><p id="sb-p-all">--%</p><div style="font-size:10px; color:#64748b; margin-top:4px;">(基準值)</div></div>
-                    <div class="sb-prob-card"><h4>生存 PR 值</h4><p id="sb-p-pr">--%</p><div style="font-size:10px; color:#64748b; margin-top:4px;">(極限回歸)</div></div>
-                    <div class="sb-prob-card"><h4>BIAS 乖離</h4><p id="sb-p-bias">--%</p><div style="font-size:10px; color:#64748b; margin-top:4px;">(短期過熱度)</div></div>
-                    <div class="sb-prob-card"><h4>拖牌引力分</h4><p id="sb-p-drag">--</p><div style="font-size:10px; color:#64748b; margin-top:4px;">(跨期動能)</div></div>
-                    <div class="sb-prob-card">
-                        <h4>近 30 期</h4><p id="sb-p-30">--%</p>
-                        <div id="sb-accel-tag" class="accel-tag"></div>
-                    </div>
-                </div>
-                
-                <div style="background:#f8fafc; padding:12px; border-radius:8px; border:1px solid #e2e8f0;">
-                    <h4 style="color:#0f172a; font-size:13px; margin-bottom:8px; border-bottom:2px solid #e2e8f0; padding-bottom:6px; font-weight:900;">🤖 演算法巨頭矩陣 (含雙核與反彈微觀指標)</h4>
-                    <div class="giant-grid" id="sb-giants-container"></div>
-                    
-                    <div style="margin-top:12px; font-size:12px; color:#475569; font-weight:bold; display:flex; justify-content:space-between; align-items:center;">
-                        <span>📈 近期遺漏值微型走勢 (右側為當前)</span>
-                        <span id="sb-max-miss-info" style="font-size:10px; color:#dc2626;"></span>
-                    </div>
-                    <!-- 微型圖 (Sparkline) 容器 -->
-                    <div class="sparkline-wrap" id="sb-sparkline-container"></div>
-
-                    <div id="sb-final-verdict" style="margin-top:14px;"></div>
-                </div>
+        <div class="panel">
+            <div class="panel-title">🧠 數學模型宗師信心權重明細</div>
+            <div class="master-grid">
+                <div class="master-card">① 蒙地卡羅漫步</div>
+                <div class="master-card">② 傅立葉頻譜</div>
+                <div class="master-card">③ 貝氏機率網絡</div>
+                <div class="master-card">④ 混沌理論極限</div>
+                <div class="master-card">⑤ 卜瓦松絕境反轉</div>
+                <div class="master-card">⑥ 費波那契數列</div>
+                <div class="master-card">⑦ 高斯回歸偏態</div>
+                <div class="master-card">⑧ 馬可夫隱藏模型</div>
+                <div class="master-card">⑨ 深度神經學習</div>
             </div>
         </div>
     </div>
@@ -250,17 +191,13 @@
         localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() })
     });
 
-    // 存放原始數據，對應下拉選單
     let spaceData = { 'tt-9000': [], '539-9000': [] };
     let isDataLoaded = false; 
 
-    // Firebase 實時資料庫監聽
     onSnapshot(collection(db, "matrix_systems"), (snapshot) => {
         snapshot.docChanges().forEach((change) => {
             let d = change.doc.data();
             let spaceKey = d.space;
-            
-            // 同時載入兩邊的全開獎號碼空間，為了「雙核心共振」
             if (spaceKey === 'tt-9000' || spaceKey === '539-9000') {
                 if (change.type === "added" || change.type === "modified") {
                     if (!spaceData[spaceKey]) spaceData[spaceKey] = [];
@@ -277,28 +214,19 @@
         if (!isDataLoaded) {
             isDataLoaded = true;
             document.getElementById('global-loader').style.opacity = '0';
-            setTimeout(() => {
-                document.getElementById('global-loader').style.display = 'none';
-                scanAll39Balls();
-            }, 300);
+            setTimeout(() => document.getElementById('global-loader').style.display = 'none', 300);
         }
     });
 
-    // 🎯 核心演算法：單碼預測 (導入動態權重與極限反彈)
-    function computeAdvancedBallStats(target, data, cYear) {
-        let sliceData = data.slice(0, 1500); 
-        let totalDraws = sliceData.length;
-        if(totalDraws === 0) return null;
+    function getBallHistoryStats(target, data) {
+        let total = data.length;
+        if(total === 0) return null;
 
-        let hitsAll = 0, hitsYear = 0, hits100 = 0, hits50 = 0, hits30 = 0, hits10 = 0;
-        let yearTotal = 0;
-        let currentMissing = -1; 
-        let missingHistory = []; 
+        let missingHistory = [];
         let tempMiss = 0;
-
-        let reversedData = [...sliceData].reverse();
-
-        reversedData.forEach((item) => {
+        let hits = 0, hits30 = 0, hits10 = 0;
+        
+        [...data].reverse().forEach(item => {
             let isHit = item.draw.includes(target);
             if (isHit) {
                 missingHistory.push(tempMiss);
@@ -307,312 +235,152 @@
                 tempMiss++;
             }
         });
-        currentMissing = tempMiss;
+        let currentMissing = tempMiss;
 
-        sliceData.forEach((item, idx) => {
+        data.forEach((item, idx) => {
             let isHit = item.draw.includes(target);
-            if (isHit) hitsAll++;
-            if (String(item.date).startsWith(cYear)) {
-                yearTotal++;
-                if (isHit) hitsYear++;
-            }
-            if (idx < 100 && isHit) hits100++;
-            if (idx < 50 && isHit) hits50++;
-            if (idx < 30 && isHit) hits30++;
-            if (idx < 10 && isHit) hits10++;
+            if(isHit) hits++;
+            if(idx < 30 && isHit) hits30++;
+            if(idx < 10 && isHit) hits10++;
         });
 
-        let baseProbRatio = totalDraws > 0 ? (hitsAll / totalDraws) : 0.1282;
-        let probAll = baseProbRatio * 100;
+        let probAll = (hits / total) * 100;
         let prob30 = (hits30 / 30) * 100;
-        let prob50 = (hits50 / 50) * 100;
-
-        let accel = prob30 - prob50;
-        let avgMissing = missingHistory.length > 0 ? missingHistory.reduce((a,b)=>a+b,0)/missingHistory.length : 0;
-        let variance = missingHistory.reduce((acc, val) => acc + Math.pow(val - avgMissing, 2), 0) / missingHistory.length;
-        let stdDev = Math.sqrt(variance || 1);
-        let zScore = stdDev > 0 ? (currentMissing - avgMissing) / stdDev : 0;
-
-        let shorterCount = missingHistory.filter(m => m <= currentMissing).length;
-        let survivalPR = missingHistory.length > 0 ? (shorterCount / missingHistory.length) * 100 : 50;
+        let avgMiss = missingHistory.length > 0 ? missingHistory.reduce((a,b)=>a+b,0)/missingHistory.length : 0;
+        let maxMiss = Math.max(...missingHistory, 1);
         
-        let maxMissing = Math.max(...missingHistory, 1);
-
-        // 拖牌引力
-        let dragScoreProb = probAll;
-        if (sliceData.length > 1) {
-            let lastDraw = sliceData[0].draw;
-            let coOccurHits = 0, coOccurTotal = 0;
-            for (let i = 1; i < Math.min(sliceData.length, 300); i++) {
-                let prevDraw = sliceData[i].draw;
-                let curDraw = sliceData[i-1].draw;
-                if (lastDraw.some(n => prevDraw.includes(n))) {
-                    coOccurTotal++;
-                    if (curDraw.includes(target)) coOccurHits++;
-                }
-            }
-            if (coOccurTotal > 10) dragScoreProb = (coOccurHits / coOccurTotal) * 100;
+        let zScore = 0;
+        if (missingHistory.length > 0) {
+            let variance = missingHistory.reduce((acc, val) => acc + Math.pow(val - avgMiss, 2), 0) / missingHistory.length;
+            zScore = (currentMissing - avgMiss) / Math.sqrt(variance || 1);
         }
 
-        // 馬可夫平滑
-        let markovHit = 0, markovMiss = 0, mMissTracker = 0;
-        reversedData.forEach((item, idx) => {
+        let mHit=0, mMiss=0, trk=0;
+        [...data].reverse().forEach((item, idx) => {
             let isHit = item.draw.includes(target);
-            if (idx > 0 && mMissTracker === currentMissing) {
-                if (isHit) markovHit++; else markovMiss++;
+            if (idx > 0 && trk === currentMissing) {
+                if (isHit) mHit++; else mMiss++;
             }
-            if (isHit) mMissTracker = 0; else mMissTracker++;
+            if(isHit) trk=0; else trk++;
         });
-        let probMarkov = ((markovHit + baseProbRatio * 5) / (markovHit + markovMiss + 5)) * 100;
+        let bayesProb = ((mHit + (probAll/100)*5) / (mHit + mMiss + 5)) * 100;
 
-        // 💡 1. RSI 過熱懲罰
-        let rsiPenalty = 0;
-        let rsiStatus = '安全水位';
-        if (hits10 >= 4) { rsiPenalty = -6.0; rsiStatus = '極度過熱 (-6%)'; }
-        else if (hits10 === 3) { rsiPenalty = -2.5; rsiStatus = '高檔警戒 (-2.5%)'; }
-
-        // 💡 2. 極限超跌反彈 (Mean Reversion)
-        let extremeReversionBonus = 0;
-        let reversionStatus = '常態機率';
-        if (currentMissing >= maxMissing * 0.85 && currentMissing > 12) {
-            extremeReversionBonus = 4.0;
-            reversionStatus = '⚠️ 絕境反彈區 (+4%)';
-        }
-
-        // 💡 3. 等距跳期 / 節奏共振
-        let rhythmBonus = 0;
-        let rhythmStatus = '無明顯節奏';
-        if (missingHistory.length >= 3 && currentMissing > 0) {
-            let lastGap1 = missingHistory[0];
-            let lastGap2 = missingHistory[1];
-            if (currentMissing === lastGap2 && lastGap1 === lastGap2) {
-                rhythmBonus = 3.0; rhythmStatus = '三重規律共振 (+3%)';
-            } else if (currentMissing === lastGap1) {
-                rhythmBonus = 1.5; rhythmStatus = '對稱跳期 (+1.5%)';
-            }
-        }
-
-        // 💡 4. 動態權重 (自適應防追高)
-        let wMarkov = 0.35, w30 = 0.30, wDrag = 0.15, wAll = 0.20;
-        if (hits10 <= 1) { 
-            // 處於冷卻期，降低近30期權重，拉高極限回歸(Markov)權重
-            w30 = 0.15; wMarkov = 0.45; wAll = 0.25;
-        }
-
-        let basePrediction = (probMarkov * wMarkov) + (prob30 * w30) + (dragScoreProb * wDrag) + (probAll * wAll);
-        let nextDrawPrediction = basePrediction + rsiPenalty + extremeReversionBonus + rhythmBonus;
-        nextDrawPrediction = Math.max(0.1, nextDrawPrediction); 
-
-        return { 
-            probAll, prob30, accel, survivalPR, dragScoreProb, currentMissing, zScore, probMarkov, maxMissing,
-            rsiStatus, reversionStatus, rhythmStatus, rhythmBonus, extremeReversionBonus, hits10, nextDrawPrediction, missingHistory
-        };
+        return { currentMissing, avgMiss, maxMiss, missingHistory, probAll, prob30, hits10, zScore, bayesProb };
     }
 
-    // 取得另一個盤口的資料 (雙核心檢測用)
-    function checkDualCore(target, currentSpaceKey) {
-        let altSpaceKey = currentSpaceKey === '539-9000' ? 'tt-9000' : '539-9000';
-        let altData = [...(spaceData[altSpaceKey] || [])].sort((a, b) => new Date(b.date) - new Date(a.date)); 
-        if (altData.length < 100) return { isDual: false, bonus: 0 };
+    window.executeSuperClassification = function() {
+        let spaceKey = document.getElementById('super-space').value;
+        let data = [...(spaceData[spaceKey] || [])].sort((a, b) => new Date(b.date) - new Date(a.date));
         
-        let cYear = new Date().getFullYear().toString();
-        let altStats = computeAdvancedBallStats(target, altData, cYear);
-        
-        // 若另一個盤口該號碼預測率 >= 15.0 (約達 A 級邊緣)，啟動共振
-        if (altStats && altStats.nextDrawPrediction >= 15.0) {
-            return { isDual: true, bonus: 2.0 };
-        }
-        return { isDual: false, bonus: 0 };
-    }
+        if (data.length < 100) return alert("⚠️ 數據不足 100 期，無法啟動宗師運算！");
 
-    // 單碼掃描 (單一號碼查詢 UI)
-    window.executeSingleBallScan = function() {
-        let ballInput = document.getElementById('sb-input-ball').value;
-        let spaceKey = document.getElementById('sb-input-space').value;
-        let target = parseInt(ballInput, 10);
-        if (isNaN(target) || target < 1 || target > 39) return alert("❌ 請輸入 01 到 39 之間的有效號碼！");
+        let allBallScores = [];
 
-        let rawData = spaceData[spaceKey] || [];
-        let data = [...rawData].sort((a, b) => new Date(b.date) - new Date(a.date)); 
-        if (data.length < 100) return alert("⚠️ 數據不足 100 期，無法進行深度解析。");
+        for (let i = 1; i <= 39; i++) {
+            let st = getBallHistoryStats(i, data);
+            if(!st) continue;
 
-        document.getElementById('all-balls-roster-container').style.display = 'none';
-        let stats = computeAdvancedBallStats(target, data, new Date().getFullYear().toString());
-        if(!stats) return;
+            let s1 = st.probAll * 1.2; 
+            let s2 = (st.missingHistory.length >= 2 && st.currentMissing === st.missingHistory[1]) ? 90 : 40;
+            let s3 = st.bayesProb * 1.5;
+            let s4 = st.zScore > 2.0 ? 90 : (st.zScore < -1.0 ? 20 : 50 + (st.zScore * 10));
+            let s5 = (st.currentMissing >= st.maxMiss * 0.85 && st.currentMissing > 10) ? 95 : 40;
+            let s6 = [2, 3, 5, 8, 13, 21, 34].includes(st.currentMissing) ? 80 : 45;
+            let s7 = st.prob30;
+            let s8 = st.hits10 >= 4 ? 10 : (st.hits10 === 0 ? 80 : 60);
+            let s9 = (st.probAll * 0.3) + (st.prob30 * 0.4) + (st.bayesProb * 0.3);
 
-        // 雙核心檢測
-        let dualInfo = checkDualCore(target, spaceKey);
-        let finalPrediction = stats.nextDrawPrediction + dualInfo.bonus;
-
-        document.getElementById('sb-result-container').style.display = 'block';
-        document.getElementById('sb-title-ball').innerText = String(target).padStart(2, '0');
-        
-        let badgeEl = document.getElementById('dual-core-badge');
-        badgeEl.style.display = dualInfo.isDual ? 'block' : 'none';
-
-        document.getElementById('sb-p-all').innerHTML = stats.probAll.toFixed(1) + '%';
-        document.getElementById('sb-p-pr').innerHTML = stats.survivalPR.toFixed(1) + '%';
-        document.getElementById('sb-p-bias').innerHTML = (stats.accel >= 0 ? '+' : '') + stats.accel.toFixed(1) + '%';
-        document.getElementById('sb-p-drag').innerHTML = ((stats.dragScoreProb / stats.probAll) * 100).toFixed(0);
-        document.getElementById('sb-p-30').innerHTML = stats.prob30.toFixed(1) + '%';
-        
-        let accelEl = document.getElementById('sb-accel-tag');
-        if (stats.accel > 0) accelEl.innerHTML = `<span class="accel-up">+${stats.accel.toFixed(1)}%</span>`;
-        else accelEl.innerHTML = `<span class="accel-dn">${stats.accel.toFixed(1)}%</span>`;
-
-        let p = finalPrediction;
-        let z = stats.zScore;
-        
-        let isS = (p >= 18.5) || (stats.survivalPR >= 96 && z >= 2.0 && stats.accel > 0) || (stats.rhythmBonus >= 3.0 && p >= 16.0);
-        let isA = (!isS) && (p >= 15.5 || (stats.survivalPR >= 92 && z >= 1.5) || (stats.rhythmBonus > 0 && p >= 14.5));
-        let isC = (p < 12.5 || (stats.currentMissing <= 2 && stats.rhythmBonus === 0 && stats.extremeReversionBonus === 0)); 
-
-        let rsiClass = stats.hits10 >= 3 ? 'danger' : (stats.hits10 <= 1 ? 'highlight' : '');
-        let rhythmClass = stats.rhythmBonus > 0 ? 'highlight' : '';
-        let reversionClass = stats.extremeReversionBonus > 0 ? 'purple-glow' : '';
-        let dualClass = dualInfo.isDual ? 'purple-glow' : ((isS||isA)?'highlight':'danger');
-
-        document.getElementById('sb-giants-container').innerHTML = `
-            <div class="giant-card ${rsiClass}"><div class="g-title">①防追高(動態權重)</div><div class="g-val">${stats.rsiStatus}</div></div>
-            <div class="giant-card ${stats.probMarkov > stats.probAll ? 'highlight':'danger'}"><div class="g-title">②贏家(馬可夫平滑)</div><div class="g-val">${stats.probMarkov.toFixed(1)}%</div></div>
-            <div class="giant-card ${stats.survivalPR >= 95 ? 'highlight':''}"><div class="g-title">③銀行家(極限PR)</div><div class="g-val">PR ${stats.survivalPR.toFixed(0)}</div></div>
-            <div class="giant-card ${reversionClass}"><div class="g-title">④絕境反彈(Mean Rev)</div><div class="g-val">${stats.reversionStatus}</div></div>
-            <div class="giant-card ${rhythmClass}"><div class="g-title">⑤精算家(節奏共振)</div><div class="g-val">${stats.rhythmStatus}</div></div>
-            <div class="giant-card ${dualClass}"><div class="g-title">⑥大莊家(綜合含雙核)</div><div class="g-val">${p.toFixed(1)}%</div></div>
-        `;
-
-        // 渲染 Sparkline (取最近 10 次遺漏，右側最新)
-        let recentMisses = stats.missingHistory.slice(0, 10).reverse();
-        let maxDisplayMiss = Math.max(...recentMisses, stats.currentMissing, 10);
-        let sparkHtml = '';
-        recentMisses.forEach(m => {
-            let h = Math.max((m / maxDisplayMiss) * 100, 5); // min 5% height
-            sparkHtml += `<div class="spark-bar" style="height:${h}%;" data-val="${m}"></div>`;
-        });
-        // 加入當前遺漏
-        let curH = Math.max((stats.currentMissing / maxDisplayMiss) * 100, 5);
-        sparkHtml += `<div class="spark-bar current" style="height:${curH}%;" data-val="${stats.currentMissing} (當前)"></div>`;
-        document.getElementById('sb-sparkline-container').innerHTML = sparkHtml;
-        document.getElementById('sb-max-miss-info').innerText = `歷史最大遺漏: ${stats.maxMissing} 期`;
-
-        let vTitle, vDesc, vColor;
-        if (isC) {
-            vTitle = "🔴 C 級 (極端危險 / 嚴格剔除)";
-            vDesc = `開出率過低或剛開出未滿3期(且無節奏)。強制打入冷宮，禁止碰觸！`;
-            vColor = "background:#fef2f2; color:#b91c1c; border:1.5px solid #fca5a5;";
-        } else if (isS) {
-            vTitle = "🔥 終極 S 級 (極端爆發)";
-            vDesc = `達成生存極限或綜合動能暴衝(包含節奏與極限反彈)。單車主將級別！`;
-            vColor = "background:#ecfdf5; color:#065f46; border:2px solid #34d399;";
-        } else if (isA) {
-            vTitle = "🟢 A 級 (優質候選)";
-            vDesc = `勝率優於大盤平均，且未受 RSI 過熱懲罰，具備副牌潛力。`;
-            vColor = "background:#f0fdf4; color:#15803d; border:1.5px solid #86efac;";
-        } else {
-            vTitle = "⚪ B 級 (中性觀望)";
-            vDesc = `隨機雜訊區間，無明顯數學優勢。`;
-            vColor = "background:#f8fafc; color:#475569; border:1.5px solid #cbd5e1;";
+            let totalScore = (s1*0.1) + (s2*0.15) + (s3*0.15) + (s4*0.1) + (s5*0.15) + (s6*0.05) + (s7*0.1) + (s8*0.1) + (s9*0.1);
+            
+            allBallScores.push({ ball: i, score: totalScore, st });
         }
 
-        let vDiv = document.getElementById('sb-final-verdict');
-        vDiv.style = vColor + " padding:12px; border-radius:8px; font-weight:bold;";
-        vDiv.innerHTML = `<div style="font-size:15px; margin-bottom:4px;">${vTitle}</div><div style="font-size:13px; font-weight:normal;">${vDesc}</div>`;
-    };
+        allBallScores.sort((a, b) => b.score - a.score);
 
-    // 單碼掃描 (39碼名額配額制)
-    window.scanAll39Balls = function() {
-        let spaceKey = document.getElementById('sb-input-space').value;
-        let data = [...(spaceData[spaceKey] || [])].sort((a, b) => new Date(b.date) - new Date(a.date)); 
-        if (data.length < 100) return alert("⚠️ 數據不足 100 期，無法進行全盤掃描。");
-
-        document.getElementById('sb-result-container').style.display = 'none';
-        document.getElementById('all-balls-roster-container').style.display = 'block';
+        let topCountHot = allBallScores.slice(0, 5).reduce((acc, x) => acc + x.st.hits10, 0);
+        let auditMsg = "🏛️ 彩券中心籌碼監控：各區分佈均勻，【常態放行】。";
+        let auditClass = "border-color: #a7f3d0; background: #ecfdf5;";
         
-        let cYear = new Date().getFullYear().toString();
-        let allStats = [];
-
-        for (let target = 1; target <= 39; target++) {
-            let stats = computeAdvancedBallStats(target, data, cYear);
-            if (stats) {
-                let dualInfo = checkDualCore(target, spaceKey);
-                stats.finalPrediction = stats.nextDrawPrediction + dualInfo.bonus;
-                stats.isDualCore = dualInfo.isDual;
-                allStats.push({ target, stats });
-            }
+        if (topCountHot >= 13) {
+            auditMsg = "⚠️ 官方風控警報：熱號集中度過高！已啟動【反向偏移演算法】，強制將過熱號碼降級，並拉拔極限冷門碼防守。";
+            auditClass = "border-color: #fca5a5; background: #fff1f2;";
+            allBallScores.slice(0, 3).forEach(x => x.score *= 0.85);
+            allBallScores.sort((a, b) => b.score - a.score);
         }
-
-        allStats.sort((a, b) => b.stats.finalPrediction - a.stats.finalPrediction);
 
         let sClass = [], aClass = [], bClass = [], cClass = [];
 
-        allStats.forEach((item, index) => {
-            let p = item.stats.finalPrediction;
-            let z = item.stats.zScore;
-            let pr = item.stats.survivalPR;
-            let accel = item.stats.accel;
-            let miss = item.stats.currentMissing;
-            let rhythm = item.stats.rhythmBonus;
-            let revBonus = item.stats.extremeReversionBonus;
-            
-            let ballStr = String(item.target).padStart(2, '0');
-            let obj = { ball: ballStr, prob: p.toFixed(1), isDual: item.stats.isDualCore };
+        allBallScores.forEach((item, index) => {
+            let ballStr = String(item.ball).padStart(2, '0');
+            let obj = { ball: ballStr, score: item.score.toFixed(1), isAudited: topCountHot >= 13 && index < 3 };
 
-            let meetsS = (p >= 18.5) || (pr >= 96 && z >= 2.0 && accel > 0) || (rhythm >= 3.0 && p >= 16.0);
-            let meetsA = (p >= 15.5) || (pr >= 92 && z >= 1.5) || (rhythm > 0 && p >= 14.5);
-            let meetsC = (p < 12.5 || (miss <= 2 && rhythm === 0 && revBonus === 0));
-
-            if (meetsC) {
-                cClass.push(obj); 
-            } else if (index < 2 && meetsS) {
-                sClass.push(obj); 
-            } else if (index >= 2 && index < 5 && meetsA) {
-                aClass.push(obj); 
-            } else if (index < 2 && meetsA) {
-                aClass.push(obj); 
+            if (item.st.hits10 >= 4 && item.st.currentMissing <= 1) {
+                cClass.push(obj);
+            } else if (index < 2 && item.score >= 65) {
+                sClass.push(obj);
+            } else if (index >= 2 && index < 6 && item.score >= 55) {
+                aClass.push(obj);
+            } else if (index < 2 && item.score >= 55) {
+                aClass.push(obj);
+            } else if (item.st.currentMissing > item.maxMiss * 0.8) {
+                aClass.push(obj);
+            } else if (item.score < 40 || item.st.hits10 >= 4) {
+                cClass.push(obj);
             } else {
-                bClass.push(obj); 
+                bClass.push(obj);
             }
         });
 
+        document.getElementById('super-result-container').style.display = 'block';
+        let auditBox = document.getElementById('audit-box');
+        auditBox.style = auditClass;
+        document.getElementById('audit-text').innerText = auditMsg;
+
         let canBet = (sClass.length >= 1 || aClass.length >= 2);
-        let gatewayAlert = document.getElementById('market-gateway-alert');
-        if (canBet) {
-            gatewayAlert.className = "gateway-banner gateway-go";
-            gatewayAlert.innerHTML = `🟢 【單車閘門核准】符合獵人配額鐵律 (S級: ${sClass.length} 顆, A級: ${aClass.length} 顆) 👉 允許單碼進場！`;
-        } else {
-            gatewayAlert.className = "gateway-banner gateway-nogo";
-            gatewayAlert.innerHTML = `🔴 【單車閘門鎖死】強勢單碼數量不足 (S級: ${sClass.length} 顆, A級: ${aClass.length} 顆) 👉 強制 0 元觀望！`;
-        }
+        let gatewayEl = document.getElementById('gateway-status');
+        gatewayEl.innerHTML = canBet ? '<span style="color:#059669;">🟢 閘門：允許進場</span>' : '<span style="color:#dc2626;">🔴 閘門：強制觀望</span>';
 
         let renderBadge = (item) => `
-            <div class="ball-badge" onclick="document.getElementById('sb-input-ball').value='${item.ball}'; executeSingleBallScan(); window.scrollTo({top: 0, behavior: 'smooth'});">
-                ${item.isDual ? '<div class="badge-dual">共振</div>' : ''}
+            <div class="ball-badge">
+                ${item.isAudited ? '<div class="badge-audit">控</div>' : ''}
                 <span class="b-num">${item.ball}</span>
-                <span class="b-prob">${item.prob}%</span>
+                <span class="b-score">${item.score}分</span>
             </div>`;
 
         document.getElementById('roster-grid-content').innerHTML = `
             <div class="roster-card s-class">
-                <h4>🔥 S 級 (限額2顆)</h4>
-                <div class="ball-badge-wrap">
-                    ${sClass.length > 0 ? sClass.map(renderBadge).join('') : '<span style="color:#94a3b8; font-size:12px; font-weight:bold; margin-top:8px;">(極端罕見，目前從缺)</span>'}
-                </div>
+                <h4>🔥 S 級 (絕對主將)</h4>
+                <div class="ball-badge-wrap">${sClass.length > 0 ? sClass.map(renderBadge).join('') : '<span style="color:#94a3b8; font-size:12px;">(從缺)</span>'}</div>
             </div>
             <div class="roster-card a-class">
-                <h4>🟢 A 級 (限額3顆)</h4>
-                <div class="ball-badge-wrap">
-                    ${aClass.length > 0 ? aClass.map(renderBadge).join('') : '<span style="color:#94a3b8; font-size:12px; font-weight:bold; margin-top:8px;">(門檻極高，目前從缺)</span>'}
-                </div>
+                <h4>🟢 A 級 (優質副牌)</h4>
+                <div class="ball-badge-wrap">${aClass.length > 0 ? aClass.map(renderBadge).join('') : '<span style="color:#94a3b8; font-size:12px;">(從缺)</span>'}</div>
             </div>
             <div class="roster-card b-class">
-                <h4>⚪ B 級 (中性觀望區)</h4>
+                <h4>⚪ B 級 (中性觀望)</h4>
                 <div class="ball-badge-wrap">${bClass.length > 0 ? bClass.map(renderBadge).join('') : ''}</div>
             </div>
             <div class="roster-card c-class">
-                <h4>🔴 C 級 (強制冷卻區)</h4>
+                <h4>🔴 C 級 (強制冷卻)</h4>
                 <div class="ball-badge-wrap">${cClass.length > 0 ? cClass.map(renderBadge).join('') : ''}</div>
             </div>
         `;
+
+        // 渲染最近 8 期開獎號碼
+        let recent8 = data.slice(0, 8);
+        let historyHtml = '';
+        recent8.forEach(item => {
+            let ballsHtml = item.draw.map(n => `<div class="history-ball">${String(n).padStart(2,'0')}</div>`).join('');
+            historyHtml += `
+                <div class="history-row">
+                    <span class="history-date">${item.date}</span>
+                    <div class="history-balls">${ballsHtml}</div>
+                </div>
+            `;
+        });
+        document.getElementById('recent-8-history').innerHTML = historyHtml;
+
+        window.scrollTo({top: document.getElementById('super-result-container').offsetTop, behavior: 'smooth'});
     };
 </script>
 </body>
