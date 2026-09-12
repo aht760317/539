@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>⚡ 雙核心量化操盤系統 | 終極實戰版 (效能演算法升級)</title>
+    <title>⚡ 雙核心量化操盤系統 | 終極實戰版 (效能與嚴格演算法升級)</title>
     <style>
         /* ==========================================
            1. 全局變數與基礎字體設定 (清爽明亮專業版)
@@ -286,9 +286,9 @@
     <!-- ========================================== -->
     <div id="single-ball-panel" style="display:none;">
         <div class="panel">
-            <div class="panel-title">🎯 39 碼全盤量化雷達與行動閘門 (最高精度嚴格版)</div>
+            <div class="panel-title">🎯 39 碼全盤量化雷達與行動閘門 (極度嚴格版)</div>
             <div style="font-size:11px; color:#64748b; margin-bottom:12px; font-weight:bold; line-height:1.5;">
-                利用全歷史大數據進行極限收斂運算。S級信號極端嚴格，必須同時滿足「生存極限(PR≥96) + 偏離極端(Z≥2.0) + 短期加速」才會亮燈！
+                利用全歷史大數據進行極限收斂運算。S級與A級信號採用地獄級標準，將雜訊徹底濾除，確保選出的號碼都是具備極高爆發潛力的強勢主力！
             </div>
             
             <div class="form-row" style="background: #f8fafc; padding: 12px; border-radius: 8px; border: 1px solid #e2e8f0; align-items: flex-end;">
@@ -319,7 +319,7 @@
                 <div id="market-gateway-alert" class="gateway-banner gateway-nogo">⏳ 正在計算今晚大盤總閘門...</div>
 
                 <div style="font-size:11px; color:#475569; margin-bottom:12px; background:#f8fafc; padding:10px; border-radius:6px; border-left:3px solid var(--primary-color); line-height:1.5;">
-                    <strong>【下注鐵律】</strong> 選號池中必須出現 S 級，或至少 3 顆以上 A 級，系統才會放行下注。<br>
+                    <strong>【下注鐵律】</strong> 選號池中必須出現 S 級，或至少 2 顆以上 A 級，系統才會放行下注。<br>
                     <strong>【強制觀望】</strong> 若大盤閘門亮紅燈（滿眼 B/C 級），今晚一律 0 元觀望，絕不送錢！<br>
                     <span style="color:var(--orange-color); font-weight:900;">💡 點擊下方號碼可直接查看「單碼深度透視」！</span>
                 </div>
@@ -801,10 +801,10 @@
         let p = stats.nextDrawPrediction;
         let z = stats.zScore;
         
-        // 🚨 超級嚴格 S 級把關
-        let isS = (stats.survivalPR >= 96 && z >= 2.0 && stats.accel > 0) || (p >= 18.5 && z >= 1.5);
-        let isA = (!isS) && (p >= 15.0 || (stats.survivalPR >= 85 && z >= 1.2));
-        let isC = (p < 11.5 || stats.currentMissing <= 2);
+        // 🚨 超級嚴格 S/A 級把關 (修正版)
+        let isS = (p >= 19.0) || (stats.survivalPR >= 98 && z >= 2.5 && stats.accel > 0);
+        let isA = (!isS) && (p >= 16.5 || (stats.survivalPR >= 92 && z >= 1.5 && stats.accel >= 0));
+        let isC = (p < 12.5 || stats.currentMissing <= 3); // 剛開過 3 期內強制 C 級冷卻
 
         let g1Color = stats.prob30 < stats.probAll ? 'highlight' : 'danger';
         let g1Text = stats.prob30 < stats.probAll ? '低檔補漲拉力強' : '高檔過熱需冷卻';
@@ -831,7 +831,7 @@
         let verdictTitle, verdictDesc, verdictColor;
         if (isS) {
             verdictTitle = "🔥 終極 S 級 (極端爆發 / 必選主力)";
-            verdictDesc = `【診斷】百年難得的發動點！達成嚴苛生存極限 (PR≥96 + Z≥2.0) 或綜合動能暴衝。強烈推薦佈局！`;
+            verdictDesc = `【診斷】百年難得的發動點！達成嚴苛生存極限 (PR≥98 + Z≥2.5) 或綜合動能暴衝。強烈推薦佈局！`;
             verdictColor = "background:#fef2f2; color:#b91c1c; border:2px solid #ef4444; box-shadow:0 0 10px rgba(239, 68, 68, 0.2);";
         } else if (isA) {
             verdictTitle = "🟢 A 級 (優質候選 / 穩定佈局)";
@@ -876,10 +876,10 @@
             let ballStr = String(target).padStart(2, '0');
             let obj = { ball: ballStr, prob: p.toFixed(1), z: isNaN(z) ? 0 : z.toFixed(2) };
 
-            // 🚨 超級嚴格 S 級把關
-            let isS = (stats.survivalPR >= 96 && z >= 2.0 && stats.accel > 0) || (p >= 18.5 && z >= 1.5);
-            let isA = (!isS) && (p >= 15.0 || (stats.survivalPR >= 85 && z >= 1.2));
-            let isC = (p < 11.5 || stats.currentMissing <= 2);
+            // 🚨 超級嚴格 S/A 級把關 (修正版)
+            let isS = (p >= 19.0) || (stats.survivalPR >= 98 && z >= 2.5 && stats.accel > 0);
+            let isA = (!isS) && (p >= 16.5 || (stats.survivalPR >= 92 && z >= 1.5 && stats.accel >= 0));
+            let isC = (p < 12.5 || stats.currentMissing <= 3); // 剛開過 3 期內強制 C 級冷卻
 
             if (isS) sClass.push(obj);
             else if (isA) aClass.push(obj);
@@ -890,7 +890,8 @@
         let sortDesc = (a, b) => b.prob - a.prob;
         sClass.sort(sortDesc); aClass.sort(sortDesc); bClass.sort(sortDesc); cClass.sort(sortDesc);
 
-        let canBet = (sClass.length >= 1 || aClass.length >= 3);
+        // A級變嚴格了，這裡配合改成至少 2 顆 A 級就放行
+        let canBet = (sClass.length >= 1 || aClass.length >= 2);
         let gatewayAlert = document.getElementById('market-gateway-alert');
         
         if (canBet) {
@@ -1346,29 +1347,34 @@
                 let expertDiagnosis = "";
                 let passZ = a.zScore >= 0.5;
 
+                // 🚨 能下注=淡淡綠色 / 不能下注=淡淡紅色
                 if (a.isTurbulent) {
                     expertDiagnosis = `【風控啟動】偵測到大盤進入高回撤深水區。`;
-                    recBet = 0; statusText = `🟡 亂流迴避 👉 強制: 0 元/碰`; cardStyle = 'background:#fffbeb; border-color:#fcd34d;';
+                    recBet = 0; statusText = `🟡 亂流迴避 👉 強制: 0 元/碰`; 
+                    cardStyle = 'background:#fef2f2; border-color:#fecaca;'; // 淡紅
                     reasonText = `${expertDiagnosis}<br>【獵人鐵律】亂流區勝率極度不穩，嚴格禁止出手，強制 <strong>0 元</strong> 觀望保本。`;
                 } else if (a.zScore >= 1.5 && a.EV > 0 && a.fracKelly > 0) {
                     expertDiagnosis = `【巨頭診斷】馬可夫反轉機率飆高、④偏離極端(Z=${Number(a.zScore).toFixed(2)})、凱利公式核准。`;
                     recBet = 2; 
-                    statusText = `🔥 S級狙擊 👉 強制: ${recBet} 元/碰`; cardStyle = 'background:#fef2f2; border-color:#fca5a5; box-shadow:0 2px 10px rgba(220,38,38,0.1)';
+                    statusText = `🔥 S級狙擊 👉 強制: ${recBet} 元/碰`; 
+                    cardStyle = 'background:#ecfdf5; border-color:#6ee7b7; box-shadow:0 2px 10px rgba(16,185,129,0.1)'; // 淡綠
                     reasonText = `${expertDiagnosis}<br>【獵人鐵律】信號升級至S級！嚴格執行 <strong>${recBet} 元/碰</strong> 狙擊。兩期內無論輸贏，硬性停損歸零！`;
                 } else if (passZ && a.EV > 0 && a.fracKelly > 0) {
                     expertDiagnosis = `【巨頭診斷】④偏離度脫離雜訊且期望值與凱利皆大於0，A級佈局點確認。`;
                     recBet = 1; 
-                    statusText = `🟢 A級佈局 👉 強制: ${recBet} 元/碰`; cardStyle = 'background:#ecfdf5; border-color:#6ee7b7;';
+                    statusText = `🟢 A級佈局 👉 強制: ${recBet} 元/碰`; 
+                    cardStyle = 'background:#ecfdf5; border-color:#6ee7b7;'; // 淡綠
                     reasonText = `${expertDiagnosis}<br>【獵人鐵律】首次全綠燈！嚴格執行 <strong>${recBet} 元/碰</strong> 試單。若槓龜且下一期未升級，立即斷開停損。`;
                 } else {
                     expertDiagnosis = `【巨頭診斷】未達六大巨頭全綠燈標準。`;
                     recBet = 0; 
-                    statusText = `🔴 徹底觀望 👉 強制: 0 元/碰`; cardStyle = 'background:#ffffff; border-color:#e2e8f0;';
+                    statusText = `🔴 徹底觀望 👉 強制: 0 元/碰`; 
+                    cardStyle = 'background:#fef2f2; border-color:#fecaca;'; // 淡紅
                     reasonText = `${expertDiagnosis}<br>【獵人鐵律】徹底放棄平推試水！只要有任何一盞燈沒亮，一律 <strong>0 元</strong> 觀望，絕不耗損本金。`;
                 }
 
                 recHtml += `
-                    <div style="padding:14px; border:1.5px solid; border-radius:10px; ${cardStyle} line-height:1.6; background-color:#fff;">
+                    <div style="padding:14px; border:1.5px solid; border-radius:10px; ${cardStyle} line-height:1.6;">
                         <div style="font-weight:900; font-size:14px; color:#0f172a; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
                             <span>${a.cfg.name}</span>
                             <span style="font-size:13px; font-weight:900; color:#dc2626;">${statusText}</span>
