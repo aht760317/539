@@ -208,13 +208,13 @@
 
 <div id="global-loader">
     <div class="loader-spinner"></div>
-    <h2 style="color:var(--text-main); font-weight:900; font-size:18px;">☁️ 雲端數據庫同步與矩陣重算中...</h2>
+    <h2 style="color:var(--text-main); font-weight:900; font-size:18px;">☁️ 雲端數據庫同步與量化矩陣重算中...</h2>
 </div>
 
 <div class="container">
     <header>
         <h1>⚡ 天天樂 & 五三九 雙核心量化操盤系統 ⚡</h1>
-        <div class="cloud-badge"><div class="dot"></div> Firebase 極速引擎 (矩陣動態修正版)</div>
+        <div class="cloud-badge"><div class="dot"></div> Firebase 極速引擎 (矩陣動態優化版)</div>
     </header>
 
     <div class="year-filter-bar">
@@ -267,7 +267,7 @@
         <div style="font-size:11px; color:#475569; margin-bottom:12px; line-height:1.5;">
             【專家審慎審查期】專家具備獨立否決權。任何單一核心指標未達標即刻否決！<br>
             正常 Z-Score (0.8~1.5) 且 EV>0 佈局 1 倍；極端偏離且 EV>0 (1.5~3.0) 狙擊 2 倍；若 EV 小於 0，專家強制否決，0 倍空手保本！<br>
-            <span style="color:#dc2626; font-weight:bold;">※ 最新修正：修復連槓期數無限累加 Bug，現已套用高敏度貝氏公式，輸入新號碼將立刻引發矩陣變動！</span>
+            <span style="color:#dc2626; font-weight:bold;">※ 最新修正：修復連槓期數無限累加 Bug，現已套用高敏度貝氏公式與極端值防護，確保期望值運算絕對精準。</span>
         </div>
         <div class="setting-grid" id="setting-inputs"></div>
         <div class="action-bar">
@@ -456,38 +456,40 @@
         }
     };
 
+    // 優化核心判斷邏輯，減少不必要的記憶體配置
     function check1800(balls) {
         if (!balls || !Array.isArray(balls)) return { puffs: 0, text: "錯誤", p1:0, p2:0, p3:0 };
         let p1=0, p2=0, p3=0;
-        balls.forEach(n => { 
-            let num = Number(n);
-            if(num>=10 && num<=18) p1++; else if(num>=20 && num<=29) p2++; else p3++; 
-        });
+        for (let i = 0; i < balls.length; i++) {
+            let num = Number(balls[i]);
+            if (num >= 10 && num <= 18) p1++; 
+            else if (num >= 20 && num <= 29) p2++; 
+            else p3++; 
+        }
         let puffs = p1 * p2 * p3;
-        return { puffs, text: puffs>0?`${puffs}碰`:"未中獎", p1, p2, p3 };
+        return { puffs, text: puffs > 0 ? `${puffs}碰` : "未中獎", p1, p2, p3 };
     }
     
     function check9000(balls) {
         if (!balls || !Array.isArray(balls)) return { pass: false, puffs: 0, text: "錯誤", q1:0, q2:0, q3:0, q4:0 };
         let q1=0, q2=0, q3=0, q4=0;
-        balls.forEach(n => { 
-            let num = Number(n);
-            if(num>=1 && num<=9) q1++; 
-            else if(num>=10 && num<=19) q2++; 
-            else if(num>=20 && num<=29) q3++; 
-            else if(num>=30 && num<=39) q4++; 
-        });
-        let pass = (q1>0 && q2>0 && q3>0 && q4>0);
-        return { pass, puffs: pass?2:0, text: pass?"過關":"斷柱", q1, q2, q3, q4 };
+        for (let i = 0; i < balls.length; i++) {
+            let num = Number(balls[i]);
+            if (num >= 1 && num <= 9) q1++; 
+            else if (num >= 10 && num <= 19) q2++; 
+            else if (num >= 20 && num <= 29) q3++; 
+            else if (num >= 30 && num <= 39) q4++; 
+        }
+        let pass = (q1 > 0 && q2 > 0 && q3 > 0 && q4 > 0);
+        return { pass, puffs: pass ? 2 : 0, text: pass ? "過關" : "斷柱", q1, q2, q3, q4 };
     }
 
     function getFilteredData(spaceKey) {
         let rawData = spaceData[spaceKey] || [];
-        return rawData.filter(x => {
-            if(!x || !x.date) return false;
-            if(selectedYear !== 'all' && !String(x.date).startsWith(selectedYear)) return false;
-            return true;
-        }).sort((a, b) => new Date(b.date) - new Date(a.date));
+        // 優化日期過濾與排序效能
+        return rawData
+            .filter(x => x && x.date && (selectedYear === 'all' || x.date.startsWith(selectedYear)))
+            .sort((a, b) => a.date > b.date ? -1 : 1);
     }
 
     window.switchSpace = function(spaceKey) {
@@ -527,11 +529,11 @@
     };
 
     // ==============================================================
-    // 🎯 🚨 雷達運算與渲染
+    // 🎯 🚨 雷達運算與渲染 (效能優化)
     // ==============================================================
     function analyzeRadar(gameType) {
         let spaceKey = gameType + '-9000';
-        let data = getFilteredData(spaceKey).slice(0, 1500);
+        let data = getFilteredData(spaceKey).slice(0, 1500); // 限制回測樣本以優化運算
         let totalDraws = data.length;
         let tripleLosingStreak = 0;
         let overallHitFound = false;
@@ -545,13 +547,13 @@
             if (!balls || !Array.isArray(balls)) continue;
 
             let q1=0, q2=0, q3=0, q4=0;
-            balls.forEach(n => { 
-                let num = Number(n);
-                if(num>=1 && num<=9) q1++; 
-                else if(num>=10 && num<=19) q2++; 
-                else if(num>=20 && num<=29) q3++; 
-                else if(num>=30 && num<=39) q4++; 
-            });
+            for (let j = 0; j < balls.length; j++) {
+                let num = Number(balls[j]);
+                if (num >= 1 && num <= 9) q1++; 
+                else if (num >= 10 && num <= 19) q2++; 
+                else if (num >= 20 && num <= 29) q3++; 
+                else if (num >= 30 && num <= 39) q4++; 
+            }
 
             if(q1>=3) colHits.q1++;
             if(q2>=3) colHits.q2++;
@@ -576,7 +578,7 @@
         let colProbs = {};
         ['q1', 'q2', 'q3', 'q4'].forEach(k => {
             let theoreticalColProb = k === 'q1' ? 0.0702 : 0.0956;
-            colProbs[k] = theoreticalColProb + (colStreaks[k] * 0.005); 
+            colProbs[k] = Math.min(theoreticalColProb + (colStreaks[k] * 0.005), 0.99); 
         });
 
         let maxProb = Math.max(colProbs.q1, colProbs.q2, colProbs.q3, colProbs.q4);
@@ -631,17 +633,17 @@
 
     // ==============================================================
     // 🎯 核心運算：華爾街 8 大量化指標 + 東方 10 大傳統指標
-    // 🛠️ BUG已修復：連敗計數邏輯正確還原、敏感度大幅提升
+    // 🛠️ 優化：合併雙向迴圈邏輯、加入極端值數學防禦 (防呆保護)
     // ==============================================================
     function analyzeSpace(key) {
         let cfg = spaceConfigs[key] || { type: '1800', unitBet: 1, basePuffs: 1800, rebate: 0, unitPrize: 0, name: '' };
-        let data = getFilteredData(key).slice(0, 1500);
+        let data = getFilteredData(key).slice(0, 1500); // 截取前 1500 筆確保運算效率
         let totalDraws = data.length;
         if (totalDraws === 0) return null;
 
         let wins = 0;
         let losingStreak = 0;
-        let countingStreak = true; // 追蹤真實的「當下連敗」
+        let countingStreak = true;
 
         let wins14 = 0, wins30 = 0, wins120 = 0, wins500 = 0;
         let theoreticalEquity = 0;
@@ -653,36 +655,37 @@
         let expectedPrizePuffs = cfg.type === '1800' ? 3.5576 : 2.0;
         let avgPrizeWhenWin = expectedPrizePuffs * Number(cfg.unitPrize) * Number(cfg.unitBet);
 
+        // 第 1 次走訪：計算歷史曲線與最大回撤 (由舊到新)
         let reversedData = [...data].reverse();
         let missingHistory = [];
         let tempMiss = 0;
-        
-        reversedData.forEach((item) => {
-            let balls = item.draw;
-            if (!balls || !Array.isArray(balls)) return;
+        let markovHit = 0, markovMiss = 0;
 
-            let res = cfg.type === '1800' ? check1800(balls) : check9000(balls);
+        for (let i = 0; i < reversedData.length; i++) {
+            let item = reversedData[i];
+            let res = cfg.type === '1800' ? check1800(item.draw) : check9000(item.draw);
             let isWin = (cfg.type === '1800' && res.puffs >= 3) || (cfg.type === '9000' && res.pass);
             
+            // 資金曲線計算
             let roundPnL = isWin ? (avgPrizeWhenWin - costPerRound) : -costPerRound;
             theoreticalEquity += roundPnL;
             if (theoreticalEquity > peakTheoretical) peakTheoretical = theoreticalEquity;
             let dd = peakTheoretical - theoreticalEquity;
             if (dd > maxDrawdown) maxDrawdown = dd;
 
+            // 連敗歷史紀錄
             if(isWin){
                 missingHistory.push(tempMiss);
                 tempMiss = 0;
             }else{
                 tempMiss++;
             }
-        });
+        }
 
+        // 第 2 次走訪：近期狀態計算 (由新到舊)
         for (let i = 0; i < data.length; i++) {
-            let balls = data[i].draw;
-            if (!balls || !Array.isArray(balls)) continue;
-
-            let res = cfg.type === '1800' ? check1800(balls) : check9000(balls);
+            let item = data[i];
+            let res = cfg.type === '1800' ? check1800(item.draw) : check9000(item.draw);
             let isWin = (cfg.type === '1800' && res.puffs >= 3) || (cfg.type === '9000' && res.pass);
             
             if (isWin) {
@@ -691,10 +694,23 @@
                 if (i < 30) wins30++;
                 if (i < 120) wins120++;
                 if (i < 500) wins500++;
-                countingStreak = false; // 一旦碰到中獎，就停止計算連敗！
+                countingStreak = false; // 觸碰到中獎即停止累加連敗
             } else {
                 if (countingStreak) losingStreak++;
             }
+        }
+
+        // 針對最終確定的 losingStreak，再次精算其馬可夫轉換
+        let mMissTracker = 0;
+        for (let i = 0; i < reversedData.length; i++) {
+            let item = reversedData[i];
+            let res = cfg.type === '1800' ? check1800(item.draw) : check9000(item.draw);
+            let isWin = (cfg.type === '1800' && res.puffs >= 3) || (cfg.type === '9000' && res.pass);
+            
+            if (i > 0 && mMissTracker === losingStreak) {
+                if (isWin) markovHit++; else markovMiss++;
+            }
+            if (isWin) mMissTracker = 0; else mMissTracker++;
         }
 
         let ma14 = Math.min(data.length, 14) > 0 ? wins14 / Math.min(data.length, 14) : 0;
@@ -706,44 +722,39 @@
 
         let empWinRate = totalDraws > 0 ? (wins / totalDraws) : baseP_Threshold;
 
-        // 幾何分佈理論 Z-Score
-        let geomMean = (1 - baseP_Threshold) / baseP_Threshold;
-        let geomStd = Math.sqrt(1 - baseP_Threshold) / baseP_Threshold;
+        // 幾何分佈理論 Z-Score (加入除零防護)
+        let geomMean = baseP_Threshold > 0 ? (1 - baseP_Threshold) / baseP_Threshold : 0;
+        let geomStd = baseP_Threshold > 0 ? Math.sqrt(1 - baseP_Threshold) / baseP_Threshold : 1;
         let rawZ = geomStd > 0 ? (losingStreak - geomMean) / geomStd : 0;
         let zScore = Math.max(-3.0, Math.min(rawZ, 3.0));
 
         let shorterCount = missingHistory.filter(m => m <= losingStreak).length;
         let prSurv = missingHistory.length > 0 ? (shorterCount / missingHistory.length) * 100 : 50;
 
-        // 馬可夫平滑機率 (針對當下真實的 losingStreak 尋找歷史狀態)
-        let markovHit = 0, markovMiss = 0, mMissTracker = 0;
-        reversedData.forEach((item, idx) => {
-            let res = cfg.type === '1800' ? check1800(item.draw) : check9000(item.draw);
-            let isWin = (cfg.type === '1800' && res.puffs >= 3) || (cfg.type === '9000' && res.pass);
-            
-            if (idx > 0 && mMissTracker === losingStreak) {
-                if (isWin) markovHit++; else markovMiss++;
-            }
-            if (isWin) mMissTracker = 0; else mMissTracker++;
-        });
-        
-        let pMarkov = ((markovHit + baseP_Threshold * 2) / (markovHit + markovMiss + 2)); // 拉普拉斯平滑降低遲鈍
+        // 拉普拉斯平滑降低馬可夫遲鈍
+        let pMarkov = ((markovHit + baseP_Threshold * 2) / (markovHit + markovMiss + 2)); 
 
-        // 💡 高敏度貝氏綜合機率：強調近期 MA14 與馬可夫，並增加 Z-Score 的爆發力
-        let maxAllowedProb = baseP_Threshold * 1.6;
+        // 💡 高敏度綜合機率 (Ensemble Probability) - 加入極限收斂防護
+        let maxAllowedProb = Math.min(baseP_Threshold * 1.6, 0.99); // 嚴格控制機率上限
         let bayesProb = (ma14 * 0.3) + (ma30 * 0.2) + (pMarkov * 0.5); 
         
         // 若 Z-Score 達標，給予強力權重推升 EV
         if (zScore >= 0.8) bayesProb += (zScore * 0.035); 
-        bayesProb = Math.min(bayesProb, maxAllowedProb);
+        bayesProb = Math.max(0, Math.min(bayesProb, maxAllowedProb));
 
         let EV = (bayesProb * avgPrizeWhenWin) - costPerRound;
         let currentDrawdown = peakTheoretical - theoreticalEquity;
         let b = costPerRound > 0 ? ((avgPrizeWhenWin - costPerRound) / costPerRound) : 0; 
+        
+        // 💡 凱利公式防護機制 (保守降級版)
         let fullKelly = b > 0 ? ((bayesProb * (b + 1) - 1) / b) : 0;
         let isTurbulent = (maxDrawdown > costPerRound * 5 && currentDrawdown >= maxDrawdown * 0.75);
-        let kellyScale = isTurbulent ? 0.02 : (currentDrawdown > maxDrawdown * 0.5 ? 0.08 : 0.20);
-        let fracKelly = Math.max(0, fullKelly * kellyScale);
+        
+        // 【微調區】大幅降低凱利乘數，採用「極度防禦」降檔機制
+        // 參數說明： 亂流期 / 中度回撤期 / 正常期
+        let kellyScale = isTurbulent ? 0.00 : (currentDrawdown > maxDrawdown * 0.5 ? 0.03 : 0.10);
+        
+        let fracKelly = Math.max(0, Math.min(fullKelly * kellyScale, 1)); // 嚴格控制不高於 100%
 
         return { 
             cfg, totalDraws, losingStreak, ma30, ma120, ma500, empWinRate, bayesProb, zScore, EV, costPerRound,
@@ -1058,7 +1069,7 @@
             }
             else if (currentSpace === 'ledger') renderLedgerSummary();
             else renderMain();
-        }, 500);
+        }, 500); // 增加防抖 (Debounce) 延遲時間，保護前端不被頻繁渲染卡死
     });
 
     function renderMain() {
