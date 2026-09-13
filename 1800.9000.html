@@ -138,7 +138,7 @@
 
         /* 預測與量化方塊樣式 */
         .ai-prediction-box { margin-top: auto; padding: 12px; background: linear-gradient(to bottom, #ffffff, #f8fafc); border: 2px solid #e2e8f0; border-radius: 10px; font-size: 12px; }
-        .strategy-box { margin: 0 0 10px 0; padding: 12px; border-radius: 8px; text-align: center; font-weight: 900; font-size: 13px; line-height: 1.5; }
+        .strategy-box { margin: 0 0 10px 0; padding: 12px; border-radius: 8px; text-align: center; font-weight: 900; font-size: 13px; line-height: 1.5; transition: 0.3s; }
         .strategy-box h6 { font-size:16px; margin:0 0 4px 0; }
         .strategy-box .tomorrow-prob { font-size:14px; margin-top:4px; color:#1e293b; background: rgba(255,255,255,0.6); padding:4px; border-radius:4px;}
 
@@ -208,13 +208,13 @@
 
 <div id="global-loader">
     <div class="loader-spinner"></div>
-    <h2 style="color:var(--text-main); font-weight:900; font-size:18px;">☁️ 雲端數據庫同步中...</h2>
+    <h2 style="color:var(--text-main); font-weight:900; font-size:18px;">☁️ 雲端數據庫同步與矩陣重算中...</h2>
 </div>
 
 <div class="container">
     <header>
         <h1>⚡ 天天樂 & 五三九 雙核心量化操盤系統 ⚡</h1>
-        <div class="cloud-badge"><div class="dot"></div> Firebase 極速引擎 (華爾街純量化版)</div>
+        <div class="cloud-badge"><div class="dot"></div> Firebase 極速引擎 (矩陣動態修正版)</div>
     </header>
 
     <div class="year-filter-bar">
@@ -246,7 +246,7 @@
             <div class="guide-item"><strong>① 數學家 (物理勝率)：</strong><br>該盤口的基礎過關機率。<span class="guide-target">🎯 達標亮綠門檻：目前勝率大於遊戲基礎機率。</span></div>
             <div class="guide-item"><strong>② 資金家 (自適應凱利)：</strong><br>動態計算最佳注碼比例，遇回撤自動收縮。<span class="guide-target">🎯 達標亮綠門檻：算定配置比例 f* > 0% 。</span></div>
             <div class="guide-item"><strong>③ 贏家 (馬可夫核平滑)：</strong><br>精算盤口在「目前的連敗狀態下」，歷史上的反轉勝率。<span class="guide-target">🎯 達標亮綠門檻：動態反轉勝率大於基礎機率。</span></div>
-            <div class="guide-item"><strong>④ 銀行家 (幾何分佈 Z-Score)：</strong><br>測量連槓期數偏離平均值的嚴重程度。<span class="guide-target">🎯 達標亮綠門檻：數值大於或等於 0.5。</span></div>
+            <div class="guide-item"><strong>④ 銀行家 (幾何分佈 Z-Score)：</strong><br>測量連槓期數偏離平均值的嚴重程度。<span class="guide-target">🎯 達標亮綠門檻：數值大於或等於 0.8。</span></div>
             <div class="guide-item"><strong>⑤ 精算家 (波動與回撤防禦)：</strong><br>監控系統理論淨值最大回撤(Max Drawdown)與亂流。<span class="guide-target">🎯 達標亮綠門檻：資金曲線未進入極端亂流。</span></div>
             <div class="guide-item"><strong>⑥ 大莊家 (數學期望值 EV)：</strong><br>下注 1 元/碰 跑長期的平均賺賠金額。<span class="guide-target">🎯 達標亮綠門檻：期望值必須大於 0。</span></div>
         </div>
@@ -266,7 +266,8 @@
         </div>
         <div style="font-size:11px; color:#475569; margin-bottom:12px; line-height:1.5;">
             【專家審慎審查期】專家具備獨立否決權。任何單一核心指標未達標即刻否決！<br>
-            正常 Z-Score (0.8~1.5) 且 EV>0 佈局 1 倍；極端偏離且 EV>0 (1.5~3.0) 狙擊 2 倍；若 Z 破 3.0 或 EV 小於 0，專家強制否決，0 倍空手保本！
+            正常 Z-Score (0.8~1.5) 且 EV>0 佈局 1 倍；極端偏離且 EV>0 (1.5~3.0) 狙擊 2 倍；若 EV 小於 0，專家強制否決，0 倍空手保本！<br>
+            <span style="color:#dc2626; font-weight:bold;">※ 最新修正：修復連槓期數無限累加 Bug，現已套用高敏度貝氏公式，輸入新號碼將立刻引發矩陣變動！</span>
         </div>
         <div class="setting-grid" id="setting-inputs"></div>
         <div class="action-bar">
@@ -442,7 +443,6 @@
         content.style.display = (content.style.display === "none" || content.style.display === "") ? "grid" : "none";
     };
 
-    // 💡 修正：精準綁定 ID 切換東方指標展開/收合
     window.toggleEasternMetrics = function(spaceKey) {
         let container = document.getElementById(`eastern-box-${spaceKey}`);
         let btn = document.getElementById(`btn-toggle-eastern-${spaceKey}`);
@@ -527,7 +527,7 @@
     };
 
     // ==============================================================
-    // 🎯 🚨 雷達運算與渲染 (真實機率校正)
+    // 🎯 🚨 雷達運算與渲染
     // ==============================================================
     function analyzeRadar(gameType) {
         let spaceKey = gameType + '-9000';
@@ -631,6 +631,7 @@
 
     // ==============================================================
     // 🎯 核心運算：華爾街 8 大量化指標 + 東方 10 大傳統指標
+    // 🛠️ BUG已修復：連敗計數邏輯正確還原、敏感度大幅提升
     // ==============================================================
     function analyzeSpace(key) {
         let cfg = spaceConfigs[key] || { type: '1800', unitBet: 1, basePuffs: 1800, rebate: 0, unitPrize: 0, name: '' };
@@ -639,8 +640,8 @@
         if (totalDraws === 0) return null;
 
         let wins = 0;
-        let latestIsWin = false;
         let losingStreak = 0;
+        let countingStreak = true; // 追蹤真實的「當下連敗」
 
         let wins14 = 0, wins30 = 0, wins120 = 0, wins500 = 0;
         let theoreticalEquity = 0;
@@ -690,18 +691,13 @@
                 if (i < 30) wins30++;
                 if (i < 120) wins120++;
                 if (i < 500) wins500++;
-            }
-
-            if (i === 0) {
-                latestIsWin = isWin;
-                if (!isWin) losingStreak++;
-            } else if (!latestIsWin && !isWin) {
-                losingStreak++;
+                countingStreak = false; // 一旦碰到中獎，就停止計算連敗！
             } else {
-                latestIsWin = false;
+                if (countingStreak) losingStreak++;
             }
         }
 
+        let ma14 = Math.min(data.length, 14) > 0 ? wins14 / Math.min(data.length, 14) : 0;
         let ma30 = Math.min(data.length, 30) > 0 ? wins30 / Math.min(data.length, 30) : 0;
         let ma120 = Math.min(data.length, 120) > 0 ? wins120 / Math.min(data.length, 120) : 0;
         let ma500 = Math.min(data.length, 500) > 0 ? wins500 / Math.min(data.length, 500) : 0;
@@ -719,20 +715,26 @@
         let shorterCount = missingHistory.filter(m => m <= losingStreak).length;
         let prSurv = missingHistory.length > 0 ? (shorterCount / missingHistory.length) * 100 : 50;
 
-        // 馬可夫平滑機率
+        // 馬可夫平滑機率 (針對當下真實的 losingStreak 尋找歷史狀態)
         let markovHit = 0, markovMiss = 0, mMissTracker = 0;
         reversedData.forEach((item, idx) => {
-            let isWin = (cfg.type === '1800' && check1800(item.draw).puffs >= 3) || (cfg.type === '9000' && check9000(item.draw).pass);
+            let res = cfg.type === '1800' ? check1800(item.draw) : check9000(item.draw);
+            let isWin = (cfg.type === '1800' && res.puffs >= 3) || (cfg.type === '9000' && res.pass);
+            
             if (idx > 0 && mMissTracker === losingStreak) {
                 if (isWin) markovHit++; else markovMiss++;
             }
             if (isWin) mMissTracker = 0; else mMissTracker++;
         });
-        let pMarkov = ((markovHit + baseP_Threshold * 5) / (markovHit + markovMiss + 5));
+        
+        let pMarkov = ((markovHit + baseP_Threshold * 2) / (markovHit + markovMiss + 2)); // 拉普拉斯平滑降低遲鈍
 
-        let maxAllowedProb = baseP_Threshold * 1.4;
-        let bayesProb = (ma30 * 0.3) + (ma120 * 0.2) + (ma500 * 0.1) + (pMarkov * 0.4); 
-        if (zScore >= 1.0) bayesProb += (zScore * 0.015); 
+        // 💡 高敏度貝氏綜合機率：強調近期 MA14 與馬可夫，並增加 Z-Score 的爆發力
+        let maxAllowedProb = baseP_Threshold * 1.6;
+        let bayesProb = (ma14 * 0.3) + (ma30 * 0.2) + (pMarkov * 0.5); 
+        
+        // 若 Z-Score 達標，給予強力權重推升 EV
+        if (zScore >= 0.8) bayesProb += (zScore * 0.035); 
         bayesProb = Math.min(bayesProb, maxAllowedProb);
 
         let EV = (bayesProb * avgPrizeWhenWin) - costPerRound;
@@ -750,7 +752,7 @@
         };
     }
 
-    // 🚨 渲染函式：華爾街8項固定顯示，東方10項折疊
+    // 🚨 渲染函式：動態反應當下狀態
     function getPredictionHtml(analysis, spaceKey) {
         if (!analysis || analysis.totalDraws < 5) return `<div class="ai-prediction-box" style="text-align:center; color:#94a3b8; padding:20px;">⏳ 歷史數據不足</div>`;
 
@@ -762,29 +764,29 @@
 
         let consensusTitle = "", consensusDesc = "", consensusColor = "";
 
-        if (!passEV) {
+        if (!passEV && !passZ) {
             consensusTitle = "🔴 系統否決 (期望值為負)";
-            consensusDesc = `【風控否決】長期期望值 EV 為負數，盤口無數學優勢。強制 0 倍空手！`;
+            consensusDesc = `【風控否決】目前近期盤勢弱，期望值 EV < 0。系統強制 0 倍空手觀望！`;
             consensusColor = "background:#fef2f2; color:#b91c1c; border: 2px solid #fecaca;";
         } else if (!passDD) {
             consensusTitle = "🟡 亂流防禦 (波動率限制)";
-            consensusDesc = `【回撤警告】資金曲線進入深水區亂流。系統決議：降級防禦或 0 倍觀望。`;
+            consensusDesc = `【回撤警告】資金曲線進入深水區亂流。建議降級防禦或 0 倍觀望。`;
             consensusColor = "background:#fffbeb; color:#b45309; border: 2px solid #fcd34d;";
-        } else if (passZ && a.zScore >= 1.5 && a.fracKelly > 0) {
-            consensusTitle = "🔥 黃金狙擊 (健康乖離 Z>1.5)";
-            consensusDesc = `【精準打擊】多頭且偏離度達標。核准 2 倍火力狙擊回歸！`;
+        } else if (a.zScore >= 1.2 && passEV) {
+            consensusTitle = "🔥 黃金狙擊 (乖離 Z>1.2)";
+            consensusDesc = `【精準打擊】目前連槓 ${a.losingStreak} 期，Z-Score 強勢達標推升期望值！核准 2 倍火力狙擊回歸！`;
             consensusColor = "background:#ecfdf5; color:#065f46; border: 2px solid #6ee7b7;";
-        } else if (a.ma30 >= a.ma120 && passEV && a.fracKelly > 0) {
+        } else if (a.ma30 >= a.ma120 && passEV) {
             consensusTitle = "🟢 標準多頭佈局";
-            consensusDesc = `【常態區】均線多頭且 EV>0。核准 1 倍標準注碼平推。`;
+            consensusDesc = `【常態區】短均線站上長均線，且 EV>0。核准 1 倍標準注碼平推。`;
             consensusColor = "background:#f0fdf4; color:#15803d; border: 2px solid #a7f3d0;";
         } else {
             consensusTitle = "🔴 聯合否決 (條件未齊)";
-            consensusDesc = `【觀望區】短中均線未完全共振或乖離不足。系統決議：嚴格 0 倍觀望！`;
+            consensusDesc = `【觀望區】多空不明確，乖離率不足以補償 EV。嚴格執行 0 倍觀望！`;
             consensusColor = "background:#f8fafc; color:#64748b; border: 2px solid #e2e8f0;";
         }
 
-        // 通過檢驗顏色判別 (綠色hl / 紅色dg)
+        // 通過檢驗顏色判別
         let c_bayes = a.bayesProb > a.baseP_Threshold ? 'hl' : 'dg';
         let c_ev = a.EV > 0 ? 'hl' : 'dg';
         let c_kelly = a.fracKelly > 0 ? 'hl' : 'dg';
@@ -794,7 +796,6 @@
         let c_rsi = (a.rsi14 >= 35 && a.rsi14 <= 75) ? 'hl' : 'dg';
         let c_accel = a.accel > 0 ? 'hl' : 'dg';
 
-        // 東方指標顏色判別
         let c_emp = a.empWinRate >= a.baseP_Threshold ? 'hl' : 'dg';
         let c_ma30 = a.ma30 >= a.baseP_Threshold ? 'hl' : 'dg';
         let c_ma120 = a.ma120 >= a.baseP_Threshold ? 'hl' : 'dg';
@@ -804,14 +805,12 @@
 
         return `
             <div class="ai-prediction-box">
-                <!-- 決策卡片 (已移除真實賠率) -->
                 <div class="strategy-box" style="${consensusColor}">
                     <h6>${consensusTitle}</h6>
                     <div style="font-size:11.5px; font-weight:bold; margin-top:4px; text-align:left; color:#1e293b;">${consensusDesc}</div>
-                    <div class="tomorrow-prob">🎯 下期開盤預測：<strong>${(a.bayesProb * 100).toFixed(1)}%</strong></div>
+                    <div class="tomorrow-prob">🎯 下期開盤機率：<strong>${(a.bayesProb * 100).toFixed(1)}%</strong></div>
                 </div>
                 
-                <!-- 🏛️ 華爾街 8 大核心指標 (固定常駐顯示) -->
                 <div style="font-size: 11px; font-weight: 900; color: #0f172a; margin-bottom: 4px; display:flex; align-items:center; gap:4px;">
                     <span>🏛️ 華爾街 8 大量化指標 (固定顯示)</span>
                 </div>
@@ -826,7 +825,6 @@
                     <div class="g-item ${c_accel}"><div class="g-t">8. 動能加速(Accel)</div><div class="g-v">${a.accel>0?'+':''}${(a.accel*100).toFixed(1)}%</div></div>
                 </div>
 
-                <!-- ☯️ 東方傳統 10 大指標 (折疊開關) -->
                 <button id="btn-toggle-eastern-${spaceKey}" onclick="toggleEasternMetrics('${spaceKey}')" class="btn-toggle-eastern">
                     ▼ 展開 東方傳統 10 大指標矩陣
                 </button>
@@ -860,7 +858,6 @@
             let cfg = analysis.cfg;
             let labelPrize = cfg.type === '1800' ? '三星單碰(元)' : '四星單碰(元)';
             
-            // 💡 精準傳入 key，保證點擊 ID 完全對應
             html += `
                 <div class="space-config-card">
                     <h4>${cfg.name}</h4>
@@ -891,9 +888,11 @@
                 let status = "";
                 let cssClass = "";
                 
-                if (a.EV <= 0 || a.isTurbulent) {
+                if (a.EV <= 0 && a.zScore < 1.2) {
                     status = `🔴 系統否決 👉 <span style="color:#fca5a5;">0 倍空手</span>`;
-                } else if (a.zScore >= 1.5 && a.EV > 0) {
+                } else if (a.isTurbulent) {
+                    status = `🟡 亂流防禦 👉 <span style="color:#fcd34d;">保守觀望</span>`;
+                } else if (a.zScore >= 1.2 && a.EV > 0) {
                     status = `🔥 黃金狙擊 👉 <span style="color:#a7f3d0;">強勢 2 倍</span>`;
                     cssClass = "cold";
                 } else if (a.ma30 >= a.ma120 && a.EV > 0) {
@@ -926,14 +925,18 @@
 
             let statusText = '', reasonText = '', cardStyle = '';
             
-            if (a.EV <= 0 || a.isTurbulent) {
+            if (a.EV <= 0 && a.zScore < 1.2) {
                 statusText = `🔴 系統否決 👉 0 倍`; 
                 cardStyle = 'background:#fef2f2; border-color:#fecaca;'; 
-                reasonText = `期望值為負或處於亂流期。系統聯合否決，強制 0 元空手保本。`;
-            } else if (a.zScore >= 1.5 && a.EV > 0) {
+                reasonText = `期望值為負或處於弱勢區。系統聯合否決，強制 0 元空手保本。`;
+            } else if (a.isTurbulent) {
+                statusText = `🟡 亂流防禦 👉 0 倍`; 
+                cardStyle = 'background:#fffbeb; border-color:#fde047;'; 
+                reasonText = `資金回撤幅度大於警戒線，暫緩佈局。`;
+            } else if (a.zScore >= 1.2 && a.EV > 0) {
                 statusText = `🔥 黃金狙擊 👉 2 倍`; 
                 cardStyle = 'background:#ecfdf5; border-color:#6ee7b7; box-shadow:0 2px 10px rgba(16,185,129,0.1)'; 
-                reasonText = `極度乖離且期望值為正。核准以 2 倍火力狙擊回歸！`;
+                reasonText = `極度乖離且期望值轉正。核准以 2 倍火力狙擊回歸！`;
             } else if (a.ma30 >= a.ma120 && a.EV > 0) {
                 statusText = `🟢 標準多頭 👉 1 倍`; 
                 cardStyle = 'background:#ecfdf5; border-color:#6ee7b7;'; 
@@ -1010,7 +1013,7 @@
         try {
             const docRef = doc(db, "matrix_systems", id);
             const docSnap = await getDoc(docRef);
-            if (!docSnap.exists()) return alert(`⚠️ 找不到開獎紀錄！`);
+            if (!docSnap.exists()) return alert(`⚠️ 找不到開獎紀錄！請先在該空間單筆輸入。`);
             await setDoc(docRef, { myBet: myBet }, { merge: true });
             alert(`✅ 寫入真實帳本成功！`);
         } catch(e) { alert("失敗：" + e.message); }
