@@ -61,7 +61,7 @@
         
         /* 18 宗師巨頭網格 (綠色優良 / 紅色危險) */
         .giant-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin: 10px 0; }
-        @media (min-width: 768px) { .giant-grid { grid-template-columns: repeat(6, 1fr); } } /* 變更為一行 6 個，共 3 行=18個 */
+        @media (min-width: 768px) { .giant-grid { grid-template-columns: repeat(6, 1fr); } } 
         .giant-card { background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 6px; padding: 10px 6px; text-align: center; display: flex; flex-direction: column; justify-content: center; transition: 0.2s; }
         .giant-card .g-title { font-size: 9.5px; color: #475569; font-weight: bold; margin-bottom: 4px; letter-spacing:-0.5px;}
         .giant-card .g-val { font-size: 13px; font-weight: 900; color: #0f172a; }
@@ -242,7 +242,7 @@
                     <div class="doc-card">
                         <div class="title">② 資金家 (凱利公式)</div>
                         <div class="formula">f* = p - [ (1 - p) / b ]</div>
-                        <div class="desc">華爾街倉位管理聖經。b 為賠率(4.3)，p 為勝率。當算出的 f* 為正數，代表此號碼具備長期投資優勢；若為負數則強制觀望。</div>
+                        <div class="desc">華爾街倉位管理聖經。b 為淨賠率(3.3)，p 為勝率。當算出的 f* 為正數，代表此號碼具備長期投資優勢；若為負數則強制觀望。</div>
                     </div>
                     <div class="doc-card">
                         <div class="title">③ 贏家 (馬可夫轉移狀態)</div>
@@ -389,7 +389,7 @@
         }
     });
 
-    // 核心資料與 18 模型真實計算引擎
+    // 核心資料與 18 模型真實計算引擎 (數學全面除蟲版)
     function compute18Masters(target, data) {
         let N = data.length;
         if(N === 0) return null;
@@ -400,6 +400,8 @@
         
         let eqCurve = [0];
         let peak = 0, maxDD = 0;
+        
+        // reversed 是由舊到新 (計算歷史動態軌跡使用)
         let reversed = [...data].reverse();
 
         reversed.forEach((item, i) => {
@@ -407,12 +409,12 @@
             if (isHit) {
                 missingHistory.push(tempMiss);
                 tempMiss = 0;
-                let newEq = eqCurve[eqCurve.length-1] + 330; // Win: 430-100=330
+                let newEq = eqCurve[eqCurve.length-1] + 330; // 成本100, 贏回430, 淨利330
                 eqCurve.push(newEq);
                 if (newEq > peak) peak = newEq;
             } else {
                 tempMiss++;
-                let newEq = eqCurve[eqCurve.length-1] - 100; // Lose: 100
+                let newEq = eqCurve[eqCurve.length-1] - 100; // 淨損 100
                 eqCurve.push(newEq);
             }
             let dd = peak - eqCurve[eqCurve.length-1];
@@ -421,6 +423,7 @@
         
         let currentMiss = tempMiss;
 
+        // data 是由新到舊 (計算近期機率使用)
         data.forEach((item, idx) => {
             let isHit = item.draw.includes(target);
             if(isHit) hits++;
@@ -432,47 +435,50 @@
         let probAll = hits / N;
         let prob10 = hits10 / 10;
         let prob30 = hits30 / 30;
-        let accel = (prob30 - (hits50/50)) * 100;
+        let accel = (prob10 - prob30) * 100; // 短期動能扣除中期動能
 
         let avgMiss = missingHistory.length > 0 ? missingHistory.reduce((a,b)=>a+b,0)/missingHistory.length : (1/probAll - 1);
-        let maxMiss = Math.max(...missingHistory, 1);
+        let maxMiss = Math.max(...(missingHistory.length ? missingHistory : [0]), currentMiss, 1);
         let variance = missingHistory.reduce((acc, val) => acc + Math.pow(val - avgMiss, 2), 0) / (missingHistory.length || 1);
         let stdDev = Math.sqrt(variance || 1);
         
         // ----------------------------------------------------
         // 🏛️ 華爾街 8 巨頭
         // ----------------------------------------------------
-        let m1_Laplace = (hits + 1) / (N + 2); // Laplace
+        let m1_Laplace = (hits + 1) / (N + 2); // Laplace 平滑
         
-        let b_odds = 4.3; 
-        let m2_Kelly = prob30 - ((1 - prob30) / b_odds); // Kelly
+        // 凱利公式 Kelly Criterion: b 為淨賠率 = 3.3
+        let b_odds = 3.3; 
+        let m2_Kelly = prob30 - ((1 - prob30) / b_odds); 
         
+        // 馬可夫轉移機率
         let mHit=0, mMiss=0, trk=0;
         reversed.forEach((item, idx) => {
             let isHit = item.draw.includes(target);
+            // 尋找歷史上遺漏值剛好等於現在的時刻
             if (idx > 0 && trk === currentMiss) {
                 if (isHit) mHit++; else mMiss++;
             }
             if(isHit) trk=0; else trk++;
         });
-        let m3_Markov = (mHit + (probAll*5)) / (mHit + mMiss + 5); // Markov
+        let m3_Markov = (mHit + (probAll*5)) / (mHit + mMiss + 5); 
 
         let m4_ZScore = stdDev > 0 ? (currentMiss - avgMiss) / stdDev : 0; // Z-Score
-        let m5_DD = maxDD; // Drawdown
-        let m6_EV = (prob30 * 430) - ((1 - prob30) * 100); // EV
+        let m5_DD = maxDD; 
+        let m6_EV = (prob30 * 330) - ((1 - prob30) * 100); // 真實淨利 EV
 
-        // M7: RSI (14 periods)
+        // M7: RSI (擷取最近 14 期，使用 data 由新到舊切片)
         let gains = 0, losses = 0;
-        let recent14 = reversed.slice(0, 14);
+        let recent14 = data.slice(0, 14);
         recent14.forEach(item => {
             if (item.draw.includes(target)) gains += 330;
-            else losses += 100;
+            else losses += 100; // 絕對損失
         });
         let rs = losses === 0 ? 100 : (gains / 14) / (losses / 14);
         let m7_RSI = losses === 0 ? 100 : 100 - (100 / (1 + rs));
 
-        // M8: Sharpe Ratio (30 periods)
-        let recent30 = reversed.slice(0, 30);
+        // M8: Sharpe Ratio (擷取最近 30 期)
+        let recent30 = data.slice(0, 30);
         let rets = recent30.map(item => item.draw.includes(target) ? 330 : -100);
         let avgRet = rets.reduce((a,b)=>a+b,0) / (rets.length||1);
         let varRet = rets.reduce((acc, val) => acc + Math.pow(val - avgRet, 2), 0) / (rets.length||1);
@@ -483,43 +489,68 @@
         // ----------------------------------------------------
         // ⛩️ 東方 10 巨頭 (0-100分)
         // ----------------------------------------------------
-        let m9 = prob10 > probAll ? 85 : 45; // Monte Carlo Momentum
-        let m10 = 40; // Fourier
+        let m9 = prob10 > probAll ? 85 : 45; // 蒙地卡羅動能
+        let m10 = 40; // 傅立葉共振
         if (missingHistory.length >= 2) {
             if (currentMiss === missingHistory[missingHistory.length-1]) m10 = 95;
             else if (currentMiss === missingHistory[missingHistory.length-2]) m10 = 80;
         }
         let totalOverMiss = missingHistory.filter(x => x >= currentMiss).length;
-        let m11 = totalOverMiss > 0 ? (1 / (totalOverMiss + 1)) * 100 : 99; // Bayesian
-        let m12 = (m4_ZScore > 2.0 || m4_ZScore < -1.5) ? 90 : 40; // Chaos
-        let m13 = currentMiss >= (maxMiss * 0.8) ? 95 : 30; // Poisson
-        let m14 = [1,2,3,5,8,13,21,34].includes(currentMiss) ? 85 : 35; // Fibonacci
-        let m15 = (prob10 - prob30) > 0 ? 75 : 45; // Gaussian Skewness
-        let m16 = hits10 >= 3 ? 15 : (hits10 === 0 && currentMiss > 3 ? 85 : 55); // HMM
-        let m17 = (m1_Laplace*0.3 + m3_Markov*0.4 + prob30*0.3) * 100; // Deep Neural
+        let m11 = totalOverMiss > 0 ? (1 / (totalOverMiss + 1)) * 100 : 99; // 貝氏條件機率
+        let m12 = (m4_ZScore > 2.0 || m4_ZScore < -1.5) ? 90 : 40; // 混沌極限
+        let m13 = currentMiss >= (maxMiss * 0.8) ? 95 : 30; // 卜瓦松反轉
+        let m14 = [1,2,3,5,8,13,21,34].includes(currentMiss) ? 85 : 35; // 費波那契
+        let m15 = (prob10 - prob30) > 0 ? 75 : 45; // 高斯偏態
+        let m16 = hits10 >= 3 ? 15 : (hits10 === 0 && currentMiss > 3 ? 85 : 55); // 馬可夫隱藏狀態
+        let m17 = (m1_Laplace*0.3 + m3_Markov*0.4 + prob30*0.3) * 100; // 神經擬合
 
-        // M18: Ichimoku (雲層突破)
+        // M18: 一目均衡表 (動態陣列擷取防護)
         let tenkan = 40, kijun = 40;
-        if (missingHistory.length >= 26) {
-            let last9 = missingHistory.slice(0, 9);
-            let last26 = missingHistory.slice(0, 26);
+        if (missingHistory.length >= 9) {
+            let last9 = missingHistory.slice(-9);
             tenkan = (Math.max(...last9) + Math.min(...last9)) / 2;
+        }
+        if (missingHistory.length >= 26) {
+            let last26 = missingHistory.slice(-26);
             kijun = (Math.max(...last26) + Math.min(...last26)) / 2;
         }
         let m18 = 40;
-        if (currentMiss > kijun) m18 = 90; // Breakout!
+        if (currentMiss > kijun) m18 = 90; // 雲層突破
         else if (currentMiss < tenkan) m18 = 30; 
         else m18 = 60;
 
         let shorterCount = missingHistory.filter(m => m <= currentMiss).length;
         let survivalPR = missingHistory.length > 0 ? (shorterCount / missingHistory.length) * 100 : 50;
 
-        let kellyClamped = m2_Kelly < 0 ? 0 : m2_Kelly;
+        // ----------------------------------------------------
+        // 💯 終極 18 矩陣精算配分 (嚴格映射 100 分制)
+        // ----------------------------------------------------
+        let kellyClamped = Math.max(0, Math.min(m2_Kelly * 10, 1)) * 10; // 最大貢獻 10 分
+        let zScorePts = m4_ZScore > 1.5 ? 6 : (m4_ZScore > 0.5 ? 4 : (m4_ZScore > -0.5 ? 2 : 0));
+        let ddPts = m5_DD <= 4000 ? 5 : (m5_DD <= 8000 ? 3 : 0);
+        let evPts = m6_EV > 20 ? 5 : (m6_EV > 0 ? 3 : 0);
+        let rsiPts = m7_RSI >= 60 ? 5 : (m7_RSI >= 40 ? 3 : 0);
+        let sharpePts = m8_Sharpe > 0.5 ? 5 : (m8_Sharpe > 0 ? 3 : 0);
         
-        // 終極 18 矩陣綜合配分 (Weighted Sum)
-        let finalScore = (m1_Laplace*100 * 0.08) + (kellyClamped*100 * 0.12) + (m3_Markov*100 * 0.12) + 
-                         (m4_ZScore > 1.0 ? 5 : 0) + (m6_EV > 0 ? 5 : 0) + (m7_RSI >= 40 ? 4 : 0) + (m8_Sharpe > 0 ? 4 : 0) +
-                         (m9*0.04) + (m10*0.06) + (m11*0.04) + (m12*0.04) + (m13*0.06) + (m14*0.03) + (m15*0.04) + (m16*0.03) + (m17*0.04) + (m18*0.04);
+        let finalScore = 
+            (m1_Laplace * 100 * 0.08) + // Max ~ 8
+            kellyClamped +              // Max 10
+            (m3_Markov * 100 * 0.10) +  // Max ~ 10
+            zScorePts +                 // Max 6
+            ddPts +                     // Max 5
+            evPts +                     // Max 5
+            rsiPts +                    // Max 5
+            sharpePts +                 // Max 5
+            (m9 * 0.04) +               // Max 3.4
+            (m10 * 0.06) +              // Max 5.7
+            (m11 * 0.04) +              // Max 4.0
+            (m12 * 0.04) +              // Max 3.6
+            (m13 * 0.06) +              // Max 5.7
+            (m14 * 0.04) +              // Max 3.4
+            (m15 * 0.04) +              // Max 3.0
+            (m16 * 0.04) +              // Max 3.4
+            (m17 * 0.05) +              // Max 5.0
+            (m18 * 0.04);               // Max 3.6
 
         return { 
             currentMiss, avgMiss, maxMiss, missingHistory, probAll, prob30, hits10, accel, survivalPR,
@@ -552,7 +583,7 @@
         let rank = allScores.findIndex(x => x.ball === target);
         
         let gradeHtml = '';
-        if (rank < 3) {
+        if (rank < 3) { // 0, 1, 2
             gradeHtml = `<div style="padding:14px; background:#fef2f2; border:2px solid #fca5a5; border-radius:8px; color:#b91c1c; font-weight:bold; font-size:15px; text-align:center; box-shadow:0 4px 6px rgba(248,113,113,0.1);">🔥 綜合評比分級：【S 級 (絕對主將)】<br><span style="font-size:12px; color:#7f1d1d; font-weight:bold; display:block; margin-top:4px;">(全盤第 ${rank+1} 名) - 極限爆發區間，強烈建議納入核心主牌！</span></div>`;
         } else if (rank >= 3 && rank < 9) {
             gradeHtml = `<div style="padding:14px; background:#ecfdf5; border:2px solid #6ee7b7; border-radius:8px; color:#047857; font-weight:bold; font-size:15px; text-align:center; box-shadow:0 4px 6px rgba(52,211,153,0.1);">🟢 綜合評比分級：【A 級 (優質副牌)】<br><span style="font-size:12px; color:#064e3b; font-weight:bold; display:block; margin-top:4px;">(全盤第 ${rank+1} 名) - 勝率與動能具水準，適合防禦與副牌搭配。</span></div>`;
@@ -571,15 +602,15 @@
         document.getElementById('sb-p-drag').innerHTML = st.maxMiss + ' 期';
         document.getElementById('sb-p-30').innerHTML = (st.prob30*100).toFixed(1) + '%';
 
-        // 18 宮格紅綠燈邏輯
+        // 18 宮格紅綠燈邏輯 (嚴格閾值過濾)
         let c1 = st.m1_Laplace > st.probAll ? 'highlight' : 'danger';
         let c2 = st.m2_Kelly > 0 ? 'highlight' : 'danger';
         let c3 = st.m3_Markov > st.probAll ? 'highlight' : 'danger';
-        let c4 = st.m4_ZScore >= 0 ? 'highlight' : 'danger';
-        let c5 = st.m5_DD <= 150000 ? 'highlight' : 'danger'; 
+        let c4 = st.m4_ZScore > 0 ? 'highlight' : 'danger';
+        let c5 = st.m5_DD <= 6000 ? 'highlight' : 'danger'; 
         let c6 = st.m6_EV > 0 ? 'highlight' : 'danger';
-        let c7 = st.m7_RSI >= 40 ? 'highlight' : 'danger';
-        let c8 = st.m8_Sharpe >= -0.1 ? 'highlight' : 'danger';
+        let c7 = st.m7_RSI >= 40 && st.m7_RSI <= 75 ? 'highlight' : 'danger';
+        let c8 = st.m8_Sharpe > 0 ? 'highlight' : 'danger';
         
         let c9 = st.m9 >= 60 ? 'highlight' : 'danger';
         let c10 = st.m10 >= 60 ? 'highlight' : 'danger';
@@ -616,15 +647,15 @@
 
         document.getElementById('sb-final-verdict').innerHTML = gradeHtml;
 
-        let recentMisses = st.missingHistory.slice(0, 10).reverse();
-        let maxDisplayMiss = Math.max(...recentMisses, st.currentMissing, 10);
+        let recentMisses = st.missingHistory.slice(-10).reverse();
+        let maxDisplayMiss = Math.max(...recentMisses, st.currentMiss, 10);
         let sparkHtml = '';
         recentMisses.forEach(m => {
             let h = Math.max((m / maxDisplayMiss) * 100, 5);
             sparkHtml += `<div class="spark-bar" style="height:${h}%;" data-val="${m}"></div>`;
         });
-        let curH = Math.max((st.currentMissing / maxDisplayMiss) * 100, 5);
-        sparkHtml += `<div class="spark-bar current" style="height:${curH}%;" data-val="${st.currentMissing} (當前)"></div>`;
+        let curH = Math.max((st.currentMiss / maxDisplayMiss) * 100, 5);
+        sparkHtml += `<div class="spark-bar current" style="height:${curH}%;" data-val="${st.currentMiss} (當前)"></div>`;
         document.getElementById('sb-sparkline-container').innerHTML = sparkHtml;
         document.getElementById('sb-max-miss-info').innerText = `歷史最大遺漏: ${st.maxMiss} 期`;
 
