@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>⚡ 18 宗師東西方合璧 | 終極量化操盤系統</title>
+    <title>⚡ 18 宗師東西方合璧 | 終極量化操盤系統 (動態抗過熱版)</title>
     <style>
         :root {
             --bg-color: #f8fafc; 
@@ -59,7 +59,7 @@
         .sb-prob-card h4 { font-size: 11px; color: #64748b; margin-bottom: 4px; font-weight: bold;}
         .sb-prob-card p { font-size: 16px; font-weight: 900; margin: 0; color: #0f172a; font-family: monospace;}
         
-        /* 18 宗師巨頭網格 (綠色優良 / 紅色危險) */
+        /* 18 宗師巨頭網格 */
         .giant-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin: 10px 0; }
         @media (min-width: 768px) { .giant-grid { grid-template-columns: repeat(6, 1fr); } } 
         .giant-card { background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 6px; padding: 10px 6px; text-align: center; display: flex; flex-direction: column; justify-content: center; transition: 0.2s; }
@@ -104,7 +104,7 @@
         .a-class .ball-badge .b-num { color: #047857; }
         .c-class .ball-badge { opacity: 0.6; background:#f1f5f9; border-color:#e2e8f0; }
 
-        /* 最近 8 期開獎 (4 行精巧版) */
+        /* 最近 8 期開獎 */
         .history-grid-4rows { display: grid; grid-template-columns: 1fr; gap: 8px; }
         @media (min-width: 640px) { .history-grid-4rows { grid-template-columns: repeat(2, 1fr); } }
         
@@ -113,7 +113,7 @@
         .history-balls-wrap { display: flex; gap: 5px; }
         .color-ball { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #78350f; border: 1.5px solid #d97706; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 900; font-family: monospace; box-shadow: 0 2px 5px rgba(245, 158, 11, 0.3); }
 
-        /* 系統說明書 (預設縮合) */
+        /* 系統說明書 */
         .guide-box { background: #1e293b; color: #f8fafc; border-radius: 12px; padding: 16px; margin-top: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
         .guide-box h3 { display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-size: 15px; font-weight: 900; color: #fbbf24; border-bottom: 1px solid #334155; padding-bottom: 10px; margin-bottom: 0; }
         .guide-box h3:hover { color: #fcd34d; }
@@ -146,7 +146,7 @@
 <div class="container">
     <header>
         <h1>⚡ 18 宗師東西方合璧 | 終極量化系統</h1>
-        <div class="cloud-badge"><div class="dot"></div> 8 大華爾街模型 × 10 大東方演算法</div>
+        <div class="cloud-badge"><div class="dot"></div> 歷史動能回歸與過熱熔斷機制</div>
     </header>
 
     <!-- 🔍 單號深度查詢面板 -->
@@ -237,42 +237,42 @@
                     <div class="doc-card">
                         <div class="title">① 數學家 (拉普拉斯平滑均值)</div>
                         <div class="formula">P = (Hits + 1) / (N + 2)</div>
-                        <div class="desc">傳統機率易受極端值干擾。導入 Laplace Smoothing 處理稀疏數據，避免機率歸零，提供最平穩的基礎期望值定錨。</div>
+                        <div class="desc">處理稀疏數據，避免機率歸零，提供平穩的基礎期望值定錨。</div>
                     </div>
                     <div class="doc-card">
                         <div class="title">② 資金家 (凱利公式)</div>
                         <div class="formula">f* = p - [ (1 - p) / b ]</div>
-                        <div class="desc">華爾街倉位管理聖經。b 為淨賠率(3.3)，p 為勝率。當算出的 f* 為正數，代表此號碼具備長期投資優勢；若為負數則強制觀望。</div>
+                        <div class="desc">若 f* 為正數代表具備長期投資優勢；負數則強制觀望。</div>
                     </div>
                     <div class="doc-card">
                         <div class="title">③ 贏家 (馬可夫轉移狀態)</div>
                         <div class="formula">P(Hit|Miss_k)</div>
-                        <div class="desc">不看總勝率，只看「在目前槓了 K 期的狀態下，歷史上反轉開出的機率」。精準捕捉該號碼在特定遺漏狀態的爆發動能。</div>
+                        <div class="desc">精準捕捉該號碼在特定遺漏狀態的爆發動能。</div>
                     </div>
                     <div class="doc-card">
                         <div class="title">④ 銀行家 (Z-Score 乖離率)</div>
                         <div class="formula">Z = (CurrentMiss - μ) / σ</div>
-                        <div class="desc">測量當前遺漏偏離平均(μ)幾個標準差(σ)。Z > 0 代表處於欠收期，有利於回歸。Z < 0 代表開出過密。</div>
+                        <div class="desc">Z > 0 代表處於欠收期，有利於回歸。Z < 0 代表開出過密。</div>
                     </div>
                     <div class="doc-card">
                         <div class="title">⑤ 精算家 (最大回撤 Drawdown)</div>
                         <div class="formula">MDD = Max(Peak - CurrentEquity)</div>
-                        <div class="desc">模擬單壓此號碼的歷史淨值曲線。MDD 代表歷史上經歷過最慘烈的資金連續失血。越低代表抗震性越強。</div>
+                        <div class="desc">越低代表抗震性越強，歷史經歷的資金連續失血最少。</div>
                     </div>
                     <div class="doc-card">
                         <div class="title">⑥ 莊家 (單注期望值 EV)</div>
                         <div class="formula">EV = (P × Profit) - ((1-P) × Cost)</div>
-                        <div class="desc">賭場與莊家賴以生存的核心指標。將近 30 期勝率代入賠率計算，EV 為正才代表這是一筆長線穩賺不賠的交易。</div>
+                        <div class="desc">EV 為正才代表這是一筆長線穩賺不賠的交易。</div>
                     </div>
                     <div class="doc-card">
                         <div class="title">⑦ 操盤手 (RSI 相對強弱指標)</div>
                         <div class="formula">RSI = 100 - 100 / (1 + RS)</div>
-                        <div class="desc">計算近 14 期內「獲利幅度」與「虧損幅度」的比值。RSI > 50 顯示具備向上強勢動能，但若過高則需防範超買崩盤。</div>
+                        <div class="desc">RSI > 50 顯示具備向上強勢動能。</div>
                     </div>
                     <div class="doc-card">
                         <div class="title">⑧ 分析師 (Sharpe 夏普比率)</div>
                         <div class="formula">Sharpe = AvgReturn / StdDev</div>
-                        <div class="desc">華爾街衡量風險報酬的神器。計算平均獲利除以其波動率，Sharpe > 0 代表你承擔的風險能換取超額報酬。</div>
+                        <div class="desc">Sharpe > 0 代表你承擔的風險能換取超額報酬。</div>
                     </div>
                 </div>
             </div>
@@ -283,52 +283,52 @@
                     <div class="doc-card">
                         <div class="title">⑨ 蒙地卡羅動能 (均線交叉)</div>
                         <div class="formula">IF (Prob_10 > Prob_All) -> Score+</div>
-                        <div class="desc">動量投資派。當短期(10期)勝率強勢穿越長期總勝率，視為籌碼集中、主力進駐，賦予高額動能分數。</div>
+                        <div class="desc">當短期勝率強勢穿越長期總勝率，視為主力進駐。</div>
                     </div>
                     <div class="doc-card">
                         <div class="title">⑩ 傅立葉頻譜 (規律共振)</div>
                         <div class="formula">Check Symmetrical Miss Gaps</div>
-                        <div class="desc">分析號碼開出的「頻率」。若近期遺漏期數呈現對稱（如：隔3期、隔5期、隔3期），判定為主力畫線的共振點。</div>
+                        <div class="desc">若近期遺漏期數呈現對稱，判定為規律共振點。</div>
                     </div>
                     <div class="doc-card">
                         <div class="title">⑪ 貝氏條件機率 (生存者偏差)</div>
                         <div class="formula">P = 1 / (Total(Miss > Current) + 1)</div>
-                        <div class="desc">在歷史紀錄中，有多少次槓得比現在還久？次數越少，代表該號碼越接近其「生存極限」，隨時會爆發。</div>
+                        <div class="desc">次數越少，代表該號碼越接近其生存極限。</div>
                     </div>
                     <div class="doc-card">
                         <div class="title">⑫ 混沌極限理論</div>
                         <div class="formula">Trigger IF |Z-Score| > 1.5</div>
-                        <div class="desc">市場常態屬隨機漫步，但當 Z-Score 突破臨界值，系統將進入「混沌邊緣」，此時發生反轉的機率呈現非線性暴增。</div>
+                        <div class="desc">當 Z-Score 突破臨界值，發生反轉的機率呈非線性暴增。</div>
                     </div>
                     <div class="doc-card">
                         <div class="title">⑬ 卜瓦松絕境反轉</div>
                         <div class="formula">CurrentMiss >= (MaxMiss * 0.8)</div>
-                        <div class="desc">專抓極端罕見事件。當號碼遺漏期數逼近歷史最高遺漏紀錄的 80% 時，啟動強力反彈加分。</div>
+                        <div class="desc">遺漏期數逼近歷史最高紀錄 80% 時，啟動強力反彈加分。</div>
                     </div>
                     <div class="doc-card">
                         <div class="title">⑭ 費波那契數列 (黃金分割)</div>
                         <div class="formula">Miss ∈ [1, 2, 3, 5, 8, 13, 21, 34]</div>
-                        <div class="desc">大自然的黃金密碼。許多時間序列的反轉點，容易落在費波那契數列的天數上，作為神秘的支撐位判定。</div>
+                        <div class="desc">大自然的黃金密碼，常作為神秘的支撐位判定。</div>
                     </div>
                     <div class="doc-card">
                         <div class="title">⑮ 高斯回歸偏態</div>
                         <div class="formula">Skew = Prob_10 - Prob_30</div>
-                        <div class="desc">測量機率分佈的傾斜度。正偏態代表近期爆發力度遠超波段均值，是抓取連莊或短線強勢股的核心。</div>
+                        <div class="desc">正偏態代表近期爆發力度遠超波段均值。</div>
                     </div>
                     <div class="doc-card">
-                        <div class="title">十六 馬可夫隱藏狀態 (HMM)</div>
-                        <div class="formula">Detect Latent State (Overheated)</div>
-                        <div class="desc">防追高機制。即使勝率再高，若判定目前處於「過熱崩盤前夕（10期內狂開3次以上）」，將嚴格扣分打入冷宮。</div>
+                        <div class="title">十六 馬可夫歷史動能 (過熱熔斷)</div>
+                        <div class="formula">HotState Prob Check / Circuit Breaker</div>
+                        <div class="desc">以歷史真實數據檢測「過熱連開」的延續率。若近5期開出3次以上則直接啟動強制冷卻熔斷機制。</div>
                     </div>
                     <div class="doc-card">
                         <div class="title">⑰ 深度神經擬合 (複合指標)</div>
                         <div class="formula">Weighted Σ (M1, M3, Prob30)</div>
-                        <div class="desc">將拉普拉斯定錨、馬可夫狀態與波段均值，進行多層次權重融合，作為系統防禦雜訊的最終壓艙石。</div>
+                        <div class="desc">多層次權重融合，作為系統防禦雜訊的壓艙石。</div>
                     </div>
                     <div class="doc-card">
-                        <div class="title">⑱ 一目均衡表 (Ichimoku 雲層突破)</div>
+                        <div class="title">⑱ 一目均衡表 (Ichimoku 突破)</div>
                         <div class="formula">CurrentMiss > Kijun-Sen</div>
-                        <div class="desc">東方趨勢之王。計算近期與長期的遺漏值中線，當目前遺漏值強勢升破「基準線雲層」時，代表行情進入絕佳佈局區。</div>
+                        <div class="desc">目前遺漏值強勢升破基準線雲層時，進入佈局區。</div>
                     </div>
                 </div>
             </div>
@@ -389,23 +389,42 @@
         }
     });
 
-    // 核心資料與 18 模型真實計算引擎 (數學全面除蟲版)
+    // 核心資料與 18 模型真實計算引擎 (含歷史動態機率與極端過熱熔斷)
     function compute18Masters(target, data) {
         let N = data.length;
         if(N === 0) return null;
 
         let missingHistory = [];
         let tempMiss = 0;
-        let hits = 0, hits10 = 0, hits30 = 0, hits50 = 0;
+        let hits = 0, hits5 = 0, hits10 = 0, hits30 = 0;
         
         let eqCurve = [0];
         let peak = 0, maxDD = 0;
         
-        // reversed 是由舊到新 (計算歷史動態軌跡使用)
         let reversed = [...data].reverse();
+
+        // --- 熱區動能條件機率追蹤器 ---
+        let hotStateEncounters = 0; 
+        let hotStateHits = 0;       
+        let window5 = [];           
 
         reversed.forEach((item, i) => {
             let isHit = item.draw.includes(target);
+            
+            // 判斷前 5 期（不含當期）是否處於過熱狀態
+            if (window5.length === 5) {
+                let recentHits = window5.filter(x => x).length;
+                if (recentHits >= 2) {
+                    hotStateEncounters++;
+                    if (isHit) hotStateHits++; // 熱區延續成功
+                }
+            }
+            
+            // 更新滑動窗口
+            window5.push(isHit);
+            if (window5.length > 5) window5.shift();
+
+            // 基礎資產曲線與遺漏值計算
             if (isHit) {
                 missingHistory.push(tempMiss);
                 tempMiss = 0;
@@ -423,19 +442,21 @@
         
         let currentMiss = tempMiss;
 
-        // data 是由新到舊 (計算近期機率使用)
         data.forEach((item, idx) => {
             let isHit = item.draw.includes(target);
             if(isHit) hits++;
+            if(idx < 5 && isHit) hits5++;   
             if(idx < 10 && isHit) hits10++;
             if(idx < 30 && isHit) hits30++;
-            if(idx < 50 && isHit) hits50++;
         });
 
         let probAll = hits / N;
         let prob10 = hits10 / 10;
         let prob30 = hits30 / 30;
-        let accel = (prob10 - prob30) * 100; // 短期動能扣除中期動能
+        let accel = (prob10 - prob30) * 100;
+        
+        // 歷史過熱時的真實延續機率
+        let hotStateProb = hotStateEncounters > 0 ? (hotStateHits / hotStateEncounters) : probAll;
 
         let avgMiss = missingHistory.length > 0 ? missingHistory.reduce((a,b)=>a+b,0)/missingHistory.length : (1/probAll - 1);
         let maxMiss = Math.max(...(missingHistory.length ? missingHistory : [0]), currentMiss, 1);
@@ -445,17 +466,13 @@
         // ----------------------------------------------------
         // 🏛️ 華爾街 8 巨頭
         // ----------------------------------------------------
-        let m1_Laplace = (hits + 1) / (N + 2); // Laplace 平滑
-        
-        // 凱利公式 Kelly Criterion: b 為淨賠率 = 3.3
+        let m1_Laplace = (hits + 1) / (N + 2); 
         let b_odds = 3.3; 
         let m2_Kelly = prob30 - ((1 - prob30) / b_odds); 
         
-        // 馬可夫轉移機率
         let mHit=0, mMiss=0, trk=0;
         reversed.forEach((item, idx) => {
             let isHit = item.draw.includes(target);
-            // 尋找歷史上遺漏值剛好等於現在的時刻
             if (idx > 0 && trk === currentMiss) {
                 if (isHit) mHit++; else mMiss++;
             }
@@ -463,21 +480,19 @@
         });
         let m3_Markov = (mHit + (probAll*5)) / (mHit + mMiss + 5); 
 
-        let m4_ZScore = stdDev > 0 ? (currentMiss - avgMiss) / stdDev : 0; // Z-Score
+        let m4_ZScore = stdDev > 0 ? (currentMiss - avgMiss) / stdDev : 0; 
         let m5_DD = maxDD; 
-        let m6_EV = (prob30 * 330) - ((1 - prob30) * 100); // 真實淨利 EV
+        let m6_EV = (prob30 * 330) - ((1 - prob30) * 100); 
 
-        // M7: RSI (擷取最近 14 期，使用 data 由新到舊切片)
         let gains = 0, losses = 0;
         let recent14 = data.slice(0, 14);
         recent14.forEach(item => {
             if (item.draw.includes(target)) gains += 330;
-            else losses += 100; // 絕對損失
+            else losses += 100; 
         });
         let rs = losses === 0 ? 100 : (gains / 14) / (losses / 14);
         let m7_RSI = losses === 0 ? 100 : 100 - (100 / (1 + rs));
 
-        // M8: Sharpe Ratio (擷取最近 30 期)
         let recent30 = data.slice(0, 30);
         let rets = recent30.map(item => item.draw.includes(target) ? 330 : -100);
         let avgRet = rets.reduce((a,b)=>a+b,0) / (rets.length||1);
@@ -485,26 +500,34 @@
         let stdRet = Math.sqrt(varRet) || 1;
         let m8_Sharpe = avgRet / stdRet;
 
-
         // ----------------------------------------------------
-        // ⛩️ 東方 10 巨頭 (0-100分)
+        // ⛩️ 東方 10 巨頭 
         // ----------------------------------------------------
-        let m9 = prob10 > probAll ? 85 : 45; // 蒙地卡羅動能
-        let m10 = 40; // 傅立葉共振
+        let m9 = prob10 > probAll ? 85 : 45; 
+        let m10 = 40; 
         if (missingHistory.length >= 2) {
             if (currentMiss === missingHistory[missingHistory.length-1]) m10 = 95;
             else if (currentMiss === missingHistory[missingHistory.length-2]) m10 = 80;
         }
         let totalOverMiss = missingHistory.filter(x => x >= currentMiss).length;
-        let m11 = totalOverMiss > 0 ? (1 / (totalOverMiss + 1)) * 100 : 99; // 貝氏條件機率
-        let m12 = (m4_ZScore > 2.0 || m4_ZScore < -1.5) ? 90 : 40; // 混沌極限
-        let m13 = currentMiss >= (maxMiss * 0.8) ? 95 : 30; // 卜瓦松反轉
-        let m14 = [1,2,3,5,8,13,21,34].includes(currentMiss) ? 85 : 35; // 費波那契
-        let m15 = (prob10 - prob30) > 0 ? 75 : 45; // 高斯偏態
-        let m16 = hits10 >= 3 ? 15 : (hits10 === 0 && currentMiss > 3 ? 85 : 55); // 馬可夫隱藏狀態
-        let m17 = (m1_Laplace*0.3 + m3_Markov*0.4 + prob30*0.3) * 100; // 神經擬合
+        let m11 = totalOverMiss > 0 ? (1 / (totalOverMiss + 1)) * 100 : 99; 
+        let m12 = (m4_ZScore > 2.0 || m4_ZScore < -1.5) ? 90 : 40; 
+        let m13 = currentMiss >= (maxMiss * 0.8) ? 95 : 30; 
+        let m14 = [1,2,3,5,8,13,21,34].includes(currentMiss) ? 85 : 35; 
+        let m15 = (prob10 - prob30) > 0 ? 75 : 45; 
+        
+        // ⑯ 馬可夫歷史狀態 (交由歷史機率決定動能)
+        let m16 = 55; // 預設中性
+        if (hits5 >= 2) {
+            if (hotStateProb > probAll * 1.2) m16 = 95; 
+            else if (hotStateProb < probAll * 0.8) m16 = 15; 
+            else m16 = 60;
+        } else if (hits10 === 0 && currentMiss > 3) {
+            m16 = 85; 
+        }
+        
+        let m17 = (m1_Laplace*0.3 + m3_Markov*0.4 + prob30*0.3) * 100; 
 
-        // M18: 一目均衡表 (動態陣列擷取防護)
         let tenkan = 40, kijun = 40;
         if (missingHistory.length >= 9) {
             let last9 = missingHistory.slice(-9);
@@ -514,8 +537,9 @@
             let last26 = missingHistory.slice(-26);
             kijun = (Math.max(...last26) + Math.min(...last26)) / 2;
         }
+        
         let m18 = 40;
-        if (currentMiss > kijun) m18 = 90; // 雲層突破
+        if (currentMiss > kijun) m18 = 90; 
         else if (currentMiss < tenkan) m18 = 30; 
         else m18 = 60;
 
@@ -523,9 +547,9 @@
         let survivalPR = missingHistory.length > 0 ? (shorterCount / missingHistory.length) * 100 : 50;
 
         // ----------------------------------------------------
-        // 💯 終極 18 矩陣精算配分 (嚴格映射 100 分制)
+        // 💯 總分計算與極端過熱熔斷機制
         // ----------------------------------------------------
-        let kellyClamped = Math.max(0, Math.min(m2_Kelly * 10, 1)) * 10; // 最大貢獻 10 分
+        let kellyClamped = Math.max(0, Math.min(m2_Kelly * 10, 1)) * 10; 
         let zScorePts = m4_ZScore > 1.5 ? 6 : (m4_ZScore > 0.5 ? 4 : (m4_ZScore > -0.5 ? 2 : 0));
         let ddPts = m5_DD <= 4000 ? 5 : (m5_DD <= 8000 ? 3 : 0);
         let evPts = m6_EV > 20 ? 5 : (m6_EV > 0 ? 3 : 0);
@@ -533,27 +557,35 @@
         let sharpePts = m8_Sharpe > 0.5 ? 5 : (m8_Sharpe > 0 ? 3 : 0);
         
         let finalScore = 
-            (m1_Laplace * 100 * 0.08) + // Max ~ 8
-            kellyClamped +              // Max 10
-            (m3_Markov * 100 * 0.10) +  // Max ~ 10
-            zScorePts +                 // Max 6
-            ddPts +                     // Max 5
-            evPts +                     // Max 5
-            rsiPts +                    // Max 5
-            sharpePts +                 // Max 5
-            (m9 * 0.04) +               // Max 3.4
-            (m10 * 0.06) +              // Max 5.7
-            (m11 * 0.04) +              // Max 4.0
-            (m12 * 0.04) +              // Max 3.6
-            (m13 * 0.06) +              // Max 5.7
-            (m14 * 0.04) +              // Max 3.4
-            (m15 * 0.04) +              // Max 3.0
-            (m16 * 0.04) +              // Max 3.4
-            (m17 * 0.05) +              // Max 5.0
-            (m18 * 0.04);               // Max 3.6
+            (m1_Laplace * 100 * 0.08) + 
+            kellyClamped + 
+            (m3_Markov * 100 * 0.10) + 
+            zScorePts + 
+            ddPts + 
+            evPts + 
+            rsiPts + 
+            sharpePts + 
+            (m9 * 0.04) + 
+            (m10 * 0.06) + 
+            (m11 * 0.04) + 
+            (m12 * 0.04) + 
+            (m13 * 0.06) + 
+            (m14 * 0.04) + 
+            (m15 * 0.04) + 
+            (m16 * 0.04) + 
+            (m17 * 0.05) + 
+            (m18 * 0.04);
+
+        // 🛑 絕對熔斷機制：近 5 期開出 3 次以上，無視一切指標，強制打入冷宮
+        if (hits5 >= 3) {
+            finalScore = Math.min(finalScore, 35); 
+        } else if (hits5 === 2 && currentMiss === 0) {
+            // 剛好連開 2 次且當期又開，給予輕度回檔壓力測試
+            finalScore = finalScore - 15; 
+        }
 
         return { 
-            currentMiss, avgMiss, maxMiss, missingHistory, probAll, prob30, hits10, accel, survivalPR,
+            currentMiss, avgMiss, maxMiss, missingHistory, probAll, prob30, hits10, hits5, accel, survivalPR, hotStateProb,
             m1_Laplace, m2_Kelly, m3_Markov, m4_ZScore, m5_DD, m6_EV, m7_RSI, m8_Sharpe,
             m9, m10, m11, m12, m13, m14, m15, m16, m17, m18, finalScore
         };
@@ -583,7 +615,7 @@
         let rank = allScores.findIndex(x => x.ball === target);
         
         let gradeHtml = '';
-        if (rank < 3) { // 0, 1, 2
+        if (rank < 3) { 
             gradeHtml = `<div style="padding:14px; background:#fef2f2; border:2px solid #fca5a5; border-radius:8px; color:#b91c1c; font-weight:bold; font-size:15px; text-align:center; box-shadow:0 4px 6px rgba(248,113,113,0.1);">🔥 綜合評比分級：【S 級 (絕對主將)】<br><span style="font-size:12px; color:#7f1d1d; font-weight:bold; display:block; margin-top:4px;">(全盤第 ${rank+1} 名) - 極限爆發區間，強烈建議納入核心主牌！</span></div>`;
         } else if (rank >= 3 && rank < 9) {
             gradeHtml = `<div style="padding:14px; background:#ecfdf5; border:2px solid #6ee7b7; border-radius:8px; color:#047857; font-weight:bold; font-size:15px; text-align:center; box-shadow:0 4px 6px rgba(52,211,153,0.1);">🟢 綜合評比分級：【A 級 (優質副牌)】<br><span style="font-size:12px; color:#064e3b; font-weight:bold; display:block; margin-top:4px;">(全盤第 ${rank+1} 名) - 勝率與動能具水準，適合防禦與副牌搭配。</span></div>`;
@@ -602,7 +634,6 @@
         document.getElementById('sb-p-drag').innerHTML = st.maxMiss + ' 期';
         document.getElementById('sb-p-30').innerHTML = (st.prob30*100).toFixed(1) + '%';
 
-        // 18 宮格紅綠燈邏輯 (嚴格閾值過濾)
         let c1 = st.m1_Laplace > st.probAll ? 'highlight' : 'danger';
         let c2 = st.m2_Kelly > 0 ? 'highlight' : 'danger';
         let c3 = st.m3_Markov > st.probAll ? 'highlight' : 'danger';
@@ -640,7 +671,7 @@
             <div class="giant-card ${c13}"><div class="g-title">⑬卜瓦松反轉</div><div class="g-val">${st.m13.toFixed(0)} 分</div></div>
             <div class="giant-card ${c14}"><div class="g-title">⑭費波那契數列</div><div class="g-val">${st.m14.toFixed(0)} 分</div></div>
             <div class="giant-card ${c15}"><div class="g-title">⑮高斯回歸偏態</div><div class="g-val">${st.m15.toFixed(0)} 分</div></div>
-            <div class="giant-card ${c16}"><div class="g-title">⑯馬可夫狀態</div><div class="g-val">${st.m16.toFixed(0)} 分</div></div>
+            <div class="giant-card ${c16}"><div class="g-title">⑯馬可夫歷史狀態</div><div class="g-val">${st.m16.toFixed(0)} 分</div></div>
             <div class="giant-card ${c17}"><div class="g-title">⑰深度神經擬合</div><div class="g-val">${st.m17.toFixed(0)} 分</div></div>
             <div class="giant-card ${c18}"><div class="g-title">⑱一目均衡突破</div><div class="g-val">${st.m18.toFixed(0)} 分</div></div>
         `;
