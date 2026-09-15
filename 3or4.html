@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>🎯 同區極限偏態戰情室 (獨立版)</title>
+    <title>🎯 同區極限偏態戰情室 (雙引擎版)</title>
     <style>
         :root {
             --bg-color: #f8fafc; 
@@ -12,10 +12,11 @@
             --danger-color: #dc2626;
             --purple-color: #7c3aed;
             --orange-color: #ea580c;
+            --blue-color: #0284c7;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Microsoft JhengHei", sans-serif; }
         body { background-color: var(--bg-color); color: var(--text-main); padding: 12px; line-height: 1.5; }
-        .container { max-width: 800px; margin: 0 auto; }
+        .container { max-width: 900px; margin: 0 auto; }
         
         header { 
             background: linear-gradient(135deg, #ffffff, #fff7ed); border: 1px solid #fed7aa;
@@ -27,41 +28,43 @@
             font-weight: 900; margin-bottom: 8px;
         }
         
-        .panel { background: var(--panel-bg); padding: 16px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .panel-title { font-size: 16px; font-weight: 900; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f1f5f9; padding-bottom: 12px; color: var(--text-main); }
-        
-        select { padding: 6px 12px; font-weight: bold; font-size: 14px; border-radius: 6px; border: 2px solid #cbd5e1; outline: none; background: #f8fafc; color: #334155; }
+        .panel { background: var(--panel-bg); padding: 16px; border-radius: 12px; border: 2px solid #e2e8f0; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .panel-title { font-size: 18px; font-weight: 900; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; border-bottom: 2px solid #f1f5f9; padding-bottom: 10px; }
         
         .monitor-box { background: #fffbeb; padding: 16px; border-radius: 10px; border: 2px solid #fde047; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
         
         .bias-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
         @media (min-width: 768px) { .bias-grid { grid-template-columns: repeat(2, 1fr); } }
-        .bias-card { padding: 20px; border-radius: 12px; border: 2px solid #e2e8f0; background: #f8fafc; transition: all 0.3s ease; }
-        .bias-card h3 { font-size: 18px; font-weight: 900; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; color:#334155; }
-        .bias-badge { padding: 6px 12px; border-radius: 20px; font-size: 13px; font-weight: bold; background: #e2e8f0; color: #475569; }
+        .bias-card { padding: 16px; border-radius: 12px; border: 2px solid #e2e8f0; background: #f8fafc; transition: all 0.3s ease; }
+        .bias-card h3 { font-size: 16px; font-weight: 900; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; color:#334155; }
+        .bias-badge { padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; background: #e2e8f0; color: #475569; }
         
-        .bias-card.active-a { border-color: #f87171; background: #fef2f2; box-shadow: 0 6px 16px rgba(239,68,68,0.2); }
+        .bias-card.active-a { border-color: #f87171; background: #fef2f2; box-shadow: 0 4px 12px rgba(239,68,68,0.15); }
         .bias-card.active-a .bias-badge { background: #dc2626; color: white; animation: pulse 1.5s infinite; }
-        .bias-card.active-b { border-color: #c084fc; background: #faf5ff; box-shadow: 0 6px 16px rgba(168,85,247,0.2); }
+        .bias-card.active-b { border-color: #c084fc; background: #faf5ff; box-shadow: 0 4px 12px rgba(168,85,247,0.15); }
         .bias-card.active-b .bias-badge { background: #9333ea; color: white; animation: pulse 1.5s infinite; }
         
         @keyframes pulse { 0% { transform: scale(0.95); opacity: 0.8; } 50% { transform: scale(1.05); opacity: 1; } 100% { transform: scale(0.95); opacity: 0.8; } }
         
-        .sugg-box { margin-top: 16px; padding-top: 16px; border-top: 1px dashed #cbd5e1; }
+        .sugg-box { margin-top: 12px; padding-top: 12px; border-top: 1px dashed #cbd5e1; }
         .sugg-box ul { list-style: none; padding: 0; }
-        .sugg-box li { display: flex; justify-content: space-between; font-size: 14px; font-weight: bold; margin-bottom: 6px; color: #475569; }
-        .sugg-box li span.del-num { color: #dc2626; font-size: 18px; font-weight: 900; font-family: monospace; }
+        .sugg-box li { display: flex; justify-content: space-between; font-size: 13px; font-weight: bold; margin-bottom: 6px; color: #475569; }
+        .sugg-box li span.del-num { color: #dc2626; font-size: 16px; font-weight: 900; font-family: monospace; }
         
         #global-loader { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.95); z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center; transition: opacity 0.3s; }
         .loader-spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top-color: var(--orange-color); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom:12px;}
         @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* 讓 539 跟 天天樂 的標題顏色區分 */
+        .title-539 { color: var(--blue-color); }
+        .title-tt { color: var(--purple-color); }
     </style>
 </head>
 <body>
 
 <div id="global-loader">
     <div class="loader-spinner"></div>
-    <h2 style="color:var(--text-main); font-weight:900; font-size:18px;">☁️ 戰情室數據庫連線同步中...</h2>
+    <h2 style="color:var(--text-main); font-weight:900; font-size:18px;">☁️ 雙引擎數據庫連線同步中...</h2>
 </div>
 
 <div class="container">
@@ -70,54 +73,85 @@
         <div style="font-size: 13px; color: #ea580c; font-weight: bold;">(已與主系統開獎號碼資料庫 100% 雲端同步)</div>
     </header>
 
-    <div class="panel">
-        <div class="panel-title">
-            <span>📡 偏態監控面板</span>
-            <div style="display: flex; gap: 8px; align-items: center;">
-                <select id="bias-game-select" onchange="renderBiasPanel()">
-                    <option value="539-9000">今彩 539</option>
-                    <option value="tt-9000">天天樂</option>
-                </select>
-            </div>
+    <!-- ========================================== -->
+    <!-- 🟢 今彩 539 面板 -->
+    <!-- ========================================== -->
+    <div class="panel" style="border-top: 4px solid var(--blue-color);">
+        <div class="panel-title title-539">
+            <span>📊 今彩 539 - 偏態監控</span>
         </div>
         
         <div class="monitor-box">
-            <span style="font-size:16px; font-weight:bold; color:#b45309;">📊 當前大盤狀態監控</span>
-            <span style="font-size:16px; font-weight:900; color:#d97706; background:#fef9c3; padding:6px 14px; border-radius:20px; border:1px solid #fde047;">
-                連續未出同區 3顆以上： <span id="bias-consecutive" style="font-size:24px; color:#dc2626;">0</span> 期
+            <span style="font-size:15px; font-weight:bold; color:#b45309;">大盤狀態監控</span>
+            <span style="font-size:15px; font-weight:900; color:#d97706; background:#fef9c3; padding:4px 12px; border-radius:20px; border:1px solid #fde047;">
+                連續未出 3顆以上： <span id="bias-consecutive-539" style="font-size:20px; color:#dc2626;">0</span> 期
             </span>
         </div>
 
         <div class="bias-grid">
-            <!-- 策略 A -->
-            <div id="bias-card-a" class="bias-card">
-                <h3>策略 A (量化正收益) <span id="bias-badge-a" class="bias-badge">觀望中</span></h3>
-                <p style="font-size:14px; color:#64748b; margin-bottom:8px;">進場條件：連 5 期未開出同區 3 顆。<br>打法：<strong style="color:#0f172a;">各區刪1極冷號，壓至 756 碰。</strong></p>
-                <div id="bias-sugg-a" class="sugg-box" style="display:none;">
-                    <div style="color:#dc2626; font-weight:bold; font-size:15px; margin-bottom:12px;">🔥 達標！建議刪除以下極端死號：</div>
-                    <ul id="bias-list-a"></ul>
-                    <div style="margin-top:12px; font-size:12px; color:#475569; background:#f1f5f9; padding:8px; border-radius:6px; line-height: 1.5;">💡 提示：此策略中3顆即淨賺約1520元，中4顆淨賺約9.3萬。</div>
+            <div id="bias-card-a-539" class="bias-card">
+                <h3>策略 A (量化正收益) <span id="bias-badge-a-539" class="bias-badge">觀望中</span></h3>
+                <p style="font-size:13px; color:#64748b; margin-bottom:6px;">條件：連 5 期未出同區 3 顆。<br>打法：<strong style="color:#0f172a;">各區刪1冷號，壓至 756 碰。</strong></p>
+                <div id="bias-sugg-a-539" class="sugg-box" style="display:none;">
+                    <div style="color:#dc2626; font-weight:bold; font-size:14px; margin-bottom:10px;">🔥 達標！建議刪除極端死號：</div>
+                    <ul id="bias-list-a-539"></ul>
                 </div>
             </div>
 
-            <!-- 策略 B -->
-            <div id="bias-card-b" class="bias-card">
-                <h3>策略 B (防呆狙擊手) <span id="bias-badge-b" class="bias-badge">觀望中</span></h3>
-                <p style="font-size:14px; color:#64748b; margin-bottom:8px;">進場條件：連 7 期未開出同區 3 顆。<br>打法：<strong style="color:#0f172a;">保本防呆，四區 1200 碰全包。</strong></p>
-                <div id="bias-sugg-b" class="sugg-box" style="display:none; text-align:center;">
-                    <div style="font-size:22px; font-weight:900; color:#9333ea; margin-bottom:12px; margin-top:10px;">🎯 狙擊時機已到！</div>
-                    <div style="font-size:15px; color:#475569; font-weight:bold; line-height: 1.6;">今晚不刪牌直接滿注進場，<br>等待爆發，睡覺免煩惱！</div>
+            <div id="bias-card-b-539" class="bias-card">
+                <h3>策略 B (防呆狙擊手) <span id="bias-badge-b-539" class="bias-badge">觀望中</span></h3>
+                <p style="font-size:13px; color:#64748b; margin-bottom:6px;">條件：連 7 期未出同區 3 顆。<br>打法：<strong style="color:#0f172a;">保本防呆，四區 1200 碰全包。</strong></p>
+                <div id="bias-sugg-b-539" class="sugg-box" style="display:none; text-align:center;">
+                    <div style="font-size:18px; font-weight:900; color:#9333ea; margin-bottom:8px; margin-top:6px;">🎯 狙擊時機已到！</div>
+                    <div style="font-size:13px; color:#475569; font-weight:bold; line-height: 1.5;">今晚不刪牌直接滿注進場，<br>等待爆發，睡覺免煩惱！</div>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- ========================================== -->
+    <!-- 🟣 天天樂 面板 -->
+    <!-- ========================================== -->
+    <div class="panel" style="border-top: 4px solid var(--purple-color);">
+        <div class="panel-title title-tt">
+            <span>🚀 天天樂 - 偏態監控</span>
+        </div>
+        
+        <div class="monitor-box">
+            <span style="font-size:15px; font-weight:bold; color:#b45309;">大盤狀態監控</span>
+            <span style="font-size:15px; font-weight:900; color:#d97706; background:#fef9c3; padding:4px 12px; border-radius:20px; border:1px solid #fde047;">
+                連續未出 3顆以上： <span id="bias-consecutive-tt" style="font-size:20px; color:#dc2626;">0</span> 期
+            </span>
+        </div>
+
+        <div class="bias-grid">
+            <div id="bias-card-a-tt" class="bias-card">
+                <h3>策略 A (量化正收益) <span id="bias-badge-a-tt" class="bias-badge">觀望中</span></h3>
+                <p style="font-size:13px; color:#64748b; margin-bottom:6px;">條件：連 5 期未出同區 3 顆。<br>打法：<strong style="color:#0f172a;">各區刪1冷號，壓至 756 碰。</strong></p>
+                <div id="bias-sugg-a-tt" class="sugg-box" style="display:none;">
+                    <div style="color:#dc2626; font-weight:bold; font-size:14px; margin-bottom:10px;">🔥 達標！建議刪除極端死號：</div>
+                    <ul id="bias-list-a-tt"></ul>
+                </div>
+            </div>
+
+            <div id="bias-card-b-tt" class="bias-card">
+                <h3>策略 B (防呆狙擊手) <span id="bias-badge-b-tt" class="bias-badge">觀望中</span></h3>
+                <p style="font-size:13px; color:#64748b; margin-bottom:6px;">條件：連 7 期未出同區 3 顆。<br>打法：<strong style="color:#0f172a;">保本防呆，四區 1200 碰全包。</strong></p>
+                <div id="bias-sugg-b-tt" class="sugg-box" style="display:none; text-align:center;">
+                    <div style="font-size:18px; font-weight:900; color:#9333ea; margin-bottom:8px; margin-top:6px;">🎯 狙擊時機已到！</div>
+                    <div style="font-size:13px; color:#475569; font-weight:bold; line-height: 1.5;">今晚不刪牌直接滿注進場，<br>等待爆發，睡覺免煩惱！</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    // 與主系統完全相同的 Firebase 設定，確保號碼同步
+    // Firebase 雲端設定
     const firebaseConfig = {
         apiKey: "AIzaSyC9A3HggBSJg2RJJpHEb10Fkf4S6cNqgmE",
         authDomain: "gogogo539.firebaseapp.com",
@@ -135,13 +169,12 @@
     let spaceData = { 'tt-9000': [], '539-9000': [] };
     let isDataLoaded = false; 
 
-    // 即時監聽主資料庫的開獎資料
+    // 雙引擎同時監聽
     onSnapshot(collection(db, "matrix_systems"), (snapshot) => {
         snapshot.docChanges().forEach((change) => {
             let d = change.doc.data();
             let spaceKey = d.space;
             
-            // 偏態戰情室只需要 9000 碰的歷史資料軌跡即可運算
             if (spaceKey === 'tt-9000' || spaceKey === '539-9000') {
                 if (change.type === "added" || change.type === "modified") {
                     let existingIdx = spaceData[spaceKey].findIndex(x => x.id === d.id);
@@ -160,14 +193,19 @@
             setTimeout(() => document.getElementById('global-loader').style.display = 'none', 300);
         }
         
-        window.renderBiasPanel();
+        // 資料有變動時，同時渲染兩個面板
+        window.renderAllPanels();
     });
 
-    // 核心運算邏輯
-    window.renderBiasPanel = function() {
-        let game = document.getElementById('bias-game-select').value;
-        let data = spaceData[game] || [];
-        // 反轉陣列，由舊算到新，才能正確找出最後連槓次數與遺漏
+    window.renderAllPanels = function() {
+        calculateAndRender('539-9000', '539');
+        calculateAndRender('tt-9000', 'tt');
+    };
+
+    // 核心運算邏輯 (透過前綴區分 DOM 節點，互不干擾)
+    function calculateAndRender(spaceKey, prefix) {
+        let data = spaceData[spaceKey] || [];
+        // 反轉陣列，由舊算到新
         let sortedData = [...data].sort((a,b) => a.date > b.date ? 1 : -1); 
         
         let consecutiveMiss = 0;
@@ -180,7 +218,7 @@
             
             balls.forEach(num => {
                 let n = Number(num);
-                lastSeen[n] = index; // 記錄出現的 index
+                lastSeen[n] = index; // 記錄最後出現的 index
                 if (n <= 9) zones[0]++;
                 else if (n <= 19) zones[1]++;
                 else if (n <= 29) zones[2]++;
@@ -210,23 +248,23 @@
         let c3 = findColdest(20, 29);
         let c4 = findColdest(30, 39);
 
-        // 更新 UI
-        document.getElementById('bias-consecutive').innerText = consecutiveMiss;
+        // 更新 UI (使用 prefix 定位專屬節點)
+        document.getElementById(`bias-consecutive-${prefix}`).innerText = consecutiveMiss;
         
-        let cardA = document.getElementById('bias-card-a');
-        let badgeA = document.getElementById('bias-badge-a');
-        let suggA = document.getElementById('bias-sugg-a');
+        let cardA = document.getElementById(`bias-card-a-${prefix}`);
+        let badgeA = document.getElementById(`bias-badge-a-${prefix}`);
+        let suggA = document.getElementById(`bias-sugg-a-${prefix}`);
         
-        let cardB = document.getElementById('bias-card-b');
-        let badgeB = document.getElementById('bias-badge-b');
-        let suggB = document.getElementById('bias-sugg-b');
+        let cardB = document.getElementById(`bias-card-b-${prefix}`);
+        let badgeB = document.getElementById(`bias-badge-b-${prefix}`);
+        let suggB = document.getElementById(`bias-sugg-b-${prefix}`);
 
         // 策略 A (>= 5)
         if (consecutiveMiss >= 5) {
             cardA.className = "bias-card active-a";
             badgeA.innerText = "進場時刻";
             suggA.style.display = "block";
-            document.getElementById('bias-list-a').innerHTML = `
+            document.getElementById(`bias-list-a-${prefix}`).innerHTML = `
                 <li><span>第1柱 (01-09):</span> <span class="del-num">${String(c1).padStart(2,'0')}</span></li>
                 <li><span>第2柱 (10-19):</span> <span class="del-num">${String(c2).padStart(2,'0')}</span></li>
                 <li><span>第3柱 (20-29):</span> <span class="del-num">${String(c3).padStart(2,'0')}</span></li>
@@ -248,7 +286,7 @@
             badgeB.innerText = "觀望中";
             suggB.style.display = "none";
         }
-    };
+    }
 </script>
 </body>
 </html>
