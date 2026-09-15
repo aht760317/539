@@ -48,7 +48,7 @@
         .form-group input { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; font-weight: bold; outline: none; transition: 0.2s; background: #f8fafc; text-align: center; }
         
         .btn-main { border: none; padding: 12px; font-size: 14px; font-weight: 900; border-radius: 8px; cursor: pointer; width: 100%; transition: 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.1); color: white; }
-        .btn-main:hover { opacity: 0.9; }
+        .btn-main:hover { opacity: 0.9; transform: translateY(-1px); }
 
         /* 單碼詳細透視樣式 */
         .sb-dash-header { display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 900; color: var(--text-main); border-bottom: 2px solid #f1f5f9; padding-bottom: 8px; margin-bottom: 12px; }
@@ -87,7 +87,7 @@
         .roster-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 14px; }
         @media (min-width: 768px) { .roster-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (min-width: 1024px) { .roster-grid { grid-template-columns: repeat(4, 1fr); } }
-        .roster-card { border-radius: 8px; padding: 12px; border: 1px solid #e2e8f0; background: #fff; }
+        .roster-card { border-radius: 8px; padding: 12px; border: 1px solid #e2e8f0; background: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
         .roster-card h4 { font-size: 14px; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 2px solid #f1f5f9; font-weight:900; text-align:center;}
         .roster-card.s-class h4 { color: #dc2626; border-color: #fecaca; }
         .roster-card.a-class h4 { color: #059669; border-color: #a7f3d0; }
@@ -156,8 +156,8 @@
     <!-- ========================================== -->
     <!-- 📊 區塊一：五三九 (539-9000) 獨立操盤區 -->
     <!-- ========================================== -->
-    <div style="border: 2px solid var(--orange-color); border-radius: 12px; padding: 12px; margin-bottom: 24px; background: #fffaf5;">
-        <h2 style="color: var(--orange-color); font-size: 18px; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
+    <div style="border: 2px solid var(--orange-color); border-radius: 12px; padding: 12px; margin-bottom: 24px; background: #fffaf5; box-shadow: 0 4px 10px rgba(234, 88, 12, 0.05);">
+        <h2 style="color: var(--orange-color); font-size: 18px; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; font-weight: 900;">
             📊 539 專屬量化操盤區
         </h2>
 
@@ -230,8 +230,8 @@
     <!-- ========================================== -->
     <!-- 🚀 區塊二：天天樂 (tt-9000) 獨立操盤區 -->
     <!-- ========================================== -->
-    <div style="border: 2px solid var(--tt-color); border-radius: 12px; padding: 12px; margin-bottom: 24px; background: #faf5ff;">
-        <h2 style="color: var(--tt-color); font-size: 18px; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
+    <div style="border: 2px solid var(--tt-color); border-radius: 12px; padding: 12px; margin-bottom: 24px; background: #faf5ff; box-shadow: 0 4px 10px rgba(124, 58, 237, 0.05);">
+        <h2 style="color: var(--tt-color); font-size: 18px; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; font-weight: 900;">
             🚀 天天樂 專屬量化操盤區
         </h2>
 
@@ -461,6 +461,7 @@
         }
     });
 
+    // 核心 18 宗師演算法引擎 (包含剛才手動演練的所有數學公式)
     function compute18Masters(target, data) {
         let N = data.length;
         if(N === 0) return null;
@@ -477,6 +478,7 @@
         let hotStateHits = 0;        
         let window5 = [];            
 
+        // 歷史回測與資金曲線生成
         reversed.forEach((item, i) => {
             let isHit = item.draw.includes(target);
             
@@ -527,7 +529,7 @@
         let variance = missingHistory.reduce((acc, val) => acc + Math.pow(val - avgMiss, 2), 0) / (missingHistory.length || 1);
         let stdDev = Math.sqrt(variance || 1);
         
-        // 🏛️ 華爾街 8 巨頭
+        // 🏛️ 華爾街 8 巨頭運算
         let m1_Laplace = (hits + 1) / (N + 2); 
         let b_odds = 3.3; 
         let m2_Kelly = prob30 - ((1 - prob30) / b_odds); 
@@ -562,7 +564,7 @@
         let stdRet = Math.sqrt(varRet) || 1;
         let m8_Sharpe = avgRet / stdRet;
 
-        // ⛩️ 東方 10 巨頭
+        // ⛩️ 東方 10 巨頭運算
         let m9 = prob10 > probAll ? 85 : 45; 
         let m10 = 40; 
         if (missingHistory.length >= 2) {
@@ -619,6 +621,7 @@
             (m13 * 0.06) + (m14 * 0.04) + (m15 * 0.04) + (m16 * 0.04) + 
             (m17 * 0.05) + (m18 * 0.04);
 
+        // 🛑 極端過熱熔斷防禦機制
         if (hits5 >= 3) {
             finalScore = Math.min(finalScore, 35); 
         } else if (hits5 === 2 && currentMiss === 0) {
