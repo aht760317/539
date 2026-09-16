@@ -2,354 +2,1160 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>539 三柱 1800碰 實戰勝率與損益統計儀表板</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>⚡ 雙核心量化操盤系統 | 華爾街量化實戰版</title>
     <style>
+        /* ==========================================
+           1. 全局變數與基礎字體設定 (清爽明亮專業版)
+           ========================================== */
         :root {
-            --bg-main: #f8fafc;
+            --bg-color: #f8fafc; 
             --panel-bg: #ffffff;
-            --text-dark: #0f172a;
+            --panel-border: #e2e8f0;
+            --text-main: #0f172a;
             --text-muted: #64748b;
-            --primary: #1e3a8a;
-            --primary-light: #eff6ff;
-            --accent-col1: #ff7e42;
-            --accent-col2: #10b981;
-            --accent-col3: #3b82f6;
-            --success: #15803d;
-            --success-bg: #dcfce7;
-            --danger: #b91c1c;
-            --danger-bg: #fee2e2;
-            --border-color: #e2e8f0;
+            --primary-color: #0284c7;
+            --success-color: #059669;
+            --danger-color: #dc2626;
+            --purple-color: #7c3aed;
+            --orange-color: #ea580c;
+            --ball-size: 28px;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Microsoft JhengHei", sans-serif; }
-        body { background-color: var(--bg-main); color: var(--text-dark); padding: 24px; line-height: 1.5; }
-        .container { max-width: 1400px; margin: 0 auto; }
-        header { background: linear-gradient(135deg, #1e293b, #0f172a); color: #ffffff; padding: 24px; border-radius: 12px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
-        header h1 { font-size: 24px; font-weight: 700; }
-        header p { color: #94a3b8; font-size: 14px; margin-top: 4px; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Microsoft JhengHei", sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background-color: var(--bg-color); color: var(--text-main); padding: 8px; line-height: 1.5; }
+        .container { max-width: 1200px; margin: 0 auto; }
+
+        /* ==========================================
+           2. 頂部導航列 (Header)
+           ========================================== */
+        header { 
+            background: linear-gradient(135deg, #ffffff, #f0f9ff); border: 1px solid #bae6fd;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); padding: 12px; border-radius: 12px; margin-bottom: 12px; text-align: center; 
+        }
+        header h1 { 
+            font-size: clamp(16px, 4vw, 22px); letter-spacing: 0.5px;
+            background: linear-gradient(90deg, #0284c7, #7c3aed); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            font-weight: 900; margin-bottom: 4px;
+        }
+        .cloud-badge { 
+            display: inline-flex; align-items: center; gap: 4px; background: #ecfdf5; border: 1px solid #a7f3d0;
+            padding: 2px 8px; border-radius: 20px; font-size: 10px; font-weight: bold; color: #065f46; 
+        }
+        .dot { width: 6px; height: 6px; border-radius: 50%; background: #10b981; box-shadow: 0 0 4px #10b981; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { transform: scale(0.9); opacity: 0.7; } 50% { transform: scale(1.1); opacity: 1; } 100% { transform: scale(0.9); opacity: 0.7; } }
+
+        /* 年度切換器 */
+        .year-filter-bar {
+            background: #1e293b; color: #fff; padding: 10px; border-radius: 8px; margin-bottom: 14px;
+            display: flex; justify-content: center; align-items: center; gap: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .year-filter-bar select {
+            padding: 6px 12px; font-size: 14px; font-weight: bold; border-radius: 6px; border: 2px solid #3b82f6;
+            background: #0f172a; color: #60a5fa; cursor: pointer; outline: none; transition: 0.2s;
+        }
+
+        /* ==========================================
+           3. 核心功能切換按鈕 (Mode Switcher)
+           ========================================== */
+        .mode-switcher { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin-bottom: 14px; }
+        @media (min-width: 768px) { .mode-switcher { grid-template-columns: repeat(4, 1fr); } }
+        @media (min-width: 1024px) { .mode-switcher { grid-template-columns: repeat(9, 1fr); } } 
         
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px; }
-        .stat-card { background: var(--panel-bg); padding: 20px; border-radius: 12px; border: 1px solid var(--border-color); display: flex; flex-direction: column; }
-        .stat-card .label { font-size: 14px; color: var(--text-muted); font-weight: 500; margin-bottom: 8px; }
-        .stat-card .value { font-size: 28px; font-weight: 700; }
-        .stat-card.profit-positive { background-color: var(--success-bg); border-color: #bbf7d0; }
-        .stat-card.profit-positive .value { color: var(--success); }
-        .stat-card.profit-negative { background-color: var(--danger-bg); border-color: #fecaca; }
-        .stat-card.profit-negative .value { color: var(--danger); }
+        .mode-btn { 
+            padding: 8px 4px; border: 1.5px solid #cbd5e1; background: #fff; color: #475569; 
+            font-size: 12px; font-weight: 800; border-radius: 8px; cursor: pointer; transition: 0.2s; text-align: center; white-space: nowrap; box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .mode-btn:hover { background: #f8fafc; }
+        .mode-btn.active { border-color: var(--primary-color); background: var(--primary-color); color: #fff; box-shadow: 0 2px 8px rgba(2, 132, 199, 0.3); }
+        .mode-btn.arena-btn.active { border-color: var(--purple-color); background: var(--purple-color); box-shadow: 0 2px 8px rgba(124, 58, 237, 0.3); }
+        .mode-btn.ledger-btn.active { border-color: var(--success-color); background: var(--success-color); box-shadow: 0 2px 8px rgba(5, 150, 105, 0.3); }
+
+        .mode-btn.single-btn { border-color: var(--orange-color); background: #fff; color: var(--orange-color); text-decoration: none; display: flex; justify-content: center; align-items: center; }
+        .mode-btn.single-btn:hover { background: var(--orange-color); color: #fff; box-shadow: 0 2px 8px rgba(234, 88, 12, 0.3); }
+
+        /* ==========================================
+           4. 基礎面板與網格 (Panels)
+           ========================================== */
+        .panel { background: var(--panel-bg); padding: 14px; border-radius: 12px; border: 1px solid var(--panel-border); margin-bottom: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .panel-title { font-size: 14px; font-weight: 900; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px; color: var(--text-main); }
         
-        .main-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; margin-bottom: 24px; }
-        @media (max-width: 1024px) { .main-layout { grid-template-columns: 1fr; } }
+        .form-row { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+        @media (min-width: 768px) { .form-row { flex-direction: row; } }
+        .form-group label { display: block; font-size: 11px; font-weight: 800; color: #334155; margin-bottom: 2px; }
+        .form-group input, .form-group select { width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; font-family: monospace; font-weight: bold; outline:none; transition: 0.2s; }
+        textarea { width: 100%; height: 80px; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-family: monospace; font-size: 12px; margin-bottom: 8px; outline:none; }
+        .btn-main { background: linear-gradient(135deg, #0284c7, #2563eb); color: white; border: none; padding: 10px; font-size: 13px; font-weight: 900; border-radius: 8px; cursor: pointer; width: 100%; transition: 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .btn-main:active { transform: translateY(1px); }
+
+        .guide-box { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px; margin-bottom: 14px; font-size: 12px; line-height: 1.6; }
+        .guide-box h4 { margin-bottom: 8px; color: #0f172a; font-size: 14px; display: flex; align-items: center; gap: 6px; cursor: pointer; }
+        .guide-grid { display: grid; grid-template-columns: 1fr; gap: 8px; margin-top: 10px; display: none; }
+        .guide-item { background: #fff; padding: 8px; border-radius: 6px; border-left: 4px solid var(--primary-color); box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+        .guide-item strong { color: var(--primary-color); }
+        .guide-target { color: var(--success-color); font-weight: 900; font-size: 11px; margin-top: 4px; display: block; }
+
+        .setting-grid { display: grid; grid-template-columns: 1fr; gap: 14px; align-items: stretch; }
+        @media (min-width: 900px) { .setting-grid { grid-template-columns: repeat(2, 1fr); } } 
+        .space-config-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px; display: flex; flex-direction: column; }
+        .space-config-card h4 { font-size: 13px; font-weight: 900; color: var(--purple-color); margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+        .setting-item label { display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 2px; font-weight: bold; }
+        .setting-item input { width: 100%; padding: 6px 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; font-family: monospace; font-weight: bold; }
+        .setting-item input:disabled { background: #f1f5f9; color: #94a3b8; border-color:#e2e8f0; }
         
-        .panel { background: var(--panel-bg); border-radius: 12px; border: 1px solid var(--border-color); padding: 24px; margin-bottom: 24px; }
-        .panel-title { font-size: 18px; font-weight: 600; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid var(--bg-main); display: flex; justify-content: space-between; align-items: center; }
+        .action-bar { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+        .action-bar input { padding: 8px; border: 1.5px solid #cbd5e1; border-radius: 6px; flex: 1; min-width: 120px; font-size: 13px; font-weight: bold; }
         
-        .settings-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 20px; background: #f8fafc; padding: 16px; border-radius: 8px; border: 1px dashed var(--border-color); }
-        .form-group { display: flex; flex-direction: column; gap: 6px; }
-        .form-group label { font-size: 13px; font-weight: 600; }
-        .form-group input { padding: 8px 12px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 14px; outline: none; }
+        .strategy-dashboard { background: linear-gradient(135deg, #1e1b4b, #312e81); color: #fff; padding: 16px; border-radius: 12px; margin-bottom: 14px; box-shadow: 0 4px 12px rgba(49, 46, 129, 0.4); }
+        .strategy-dashboard h3 { font-size: 15px; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 6px; }
+        .dashboard-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        @media (min-width: 768px) { .dashboard-grid { grid-template-columns: repeat(2, 1fr); } }
+        .dash-card { background: rgba(255,255,255,0.1); border-radius: 8px; padding: 10px; border: 1px solid rgba(255,255,255,0.1); font-size: 12px; }
+        .dash-card h4 { color: #a5b4fc; font-size: 12px; margin-bottom: 4px; }
+
+        .radar-panel { background: linear-gradient(135deg, #fef2f2, #fff1f2); border: 2px dashed #fca5a5; border-radius: 12px; padding: 14px; margin-bottom: 14px; box-shadow: 0 4px 10px rgba(220, 38, 38, 0.08); }
+        .radar-panel h3 { font-size: 15px; color: #991b1b; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid #fecaca; padding-bottom: 6px; }
+        .radar-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        @media (min-width: 768px) { .radar-grid { grid-template-columns: repeat(2, 1fr); } }
+        .radar-card { background: #ffffff; border: 1px solid #fca5a5; border-radius: 8px; padding: 12px; font-size: 12px; line-height: 1.5; }
+        .radar-card h4 { color: #dc2626; font-size: 13px; font-weight: 900; margin-bottom: 6px; display:flex; justify-content:space-between; align-items:center;}
+        .radar-highlight { color: #b91c1c; font-weight: 900; font-size: 14px; }
         
-        /* 快速輸入區塊 */
-        .manual-input-box { display: flex; gap: 12px; align-items: flex-end; background: #fffbeb; padding: 16px; border-radius: 8px; border: 1px solid #fde68a; margin-bottom: 16px; }
-        .manual-input-box .form-group { flex: 1; }
+        .col-prob-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 8px 0; }
+        .col-prob-item { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 6px 8px; font-size: 11px; text-align: center; }
+        .col-prob-item.danger-col { background: #fff1f2; border-color: #fca5a5; }
+        .col-prob-item .col-title { font-weight: bold; color: #475569; margin-bottom: 2px; }
+        .col-prob-item.danger-col .col-title { color: #dc2626; }
+        .col-prob-item .col-val { font-weight: 900; font-size: 13px; color: #0284c7; }
+        .col-prob-item.danger-col .col-val { color: #dc2626; }
+
+        .ai-prediction-box { margin-top: auto; padding: 12px; background: linear-gradient(to bottom, #ffffff, #f8fafc); border: 2px solid #e2e8f0; border-radius: 10px; font-size: 12px; }
+        .strategy-box { margin: 0 0 10px 0; padding: 12px; border-radius: 8px; text-align: center; font-weight: 900; font-size: 13px; line-height: 1.5; transition: 0.3s; }
+        .strategy-box h6 { font-size:16px; margin:0 0 4px 0; }
+        .strategy-box .tomorrow-prob { font-size:14px; margin-top:4px; color:#1e293b; background: rgba(255,255,255,0.6); padding:4px; border-radius:4px;}
+
+        .grid-metrics { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin-top: 6px; }
+        @media (min-width: 768px) { .grid-metrics { grid-template-columns: repeat(4, 1fr); } }
         
-        .column-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 16px; }
-        @media (max-width: 640px) { .column-container { grid-template-columns: 1fr; } }
-        .col-box { border-radius: 10px; padding: 16px; border: 1px solid var(--border-color); }
-        .col-box.c1 { background-color: #fffaf7; border-top: 4px solid var(--accent-col1); }
-        .col-box.c2 { background-color: #f6fdf9; border-top: 4px solid var(--accent-col2); }
-        .col-box.c3 { background-color: #f8fafc; border-top: 4px solid var(--accent-col3); }
-        .col-box h3 { font-size: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; }
-        .ball-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(42px, 1fr)); gap: 8px; }
-        .ball { width: 42px; height: 42px; border-radius: 50%; background: #ffffff; border: 2px solid #cbd5e1; display: flex; align-items: center; justify-content: center; font-weight: 700; cursor: pointer; user-select: none; font-size: 15px; }
-        .col-box.c1 .ball.selected { background-color: var(--accent-col1); color: white; border-color: var(--accent-col1); }
-        .col-box.c2 .ball.selected { background-color: var(--accent-col2); color: white; border-color: var(--accent-col2); }
-        .col-box.c3 .ball.selected { background-color: var(--accent-col3); color: white; border-color: var(--accent-col3); }
+        .g-item { background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px; text-align: center; transition: 0.2s; display: flex; flex-direction: column; justify-content: center;}
+        .g-item .g-t { font-size: 10px; color: #475569; font-weight: bold; margin-bottom: 2px; }
+        .g-item .g-v { font-size: 13px; font-weight: 900; color: #0f172a; font-family: monospace; }
+        .g-item.hl { background: #ecfdf5; border-color: #34d399; }
+        .g-item.hl .g-t { color: #065f46; }
+        .g-item.hl .g-v { color: #059669; }
+        .g-item.dg { background: #fef2f2; border-color: #fca5a5; }
+        .g-item.dg .g-t { color: #991b1b; }
+        .g-item.dg .g-v { color: #dc2626; }
+
+        .btn-toggle-eastern { width: 100%; background: #f8fafc; color: #475569; border: 1.5px dashed #cbd5e1; padding: 8px; border-radius: 6px; font-size: 12px; font-weight: 800; cursor: pointer; transition: 0.2s; margin-top: 10px; }
+        .btn-toggle-eastern:hover { background: #e2e8f0; color: #0f172a; border-color: #94a3b8; }
+        .eastern-container { display: none; margin-top: 10px; border-top: 1px dashed #cbd5e1; padding-top: 10px; }
+
+        .ledger-stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 12px; }
+        @media (min-width: 768px) { .ledger-stats-grid { grid-template-columns: repeat(4, 1fr); } }
+        .ledger-stat-card { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px; text-align: center; }
+        .ledger-stat-card h4 { font-size: 11px; color: #64748b; margin-bottom: 4px; }
+        .ledger-stat-card p { font-size: 16px; font-weight: 900; font-family: monospace; margin: 0; }
+        .rec-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 10px; }
+        @media (min-width: 768px) { .rec-grid { grid-template-columns: repeat(2, 1fr); } }
+
+        .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 14px; }
+        @media (min-width: 768px) { .stats-grid { grid-template-columns: repeat(3, 1fr); } }
+        @media (min-width: 1024px) { .stats-grid { grid-template-columns: repeat(6, 1fr); } }
+        .stat-item { background: #fff; padding: 12px; border-radius: 8px; text-align: center; border: 1px solid #e2e8f0; display: flex; flex-direction: column; justify-content: center; }
+        .stat-item h3 { font-size: 11px; color: #64748b; margin-bottom: 4px; font-weight:bold;}
+        .stat-item p { font-size: 16px; font-weight: 900; font-family: monospace; margin:0;}
+
+        .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 8px; border: 1px solid #e2e8f0; max-height: 500px; overflow-y: auto; background:#fff;}
+        table { width: 100%; border-collapse: separate; border-spacing:0; font-size: 12px; min-width: 700px; }
+        th { background: #f8fafc; padding: 10px 4px; border-bottom: 2px solid #cbd5e1; color: #475569; white-space: nowrap; position: sticky; top: 0; z-index: 10; font-weight: 900; }
+        td { padding: 8px 4px; border-bottom: 1px solid #e2e8f0; text-align: center; vertical-align: middle; }
+        tr:hover td { background: #f1f5f9; }
         
-        .live-status { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 16px; margin-top: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
-        .live-selection-info { display: flex; gap: 16px; font-size: 14px; }
-        .live-pill { padding: 4px 10px; border-radius: 20px; font-weight: 600; color: white; }
-        .live-pill.p1 { background-color: var(--accent-col1); }
-        .live-pill.p2 { background-color: var(--accent-col2); }
-        .live-pill.p3 { background-color: var(--accent-col3); }
-        
-        .btn { padding: 10px 20px; border-radius: 6px; font-weight: 600; font-size: 14px; cursor: pointer; border: none; }
-        .btn-primary { background-color: #1d4ed8; color: white; }
-        .btn-primary:disabled { background-color: #cbd5e1; cursor: not-allowed; }
-        .btn-danger { background-color: #ef4444; color: white; }
-        .btn-secondary { background-color: #f1f5f9; color: var(--text-dark); border: 1px solid var(--border-color); }
-        .btn-warning { background-color: #f59e0b; color: white; }
-        
-        .rule-card { background: #f8fafc; border-left: 4px solid var(--primary); padding: 16px; border-radius: 0 8px 8px 0; font-size: 13px; margin-bottom: 12px; }
-        .rule-card h4 { margin-bottom: 6px; font-weight: 600; color: var(--primary); }
-        
-        .table-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .table-container { width: 100%; overflow-x: auto; background: white; border-radius: 8px; border: 1px solid var(--border-color); }
-        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
-        th { background-color: #f1f5f9; padding: 12px 16px; border-bottom: 2px solid var(--border-color); white-space: nowrap; }
-        td { padding: 14px 16px; border-bottom: 1px solid var(--border-color); }
-        
-        .badge { padding: 4px 8px; border-radius: 4px; font-weight: 600; font-size: 12px; display: inline-block; }
-        .badge-4 { background-color: #fef3c7; color: #d97706; border: 1px solid #fde68a; }
-        .badge-3 { background-color: #e0f2fe; color: #0284c7; border: 1px solid #bae6fd; }
-        .badge-0 { background-color: #f1f5f9; color: #64748b; border: 1px solid #e2e8f0; }
-        
-        .mini-ball-container { display: flex; gap: 4px; }
-        .mini-ball { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: white; }
-        .mini-ball.b1 { background-color: var(--accent-col1); }
-        .mini-ball.b2 { background-color: var(--accent-col2); }
-        .mini-ball.b3 { background-color: var(--accent-col3); }
-        
-        .text-success { color: var(--success); font-weight: 600; }
-        .text-danger { color: var(--danger); font-weight: 600; }
-        .text-muted { color: var(--text-muted); }
+        .badge { padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 11px; }
+        .bg-green { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0;}
+        .bg-red { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca;}
+        .bg-yellow { background: #fef9c3; color: #854d0e; border: 1px solid #fde047;}
+
+        .num-container { display: flex; gap: 3px; justify-content: center; flex-wrap: wrap; }
+        .num-ball { width: var(--ball-size); height: var(--ball-size); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 900; font-family: monospace; background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #78350f; border: 1px solid #b45309; }
+        .btn-tbl-action { background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 4px; padding: 2px 6px; cursor: pointer; font-size: 11px; font-weight: bold; }
+        .btn-tbl-action:hover { background: #e2e8f0; }
+
+        #global-loader { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.95); z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center; transition: opacity 0.3s; }
+        .loader-spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top-color: var(--primary-color); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom:12px;}
+        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
+
+<div id="global-loader">
+    <div class="loader-spinner"></div>
+    <h2 style="color:var(--text-main); font-weight:900; font-size:18px;">☁️ 雲端數據庫同步與量化矩陣重算中...</h2>
+</div>
+
 <div class="container">
     <header>
-        <div>
-            <h1>539 三柱包牌實戰記帳與智慧統計系統</h1>
-            <p>第一柱 (10-18) × 第二柱 (20-29) × 第三柱 (其餘) = 完美1800碰三星策略</p>
-        </div>
-        <div style="display: flex; gap: 8px;">
-            <button class="btn btn-secondary" onclick="exportData()">導出備份</button>
-            <button class="btn btn-secondary" onclick="importData()">導入數據</button>
-        </div>
+        <h1>⚡ 天天樂 & 五三九 雙核心量化操盤系統 ⚡</h1>
+        <div class="cloud-badge"><div class="dot"></div> Firebase 極速引擎 (矩陣動態優化版)</div>
     </header>
 
-    <div class="stats-grid">
-        <div class="stat-card"><span class="label">總記錄期數</span><span class="value" id="stat-total-draws">0 期</span></div>
-        <div class="stat-card"><span class="label">過關勝率 (中3或4碰)</span><span class="value" id="stat-win-rate">0.00%</span></div>
-        <div class="stat-card"><span class="label">累計總投入成本</span><span class="value" id="stat-total-cost">$0</span></div>
-        <div class="stat-card"><span class="label">累計總中獎金額</span><span class="value" id="stat-total-prize">$0</span></div>
-        <div class="stat-card" id="stat-profit-card"><span class="label">累計淨損益</span><span class="value">$0</span></div>
+    <div class="year-filter-bar">
+        <label>📅 作戰年度切換：</label>
+        <select id="global-year-filter" onchange="applyYearFilter()">
+            <option value="all">所有歷史年度</option>
+        </select>
     </div>
 
-    <div class="main-layout">
-        <div class="panel" style="margin-bottom: 0;">
-            <div class="panel-title">🎯 當期開獎號碼輸入</div>
-            
-            <div class="settings-form">
-                <div class="form-group"><label>開獎日期</label><input type="date" id="input-date"></div>
-                <div class="form-group"><label>開獎期數</label><input type="text" id="input-period" placeholder="例如：115001"></div>
-                <div class="form-group"><label>每碰本金 (元)</label><input type="number" id="cost-per-bet" value="1" min="0.1" step="0.1"></div>
-                <div class="form-group"><label>單碰三星獎金 (元)</label><input type="number" id="prize-per-hit" value="5700"></div>
-            </div>
+    <!-- ========================================== -->
+    <!-- 導航列：新增「🎯 同區3-4球」，移除「同區偏態狙擊」 -->
+    <!-- ========================================== -->
+    <div class="mode-switcher">
+        <button id="btn-tt-1800" class="mode-btn" onclick="switchSpace('tt-1800')">天天樂 1800碰</button>
+        <button id="btn-tt-9000" class="mode-btn" onclick="switchSpace('tt-9000')">天天樂 9000碰</button>
+        <button id="btn-539-1800" class="mode-btn" onclick="switchSpace('539-1800')">五三九 1800碰</button>
+        <button id="btn-539-9000" class="mode-btn" onclick="switchSpace('539-9000')">五三九 9000碰</button>
+        <button id="btn-arena" class="mode-btn arena-btn active" onclick="switchSpace('arena')">⚔️ 決策矩陣</button>
+        
+        <button id="btn-ledger" class="mode-btn ledger-btn" onclick="switchSpace('ledger')">📝 實戰獵人</button>
+        
+        <a href="https://aht760317.github.io/539/01-39.html" target="_blank" class="mode-btn single-btn">🎯 單碼必贏</a>
+        <a href="https://aht760317.github.io/539/3or4.html" target="_blank" class="mode-btn" style="border-color: #ea580c; color: #ea580c; text-decoration: none; display: flex; justify-content: center; align-items: center;">🎯 同區3-4球</a>
+        
+        <a href="https://aht760317.github.io/539/index5.html" target="_blank" class="mode-btn" style="border-color: #059669; color: #059669; text-decoration: none; display: flex; justify-content: center; align-items: center;">📊 五三九分析</a>
+        <a href="https://aht760317.github.io/539/index4.html" target="_blank" class="mode-btn" style="border-color: #0284c7; color: #0284c7; text-decoration: none; display: flex; justify-content: center; align-items: center;">🚀 天天樂分析</a> 
+    </div>
 
-            <div class="manual-input-box">
-                <div class="form-group">
-                    <label style="color:#d97706;">⌨️ 手動快速輸入號碼 (使用逗號或空白隔開)</label>
-                    <input type="text" id="manual-num-input" placeholder="例如：05, 12, 18, 30, 39" onkeypress="handleEnter(event)">
-                </div>
-                <button class="btn btn-warning" onclick="parseManualInput()">帶入號碼</button>
-            </div>
 
-            <div class="column-container">
-                <div class="col-box c1"><h3>第一柱 (10-18)<span id="count-c1">0 顆</span></h3><div class="ball-grid" id="grid-col1"></div></div>
-                <div class="col-box c2"><h3>第二柱 (20-29)<span id="count-c2">0 顆</span></h3><div class="ball-grid" id="grid-col2"></div></div>
-                <div class="col-box c3"><h3>第三柱 (其他)<span id="count-c3">0 顆</span></h3><div class="ball-grid" id="grid-col3"></div></div>
-            </div>
-
-            <div class="live-status">
-                <div class="live-selection-info">
-                    <span>已選擇：<strong id="selected-count" style="font-size:16px;">0</strong> / 5 顆球</span>
-                    <span>落點：<span class="live-pill p1">一柱 <span id="live-n1">0</span></span> <span class="live-pill p2">二柱 <span id="live-n2">0</span></span> <span class="live-pill p3">三柱 <span id="live-n3">0</span></span></span>
-                </div>
-                <button class="btn btn-primary" id="btn-add-record" disabled onclick="addRecord()">計算並計入歷史</button>
-            </div>
-        </div>
-
-        <div class="panel" style="margin-bottom: 0;">
-            <div class="panel-title">💡 說明</div>
-            <div class="rule-card"><h4>中四碰 (4注三星)：</h4><p>2+2+1 分佈 (任何一柱1顆，其餘兩柱2顆)。</p></div>
-            <div class="rule-card" style="border-left-color: var(--accent-col3);"><h4>中三碰 (3注三星)：</h4><p>3+1+1 分佈 (任何一柱3顆，其餘兩柱1顆)。</p></div>
-            <div class="rule-card" style="border-left-color: #64748b;"><h4>未過關：</h4><p>任一柱開出 0 顆（斷柱）。</p></div>
+    <div class="guide-box" id="arena-guide" style="display:none;">
+        <h4 onclick="toggleGuide()">📖 系統六大巨頭指標說明書 (點擊展開/收合) <span>▼</span></h4>
+        <div class="guide-grid" id="guide-content">
+            <div class="guide-item"><strong>① 數學家 (物理勝率)：</strong><br>該盤口的基礎過關機率。<span class="guide-target">🎯 達標亮綠門檻：目前勝率大於遊戲基礎機率。</span></div>
+            <div class="guide-item"><strong>② 資金家 (自適應凱利)：</strong><br>動態計算最佳注碼比例，遇回撤自動收縮。<span class="guide-target">🎯 達標亮綠門檻：算定配置比例 f* > 0% 。</span></div>
+            <div class="guide-item"><strong>③ 贏家 (馬可夫核平滑)：</strong><br>精算盤口在「目前的連敗狀態下」，歷史上的反轉勝率。<span class="guide-target">🎯 達標亮綠門檻：動態反轉勝率大於基礎機率。</span></div>
+            <div class="guide-item"><strong>④ 銀行家 (幾何分佈 Z-Score)：</strong><br>測量連槓期數偏離平均值的嚴重程度。<span class="guide-target">🎯 達標亮綠門檻：數值大於或等於 0.8。</span></div>
+            <div class="guide-item"><strong>⑤ 精算家 (波動與回撤防禦)：</strong><br>監控系統理論淨值最大回撤(Max Drawdown)與亂流。<span class="guide-target">🎯 達標亮綠門檻：資金曲線未進入極端亂流。</span></div>
+            <div class="guide-item"><strong>⑥ 大莊家 (數學期望值 EV)：</strong><br>下注 1 元/碰 跑長期的平均賺賠金額。<span class="guide-target">🎯 達標亮綠門檻：期望值必須大於 0。</span></div>
         </div>
     </div>
 
-    <div class="panel">
-        <div class="table-actions"><h2>📅 每周統計與機率表</h2></div>
-        <div class="table-container">
+    <div id="global-strategy" class="strategy-dashboard" style="display:none;">
+        <h3>💡 華爾街量化戰情室 (純機率進場決策)</h3>
+        <div class="dashboard-grid" id="dashboard-content">
+            <div style="text-align:center; padding:10px;">資料運算中...</div>
+        </div>
+    </div>
+
+    <div class="panel" id="arena-settings-panel" style="display:none;">
+        <div class="panel-title">
+            <span>⚙️ 盤口參數與【華爾街量化決策矩陣】</span>
+            <span id="lock-status" style="color:var(--danger-color); font-size:11px;">🔒 已鎖定(0000)</span>
+        </div>
+        <div style="font-size:11px; color:#475569; margin-bottom:12px; line-height:1.5;">
+            【專家審慎審查期】專家具備獨立否決權。任何單一核心指標未達標即刻否決！<br>
+            正常 Z-Score (0.8~1.5) 且 EV>0 佈局 1 倍；極端偏離且 EV>0 (1.5~3.0) 狙擊 2 倍；若 EV 小於 0，專家強制否決，0 倍空手保本！<br>
+            <span style="color:#dc2626; font-weight:bold;">※ 最新修正：修復連槓期數無限累加 Bug，現已套用高敏度貝氏公式與極端值防護，確保期望值運算絕對精準。</span>
+        </div>
+        <div class="setting-grid" id="setting-inputs"></div>
+        <div class="action-bar">
+            <input type="password" id="input-pwd" placeholder="密碼 0000">
+            <button class="btn-main" onclick="unlockSettings()" style="flex:1; background:#64748b;">解鎖修改</button>
+            <button class="btn-main" id="btn-save" onclick="saveSettings()" style="display: none; flex:2; background:#0284c7;">💾 儲存</button>
+        </div>
+    </div>
+
+    <div id="radar-panel" class="radar-panel" style="display:none;">
+        <h3>🚨 極端偏態雷達 (同柱 3顆以上 斷柱預警)</h3>
+        <div style="font-size:11px; color:#64748b; margin-bottom:10px; font-weight:bold;">(已套用極限機率推演：精準抓取大盤斷柱爆發點)</div>
+        <div class="radar-grid" id="radar-content">
+            <div style="text-align:center; padding:10px;">資料掃描中...</div>
+        </div>
+    </div>
+
+    <div class="panel" id="batch-input-panel" style="display:none;">
+        <div class="panel-title">📋 歷史開獎批次匯入</div>
+        <div class="form-group" style="margin-bottom: 10px;">
+            <label>🎯 匯入目標空間：</label>
+            <select id="batch-target-space" style="color: var(--purple-color); font-weight:bold; font-size:13px;">
+                <option value="tt-1800">📊 天天樂 1800碰</option>
+                <option value="tt-9000">🚀 天天樂 9000碰</option>
+                <option value="539-1800">📊 五三九 1800碰</option>
+                <option value="539-9000">🚀 五三九 9000碰</option>
+            </select>
+        </div>
+        <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 8px; font-weight:bold;">批次匯入之歷史紀錄，預設真實下注皆為 0 (不計入實單損益)。</div>
+        <textarea id="batch-text" placeholder="格式範例:\n2026-09-10 07 09 12 15 27\n2026-09-11 01 02 03 04 05"></textarea>
+        <button class="btn-main" onclick="batchImport()" style="background: linear-gradient(135deg, #7c3aed, #4f46e5); padding:10px;">⚡ 極速平行批次寫入</button>
+    </div>
+
+    <div class="panel" id="actual-bet-panel" style="display:none;">
+        <div class="panel-title">📝 獵人實戰記帳與資金中樞</div>
+        <div style="font-size:12px; color:#b91c1c; margin-bottom:12px; font-weight:bold; background:#fef2f2; padding:10px; border-radius:8px; border-left:4px solid #ef4444; line-height:1.5;">
+            ⚠️ 系統已徹底拔除人工選擇策略功能！資金派發將由「華爾街量化防禦鐵律」全權進行風控！
+        </div>
+
+        <div class="form-row">
+            <div class="form-group" style="flex:1;">
+                <label>開獎日期</label>
+                <input type="date" id="ledger-date">
+            </div>
+            <div class="form-group" style="flex:1;">
+                <label>選擇下注空間</label>
+                <select id="ledger-space" style="color: var(--purple-color); font-weight:bold;">
+                    <option value="tt-1800">📊 天天樂 1800碰</option>
+                    <option value="tt-9000">🚀 天天樂 9000碰</option>
+                    <option value="539-1800">📊 五三九 1800碰</option>
+                    <option value="539-9000">🚀 五三九 9000碰</option>
+                </select>
+            </div>
+            <div class="form-group" style="flex:1;">
+                <label>實際下注 (元/碰)</label>
+                <input type="number" id="ledger-bet" step="1" min="0" value="0" style="background:#eff6ff; border-color:#bfdbfe; color:#1e3a8a;">
+            </div>
+        </div>
+        <button class="btn-main" onclick="saveLedger()" style="background: linear-gradient(135deg, #10b981, #059669); margin-bottom:16px;">💰 寫入真實帳本</button>
+        
+        <div class="ledger-stats-grid" id="ledger-summary-container">
+            <div class="ledger-stat-card"><h4>實單期數</h4><p id="ledger-count">0 期</p></div>
+            <div class="ledger-stat-card"><h4>總投入成本</h4><p id="ledger-cost" style="color:#475569;">$0</p></div>
+            <div class="ledger-stat-card"><h4>總中獎彩金</h4><p id="ledger-prize" style="color:#0284c7;">$0</p></div>
+            <div class="ledger-stat-card"><h4>真實淨損益</h4><p id="ledger-profit" style="color:#64748b;">$0</p></div>
+        </div>
+
+        <div style="margin-top:20px; border-top:2px dashed #cbd5e1; padding-top:14px;">
+            <h3 style="font-size:14px; margin-bottom:10px; color:#0f172a; display:flex; align-items:center; gap:6px;">
+                <span>🎯 大盤戰區量化派發指引</span>
+            </h3>
+            <div class="rec-grid" id="ledger-recommendations-container">
+                <div style="text-align:center; padding:16px; color:#94a3b8; font-weight:bold;">系統運算中...</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel" id="single-input-panel" style="display:none;">
+        <div class="panel-title">📝 單筆開獎寫入 (附帶實單紀錄)</div>
+        <div class="form-row">
+            <div class="form-group" style="flex: 1;">
+                <label>開獎日期</label>
+                <input type="date" id="input-date">
+            </div>
+            <div class="form-group" style="flex: 2;">
+                <label>5 碼號碼 (01~39, 空格分隔)</label>
+                <input type="text" id="input-balls" placeholder="例: 06 07 14 28 33" style="font-size:14px; font-weight:bold; color:var(--primary-color);">
+            </div>
+            <div class="form-group" style="flex: 1;">
+                <label>真實下注 (元/碰)</label>
+                <input type="number" id="input-mybet" step="1" min="0" value="0" style="background:#ecfdf5; border-color:#a7f3d0; color:#065f46;">
+            </div>
+        </div>
+        <button class="btn-main" onclick="addNewRecord()">☁️ 儲存並結算</button>
+    </div>
+
+    <div class="stats-grid" id="stats-container" style="display:none;"></div>
+
+    <div class="panel" id="history-panel" style="display:none;">
+        <div class="panel-title">📊 歷史戰績矩陣與真實損益明細</div>
+        <div class="table-wrap">
             <table>
-                <thead><tr><th>週次區間 (週一 ~ 週日)</th><th>總期數</th><th>過關期數</th><th>當週勝率</th><th>當週總成本</th><th>當週總獎金</th><th>當週淨損益</th></tr></thead>
-                <tbody id="weekly-tbody"></tbody>
-            </table>
-        </div>
-    </div>
-
-    <div class="panel">
-        <div class="table-actions"><h2>📊 歷史實戰成績清單</h2><button class="btn btn-danger" onclick="clearAllData()">清空資料</button></div>
-        <div class="table-container">
-            <table>
-                <thead><tr><th>期數/日期</th><th>開獎號碼球</th><th>落點分佈</th><th>結果</th><th>成本</th><th>獎金</th><th>淨損益</th><th>操作</th></tr></thead>
-                <tbody id="history-tbody"></tbody>
+                <thead id="table-head"></thead>
+                <tbody id="result-tbody"></tbody>
             </table>
         </div>
     </div>
 </div>
 
-<script>
-    const COL1_NUMS = [10, 11, 12, 13, 14, 15, 16, 17, 18];
-    const COL2_NUMS = [20, 21, 22, 23, 24, 25, 26, 27, 28, 29];
-    let selectedNumbers = [], historyData = [];
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager, collection, doc, setDoc, deleteDoc, writeBatch, onSnapshot, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    window.onload = function() {
-        document.getElementById('input-date').value = new Date().toISOString().split('T')[0];
-        generateBallGrid();
-        if (localStorage.getItem('539_dashboard_history')) {
-            historyData = JSON.parse(localStorage.getItem('539_dashboard_history'));
-        }
-        updateNextPeriodInput(); renderAll();
+    const firebaseConfig = {
+        apiKey: "AIzaSyC9A3HggBSJg2RJJpHEb10Fkf4S6cNqgmE",
+        authDomain: "gogogo539.firebaseapp.com",
+        projectId: "gogogo539",
+        storageBucket: "gogogo539.firebasestorage.app",
+        messagingSenderId: "1034723826496",
+        appId: "1:1034723826496:web:16eee8eeeb35d53a4278a5"
     };
 
-    function generateBallGrid() {
-        const g1 = document.getElementById('grid-col1'), g2 = document.getElementById('grid-col2'), g3 = document.getElementById('grid-col3');
-        for (let i = 1; i <= 39; i++) {
-            const b = document.createElement('div'); b.className = 'ball'; b.innerText = i.toString().padStart(2, '0'); b.setAttribute('data-num', i); b.onclick = () => toggleNumber(i);
-            if (COL1_NUMS.includes(i)) g1.appendChild(b); else if (COL2_NUMS.includes(i)) g2.appendChild(b); else g3.appendChild(b);
+    const app = initializeApp(firebaseConfig);
+    const db = initializeFirestore(app, {
+        localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() })
+    });
+
+    let currentSpace = 'arena';
+    let currentYear = new Date().getFullYear();
+    let selectedYear = currentYear.toString();
+    let isDataLoaded = false; 
+
+    let spaceConfigs = {
+        'tt-1800': { name: '天天樂 1800碰', unitBet: 1, basePuffs: 1800, rebate: 37, unitPrize: 570, type: '1800' },
+        'tt-9000': { name: '天天樂 9000碰', unitBet: 1, basePuffs: 9000, rebate: 50, unitPrize: 8000, type: '9000' },
+        '539-1800': { name: '五三九 1800碰', unitBet: 1, basePuffs: 1800, rebate: 37, unitPrize: 570, type: '1800' },
+        '539-9000': { name: '五三九 9000碰', unitBet: 1, basePuffs: 9000, rebate: 50, unitPrize: 8000, type: '9000' }
+    };
+
+    let spaceData = { 'tt-1800': [], 'tt-9000': [], '539-1800': [], '539-9000': [] };
+
+    Object.keys(spaceConfigs).forEach(key => {
+        let savedCfg = localStorage.getItem(`cfg_${key}`);
+        if (savedCfg) spaceConfigs[key] = { ...spaceConfigs[key], ...JSON.parse(savedCfg) };
+    });
+
+    function initYearFilter() {
+        let select = document.getElementById('global-year-filter');
+        if(!select) return;
+        select.innerHTML = '<option value="all">所有歷史年度</option>';
+        let maxYear = currentYear + 5; 
+        for(let y = maxYear; y >= 2007; y--) { 
+            select.innerHTML += `<option value="${y}" ${y === currentYear ? 'selected' : ''}>${y} 年度</option>`;
         }
     }
+    initYearFilter();
 
-    function getColumnIndex(n) { if (COL1_NUMS.includes(n)) return 1; if (COL2_NUMS.includes(n)) return 2; return 3; }
+    window.applyYearFilter = function() {
+        selectedYear = document.getElementById('global-year-filter').value;
+        switchSpace(currentSpace);
+    };
 
-    function toggleNumber(n) {
-        const idx = selectedNumbers.indexOf(n);
-        if (idx > -1) selectedNumbers.splice(idx, 1);
-        else { if (selectedNumbers.length >= 5) { alert('已選滿5顆'); return; } selectedNumbers.push(n); }
-        updateSelectionUI();
+    window.toggleGuide = function() {
+        let content = document.getElementById('guide-content');
+        content.style.display = (content.style.display === "none" || content.style.display === "") ? "grid" : "none";
+    };
+
+    window.toggleEasternMetrics = function(spaceKey) {
+        let container = document.getElementById(`eastern-box-${spaceKey}`);
+        let btn = document.getElementById(`btn-toggle-eastern-${spaceKey}`);
+        if(!container) return;
+        if(container.style.display === "none" || container.style.display === "") {
+            container.style.display = "block";
+            if(btn) btn.innerText = "▲ 收合 東方傳統 10 大指標矩陣";
+        } else {
+            container.style.display = "none";
+            if(btn) btn.innerText = "▼ 展開 東方傳統 10 大指標矩陣";
+        }
+    };
+
+    function check1800(balls) {
+        if (!balls || !Array.isArray(balls)) return { puffs: 0, text: "錯誤", p1:0, p2:0, p3:0 };
+        let p1=0, p2=0, p3=0;
+        for (let i = 0; i < balls.length; i++) {
+            let num = Number(balls[i]);
+            if (num >= 10 && num <= 18) p1++; 
+            else if (num >= 20 && num <= 29) p2++; 
+            else p3++; 
+        }
+        let puffs = p1 * p2 * p3;
+        return { puffs, text: puffs > 0 ? `${puffs}碰` : "未中獎", p1, p2, p3 };
     }
-
-    /* 新增：手動解析鍵盤輸入的號碼 */
-    function handleEnter(e) { if (e.key === 'Enter') parseManualInput(); }
     
-    function parseManualInput() {
-        const inputVal = document.getElementById('manual-num-input').value;
-        const numStrings = inputVal.match(/\d+/g);
-        
-        if (!numStrings || numStrings.length !== 5) {
-            alert('請輸入剛好 5 個數字，可以用逗號或空白隔開。');
-            return;
+    function check9000(balls) {
+        if (!balls || !Array.isArray(balls)) return { pass: false, puffs: 0, text: "錯誤", q1:0, q2:0, q3:0, q4:0 };
+        let q1=0, q2=0, q3=0, q4=0;
+        for (let i = 0; i < balls.length; i++) {
+            let num = Number(balls[i]);
+            if (num >= 1 && num <= 9) q1++; 
+            else if (num >= 10 && num <= 19) q2++; 
+            else if (num >= 20 && num <= 29) q3++; 
+            else if (num >= 30 && num <= 39) q4++; 
         }
-        
-        let nums = numStrings.map(n => parseInt(n, 10)).filter(n => n >= 1 && n <= 39);
-        nums = [...new Set(nums)]; // 移除重複
-        
-        if (nums.length !== 5) {
-            alert('號碼不能有重複，且必須在 01 到 39 之間！');
-            return;
-        }
-        
-        selectedNumbers = nums;
-        document.getElementById('manual-num-input').value = ""; // 清空輸入框
-        updateSelectionUI();
+        let pass = (q1 > 0 && q2 > 0 && q3 > 0 && q4 > 0);
+        return { pass, puffs: pass ? 2 : 0, text: pass ? "過關" : "斷柱", q1, q2, q3, q4 };
     }
 
-    function updateSelectionUI() {
-        document.querySelectorAll('.ball').forEach(b => b.classList.remove('selected'));
-        let n1 = 0, n2 = 0, n3 = 0;
-        selectedNumbers.forEach(n => {
-            const ballEl = document.querySelector(`.ball[data-num="${n}"]`);
-            if(ballEl) ballEl.classList.add('selected');
-            let col = getColumnIndex(n); if (col === 1) n1++; if (col === 2) n2++; if (col === 3) n3++;
-        });
-        document.getElementById('selected-count').innerText = selectedNumbers.length;
-        document.getElementById('count-c1').innerText = `${n1} 顆`; document.getElementById('count-c2').innerText = `${n2} 顆`; document.getElementById('count-c3').innerText = `${n3} 顆`;
-        document.getElementById('live-n1').innerText = n1; document.getElementById('live-n2').innerText = n2; document.getElementById('live-n3').innerText = n3;
-        document.getElementById('btn-add-record').disabled = (selectedNumbers.length !== 5);
+    function getFilteredData(spaceKey) {
+        let rawData = spaceData[spaceKey] || [];
+        return rawData
+            .filter(x => x && x.date && (selectedYear === 'all' || x.date.startsWith(selectedYear)))
+            .sort((a, b) => a.date > b.date ? -1 : 1);
     }
 
-    function addRecord() {
-        let n1 = 0, n2 = 0, n3 = 0;
-        selectedNumbers.forEach(n => { let col = getColumnIndex(n); if (col === 1) n1++; if (col === 2) n2++; if (col === 3) n3++; });
-        let hits = 0, resultText = "未過關", distArr = [n1, n2, n3].sort((a,b)=>a-b);
-        if (distArr[0] === 1 && distArr[1] === 2 && distArr[2] === 2) { hits = 4; resultText = `中四碰 (${n1}+${n2}+${n3})`; }
-        else if (distArr[0] === 1 && distArr[1] === 1 && distArr[2] === 3) { hits = 3; resultText = `中三碰 (${n1}+${n2}+${n3})`; }
-        else { resultText = `未過關 (${n1}+${n2}+${n3})`; }
-        const costPerBet = parseFloat(document.getElementById('cost-per-bet').value) || 1;
-        const prizePerHit = parseFloat(document.getElementById('prize-per-hit').value) || 5700;
-        const cost = 1800 * costPerBet, prize = hits * prizePerHit, profit = prize - cost;
-        historyData.unshift({ id: Date.now(), date: document.getElementById('input-date').value, period: document.getElementById('input-period').value || "未填", numbers: [...selectedNumbers].sort((a,b)=>a-b), distribution: [n1, n2, n3], hits, resultText, cost, prize, profit });
-        localStorage.setItem('539_dashboard_history', JSON.stringify(historyData));
-        selectedNumbers = []; updateSelectionUI(); updateNextPeriodInput(); renderAll();
-    }
+    window.switchSpace = function(spaceKey) {
+        currentSpace = spaceKey;
+        document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+        let activeBtn = document.getElementById(`btn-${spaceKey}`);
+        if(activeBtn) activeBtn.classList.add('active');
 
-    function updateNextPeriodInput() { if (historyData.length > 0) { let p = parseInt(historyData[0].period); if (!isNaN(p)) { document.getElementById('input-period').value = p + 1; return; } } document.getElementById('input-period').value = ""; }
-    function deleteRecord(id) { if (confirm('確定刪除此筆紀錄？')) { historyData = historyData.filter(i => i.id !== id); localStorage.setItem('539_dashboard_history', JSON.stringify(historyData)); renderAll(); } }
-    function clearAllData() { if (confirm('確定清空所有歷史資料？')) { historyData = []; localStorage.removeItem('539_dashboard_history'); renderAll(); } }
+        let isArena = (spaceKey === 'arena');
+        let isLedger = (spaceKey === 'ledger');
+        let isSpace = (!isArena && !isLedger);
 
-    /* 取得週一的日期作為群組分類鍵值 */
-    function getWeekRangeLabel(dateStr) {
-        let d = new Date(dateStr);
-        let day = d.getDay();
-        let diffToMonday = d.getDate() - day + (day === 0 ? -6 : 1);
-        let monday = new Date(d.setDate(diffToMonday));
-        let sunday = new Date(monday);
-        sunday.setDate(monday.getDate() + 6);
+        document.getElementById('arena-settings-panel').style.display = isArena ? 'block' : 'none';
+        document.getElementById('batch-input-panel').style.display = isArena ? 'block' : 'none';
+        document.getElementById('global-strategy').style.display = isArena ? 'block' : 'none';
+        document.getElementById('radar-panel').style.display = isArena ? 'block' : 'none';
+        document.getElementById('arena-guide').style.display = isArena ? 'block' : 'none';
         
-        let monStr = monday.toISOString().split('T')[0];
-        let sunStr = sunday.toISOString().split('T')[0];
-        return `${monStr} ~ ${sunStr}`;
-    }
+        document.getElementById('actual-bet-panel').style.display = isLedger ? 'block' : 'none';
 
-    function renderAll() {
-        let draws = historyData.length, wins = 0, cost = 0, prize = 0, profit = 0;
-        const tbody = document.getElementById('history-tbody'); tbody.innerHTML = '';
-        const weeklyTbody = document.getElementById('weekly-tbody'); weeklyTbody.innerHTML = '';
-        
-        let weeklyStats = {}; // 用來儲存每週統計
+        document.getElementById('single-input-panel').style.display = isSpace ? 'block' : 'none';
+        document.getElementById('stats-container').style.display = isSpace ? 'grid' : 'none';
+        document.getElementById('history-panel').style.display = isSpace ? 'block' : 'none';
 
-        historyData.forEach(item => {
-            cost += item.cost; prize += item.prize; profit += item.profit; if (item.hits > 0) wins++;
-            
-            // 處理歷史紀錄表格
-            let ballsHtml = '<div class="mini-ball-container">';
-            item.numbers.forEach(n => { ballsHtml += `<span class="mini-ball b${getColumnIndex(n)}">${n.toString().padStart(2,'0')}</span>`; });
-            ballsHtml += '</div>';
-            let bc = item.hits === 4 ? 'badge-4' : (item.hits === 3 ? 'badge-3' : 'badge-0');
-            const tr = document.createElement('tr');
-            tr.innerHTML = `<td><strong>${item.period} 期</strong><br><span class="text-muted" style="font-size:12px;">${item.date}</span></td><td>${ballsHtml}</td><td>${item.distribution.join(' - ')}</td><td><span class="badge ${bc}">${item.resultText}</span></td><td>$${item.cost}</td><td>$${item.prize}</td><td class="${item.profit>=0?'text-success':'text-danger'}">${item.profit>=0?'+':''}$${item.profit}</td><td><button class="btn btn-secondary" style="padding:4px 8px;font-size:12px;" onclick="deleteRecord(${item.id})">刪除</button></td>`;
-            tbody.appendChild(tr);
-
-            // 處理每週統計資料
-            let weekLabel = getWeekRangeLabel(item.date);
-            if(!weeklyStats[weekLabel]) {
-                weeklyStats[weekLabel] = { draws: 0, wins: 0, cost: 0, prize: 0, profit: 0 };
+        if (isDataLoaded) {
+            if (isArena) {
+                renderSettingsPanel();
+                renderDashboard();
+                renderRadar(); 
+            } else if (isLedger) {
+                renderLedgerSummary();
+            } else {
+                document.getElementById('batch-target-space').value = spaceKey;
+                renderMain();
             }
-            weeklyStats[weekLabel].draws++;
-            if(item.hits > 0) weeklyStats[weekLabel].wins++;
-            weeklyStats[weekLabel].cost += item.cost;
-            weeklyStats[weekLabel].prize += item.prize;
-            weeklyStats[weekLabel].profit += item.profit;
+        }
+    };
+
+    function analyzeRadar(gameType) {
+        let spaceKey = gameType + '-9000';
+        let data = getFilteredData(spaceKey).slice(0, 1500);
+        let totalDraws = data.length;
+        let tripleLosingStreak = 0;
+        let overallHitFound = false;
+        let colHits = { q1: 0, q2: 0, q3: 0, q4: 0 };
+        let colStreaks = { q1: 0, q2: 0, q3: 0, q4: 0 };
+        let colFound = { q1: false, q2: false, q3: false, q4: false };
+
+        for (let i = 0; i < data.length; i++) {
+            let balls = data[i].draw;
+            if (!balls || !Array.isArray(balls)) continue;
+
+            let q1=0, q2=0, q3=0, q4=0;
+            for (let j = 0; j < balls.length; j++) {
+                let num = Number(balls[j]);
+                if (num >= 1 && num <= 9) q1++; 
+                else if (num >= 10 && num <= 19) q2++; 
+                else if (num >= 20 && num <= 29) q3++; 
+                else if (num >= 30 && num <= 39) q4++; 
+            }
+
+            if(q1>=3) colHits.q1++;
+            if(q2>=3) colHits.q2++;
+            if(q3>=3) colHits.q3++;
+            if(q4>=3) colHits.q4++;
+
+            let isTripleOrMore = (q1>=3 || q2>=3 || q3>=3 || q4>=3); 
+            if (!overallHitFound) {
+                if (isTripleOrMore) overallHitFound = true;
+                else tripleLosingStreak++;
+            }
+            if (!colFound.q1) { if(q1>=3) colFound.q1 = true; else colStreaks.q1++; }
+            if (!colFound.q2) { if(q2>=3) colFound.q2 = true; else colStreaks.q2++; }
+            if (!colFound.q3) { if(q3>=3) colFound.q3 = true; else colStreaks.q3++; }
+            if (!colFound.q4) { if(q4>=3) colFound.q4 = true; else colStreaks.q4++; }
+        }
+
+        let baseOverallTripleProb = 0.357; 
+        let tripleNextProb = Math.min(baseOverallTripleProb + (tripleLosingStreak * 0.015), 0.95);
+        let colProbs = {};
+        ['q1', 'q2', 'q3', 'q4'].forEach(k => {
+            let theoreticalColProb = k === 'q1' ? 0.0702 : 0.0956;
+            colProbs[k] = Math.min(theoreticalColProb + (colStreaks[k] * 0.005), 0.99); 
         });
 
-        // 渲染每週統計表
-        let hasWeeks = false;
-        for(let week in weeklyStats) {
-            hasWeeks = true;
-            let ws = weeklyStats[week];
-            let rate = ((ws.wins / ws.draws) * 100).toFixed(1) + '%';
-            const trW = document.createElement('tr');
-            trW.innerHTML = `<td><strong>${week}</strong></td><td>${ws.draws} 期</td><td>${ws.wins} 期</td><td><strong>${rate}</strong></td><td>$${ws.cost.toLocaleString()}</td><td>$${ws.prize.toLocaleString()}</td><td class="${ws.profit>=0?'text-success':'text-danger'}">${ws.profit>=0?'+':''}$${ws.profit.toLocaleString()}</td>`;
-            weeklyTbody.appendChild(trW);
-        }
+        let maxProb = Math.max(colProbs.q1, colProbs.q2, colProbs.q3, colProbs.q4);
+        let dangerCols = [];
+        if (colProbs.q1 === maxProb) dangerCols.push("第1柱 (01-09)");
+        if (colProbs.q2 === maxProb) dangerCols.push("第2柱 (10-19)");
+        if (colProbs.q3 === maxProb) dangerCols.push("第3柱 (20-29)");
+        if (colProbs.q4 === maxProb) dangerCols.push("第4柱 (30-39)");
 
-        if (draws === 0) {
-            tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:30px;">尚無紀錄</td></tr>`;
-            weeklyTbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:30px;">尚無每週統計資料</td></tr>`;
-        }
-
-        // 更新頂部數據卡片
-        document.getElementById('stat-total-draws').innerText = `${draws} 期`;
-        document.getElementById('stat-win-rate').innerText = `${draws>0?(wins/draws*100).toFixed(2):0.00}%`;
-        document.getElementById('stat-total-cost').innerText = `$${cost.toLocaleString()}`;
-        document.getElementById('stat-total-prize').innerText = `$${prize.toLocaleString()}`;
-        const card = document.getElementById('stat-profit-card'); card.querySelector('.value').innerText = `${profit>=0?'+':''}$${profit.toLocaleString()}`;
-        card.className = 'stat-card ' + (draws>0 ? (profit>=0?'profit-positive':'profit-negative') : '');
+        return { gameName: gameType === 'tt' ? '天天樂' : '五三九', tripleLosingStreak, tripleNextProb, dangerColsText: dangerCols.join("、"), totalDraws, colProbs };
     }
 
-    function exportData() { const s = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(historyData)); const a = document.createElement('a'); a.setAttribute("href", s); a.setAttribute("download", "539_資料備份.json"); a.click(); }
-    function importData() { const i = document.createElement('input'); i.type = 'file'; i.accept = '.json'; i.onchange = e => { const f = e.target.files[0], r = new FileReader(); r.readAsText(f, 'UTF-8'); r.onload = ev => { try { historyData = JSON.parse(ev.target.result); localStorage.setItem('539_dashboard_history', JSON.stringify(historyData)); updateNextPeriodInput(); renderAll(); alert('導入成功！'); } catch(err) { alert('檔案格式錯誤'); } } }; i.click(); }
+    function renderRadar() {
+        let container = document.getElementById('radar-content');
+        if(!container) return;
+        try {
+            let html = '';
+            ['tt', '539'].forEach(type => {
+                let r = analyzeRadar(type);
+                if(r.totalDraws < 5) {
+                    html += `<div class="radar-card"><h4>${r.gameName}</h4><div style="color:#94a3b8;">數據不足</div></div>`;
+                    return;
+                }
+                let maxProb = Math.max(r.colProbs.q1, r.colProbs.q2, r.colProbs.q3, r.colProbs.q4);
+                let getClass = (val) => val === maxProb ? "danger-col" : "";
+
+                html += `
+                    <div class="radar-card">
+                        <h4>
+                            <span>📡 ${r.gameName} 偏態監控 (3顆以上)</span>
+                            <span style="font-size:11px; color:#64748b;">目前連漏 ${r.tripleLosingStreak} 期</span>
+                        </h4>
+                        <div style="margin-bottom:8px; font-size:14px; font-weight:bold;">大盤爆發機率：<span class="radar-highlight">${(r.tripleNextProb * 100).toFixed(1)}%</span></div>
+                        <div class="col-prob-grid">
+                            <div class="col-prob-item ${getClass(r.colProbs.q1)}"><div class="col-title">第1柱(01-09)</div><div class="col-val">${(r.colProbs.q1 * 100).toFixed(1)}%</div></div>
+                            <div class="col-prob-item ${getClass(r.colProbs.q2)}"><div class="col-title">第2柱(10-19)</div><div class="col-val">${(r.colProbs.q2 * 100).toFixed(1)}%</div></div>
+                            <div class="col-prob-item ${getClass(r.colProbs.q3)}"><div class="col-title">第3柱(20-29)</div><div class="col-val">${(r.colProbs.q3 * 100).toFixed(1)}%</div></div>
+                            <div class="col-prob-item ${getClass(r.colProbs.q4)}"><div class="col-title">第4柱(30-39)</div><div class="col-val">${(r.colProbs.q4 * 100).toFixed(1)}%</div></div>
+                        </div>
+                        <div style="margin-top:8px; padding:8px; background:#fff1f2; border:1px solid #fecaca; border-radius:6px; color:#b91c1c; font-size:12px; font-weight:bold;">
+                            ⚠️ <strong>最危險區域：</strong><br>${r.dangerColsText}
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        } catch(e) { console.error("Radar Error:", e); }
+    }
+
+    function analyzeSpace(key) {
+        let cfg = spaceConfigs[key] || { type: '1800', unitBet: 1, basePuffs: 1800, rebate: 0, unitPrize: 0, name: '' };
+        let data = getFilteredData(key).slice(0, 1500); 
+        let totalDraws = data.length;
+        if (totalDraws === 0) return null;
+
+        let wins = 0;
+        let losingStreak = 0;
+        let countingStreak = true;
+
+        let wins14 = 0, wins30 = 0, wins120 = 0, wins500 = 0;
+        let theoreticalEquity = 0;
+        let peakTheoretical = 0;
+        let maxDrawdown = 0;
+        
+        let baseP_Threshold = cfg.type === '1800' ? 0.5536 : 0.2736;
+        let costPerRound = Number(cfg.unitBet) * Number(cfg.basePuffs) * (1 - Number(cfg.rebate) / 100);
+        let expectedPrizePuffs = cfg.type === '1800' ? 3.5576 : 2.0;
+        let avgPrizeWhenWin = expectedPrizePuffs * Number(cfg.unitPrize) * Number(cfg.unitBet);
+
+        let reversedData = [...data].reverse();
+        let missingHistory = [];
+        let tempMiss = 0;
+        let markovHit = 0, markovMiss = 0;
+
+        for (let i = 0; i < reversedData.length; i++) {
+            let item = reversedData[i];
+            let res = cfg.type === '1800' ? check1800(item.draw) : check9000(item.draw);
+            let isWin = (cfg.type === '1800' && res.puffs >= 3) || (cfg.type === '9000' && res.pass);
+            
+            let roundPnL = isWin ? (avgPrizeWhenWin - costPerRound) : -costPerRound;
+            theoreticalEquity += roundPnL;
+            if (theoreticalEquity > peakTheoretical) peakTheoretical = theoreticalEquity;
+            let dd = peakTheoretical - theoreticalEquity;
+            if (dd > maxDrawdown) maxDrawdown = dd;
+
+            if(isWin){
+                missingHistory.push(tempMiss);
+                tempMiss = 0;
+            }else{
+                tempMiss++;
+            }
+        }
+
+        for (let i = 0; i < data.length; i++) {
+            let item = data[i];
+            let res = cfg.type === '1800' ? check1800(item.draw) : check9000(item.draw);
+            let isWin = (cfg.type === '1800' && res.puffs >= 3) || (cfg.type === '9000' && res.pass);
+            
+            if (isWin) {
+                wins++;
+                if (i < 14) wins14++;
+                if (i < 30) wins30++;
+                if (i < 120) wins120++;
+                if (i < 500) wins500++;
+                countingStreak = false; 
+            } else {
+                if (countingStreak) losingStreak++;
+            }
+        }
+
+        let mMissTracker = 0;
+        for (let i = 0; i < reversedData.length; i++) {
+            let item = reversedData[i];
+            let res = cfg.type === '1800' ? check1800(item.draw) : check9000(item.draw);
+            let isWin = (cfg.type === '1800' && res.puffs >= 3) || (cfg.type === '9000' && res.pass);
+            
+            if (i > 0 && mMissTracker === losingStreak) {
+                if (isWin) markovHit++; else markovMiss++;
+            }
+            if (isWin) mMissTracker = 0; else mMissTracker++;
+        }
+
+        let ma14 = Math.min(data.length, 14) > 0 ? wins14 / Math.min(data.length, 14) : 0;
+        let ma30 = Math.min(data.length, 30) > 0 ? wins30 / Math.min(data.length, 30) : 0;
+        let ma120 = Math.min(data.length, 120) > 0 ? wins120 / Math.min(data.length, 120) : 0;
+        let ma500 = Math.min(data.length, 500) > 0 ? wins500 / Math.min(data.length, 500) : 0;
+        let rsi14 = Math.min(data.length, 14) > 0 ? (wins14 / Math.min(data.length, 14)) * 100 : 50;
+        let accel = ma30 - ma120;
+
+        let empWinRate = totalDraws > 0 ? (wins / totalDraws) : baseP_Threshold;
+
+        let geomMean = baseP_Threshold > 0 ? (1 - baseP_Threshold) / baseP_Threshold : 0;
+        let geomStd = baseP_Threshold > 0 ? Math.sqrt(1 - baseP_Threshold) / baseP_Threshold : 1;
+        let rawZ = geomStd > 0 ? (losingStreak - geomMean) / geomStd : 0;
+        let zScore = Math.max(-3.0, Math.min(rawZ, 3.0));
+
+        let shorterCount = missingHistory.filter(m => m <= losingStreak).length;
+        let prSurv = missingHistory.length > 0 ? (shorterCount / missingHistory.length) * 100 : 50;
+        let pMarkov = ((markovHit + baseP_Threshold * 2) / (markovHit + markovMiss + 2)); 
+        let maxAllowedProb = Math.min(baseP_Threshold * 1.6, 0.99); 
+        let bayesProb = (ma14 * 0.3) + (ma30 * 0.2) + (pMarkov * 0.5); 
+        
+        if (zScore >= 0.8) bayesProb += (zScore * 0.035); 
+        bayesProb = Math.max(0, Math.min(bayesProb, maxAllowedProb));
+
+        let EV = (bayesProb * avgPrizeWhenWin) - costPerRound;
+        let currentDrawdown = peakTheoretical - theoreticalEquity;
+        let b = costPerRound > 0 ? ((avgPrizeWhenWin - costPerRound) / costPerRound) : 0; 
+        let fullKelly = b > 0 ? ((bayesProb * (b + 1) - 1) / b) : 0;
+        let isTurbulent = (maxDrawdown > costPerRound * 5 && currentDrawdown >= maxDrawdown * 0.75);
+        let kellyScale = isTurbulent ? 0.00 : (currentDrawdown > maxDrawdown * 0.5 ? 0.03 : 0.10);
+        let fracKelly = Math.max(0, Math.min(fullKelly * kellyScale, 1)); 
+
+        return { 
+            cfg, totalDraws, losingStreak, ma30, ma120, ma500, empWinRate, bayesProb, zScore, EV, costPerRound,
+            fracKelly, currentDrawdown, maxDrawdown, isTurbulent, baseP_Threshold, rsi14, accel, prSurv, pMarkov,
+            geomMean, geomStd
+        };
+    }
+
+    function getPredictionHtml(analysis, spaceKey) {
+        if (!analysis || analysis.totalDraws < 5) return `<div class="ai-prediction-box" style="text-align:center; color:#94a3b8; padding:20px;">⏳ 歷史數據不足</div>`;
+        let a = analysis;
+        let passZ = (a.zScore >= 0.8 && a.zScore <= 3.0); 
+        let passDD = !a.isTurbulent; 
+        let passEV = a.EV > 0; 
+        let consensusTitle = "", consensusDesc = "", consensusColor = "";
+
+        if (!passEV && !passZ) {
+            consensusTitle = "🔴 系統否決 (期望值為負)";
+            consensusDesc = `【風控否決】目前近期盤勢弱，期望值 EV < 0。系統強制 0 倍空手觀望！`;
+            consensusColor = "background:#fef2f2; color:#b91c1c; border: 2px solid #fecaca;";
+        } else if (!passDD) {
+            consensusTitle = "🟡 亂流防禦 (波動率限制)";
+            consensusDesc = `【回撤警告】資金曲線進入深水區亂流。建議降級防禦或 0 倍觀望。`;
+            consensusColor = "background:#fffbeb; color:#b45309; border: 2px solid #fcd34d;";
+        } else if (a.zScore >= 1.2 && passEV) {
+            consensusTitle = "🔥 黃金狙擊 (乖離 Z>1.2)";
+            consensusDesc = `【精準打擊】目前連槓 ${a.losingStreak} 期，Z-Score 強勢達標推升期望值！核准 2 倍火力狙擊回歸！`;
+            consensusColor = "background:#ecfdf5; color:#065f46; border: 2px solid #6ee7b7;";
+        } else if (a.ma30 >= a.ma120 && passEV) {
+            consensusTitle = "🟢 標準多頭佈局";
+            consensusDesc = `【常態區】短均線站上長均線，且 EV>0。核准 1 倍標準注碼平推。`;
+            consensusColor = "background:#f0fdf4; color:#15803d; border: 2px solid #a7f3d0;";
+        } else {
+            consensusTitle = "🔴 聯合否決 (條件未齊)";
+            consensusDesc = `【觀望區】多空不明確，乖離率不足以補償 EV。嚴格執行 0 倍觀望！`;
+            consensusColor = "background:#f8fafc; color:#64748b; border: 2px solid #e2e8f0;";
+        }
+
+        let c_bayes = a.bayesProb > a.baseP_Threshold ? 'hl' : 'dg';
+        let c_ev = a.EV > 0 ? 'hl' : 'dg';
+        let c_kelly = a.fracKelly > 0 ? 'hl' : 'dg';
+        let c_z = passZ ? 'hl' : 'dg';
+        let c_dd = passDD ? 'hl' : 'dg';
+        let c_markov = a.pMarkov > a.baseP_Threshold ? 'hl' : 'dg';
+        let c_rsi = (a.rsi14 >= 35 && a.rsi14 <= 75) ? 'hl' : 'dg';
+        let c_accel = a.accel > 0 ? 'hl' : 'dg';
+        let c_emp = a.empWinRate >= a.baseP_Threshold ? 'hl' : 'dg';
+        let c_ma30 = a.ma30 >= a.baseP_Threshold ? 'hl' : 'dg';
+        let c_ma120 = a.ma120 >= a.baseP_Threshold ? 'hl' : 'dg';
+        let c_ma500 = a.ma500 >= a.baseP_Threshold ? 'hl' : 'dg';
+        let c_cur = a.losingStreak >= a.geomMean ? 'hl' : 'dg';
+        let c_pr = a.prSurv >= 75 ? 'hl' : 'dg';
+
+        return `
+            <div class="ai-prediction-box">
+                <div class="strategy-box" style="${consensusColor}">
+                    <h6>${consensusTitle}</h6>
+                    <div style="font-size:11.5px; font-weight:bold; margin-top:4px; text-align:left; color:#1e293b;">${consensusDesc}</div>
+                    <div class="tomorrow-prob">🎯 下期開盤機率：<strong>${(a.bayesProb * 100).toFixed(1)}%</strong></div>
+                </div>
+                
+                <div style="font-size: 11px; font-weight: 900; color: #0f172a; margin-bottom: 4px; display:flex; align-items:center; gap:4px;">
+                    <span>🏛️ 華爾街 8 大量化指標 (固定顯示)</span>
+                </div>
+                <div class="grid-metrics">
+                    <div class="g-item ${c_bayes}"><div class="g-t">1. 綜合勝率(Bayes)</div><div class="g-v">${(a.bayesProb*100).toFixed(1)}%</div></div>
+                    <div class="g-item ${c_ev}"><div class="g-t">2. 期望值(EV)</div><div class="g-v">${a.EV>0?'+':''}${a.EV.toFixed(0)}</div></div>
+                    <div class="g-item ${c_kelly}"><div class="g-t">3. 凱利配置(Kelly)</div><div class="g-v">${(a.fracKelly*100).toFixed(1)}%</div></div>
+                    <div class="g-item ${c_z}"><div class="g-t">4. 偏離度(Z-Score)</div><div class="g-v">${a.zScore.toFixed(2)}</div></div>
+                    <div class="g-item ${c_dd}"><div class="g-t">5. 資金回撤壓力</div><div class="g-v">$${Math.round(a.currentDrawdown)}</div></div>
+                    <div class="g-item ${c_markov}"><div class="g-t">6. 馬可夫反轉率</div><div class="g-v">${(a.pMarkov*100).toFixed(1)}%</div></div>
+                    <div class="g-item ${c_rsi}"><div class="g-t">7. RSI 震盪(14期)</div><div class="g-v">${a.rsi14.toFixed(1)}</div></div>
+                    <div class="g-item ${c_accel}"><div class="g-t">8. 動能加速(Accel)</div><div class="g-v">${a.accel>0?'+':''}${(a.accel*100).toFixed(1)}%</div></div>
+                </div>
+
+                <button id="btn-toggle-eastern-${spaceKey}" onclick="toggleEasternMetrics('${spaceKey}')" class="btn-toggle-eastern">
+                    ▼ 展開 東方傳統 10 大指標矩陣
+                </button>
+                
+                <div id="eastern-box-${spaceKey}" class="eastern-container">
+                    <div style="font-size: 11px; font-weight: 900; color: #64748b; margin-bottom: 6px;">☯️ 東方傳統 10 大盤路與經驗矩陣</div>
+                    <div class="grid-metrics">
+                        <div class="g-item"><div class="g-t">1. 物理基準($P_{base}$)</div><div class="g-v">${(a.baseP_Threshold*100).toFixed(2)}%</div></div>
+                        <div class="g-item ${c_emp}"><div class="g-t">2. 大數勝率($P_{emp}$)</div><div class="g-v">${(a.empWinRate*100).toFixed(1)}%</div></div>
+                        <div class="g-item ${c_ma30}"><div class="g-t">3. 短期均線($MA_{30}$)</div><div class="g-v">${(a.ma30*100).toFixed(1)}%</div></div>
+                        <div class="g-item ${c_ma120}"><div class="g-t">4. 中期均線($MA_{120}$)</div><div class="g-v">${(a.ma120*100).toFixed(1)}%</div></div>
+                        <div class="g-item ${c_ma500}"><div class="g-t">5. 長期均線($MA_{500}$)</div><div class="g-v">${(a.ma500*100).toFixed(1)}%</div></div>
+                        <div class="g-item ${c_cur}"><div class="g-t">6. 當前連槓期數</div><div class="g-v">${a.losingStreak} 期</div></div>
+                        <div class="g-item"><div class="g-t">7. 理論平均遺漏</div><div class="g-v">${a.geomMean.toFixed(1)} 期</div></div>
+                        <div class="g-item"><div class="g-t">8. 幾何標準差($\\sigma$)</div><div class="g-v">${a.geomStd.toFixed(2)}</div></div>
+                        <div class="g-item ${c_pr}"><div class="g-t">9. 生存極限(PR值)</div><div class="g-v">${a.prSurv.toFixed(1)}%</div></div>
+                        <div class="g-item"><div class="g-t">10. 累計觀測期數</div><div class="g-v">${a.totalDraws} 期</div></div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    function renderSettingsPanel() {
+        let container = document.getElementById('setting-inputs');
+        if(!container) return;
+        let html = '';
+        ['tt-1800', 'tt-9000', '539-1800', '539-9000'].forEach(key => {
+            let analysis = analyzeSpace(key);
+            if(!analysis) return;
+            let cfg = analysis.cfg;
+            let labelPrize = cfg.type === '1800' ? '三星單碰(元)' : '四星單碰(元)';
+            
+            html += `
+                <div class="space-config-card">
+                    <h4>${cfg.name}</h4>
+                    <div class="input-row">
+                        <div class="setting-item"><label>預測下注 (元/碰)</label><input type="number" id="cfg-unitbet-${key}" value="${cfg.unitBet}" step="1" oninput="updateConfigDisplay('${key}')" disabled></div>
+                        <div class="setting-item"><label>牌面本金 (元)</label><input type="number" id="cfg-cost-${key}" value="${cfg.unitBet * cfg.basePuffs}" disabled></div>
+                    </div>
+                    <div class="input-row">
+                        <div class="setting-item"><label>退水 (%)</label><input type="number" id="cfg-rebate-${key}" value="${cfg.rebate}" disabled></div>
+                        <div class="setting-item"><label>${labelPrize}</label><input type="number" id="cfg-prize-${key}" value="${cfg.unitPrize}" disabled></div>
+                    </div>
+                    ${getPredictionHtml(analysis, key)}
+                </div>
+            `;
+        });
+        container.innerHTML = html;
+    }
+
+    function renderDashboard() {
+        let container = document.getElementById('dashboard-content');
+        if(!container) return;
+        try {
+            let html = '';
+            ['tt-1800', 'tt-9000', '539-1800', '539-9000'].forEach(key => {
+                let a = analyzeSpace(key);
+                if (!a || !a.cfg || a.totalDraws === 0) return;
+                
+                let status = "";
+                let cssClass = "";
+                
+                if (a.EV <= 0 && a.zScore < 1.2) {
+                    status = `🔴 系統否決 👉 <span style="color:#fca5a5;">0 倍空手</span>`;
+                } else if (a.isTurbulent) {
+                    status = `🟡 亂流防禦 👉 <span style="color:#fcd34d;">保守觀望</span>`;
+                } else if (a.zScore >= 1.2 && a.EV > 0) {
+                    status = `🔥 黃金狙擊 👉 <span style="color:#a7f3d0;">強勢 2 倍</span>`;
+                    cssClass = "cold";
+                } else if (a.ma30 >= a.ma120 && a.EV > 0) {
+                    status = `🟢 標準多頭 👉 <span style="color:#a7f3d0;">平推 1 倍</span>`;
+                    cssClass = "cold";
+                } else {
+                    status = `❄️ 條件不足 👉 <span style="color:#cbd5e1;">0 倍觀望</span>`;
+                }
+
+                html += `<div class="dash-card ${cssClass}"><h4>${a.cfg.name}</h4><div style="font-weight:bold; font-size:13px;">${status}</div></div>`;
+            });
+            container.innerHTML = html;
+        } catch(e) { console.error("Dashboard Error:", e); }
+    }
+
+    window.updateConfigDisplay = function(key) {
+        let unitBet = parseFloat(document.getElementById(`cfg-unitbet-${key}`).value) || 0;
+        let basePuffs = spaceConfigs[key].basePuffs;
+        let costInput = document.getElementById(`cfg-cost-${key}`);
+        if(costInput) costInput.value = unitBet * basePuffs;
+    };
+
+    window.renderLedgerSummary = function() {
+        let recHtml = '';
+        ['tt-1800', 'tt-9000', '539-1800', '539-9000'].forEach(key => {
+            let a = analyzeSpace(key);
+            if (!a || !a.cfg || a.totalDraws === 0) return;
+            let statusText = '', reasonText = '', cardStyle = '';
+            
+            if (a.EV <= 0 && a.zScore < 1.2) {
+                statusText = `🔴 系統否決 👉 0 倍`; 
+                cardStyle = 'background:#fef2f2; border-color:#fecaca;'; 
+                reasonText = `期望值為負或處於弱勢區。系統聯合否決，強制 0 元空手保本。`;
+            } else if (a.isTurbulent) {
+                statusText = `🟡 亂流防禦 👉 0 倍`; 
+                cardStyle = 'background:#fffbeb; border-color:#fde047;'; 
+                reasonText = `資金回撤幅度大於警戒線，暫緩佈局。`;
+            } else if (a.zScore >= 1.2 && a.EV > 0) {
+                statusText = `🔥 黃金狙擊 👉 2 倍`; 
+                cardStyle = 'background:#ecfdf5; border-color:#6ee7b7; box-shadow:0 2px 10px rgba(16,185,129,0.1)'; 
+                reasonText = `極度乖離且期望值轉正。核准以 2 倍火力狙擊回歸！`;
+            } else if (a.ma30 >= a.ma120 && a.EV > 0) {
+                statusText = `🟢 標準多頭 👉 1 倍`; 
+                cardStyle = 'background:#ecfdf5; border-color:#6ee7b7;'; 
+                reasonText = `均線多頭且期望值正向。核准 1 倍標準注碼平推。`;
+            } else {
+                statusText = `🔴 條件不足 👉 0 倍`; 
+                cardStyle = 'background:#fef2f2; border-color:#fecaca;'; 
+                reasonText = `未達系統全綠燈共識。強制 0 元觀望，絕不出手。`;
+            }
+
+            recHtml += `
+                <div style="padding:14px; border:1.5px solid; border-radius:10px; ${cardStyle} line-height:1.6;">
+                    <div style="font-weight:900; font-size:14px; color:#0f172a; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
+                        <span>${a.cfg.name}</span>
+                        <span style="font-size:13px; font-weight:900; color:#dc2626;">${statusText}</span>
+                    </div>
+                    <div style="font-size:12px; color:#334155;">${reasonText}</div>
+                </div>
+            `;
+        });
+        document.getElementById('ledger-recommendations-container').innerHTML = recHtml;
+
+        let totalCount = 0, totalCost = 0, totalPrize = 0;
+        Object.keys(spaceData).forEach(key => {
+            let cfg = spaceConfigs[key];
+            getFilteredData(key).forEach(item => {
+                let myBet = parseFloat(item.myBet) || 0;
+                if (myBet > 0) {
+                    totalCount++;
+                    let roundCost = myBet * Number(cfg.basePuffs) * (1 - Number(cfg.rebate) / 100);
+                    let res = cfg.type === '1800' ? check1800(item.draw) : check9000(item.draw);
+                    let roundPrize = res.puffs * Number(cfg.unitPrize) * myBet;
+                    totalCost += roundCost; totalPrize += roundPrize;
+                }
+            });
+        });
+        let net = totalPrize - totalCost;
+        document.getElementById('ledger-count').innerText = `${totalCount} 期`;
+        document.getElementById('ledger-cost').innerText = `$${Math.round(totalCost).toLocaleString()}`;
+        document.getElementById('ledger-prize').innerText = `$${Math.round(totalPrize).toLocaleString()}`;
+        document.getElementById('ledger-profit').innerText = `${net >= 0 ? '+$' : '-$'}${Math.abs(Math.round(net)).toLocaleString()}`;
+        document.getElementById('ledger-profit').style.color = net > 0 ? '#059669' : (net < 0 ? '#dc2626' : '#64748b');
+    };
+
+    window.unlockSettings = function() {
+        if (document.getElementById('input-pwd').value === "0000") {
+            ['tt-1800', 'tt-9000', '539-1800', '539-9000'].forEach(k => {
+                document.getElementById(`cfg-unitbet-${k}`).disabled = false;
+                document.getElementById(`cfg-rebate-${k}`).disabled = false;
+                document.getElementById(`cfg-prize-${k}`).disabled = false;
+            });
+            document.getElementById('btn-save').style.display = 'inline-block';
+            document.getElementById('lock-status').innerText = "🔓 已解鎖";
+            document.getElementById('lock-status').style.color = "var(--success-color)";
+        } else { alert("密碼錯誤！"); }
+    };
+
+    window.saveSettings = function() {
+        ['tt-1800', 'tt-9000', '539-1800', '539-9000'].forEach(key => {
+            spaceConfigs[key].unitBet = parseFloat(document.getElementById(`cfg-unitbet-${key}`).value) || spaceConfigs[key].unitBet;
+            spaceConfigs[key].rebate = parseFloat(document.getElementById(`cfg-rebate-${key}`).value) || spaceConfigs[key].rebate;
+            spaceConfigs[key].unitPrize = parseFloat(document.getElementById(`cfg-prize-${key}`).value) || spaceConfigs[key].unitPrize;
+            localStorage.setItem(`cfg_${key}`, JSON.stringify(spaceConfigs[key]));
+        });
+        renderSettingsPanel(); renderLedgerSummary(); alert("設定儲存成功！");
+    };
+
+    window.saveLedger = async function() {
+        let date = document.getElementById('ledger-date').value;
+        let space = document.getElementById('ledger-space').value;
+        let myBet = parseFloat(document.getElementById('ledger-bet').value) || 0;
+        if(!date) return alert("請選擇日期！");
+        let id = `${space}_${date}`;
+        try {
+            const docRef = doc(db, "matrix_systems", id);
+            const docSnap = await getDoc(docRef);
+            if (!docSnap.exists()) return alert(`⚠️ 找不到開獎紀錄！請先在該空間單筆輸入。`);
+            await setDoc(docRef, { myBet: myBet }, { merge: true });
+            alert(`✅ 寫入真實帳本成功！`);
+        } catch(e) { alert("失敗：" + e.message); }
+    };
+
+    window.editRecordBet = async function(id, curBet) {
+        let input = prompt(`請輸入下注金額 (元/碰)：`, curBet);
+        if (input === null) return; 
+        let newBet = parseFloat(input);
+        if (isNaN(newBet) || newBet < 0) return alert("無效數字！");
+        await setDoc(doc(db, "matrix_systems", id), { myBet: newBet }, { merge: true });
+    };
+
+    let renderTimer = null;
+    onSnapshot(collection(db, "matrix_systems"), (snapshot) => {
+        snapshot.docChanges().forEach((change) => {
+            let d = change.doc.data();
+            let spaceKey = d.space;
+            if (change.type === "added" || change.type === "modified") {
+                if (!spaceData[spaceKey]) spaceData[spaceKey] = [];
+                let existingIdx = spaceData[spaceKey].findIndex(x => x.id === d.id);
+                if (existingIdx > -1) spaceData[spaceKey][existingIdx] = d;
+                else spaceData[spaceKey].push(d);
+            }
+            if (change.type === "removed" && spaceData[spaceKey]) {
+                spaceData[spaceKey] = spaceData[spaceKey].filter(x => x.id !== d.id);
+            }
+        });
+
+        if (!isDataLoaded) {
+            isDataLoaded = true;
+            document.getElementById('global-loader').style.opacity = '0';
+            setTimeout(() => document.getElementById('global-loader').style.display = 'none', 300);
+        }
+
+        clearTimeout(renderTimer);
+        renderTimer = setTimeout(() => {
+            if (currentSpace === 'arena') {
+                renderSettingsPanel();
+                renderDashboard();
+                renderRadar(); 
+            }
+            else if (currentSpace === 'ledger') renderLedgerSummary();
+            else renderMain();
+        }, 500); 
+    });
+
+    function renderMain() {
+        if(currentSpace === 'arena' || currentSpace === 'ledger') return;
+        
+        let cfg = spaceConfigs[currentSpace];
+        let data = getFilteredData(currentSpace);
+        
+        let allRawList = [...(spaceData[currentSpace] || [])].sort((a, b) => new Date(b.date) - new Date(a.date));
+        
+        let recent500 = allRawList.slice(0, 500);
+        let win500 = 0;
+        recent500.forEach(item => {
+            let res = cfg.type === '1800' ? check1800(item.draw) : check9000(item.draw);
+            if ((cfg.type === '1800' && res.puffs >= 3) || (cfg.type === '9000' && res.pass)) win500++;
+        });
+        let rate500 = recent500.length > 0 ? (win500 / recent500.length) : 0;
+        let rate500Str = recent500.length > 0 ? (rate500 * 100).toFixed(1) + '%' : '--%';
+
+        let thisYearData = allRawList.filter(x => String(x.date).startsWith(currentYear.toString()));
+        let thisYearWins = 0;
+        thisYearData.forEach(item => {
+            let res = cfg.type === '1800' ? check1800(item.draw) : check9000(item.draw);
+            if ((cfg.type === '1800' && res.puffs >= 3) || (cfg.type === '9000' && res.pass)) thisYearWins++;
+        });
+        let thisYearRate = thisYearData.length > 0 ? (thisYearWins / thisYearData.length) : 0;
+        let thisYearRateStr = thisYearData.length > 0 ? (thisYearRate * 100).toFixed(1) + '%' : '--%';
+
+        let bias = (thisYearRate - rate500) * 100;
+        let biasSign = bias >= 0 ? `+${bias.toFixed(1)}%` : `${bias.toFixed(1)}%`;
+        let biasColor = bias > 1.0 ? '#059669' : (bias < -1.0 ? '#dc2626' : '#64748b');
+
+        let tbody = document.getElementById('result-tbody');
+        let thead = document.getElementById('table-head');
+        
+        let wins = 0;
+        let htmlBuilder = ""; 
+
+        if (cfg.type === '1800') {
+            thead.innerHTML = `<tr><th>日期</th><th>開獎號碼</th><th>(10-18)</th><th>(20-29)</th><th>(其他)</th><th>結果</th><th>實注</th><th>實損益</th><th>操作</th></tr>`;
+            data.forEach(item => {
+                let res = check1800(item.draw);
+                if (res.puffs >= 3) wins++;
+                
+                let myBet = parseFloat(item.myBet) || 0;
+                let profit = myBet * (res.puffs * cfg.unitPrize - cfg.basePuffs*(1-cfg.rebate/100));
+                let badge = res.puffs>=4 ? "bg-green" : (res.puffs>0 ? "bg-yellow" : "bg-red");
+                let ballsHtml = item.draw.map(n => `<div class="num-ball">${String(n).padStart(2,'0')}</div>`).join('');
+                htmlBuilder += `<tr><td>${item.date.slice(5)}</td><td><div class="num-container">${ballsHtml}</div></td><td>${res.p1}</td><td>${res.p2}</td><td>${res.p3}</td><td><span class="badge ${badge}">${res.text}</span></td><td style="color:#0284c7;font-weight:900;">${myBet}</td><td style="color:${profit>0?'#059669':'#dc2626'};font-weight:900;">${myBet>0?(profit>0?'+':'-')+'$'+Math.abs(profit):'-'}</td><td><button class="btn-tbl-action" onclick="editRecordBet('${item.id}', ${myBet})">✏️</button><button class="btn-tbl-action" onclick="deleteRecord('${item.id}')" style="color:#dc2626;">×</button></td></tr>`;
+            });
+        } else {
+            thead.innerHTML = `<tr><th>日期</th><th>開獎號碼</th><th>(01-09)</th><th>(10-19)</th><th>(20-29)</th><th>(30-39)</th><th>結果</th><th>實注</th><th>實損益</th><th>操作</th></tr>`;
+            data.forEach(item => {
+                let res = check9000(item.draw);
+                if (res.pass) wins++;
+                
+                let myBet = parseFloat(item.myBet) || 0;
+                let profit = myBet * (res.puffs * cfg.unitPrize - cfg.basePuffs*(1-cfg.rebate/100));
+                let badge = res.pass ? "bg-green" : "bg-red";
+                let ballsHtml = item.draw.map(n => `<div class="num-ball">${String(n).padStart(2,'0')}</div>`).join('');
+                htmlBuilder += `<tr><td>${item.date.slice(5)}</td><td><div class="num-container">${ballsHtml}</div></td><td>${res.q1}</td><td>${res.q2}</td><td>${res.q3}</td><td>${res.q4}</td><td><span class="badge ${badge}">${res.text}</span></td><td style="color:#0284c7;font-weight:900;">${myBet}</td><td style="color:${profit>0?'#059669':'#dc2626'};font-weight:900;">${myBet>0?(profit>0?'+':'-')+'$'+Math.abs(profit):'-'}</td><td><button class="btn-tbl-action" onclick="editRecordBet('${item.id}', ${myBet})">✏️</button><button class="btn-tbl-action" onclick="deleteRecord('${item.id}')" style="color:#dc2626;">×</button></td></tr>`;
+            });
+        }
+        
+        let fails = data.length - wins;
+        let a = analyzeSpace(currentSpace);
+        let curRateStr = a ? (a.bayesProb * 100).toFixed(1) + '%' : '--%';
+        let zScoreStr = a ? a.zScore.toFixed(2) : '--';
+        let losingStreakStr = a ? a.losingStreak : '--';
+        
+        document.getElementById('stats-container').innerHTML = `
+            <div class="stat-item"><h3>區間總期數</h3><p>${data.length} 期</p></div>
+            <div class="stat-item"><h3>中獎 (過關)</h3><p style="color:#059669;">${wins} 次</p></div>
+            <div class="stat-item"><h3>未中 (槓龜)</h3><p style="color:#dc2626;">${fails} 次</p></div>
+            
+            <div class="stat-item">
+                <h3 style="margin-bottom:2px;">近500期宏觀均值</h3>
+                <p style="color:#475569;">${rate500Str}</p>
+                <div style="font-size:10px; color:#64748b; margin-top:4px; border-top:1px dashed #e2e8f0; padding-top:4px;">
+                    今年: <span style="color:#0284c7; font-weight:900;">${thisYearRateStr}</span> 
+                    (<span style="color:${biasColor}; font-weight:900;">${biasSign}</span>)
+                </div>
+            </div>
+            
+            <div class="stat-item" style="border-color:${a&&a.EV>0?'#10b981':'#e2e8f0'}; background:${a&&a.EV>0?'#ecfdf5':'#fff'};">
+                <h3 style="color:${a&&a.EV>0?'#065f46':'#64748b'};">目前連槓 / 乖離</h3>
+                <p style="color:${a&&a.EV>0?'#059669':'#0f172a'};">${losingStreakStr} 期 (Z=${zScoreStr})</p>
+            </div>
+
+            <div class="stat-item" style="border-color:${a&&a.EV>0?'#10b981':'#e2e8f0'}; background:${a&&a.EV>0?'#ecfdf5':'#fff'}; box-shadow:${a&&a.EV>0?'0 0 10px rgba(16,185,129,0.2)':''}">
+                <h3 style="color:${a&&a.EV>0?'#065f46':'#64748b'};">下期開盤機率</h3>
+                <p style="color:${a&&a.EV>0?'#059669':'#0f172a'};">${curRateStr} ${a&&a.EV>0?'🔥':''}</p>
+            </div>
+        `;
+        tbody.innerHTML = htmlBuilder;
+    }
+
+    window.addNewRecord = async function() {
+        let date = document.getElementById('input-date').value;
+        let ballsStr = document.getElementById('input-balls').value.trim();
+        let myBet = parseFloat(document.getElementById('input-mybet').value) || 0;
+        if(!date || !ballsStr) return alert("⚠️ 請輸入開獎日期與號碼！");
+        let nums = ballsStr.match(/\d+/g);
+        if(!nums || nums.length !== 5) return alert("⚠️ 開獎號碼必須為 5 個數字！");
+        let draw = nums.map(n=>parseInt(n, 10)).sort((a,b)=>a-b);
+        if (new Set(draw).size !== 5) return alert("❌ 號碼不可重複！");
+        let id = `${currentSpace}_${date}`;
+        await setDoc(doc(db, "matrix_systems", id), { id: id, space: currentSpace, date: date, draw: draw, myBet: myBet });
+        alert(`✅ 儲存成功！`); document.getElementById('input-balls').value = '';
+    };
+
+    window.deleteRecord = async function(id) {
+        if(confirm("確定刪除此筆開獎紀錄？")) await deleteDoc(doc(db, "matrix_systems", id));
+    };
+
+    window.batchImport = async function() {
+        let targetSpace = document.getElementById('batch-target-space').value;
+        let lines = document.getElementById('batch-text').value.trim().split('\n');
+        let records = [];
+        lines.forEach(line => {
+            let matchDate = line.match(/^(\d{4}[-/]\d{1,2}[-/]\d{1,2})/);
+            if(matchDate) {
+                let date = matchDate[1].replace(/\//g, '-');
+                let nums = line.substring(matchDate[0].length).match(/\d+/g);
+                if(nums && nums.length >= 5) {
+                    let draw = Array.from(new Set(nums.map(n=>parseInt(n, 10)).filter(n => n >= 1 && n <= 39))).slice(0, 5).sort((a,b)=>a-b);
+                    if(draw.length === 5) records.push({ id: `${targetSpace}_${date}`, space: targetSpace, date: date, draw: draw, myBet: 0 });
+                }
+            }
+        });
+        if(records.length === 0) return alert("⚠️ 找不到符合格式的資料。");
+        if (!confirm(`準備匯入 ${records.length} 筆資料？`)) return;
+        const CHUNK_SIZE = 400; 
+        let batchPromises = [];
+        for (let i = 0; i < records.length; i += CHUNK_SIZE) {
+            let chunk = records.slice(i, i + CHUNK_SIZE);
+            let batch = writeBatch(db);
+            chunk.forEach(r => batch.set(doc(db, "matrix_systems", r.id), r));
+            batchPromises.push(batch.commit());
+        }
+        await Promise.all(batchPromises);
+        alert(`🎉 成功匯入 ${records.length} 筆資料！`); document.getElementById('batch-text').value = '';
+    };
+
+    document.getElementById('input-date').value = new Date().toISOString().split('T')[0];
+    document.getElementById('ledger-date').value = new Date().toISOString().split('T')[0];
+    
 </script>
 </body>
 </html>
