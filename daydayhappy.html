@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>天天樂 光量子 AI 倍投追蹤對決擂台</title>
+    <style>
+        :root {
+            --bg-color: #f1f5f9; 
+            --panel-bg: rgba(255, 255, 255, 0.94);
+            --panel-border: rgba(148, 163, 184, 0.35);
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --ai-color: #0284c7; 
+            --my-color: #059669; 
+            --draw-color: #d97706; 
+            --neon-purple: #7c3aed;
+            --hit-color: #ef4444; 
+            --gold-color: #d97706;
+            --ball-size: 34px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: "JetBrains Mono", -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft JhengHei", sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { 
+            background-color: var(--bg-color); 
+            color: var(--text-main); 
+            padding: 16px 12px; 
+            line-height: 1.45;
+            background-image: 
+                linear-gradient(rgba(14, 165, 233, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(14, 165, 233, 0.05) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+        .container { max-width: 1360px; margin: 0 auto; }
+
+        header { 
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(240, 249, 255, 0.95)); 
+            border: 1px solid rgba(14, 165, 233, 0.3);
+            box-shadow: 0 6px 20px rgba(14, 165, 233, 0.1);
+            padding: 16px; 
+            border-radius: 14px; 
+            margin-bottom: 14px; 
+            text-align: center; 
+            backdrop-filter: blur(12px);
+        }
+        header h1 { 
+            font-size: clamp(18px, 3.5vw, 26px); 
+            letter-spacing: 1.2px;
+            background: linear-gradient(90deg, #0284c7, #7c3aed, #059669);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 900;
+        }
+        .cloud-badge { 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 6px; 
+            background: #ffffff; 
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            padding: 3px 12px; 
+            border-radius: 20px; 
+            font-size: 11px; 
+            font-weight: bold; 
+            color: #065f46; 
+            margin-top: 6px; 
+        }
+        .dot { width: 7px; height: 7px; border-radius: 50%; background: #10b981; box-shadow: 0 0 6px #10b981; }
+
+        .top-action-bar {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+        .btn-open-modal {
+            background: linear-gradient(135deg, #d97706, #b45309);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 14px;
+            font-weight: 900;
+            border-radius: 10px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(217, 119, 6, 0.25);
+            transition: all 0.2s;
+        }
+        .btn-open-modal:hover { filter: brightness(1.1); transform: translateY(-1px); }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(6px);
+            z-index: 999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+        }
+        .modal-content {
+            background: #ffffff;
+            border: 1.5px solid rgba(217, 119, 6, 0.4);
+            border-radius: 18px;
+            width: 100%;
+            max-width: 1100px;
+            height: 90vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+            animation: modalPop 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes modalPop {
+            from { transform: scale(0.96); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .modal-header {
+            padding: 12px 18px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #fffbeb;
+            flex-shrink: 0;
+        }
+        .modal-header h2 {
+            font-size: 15px;
+            font-weight: 900;
+            color: #92400e;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .modal-close {
+            background: transparent;
+            border: none;
+            font-size: 26px;
+            color: #78350f;
+            cursor: pointer;
+            font-weight: bold;
+            padding: 0 4px;
+        }
+        
+        .modal-tabs {
+            display: flex;
+            background: #f8fafc;
+            border-bottom: 1.5px solid #e2e8f0;
+            padding: 6px 12px 0 12px;
+            gap: 6px;
+            overflow-x: auto;
+            white-space: nowrap;
+            flex-shrink: 0;
+            -webkit-overflow-scrolling: touch;
+        }
+        .modal-tabs::-webkit-scrollbar { display: none; }
+        .tab-btn {
+            background: transparent;
+            border: 1px solid transparent;
+            border-bottom: none;
+            padding: 8px 14px;
+            font-size: 12px;
+            font-weight: 900;
+            color: #64748b;
+            cursor: pointer;
+            border-radius: 8px 8px 0 0;
+            transition: 0.2s;
+        }
+        .tab-btn.active {
+            background: #ffffff;
+            border-color: #cbd5e1;
+            color: #d97706;
+            border-top: 3px solid #d97706;
+        }
+        
+        .modal-body {
+            padding: 14px 16px;
+            overflow-y: auto;
+            flex: 1;
+            overscroll-behavior: contain;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .calc-form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 8px;
+            margin-bottom: 12px;
+            background: #f8fafc;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+        }
+        .calc-input-group { display: flex; flex-direction: column; gap: 3px; }
+        .calc-input-group label { font-size: 11px; font-weight: 800; color: #475569; }
+        .calc-input-group input {
+            padding: 7px 9px;
+            background: #ffffff;
+            border: 1.5px solid #cbd5e1;
+            color: #0f172a;
+            border-radius: 6px;
+            font-size: 13px;
+            outline: none;
+            font-family: monospace;
+            font-weight: bold;
+        }
+        .calc-input-group input:focus { border-color: var(--gold-color); }
+        .btn-recalc {
+            background: linear-gradient(135deg, #d97706, #b45309);
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            font-size: 13px;
+            font-weight: 900;
+            border-radius: 6px;
+            cursor: pointer;
+            align-self: flex-end;
+            height: 35px;
+        }
+        .btn-recalc:hover { filter: brightness(1.1); }
+
+        .tracker-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 16px;
+        }
+        .tracker-title {
+            font-size: 13px;
+            font-weight: 900;
+            color: #334155;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .status-item {
+            background: #ffffff;
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+            text-align: center;
+        }
+        .status-item .label { font-size: 11px; color: #64748b; margin-bottom: 2px; font-weight: bold; }
+        .status-item .val { font-size: 16px; font-weight: 900; color: #0f172a; font-family: monospace; }
+        .status-item .val.highlight { color: #dc2626; }
+        .status-item .val.win { color: #16a34a; }
+
+        .action-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+        .act-btn {
+            flex: 1;
+            min-width: 130px;
+            padding: 10px 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 900;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .act-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
+        .btn-win { background: #16a34a; color: #ffffff; box-shadow: 0 2px 8px rgba(22, 163, 74, 0.25); }
+        .btn-lose { background: #dc2626; color: #ffffff; box-shadow: 0 2px 8px rgba(220, 38, 38, 0.25); }
+        .btn-reset { background: #64748b; color: #ffffff; flex: 0.4; }
+
+        .tier-sub-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .sub-tab-btn {
+            padding: 6px 14px;
+            border-radius: 6px;
+            border: 1.5px solid #cbd5e1;
+            background: #ffffff;
+            font-size: 12px;
+            font-weight: 900;
+            color: #475569;
+            cursor: pointer;
+        }
+        .sub-tab-btn.active {
+            border-color: #7c3aed;
+            background: #f5f3ff;
+            color: #7c3aed;
+        }
+
+        .plan-config-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #ffffff;
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 1.5px solid #cbd5e1;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+        .plan-config-bar label { font-size: 12px; font-weight: 900; color: #334155; }
+        .plan-config-bar input {
+            padding: 6px 10px;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 6px;
+            font-family: monospace;
+            font-weight: 900;
+            width: 90px;
+            text-align: center;
+            outline: none;
+        }
+        .plan-config-bar input:focus { border-color: var(--gold-color); }
+
+        .profit-table-wrapper {
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            overflow-x: auto;
+        }
+        .profit-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+        .profit-table th {
+            background: #f8fafc;
+            color: #475569;
+            padding: 10px 8px;
+            font-weight: 900;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        .profit-table td {
+            padding: 9px 8px;
+            border-bottom: 1px solid #f1f5f9;
+            font-family: monospace;
+            font-weight: 600;
+        }
+        .profit-table tr:hover { background: #fffbeb; }
+        .text-green { color: #059669; font-weight: 800; }
+        .text-gold { color: #d97706; font-weight: 900; }
+        .text-purple { color: #7c3aed; font-weight: 900; }
+
+        @media (max-width: 768px) {
+            body { padding: 10px 6px; }
+            .modal-overlay { padding: 8px; }
+            .modal-content { height: 96vh; border-radius: 14px; }
+            .calc-form-grid { grid-template-columns: 1fr 1fr; gap: 6px; padding: 8px; }
+            .btn-recalc { grid-column: span 2; width: 100%; height: 34px; }
+            .plan-config-bar { padding: 8px 10px; gap: 6px; }
+            .plan-config-bar input { width: 75px; }
+            
+            table, thead, tbody, th, td, tr { display: block; }
+            thead tr { position: absolute; top: -9999px; left: -9999px; }
+            tr { 
+                background: #ffffff; 
+                border: 1px solid #e2e8f0; 
+                border-radius: 10px; 
+                margin-bottom: 10px; 
+                padding: 10px; 
+            }
+            td { 
+                border: none; 
+                padding: 5px 0; 
+                display: flex; 
+                align-items: center; 
+                justify-content: space-between; 
+                border-bottom: 1px dashed #f1f5f9;
+            }
+            td::before { 
+                content: attr(data-label); 
+                font-weight: 900; 
+                font-size: 11px; 
+                color: #64748b; 
+                text-align: left;
+                min-width: 65px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>⚡ QUANTUM AI LOTTERY BATTLE ARENA (智能雙軌版) ⚡</h1>
+        <div class="cloud-badge">
+            <div class="dot"></div>
+            <span>Firebase 雲端量子網絡同步中</span>
+        </div>
+    </header>
+
+    <div class="top-action-bar">
+        <!-- 點擊此按鈕展開系統 -->
+        <button class="btn-open-modal" onclick="openProfitModal()">
+            📊 點擊開啟：天天樂全車 A區/B區 倍投與紀律追蹤表
+        </button>
+    </div>
+
+    <!-- 獲利與倍投規劃 Modal -->
+    <div class="modal-overlay" id="profit-modal" onclick="closeModalOnOverlay(event)">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>💰 天天樂全車 A/B 區 倍投與階梯紀律追蹤系統</h2>
+                <button class="modal-close" onclick="closeProfitModal()">&times;</button>
+            </div>
+            
+            <div class="modal-tabs">
+                <button class="tab-btn active" id="tab-btn-area-a" onclick="switchModalTab('area-a')">🌟 A區 (2碼全車) 規劃表</button>
+                <button class="tab-btn" id="tab-btn-area-b" onclick="switchModalTab('area-b')">🎯 B區 (3碼全車) 規劃表</button>
+                <button class="tab-btn" id="tab-btn-tier-track" onclick="switchModalTab('tier-track')">⚖️ A/B區 紀律追蹤表 (實戰面板)</button>
+            </div>
+
+            <div class="modal-body">
+                <!-- 共用參數設定 (適用於 A/B 區) -->
+                <div class="plan-config-bar">
+                    <label>💰 單車本金(預設74):</label>
+                    <input type="number" id="global-cost" value="74" step="0.5">
+                    <label>🏆 單車中獎(預設212):</label>
+                    <input type="number" id="global-reward" value="212">
+                    <label>🎯 每階目標淨利:</label>
+                    <input type="number" id="global-target" value="1000" step="100">
+                </div>
+
+                <!-- Tab 1: A區 (2碼全車) 倍投規劃 -->
+                <div id="tab-content-area-a" class="tab-content" style="display: block;">
+                    <div class="calc-form-grid">
+                        <div class="calc-input-group">
+                            <label>🚗 第 1 期起步車數</label>
+                            <input type="number" id="calc-a-first" value="0.10" min="0.01" step="0.05">
+                        </div>
+                        <div class="calc-input-group">
+                            <label>📅 規劃天數 (期數)</label>
+                            <input type="number" id="calc-a-days" value="10" min="1" max="30">
+                        </div>
+                        <button class="btn-recalc" onclick="generatePlan('A', 2)">⚡ 生成 A區 規劃表</button>
+                    </div>
+                    <div class="profit-table-wrapper">
+                        <table class="profit-table" id="table-area-a">
+                            <thead>
+                                <tr>
+                                    <th>期數</th>
+                                    <th>當期車數 (每碼)</th>
+                                    <th>當期總成本 (2碼)</th>
+                                    <th>累計總成本</th>
+                                    <th>中1碼獎金</th>
+                                    <th>中1碼淨利</th>
+                                </tr>
+                            </thead>
+                            <tbody><!-- JS 自動生成 --></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Tab 2: B區 (3碼全車) 倍投規劃 -->
+                <div id="tab-content-area-b" class="tab-content" style="display: none;">
+                    <div class="calc-form-grid">
+                        <div class="calc-input-group">
+                            <label>🚗 第 1 期起步車數</label>
+                            <input type="number" id="calc-b-first" value="0.10" min="0.01" step="0.05">
+                        </div>
+                        <div class="calc-input-group">
+                            <label>📅 規劃天數 (期數)</label>
+                            <input type="number" id="calc-b-days" value="10" min="1" max="30">
+                        </div>
+                        <button class="btn-recalc" onclick="generatePlan('B', 3)">⚡ 生成 B區 規劃表</button>
+                    </div>
+                    <div class="profit-table-wrapper">
+                        <table class="profit-table" id="table-area-b">
+                            <thead>
+                                <tr>
+                                    <th>期數</th>
+                                    <th>當期車數 (每碼)</th>
+                                    <th>當期總成本 (3碼)</th>
+                                    <th>累計總成本</th>
+                                    <th>中1碼獎金</th>
+                                    <th>中1碼淨利</th>
+                                </tr>
+                            </thead>
+                            <tbody><!-- JS 自動生成 --></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Tab 3: 階梯均注紀律追蹤表 (回歸賺錢實戰面板) -->
+                <div id="tab-content-tier-track" class="tab-content" style="display: none;">
+                    <div class="tier-sub-tabs">
+                        <button class="sub-tab-btn active" id="track-btn-a" onclick="switchTracker('A')">🌟 A區 (2碼) 追蹤</button>
+                        <button class="sub-tab-btn" id="track-btn-b" onclick="switchTracker('B')">🎯 B區 (3碼) 追蹤</button>
+                    </div>
+
+                    <div class="tracker-card">
+                        <div class="tracker-title">
+                            <span id="tracker-title-text">🌟 A區 (2碼) 實戰紀律追蹤</span>
+                            <span class="day-plan-tier" id="tracker-step-badge">第 1 階</span>
+                        </div>
+                        <div class="status-grid">
+                            <div class="status-item">
+                                <div class="label">累計盈虧 (綠色為賺)</div>
+                                <div class="val" id="tracker-pl">0</div>
+                            </div>
+                            <div class="status-item">
+                                <div class="label">本期建議車數 (每碼)</div>
+                                <div class="val text-purple" id="tracker-next-unit">0.10</div>
+                            </div>
+                            <div class="status-item">
+                                <div class="label">本期總成本</div>
+                                <div class="val" id="tracker-next-cost">14.8</div>
+                            </div>
+                        </div>
+                        
+                        <!-- 實戰操作區 -->
+                        <div class="action-btns">
+                            <button class="act-btn btn-win" onclick="recordResult(1)">🎉 中 1 碼 (收米)</button>
+                            <button class="act-btn btn-win" onclick="recordResult(2)" style="background:#059669;">🔥 中 2 碼 (大暴贏)</button>
+                            <button class="act-btn btn-lose" onclick="recordResult(0)">❌ 全倒 (進入下一階)</button>
+                            <button class="act-btn btn-reset" onclick="resetTracker()">🔄 手動重置狀態 (回歸第1階)</button>
+                        </div>
+                        <p style="font-size: 11px; color: #64748b; margin-top: 10px; font-weight: bold; line-height: 1.5;">
+                            * 系統演算法：當發生虧損時，下一期的建議車數會自動計算「歷史虧損 + 目標淨利」。<br>
+                            * 操作方式：中獎時，系統不再自動清零，會將您賺到的錢記錄在上方盈虧。請在準備好開始新一輪時，<b>自己手動點擊「重置狀態」</b>按鈕。
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // --- 介面切換邏輯 ---
+    function openProfitModal() {
+        document.getElementById('profit-modal').style.display = 'flex';
+        generatePlan('A', 2); // 預設初始化 A 區
+        generatePlan('B', 3); // 預設初始化 B 區
+    }
+    
+    function closeProfitModal() {
+        document.getElementById('profit-modal').style.display = 'none';
+    }
+
+    function closeModalOnOverlay(e) {
+        if (e.target.classList.contains('modal-overlay')) closeProfitModal();
+    }
+
+    function switchModalTab(tabId) {
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(content => content.style.display = 'none');
+        
+        document.getElementById(`tab-btn-${tabId}`).classList.add('active');
+        document.getElementById(`tab-content-${tabId}`).style.display = 'block';
+
+        if (tabId === 'area-a') generatePlan('A', 2);
+        if (tabId === 'area-b') generatePlan('B', 3);
+        if (tabId === 'tier-track') updateTrackerUI();
+    }
+
+    // --- 核心變數與倍投演算法 ---
+    // 儲存 A區與 B區 的實戰追蹤狀態 (accumulatedLoss 為正代表虧損，為負代表淨賺)
+    let trackerState = {
+        'A': { balls: 2, currentStep: 1, accumulatedLoss: 0 },
+        'B': { balls: 3, currentStep: 1, accumulatedLoss: 0 }
+    };
+    let currentTrackArea = 'A';
+
+    // 計算回本並獲利所需的車數
+    function calculateRequiredUnit(balls, accLoss) {
+        const costPerCar = parseFloat(document.getElementById('global-cost').value);
+        const rewardPerCar = parseFloat(document.getElementById('global-reward').value);
+        const targetProfit = parseFloat(document.getElementById('global-target').value);
+
+        const netProfitPerUnit = rewardPerCar - (costPerCar * balls);
+        
+        if (netProfitPerUnit <= 0) {
+            alert(`警告：當前賠率設定下，${balls}碼全車中1碼的淨利為負或零，無法使用倍投回本！請檢查成本與獎金設定。`);
+            return 0;
+        }
+
+        let required = (accLoss + targetProfit) / netProfitPerUnit;
+        
+        // 台灣全車習慣進位到小數點後兩位，此處取小數後二位無條件進位
+        required = Math.ceil(required * 100) / 100;
+        return required > 0 ? required : 0.01; // 最低起步 0.01 車
+    }
+
+    // --- 靜態規劃表生成 ---
+    function generatePlan(area, balls) {
+        const days = parseInt(document.getElementById(`calc-${area.toLowerCase()}-days`).value);
+        let currentUnit = parseFloat(document.getElementById(`calc-${area.toLowerCase()}-first`).value);
+        const costPerCar = parseFloat(document.getElementById('global-cost').value);
+        const rewardPerCar = parseFloat(document.getElementById('global-reward').value);
+
+        let tbody = document.querySelector(`#table-area-${area.toLowerCase()} tbody`);
+        if (!tbody) return;
+        tbody.innerHTML = '';
+        let accCost = 0;
+
+        for (let i = 1; i <= days; i++) {
+            let stepCost = currentUnit * balls * costPerCar;
+            accCost += stepCost;
+            let win1Reward = currentUnit * rewardPerCar;
+            let win1Net = win1Reward - accCost;
+
+            let tr = document.createElement('tr');
+            
+            // 處理手機版的 data-label 顯示
+            let td1 = `<td data-label="期數">第 ${i} 期</td>`;
+            let td2 = `<td data-label="當期車數" class="text-purple">${currentUnit.toFixed(2)} 車</td>`;
+            let td3 = `<td data-label="當期成本">${stepCost.toFixed(0)}</td>`;
+            let td4 = `<td data-label="累計成本">${accCost.toFixed(0)}</td>`;
+            let td5 = `<td data-label="中1碼獎金" class="text-gold">${win1Reward.toFixed(0)}</td>`;
+            let td6 = `<td data-label="中1碼淨利" class="${win1Net >= 0 ? 'text-green' : 'highlight'}">${win1Net.toFixed(0)}</td>`;
+            
+            tr.innerHTML = td1 + td2 + td3 + td4 + td5 + td6;
+            tbody.appendChild(tr);
+
+            // 計算下一期的車數以確保獲利
+            currentUnit = calculateRequiredUnit(balls, accCost);
+            if (currentUnit === 0) break; // 避免負淨利無限迴圈
+        }
+    }
+
+    // --- 實戰紀律追蹤表邏輯 ---
+    function switchTracker(area) {
+        document.querySelectorAll('.sub-tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.getElementById(`track-btn-${area.toLowerCase()}`).classList.add('active');
+        currentTrackArea = area;
+        updateTrackerUI();
+    }
+
+    function updateTrackerUI() {
+        const state = trackerState[currentTrackArea];
+        const costPerCar = parseFloat(document.getElementById('global-cost').value);
+        
+        document.getElementById('tracker-title-text').innerText = 
+            currentTrackArea === 'A' ? '🌟 A區 (2碼) 實戰紀律追蹤' : '🎯 B區 (3碼) 實戰紀律追蹤';
+        
+        document.getElementById('tracker-step-badge').innerText = `第 ${state.currentStep} 階`;
+        
+        let plElement = document.getElementById('tracker-pl');
+        
+        // 若 accumulatedLoss 為負數，代表淨賺 (Win)
+        if (state.accumulatedLoss < 0) {
+            plElement.innerText = "+" + Math.abs(state.accumulatedLoss).toFixed(0);
+            plElement.className = 'val win';
+        } else if (state.accumulatedLoss > 0) {
+            plElement.innerText = "-" + state.accumulatedLoss.toFixed(0);
+            plElement.className = 'val highlight';
+        } else {
+            plElement.innerText = "0";
+            plElement.className = 'val';
+        }
+
+        // 如果目前是賺錢或歸零狀態(accumulatedLoss <= 0)，建議車數就用初始設定值
+        let nextUnit = state.accumulatedLoss <= 0 ? 
+            parseFloat(document.getElementById(`calc-${currentTrackArea.toLowerCase()}-first`).value) : 
+            calculateRequiredUnit(state.balls, state.accumulatedLoss);
+            
+        let nextCost = nextUnit * state.balls * costPerCar;
+
+        document.getElementById('tracker-next-unit').innerText = nextUnit.toFixed(2) + ' 車';
+        document.getElementById('tracker-next-cost').innerText = nextCost.toFixed(0);
+    }
+
+    function recordResult(hitCount) {
+        const state = trackerState[currentTrackArea];
+        const costPerCar = parseFloat(document.getElementById('global-cost').value);
+        const rewardPerCar = parseFloat(document.getElementById('global-reward').value);
+        
+        // 取得當前該下的車數
+        let currentUnit = state.accumulatedLoss <= 0 ? 
+            parseFloat(document.getElementById(`calc-${currentTrackArea.toLowerCase()}-first`).value) : 
+            calculateRequiredUnit(state.balls, state.accumulatedLoss);
+
+        let stepCost = currentUnit * state.balls * costPerCar;
+
+        if (hitCount === 0) {
+            // 全倒：累加虧損，進入下一階
+            state.accumulatedLoss += stepCost;
+            state.currentStep += 1;
+        } else {
+            // 中獎：計算獎金並扣除成本與歷史虧損
+            let reward = currentUnit * hitCount * rewardPerCar;
+            let netProfit = reward - stepCost - state.accumulatedLoss; // 本輪淨賺(含救回的虧損)
+            
+            alert(`🎉 恭喜收米！\n本期中 ${hitCount} 碼\n本期總獎金：NT$ ${reward.toFixed(0)}\n扣除歷史虧損及成本後，實賺淨利：NT$ ${netProfit.toFixed(0)}\n\n(系統不再自動清零，您可隨時手動點擊「重置狀態」重新開始)`);
+            
+            // 將盈餘更新到 accumulatedLoss (虧損變小或變成負數即為獲利)
+            state.accumulatedLoss += stepCost; // 先扣掉本期支出的成本
+            state.accumulatedLoss -= reward;   // 再加上贏回來的獎金
+            state.currentStep += 1;            // 讓階梯照樣推進，直到使用者自己想重置
+        }
+        updateTrackerUI();
+    }
+
+    function resetTracker() {
+        if(confirm(`確定要手動重置 ${currentTrackArea}區 的實戰進度嗎？\n(盈虧紀錄與期數都會清零，回歸第 1 階)`)) {
+            trackerState[currentTrackArea] = { 
+                balls: currentTrackArea === 'A' ? 2 : 3, 
+                currentStep: 1, 
+                accumulatedLoss: 0 
+            };
+            updateTrackerUI();
+        }
+    }
+</script>
+</body>
+</html>
