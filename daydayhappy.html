@@ -17,7 +17,7 @@
             --neon-purple: #7c3aed;
             --hit-color: #ef4444; 
             --gold-color: #d97706;
-            --ball-size: 30px;
+            --ball-size: 32px;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: "JetBrains Mono", -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft JhengHei", sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -85,48 +85,45 @@
         
         .modal-body { padding: 16px; overflow-y: auto; flex: 1; overscroll-behavior: contain; }
 
-        .calc-form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 14px; background: #f8fafc; padding: 12px; border-radius: 12px; border: 1px solid #e2e8f0; }
+        /* Unified Calc Form */
+        .global-config-bar { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 16px; background: linear-gradient(to right, #f0f9ff, #f3e8ff); padding: 14px; border-radius: 12px; border: 1.5px solid #cbd5e1; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); }
         .calc-input-group { display: flex; flex-direction: column; gap: 4px; }
-        .calc-input-group label { font-size: 11.5px; font-weight: 800; color: #475569; }
-        .calc-input-group input, .calc-input-group select { padding: 8px 10px; background: #ffffff; border: 1.5px solid #cbd5e1; color: #0f172a; border-radius: 8px; font-size: 14px; outline: none; font-family: monospace; font-weight: bold; transition: 0.2s; }
+        .calc-input-group label { font-size: 11.5px; font-weight: 900; color: #334155; display: flex; align-items: center; gap:4px; }
+        .calc-input-group input, .calc-input-group select { padding: 10px; background: #ffffff; border: 1.5px solid #cbd5e1; color: #0f172a; border-radius: 8px; font-size: 15px; outline: none; font-family: monospace; font-weight: 900; transition: 0.2s; }
         .calc-input-group input:focus, .calc-input-group select:focus { border-color: var(--gold-color); box-shadow: 0 0 0 3px rgba(217,119,6,0.15); }
-        .btn-recalc { background: linear-gradient(135deg, #d97706, #b45309); color: white; border: none; padding: 8px 14px; font-size: 14px; font-weight: 900; border-radius: 8px; cursor: pointer; align-self: flex-end; height: 38px; transition: 0.2s; }
+        .btn-recalc { background: linear-gradient(135deg, #d97706, #b45309); color: white; border: none; padding: 8px 16px; font-size: 13px; font-weight: 900; border-radius: 8px; cursor: pointer; transition: 0.2s; }
         .btn-recalc:hover { filter: brightness(1.1); }
 
         /* Tracker Split Grid (左右對切) */
         .tracker-split-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
         .tracker-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.04); }
-        .tracker-card.zone-a-card { border-top: 4px solid #0284c7; background: linear-gradient(to bottom, #f0f9ff, #ffffff 30%); }
-        .tracker-card.zone-b-card { border-top: 4px solid #7c3aed; background: linear-gradient(to bottom, #faf5ff, #ffffff 30%); }
+        .tracker-card.zone-a-card { border-top: 4.5px solid #0284c7; background: linear-gradient(to bottom, #f0f9ff 0%, #ffffff 120px); }
+        .tracker-card.zone-b-card { border-top: 4.5px solid #7c3aed; background: linear-gradient(to bottom, #faf5ff 0%, #ffffff 120px); }
         
-        .tracker-title { font-size: 15px; font-weight: 900; color: #334155; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
-        .day-plan-tier { font-size: 12px; font-weight: 800; color: #7c3aed; background: #f5f3ff; padding: 4px 10px; border-radius: 6px; }
-        .day-plan-tier.za { color: #0284c7; background: #e0f2fe; }
+        .tracker-title { font-size: 15px; font-weight: 900; color: #334155; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; }
+        .day-plan-tier { font-size: 12px; font-weight: 900; color: #7c3aed; background: #ffffff; padding: 4px 12px; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); border: 1px solid #e2e8f0;}
+        .day-plan-tier.za { color: #0284c7; }
         
         .status-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 14px; }
-        .status-item { background: #ffffff; padding: 10px; border-radius: 8px; border: 1px solid #e2e8f0; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.02);}
+        .status-item { background: #ffffff; padding: 12px; border-radius: 10px; border: 1px solid #e2e8f0; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.02);}
         .status-item .label { font-size: 11px; color: #64748b; margin-bottom: 4px; font-weight: 800; }
-        .status-item .val { font-size: 16px; font-weight: 900; color: #0f172a; font-family: monospace; }
+        .status-item .val { font-size: 18px; font-weight: 900; color: #0f172a; font-family: monospace; }
         .status-item .val.highlight { color: #dc2626; }
         .status-item .val.win { color: #16a34a; }
 
         .action-btns { display: flex; gap: 8px; flex-wrap: wrap; }
-        .act-btn { flex: 1; min-width: 120px; padding: 10px; border: none; border-radius: 8px; font-size: 13px; font-weight: 900; cursor: pointer; transition: 0.2s; }
+        .act-btn { flex: 1; min-width: 120px; padding: 12px; border: none; border-radius: 8px; font-size: 13.5px; font-weight: 900; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.1);}
         .act-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
-        .btn-win { background: linear-gradient(135deg, #16a34a, #15803d); color: #ffffff; box-shadow: 0 4px 10px rgba(22, 163, 74, 0.25); }
-        .btn-lose { background: linear-gradient(135deg, #ef4444, #dc2626); color: #ffffff; box-shadow: 0 4px 10px rgba(239, 68, 68, 0.25); }
+        .btn-win { background: linear-gradient(135deg, #16a34a, #15803d); color: #ffffff; }
+        .btn-lose { background: linear-gradient(135deg, #ef4444, #dc2626); color: #ffffff; }
         .btn-reset { background: #64748b; color: #ffffff; flex: 0.4; }
 
-        .plan-config-bar { display: flex; align-items: center; gap: 10px; background: #ffffff; padding: 10px 14px; border-radius: 10px; border: 1.5px solid #cbd5e1; margin-bottom: 12px; flex-wrap: wrap; }
-        .plan-config-bar label { font-size: 12px; font-weight: 900; color: #334155; }
-        .plan-config-bar input { padding: 6px 10px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-family: monospace; font-weight: 900; width: 90px; text-align: center; outline: none; }
-        .plan-config-bar input:focus { border-color: var(--gold-color); }
-
-        .profit-table-wrapper { border: 1px solid #e2e8f0; border-radius: 12px; overflow-x: auto; background: #ffffff; margin-bottom: 12px;}
-        .profit-table { width: 100%; border-collapse: collapse; text-align: center; font-size: 11.5px; white-space: nowrap; }
-        .profit-table th { background: #f8fafc; color: #475569; padding: 10px 6px; font-weight: 900; border-bottom: 2px solid #e2e8f0; }
-        .profit-table td { padding: 8px 6px; border-bottom: 1px solid #f1f5f9; font-family: monospace; font-weight: 600; }
+        .profit-table-wrapper { border: 1px solid #e2e8f0; border-radius: 12px; overflow-x: auto; background: #ffffff; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.02);}
+        .profit-table { width: 100%; border-collapse: collapse; text-align: center; font-size: 12.5px; white-space: nowrap; }
+        .profit-table th { background: #f8fafc; color: #475569; padding: 12px 8px; font-weight: 900; border-bottom: 2px solid #e2e8f0; }
+        .profit-table td { padding: 10px 8px; border-bottom: 1px solid #f1f5f9; font-family: monospace; font-weight: 600; }
         .profit-table tr:hover { background: #f0f9ff; }
+        .profit-table tr.active-row { background: #e0f2fe; font-weight: 900; }
         .text-green { color: #059669; font-weight: 800; }
         .text-gold { color: #d97706; font-weight: 900; }
         .text-purple { color: #7c3aed; font-weight: 900; }
@@ -148,24 +145,21 @@
         .form-group label { font-size: 12px; font-weight: 900; color: #334155; }
         .form-group input { padding: 12px; background: #ffffff; border: 1.5px solid #cbd5e1; color: #0f172a; border-radius: 8px; font-size: 15px; outline: none; font-family: monospace; font-weight: bold; transition: 0.2s; }
         
-        /* 🔥 A區/B區 專屬美化外框 */
-        .zone-a-input { background: #f0f9ff; padding: 14px; border-radius: 12px; border: 1.5px solid #bae6fd; }
+        .zone-a-input { background: #f0f9ff; padding: 14px; border-radius: 12px; border: 1.5px dashed #7dd3fc; }
         .zone-a-input input:focus { border-color: #0284c7; box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15); }
-        .zone-b-input { background: #faf5ff; padding: 14px; border-radius: 12px; border: 1.5px solid #e9d5ff; }
+        .zone-b-input { background: #faf5ff; padding: 14px; border-radius: 12px; border: 1.5px dashed #d8b4fe; }
         .zone-b-input input:focus { border-color: #7c3aed; box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15); }
         
         .form-divider { width: 100%; height: 1px; background: #e2e8f0; margin: 10px 0; }
         .btn-submit { width: 100%; background: linear-gradient(135deg, #0284c7, #2563eb); color: white; border: none; padding: 15px; font-size: 15px; font-weight: 900; border-radius: 10px; cursor: pointer; margin-top: 8px; box-shadow: 0 6px 15px rgba(2, 132, 199, 0.25); transition: 0.2s;}
         .btn-submit:hover { filter: brightness(1.1); transform: translateY(-2px); box-shadow: 0 8px 18px rgba(2, 132, 199, 0.35); }
 
-        /* History Table & A/B Inline Blocks */
         .history-panel { background: var(--panel-bg); padding: 20px; border-radius: 16px; border: 1px solid var(--panel-border); margin-bottom: 20px; box-shadow: 0 4px 14px rgba(0,0,0,0.03); backdrop-filter: blur(12px); }
         table { width: 100%; border-collapse: collapse; text-align: center; }
         th { background: #f8fafc; padding: 14px 8px; border-bottom: 2px solid #e2e8f0; font-weight: 900; font-size: 13.5px; color: #475569; }
         td { padding: 14px 8px; border-bottom: 1px solid #e2e8f0; vertical-align: middle; }
         tr:hover { background: #f1f5f9; }
 
-        /* A區/B區 同行排版專屬樣式 (更好看) */
         .inline-zone-container { display: flex; flex-direction: column; gap: 8px; justify-content: center; align-items: stretch; width: 100%; max-width: 250px; margin: 0 auto;}
         .inline-pred-box { display: flex; align-items: center; justify-content: space-between; gap: 6px; padding: 6px 10px; border-radius: 10px; border: 1.5px solid #e2e8f0; box-shadow: 0 2px 4px rgba(0,0,0,0.02);}
         .inline-pred-box.zone-a { background: #f0f9ff; border-color: #bae6fd; }
@@ -177,9 +171,9 @@
         
         .hit-badge { font-size: 11px; font-weight: 900; padding: 3px 8px; border-radius: 6px; white-space: nowrap; }
         .hit-badge.win { background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; }
-        .hit-badge.lose { background: #f1f5f9; color: #64748b; border: 1px solid #cbd5e1; }
+        .hit-badge.lose { background: #ffffff; color: #94a3b8; border: 1px solid #cbd5e1; }
 
-        .num-container { display: flex; gap: 4px; align-items: center; }
+        .num-container { display: flex; gap: 4px; align-items: center; justify-content: flex-end;}
         .num-ball { width: var(--ball-size); height: var(--ball-size); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13.5px; font-weight: 900; background: #ffffff; color: #1e293b; font-family: monospace; border: 1.5px solid #cbd5e1; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
         .num-ball.small { width: 26px; height: 26px; font-size: 12px; }
         .num-ball.hit { background: linear-gradient(135deg, #ef4444, #dc2626); color: #ffffff; box-shadow: 0 3px 8px rgba(239, 68, 68, 0.35); border-color: #991b1b; }
@@ -198,7 +192,6 @@
         .delete-btn { background: #fee2e2; color: #dc2626; border-color: #fca5a5; }
         .edit-btn { background: #ffffff; color: #334155; }
 
-        /* Stats & Tools */
         .stats-board { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-bottom: 20px; }
         .stat-card { background: var(--panel-bg); padding: 18px; border-radius: 16px; border: 1px solid var(--panel-border); box-shadow: 0 6px 16px rgba(0, 0, 0, 0.03); text-align: center; backdrop-filter: blur(12px); }
         .stat-card.ai-card { border-top: 4px solid var(--ai-color); }
@@ -275,6 +268,7 @@
             td::before { content: attr(data-label); font-weight: 900; font-size: 12px; color: #64748b; margin-bottom: 6px; }
             
             .inline-zone-container { max-width: 100%; align-items: stretch;}
+            .inline-pred-box { justify-content: space-between; }
         }
     </style>
 </head>
@@ -296,29 +290,35 @@
     <div class="modal-overlay" id="profit-modal" onclick="closeModalOnOverlay(event)">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>💰 天天樂坐車・立柱倍投與階梯紀律規劃系統</h2>
+                <h2>💰 天天樂全車・立柱倍投與紀律追蹤系統</h2>
                 <button class="modal-close" onclick="closeProfitModal()">&times;</button>
             </div>
             
             <div class="modal-tabs">
-                <button class="tab-btn active" id="tab-btn-zone-a" onclick="switchModalTab('zone-a')">🌟 A區 (2碼) 目標預覽</button>
-                <button class="tab-btn" id="tab-btn-zone-b" onclick="switchModalTab('zone-b')">🎯 B區 (3碼) 目標預覽</button>
+                <button class="tab-btn active" id="tab-btn-zone-a" onclick="switchModalTab('zone-a')">🌟 A區 (2碼) 預覽</button>
+                <button class="tab-btn" id="tab-btn-zone-b" onclick="switchModalTab('zone-b')">🎯 B區 (3碼) 預覽</button>
                 <button class="tab-btn tracker-btn-tab" id="tab-btn-tier-track" style="color:#059669;" onclick="switchModalTab('tier-track')">⚖️ A/B區 雙開回本追蹤</button>
                 <button class="tab-btn matrix-active" id="tab-btn-matrix-calc" onclick="switchModalTab('matrix-calc')">⚡ 1800/9000碰倍投</button>
             </div>
 
             <div class="modal-body">
+                <!-- ⚙️ 全局 A/B區 參數設定 (Tabs 1, 2, 3 共用) -->
+                <div id="ab-global-settings" class="global-config-bar">
+                    <div class="calc-input-group"><label>💵 單車本金 (元)</label><input type="number" id="global-cost" value="2755" oninput="syncABSettings()"></div>
+                    <div class="calc-input-group"><label>🏆 單車中獎 (元)</label><input type="number" id="global-prize" value="21200" oninput="syncABSettings()"></div>
+                    <div class="calc-input-group"><label>🎯 目標淨利 (加賺)</label><input type="number" id="global-target" value="1500" oninput="syncABSettings()"></div>
+                    <div class="calc-input-group"><label>🚗 起步車數 (單碼)</label><input type="number" id="global-first" value="0.10" step="0.05" oninput="syncABSettings()"></div>
+                </div>
+
                 <!-- Tab 1: A區 (2碼) 倍投預覽 -->
                 <div id="tab-content-zone-a">
-                    <div class="calc-form-grid">
-                        <div class="calc-input-group"><label>🚗 起步車數 (每碼)</label><input type="number" id="calc-za-first" value="0.10" step="0.05"></div>
-                        <div class="calc-input-group"><label>🎯 期望淨利 (增量)</label><input type="number" id="calc-za-target" value="1844" step="50"></div>
-                        <div class="calc-input-group"><label>📅 規劃天數</label><input type="number" id="calc-za-days" value="10"></div>
-                        <div class="calc-input-group"><label>💵 每車成本</label><input type="number" id="calc-za-cost" value="2755"></div>
-                        <div class="calc-input-group"><label>🏆 每車彩金</label><input type="number" id="calc-za-prize" value="21200"></div>
-                        <button class="btn-recalc" onclick="calculateZoneAPlan()">⚡ 演算A區預覽</button>
+                    <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:12px;">
+                        <div class="calc-input-group" style="width:160px;">
+                            <label>📅 生成預覽天數</label>
+                            <input type="number" id="calc-za-days" value="10" oninput="calculateZoneAPlan()">
+                        </div>
+                        <div style="font-size:13px; font-weight:900; color:#0284c7;" id="za-plan-summary"></div>
                     </div>
-                    <div style="font-size:13px; font-weight:900; color:#0284c7; margin-bottom:10px;" id="za-plan-summary"></div>
                     <div class="profit-table-wrapper">
                         <table class="profit-table">
                             <thead><tr><th>天數</th><th>目標累計淨利</th><th>每碼下注車數</th><th>當期成本 (2碼)</th><th>累計總投入</th><th>中1碼彩金</th><th>結算淨利</th></tr></thead>
@@ -330,15 +330,13 @@
 
                 <!-- Tab 2: B區 (3碼) 倍投預覽 -->
                 <div id="tab-content-zone-b" style="display:none;">
-                    <div class="calc-form-grid">
-                        <div class="calc-input-group"><label>🚗 起步車數 (每碼)</label><input type="number" id="calc-zb-first" value="0.10" step="0.05"></div>
-                        <div class="calc-input-group"><label>🎯 期望淨利 (增量)</label><input type="number" id="calc-zb-target" value="1844" step="50"></div>
-                        <div class="calc-input-group"><label>📅 規劃天數</label><input type="number" id="calc-zb-days" value="8"></div>
-                        <div class="calc-input-group"><label>💵 每車成本</label><input type="number" id="calc-zb-cost" value="2755"></div>
-                        <div class="calc-input-group"><label>🏆 每車彩金</label><input type="number" id="calc-zb-prize" value="21200"></div>
-                        <button class="btn-recalc" style="background:linear-gradient(135deg, #7c3aed, #4f46e5);" onclick="calculateZoneBPlan()">⚡ 演算B區預覽</button>
+                    <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:12px;">
+                        <div class="calc-input-group" style="width:160px;">
+                            <label>📅 生成預覽天數</label>
+                            <input type="number" id="calc-zb-days" value="8" oninput="calculateZoneBPlan()">
+                        </div>
+                        <div style="font-size:13px; font-weight:900; color:#7c3aed;" id="zb-plan-summary"></div>
                     </div>
-                    <div style="font-size:13px; font-weight:900; color:#7c3aed; margin-bottom:10px;" id="zb-plan-summary"></div>
                     <div class="profit-table-wrapper">
                         <table class="profit-table">
                             <thead><tr><th>天數</th><th>目標累計淨利</th><th>每碼下注車數</th><th>當期成本 (3碼)</th><th>累計總投入</th><th>中1碼彩金</th><th>結算淨利</th></tr></thead>
@@ -350,13 +348,6 @@
 
                 <!-- Tab 3: A/B區 專屬實戰回本追蹤器 (左右對切) -->
                 <div id="tab-content-tier-track" style="display:none;">
-                    <div class="plan-config-bar" style="background:#f0fdf4; border-color:#bbf7d0;">
-                        <label>💵 共用每碼成本:</label> <input type="number" id="ab-cost" value="2755" onchange="updateBothTrackers()">
-                        <label>🏆 共用單碼中獎:</label> <input type="number" id="ab-prize" value="21200" onchange="updateBothTrackers()">
-                        <label>🎯 回本後均加賺:</label> <input type="number" id="ab-target" value="1500" onchange="updateBothTrackers()">
-                        <label>🚗 初始起步車數:</label> <input type="number" id="ab-first" value="0.10" step="0.05" onchange="updateBothTrackers()">
-                    </div>
-
                     <div class="tracker-split-grid">
                         <!-- 🌟 ZONE A TRACKER -->
                         <div class="tracker-card zone-a-card">
@@ -366,8 +357,8 @@
                             </div>
                             <div class="status-grid">
                                 <div class="status-item"><div class="label">累計虧損需補</div><div class="val" id="tracker-a-loss">0</div></div>
-                                <div class="status-item"><div class="label">下期建議 (每碼車數)</div><div class="val text-purple" id="tracker-a-next-unit" style="font-size:20px; color:#0284c7;">0.10 車</div></div>
-                                <div class="status-item"><div class="label">下期應備本金</div><div class="val" id="tracker-a-next-cost">551 元</div></div>
+                                <div class="status-item"><div class="label">下期建議 (每碼車數)</div><div class="val text-purple" id="tracker-a-next-unit" style="font-size:22px; color:#0284c7;">0.10 車</div></div>
+                                <div class="status-item"><div class="label">下期總成本(2碼)</div><div class="val" id="tracker-a-next-cost">551 元</div></div>
                                 <div class="status-item" style="background:#f0fdf4; border-color:#bbf7d0;"><div class="label">若中1碼結算實賺</div><div class="val win" id="tracker-a-net-win">+1,500 元</div></div>
                             </div>
                             <div class="action-btns" style="margin-bottom: 12px;">
@@ -389,12 +380,12 @@
                         <div class="tracker-card zone-b-card">
                             <div class="tracker-title">
                                 <span>🎯 B區 (3碼) 回本追蹤</span>
-                                <span class="day-plan-tier zb" id="tracker-b-step">第 1 期</span>
+                                <span class="day-plan-tier zb" style="color:#7c3aed; background:#f3e8ff;" id="tracker-b-step">第 1 期</span>
                             </div>
                             <div class="status-grid">
                                 <div class="status-item"><div class="label">累計虧損需補</div><div class="val" id="tracker-b-loss">0</div></div>
-                                <div class="status-item"><div class="label">下期建議 (每碼車數)</div><div class="val text-purple" id="tracker-b-next-unit" style="font-size:20px;">0.10 車</div></div>
-                                <div class="status-item"><div class="label">下期應備本金</div><div class="val" id="tracker-b-next-cost">827 元</div></div>
+                                <div class="status-item"><div class="label">下期建議 (每碼車數)</div><div class="val text-purple" id="tracker-b-next-unit" style="font-size:22px;">0.10 車</div></div>
+                                <div class="status-item"><div class="label">下期總成本(3碼)</div><div class="val" id="tracker-b-next-cost">827 元</div></div>
                                 <div class="status-item" style="background:#f0fdf4; border-color:#bbf7d0;"><div class="label">若中1碼結算實賺</div><div class="val win" id="tracker-b-net-win">+1,500 元</div></div>
                             </div>
                             <div class="action-btns" style="margin-bottom: 12px;">
@@ -414,7 +405,7 @@
                     </div>
                 </div>
 
-                <!-- Tab 4: 1800/9000碰立柱倍投規劃 (保留) -->
+                <!-- Tab 4: 1800/9000碰立柱倍投規劃 (保留獨立設定) -->
                 <div id="tab-content-matrix-calc" style="display:none;">
                     <div class="calc-form-grid" style="background:#faf5ff; border-color:#e9d5ff;">
                         <div class="calc-input-group" style="grid-column: span 2;">
@@ -811,6 +802,217 @@
         else { adv9000.innerHTML = `✅ 【剛開出不久】建議繼續觀望。`; adv9000.style.background = '#f0fdf4'; adv9000.style.color = '#16a34a'; adv9000.style.border = '1px solid #bbf7d0'; }
     }
 
+    // 💡 全局設定同步 (Sync global settings across all tables and trackers)
+    function syncABSettings() {
+        calculateZoneAPlan();
+        calculateZoneBPlan();
+        updateBothTrackers();
+    }
+
+    // 💡 專屬 A區(2碼) / B區(3碼) 倍投預覽
+    function calculateZoneAPlan() {
+        const firstUnits = parseFloat(document.getElementById('global-first').value) || 0.10;
+        const targetDailyProfit = parseFloat(document.getElementById('global-target').value) || 1500;
+        const days = parseInt(document.getElementById('calc-za-days').value, 10) || 10;
+        const costPerUnit = parseFloat(document.getElementById('global-cost').value) || 2755;
+        const prizePerUnit = parseFloat(document.getElementById('global-prize').value) || 21200;
+
+        const tbody = document.getElementById('za-plan-tbody'); const mobileContainer = document.getElementById('za-plan-mobile');
+        tbody.innerHTML = ''; mobileContainer.innerHTML = '';
+
+        let cumCost = 0, rowsHtml = '', mobileCardsHtml = '';
+        let netWinPerFullUnit = prizePerUnit - (costPerUnit * 2);
+
+        for (let day = 1; day <= days; day++) {
+            let targetCumProfit = targetDailyProfit * day;
+            let units = (day === 1) ? firstUnits : Math.ceil(((cumCost + targetCumProfit) / netWinPerFullUnit) * 100) / 100;
+            let currentCost = Math.round(units * 2 * costPerUnit); cumCost += currentCost;
+            let currentPrize = Math.round(units * prizePerUnit); let finalNetProfit = currentPrize - cumCost;
+
+            rowsHtml += `<tr><td><strong>第 ${day} 天</strong></td><td class="text-green">+${targetCumProfit.toLocaleString()}</td><td class="text-gold">${units.toFixed(2)} 車</td><td>${currentCost.toLocaleString()}</td><td style="color:#b91c1c;">${cumCost.toLocaleString()}</td><td>${currentPrize.toLocaleString()}</td><td class="text-green">+${finalNetProfit.toLocaleString()}</td></tr>`;
+            mobileCardsHtml += `<div class="day-plan-card"><div class="day-plan-card-header"><span class="day-plan-tag">📅 第 ${day} 天 (2碼)</span><span style="font-size:12px; font-weight:800; color:#0284c7; background:#e0f2fe; padding:2px 6px; border-radius:4px;">目標：+${targetCumProfit.toLocaleString()} 元</span></div><div class="day-plan-grid"><div class="day-plan-item"><span class="label">每碼車數</span><span class="val text-gold">${units.toFixed(2)} 車</span></div><div class="day-plan-item"><span class="label">當期成本</span><span class="val">${currentCost.toLocaleString()} 元</span></div><div class="day-plan-item"><span class="label">累計總投入</span><span class="val" style="color:#b91c1c;">${cumCost.toLocaleString()} 元</span></div><div class="day-plan-item"><span class="label">中1碼彩金</span><span class="val">${currentPrize.toLocaleString()} 元</span></div></div><div style="border-top:1px dashed #e2e8f0; padding-top:4px; display:flex; justify-content:space-between; align-items:center;"><span style="font-size:11px; color:#475569; font-weight:bold;">中1碼結算淨利</span><span class="text-green" style="font-size:13px; font-weight:900;">+${finalNetProfit.toLocaleString()} 元</span></div></div>`;
+        }
+        tbody.innerHTML = rowsHtml; mobileContainer.innerHTML = mobileCardsHtml;
+        document.getElementById('za-plan-summary').innerText = `[A區 ${days}天2碼總備援本金建議：${cumCost.toLocaleString()} 元]`;
+    }
+
+    function calculateZoneBPlan() {
+        const firstUnits = parseFloat(document.getElementById('global-first').value) || 0.10;
+        const targetDailyProfit = parseFloat(document.getElementById('global-target').value) || 1500;
+        const days = parseInt(document.getElementById('calc-zb-days').value, 10) || 8;
+        const costPerUnit = parseFloat(document.getElementById('global-cost').value) || 2755;
+        const prizePerUnit = parseFloat(document.getElementById('global-prize').value) || 21200;
+
+        const tbody = document.getElementById('zb-plan-tbody'); const mobileContainer = document.getElementById('zb-plan-mobile');
+        tbody.innerHTML = ''; mobileContainer.innerHTML = '';
+
+        let cumCost = 0, rowsHtml = '', mobileCardsHtml = '';
+        let netWinPerFullUnit = prizePerUnit - (costPerUnit * 3);
+
+        for (let day = 1; day <= days; day++) {
+            let targetCumProfit = targetDailyProfit * day;
+            let units = (day === 1) ? firstUnits : Math.ceil(((cumCost + targetCumProfit) / netWinPerFullUnit) * 100) / 100;
+            let currentCost = Math.round(units * 3 * costPerUnit); cumCost += currentCost;
+            let currentPrize = Math.round(units * prizePerUnit); let finalNetProfit = currentPrize - cumCost;
+
+            rowsHtml += `<tr><td><strong>第 ${day} 天</strong></td><td class="text-green">+${targetCumProfit.toLocaleString()}</td><td class="text-purple">${units.toFixed(2)} 車</td><td>${currentCost.toLocaleString()}</td><td style="color:#b91c1c;">${cumCost.toLocaleString()}</td><td>${currentPrize.toLocaleString()}</td><td class="text-green">+${finalNetProfit.toLocaleString()}</td></tr>`;
+            mobileCardsHtml += `<div class="day-plan-card"><div class="day-plan-card-header"><span class="day-plan-tag" style="color:#7c3aed;">📅 第 ${day} 天 (3碼)</span><span style="font-size:12px; font-weight:800; color:#7c3aed; background:#f3e8ff; padding:2px 6px; border-radius:4px;">目標：+${targetCumProfit.toLocaleString()} 元</span></div><div class="day-plan-grid"><div class="day-plan-item"><span class="label">每碼車數</span><span class="val text-purple">${units.toFixed(2)} 車</span></div><div class="day-plan-item"><span class="label">當期成本</span><span class="val">${currentCost.toLocaleString()} 元</span></div><div class="day-plan-item"><span class="label">累計總投入</span><span class="val" style="color:#b91c1c;">${cumCost.toLocaleString()} 元</span></div><div class="day-plan-item"><span class="label">中1碼彩金</span><span class="val">${currentPrize.toLocaleString()} 元</span></div></div><div style="border-top:1px dashed #e2e8f0; padding-top:4px; display:flex; justify-content:space-between; align-items:center;"><span style="font-size:11px; color:#475569; font-weight:bold;">中1碼結算淨利</span><span class="text-green" style="font-size:13px; font-weight:900;">+${finalNetProfit.toLocaleString()} 元</span></div></div>`;
+        }
+        tbody.innerHTML = rowsHtml; mobileContainer.innerHTML = mobileCardsHtml;
+        document.getElementById('zb-plan-summary').innerText = `[B區 ${days}天3碼總備援本金建議：${cumCost.toLocaleString()} 元]`;
+    }
+
+    // 💡 左右對切的 A/B區 回本追蹤器
+    let trackerState = { 'A': { balls: 2, currentStep: 1, accLoss: 0 }, 'B': { balls: 3, currentStep: 1, accLoss: 0 } };
+
+    function calculateZoneNextUnit(balls, accLoss) {
+        const costPerCar = parseFloat(document.getElementById('global-cost').value) || 2755;
+        const rewardPerCar = parseFloat(document.getElementById('global-prize').value) || 21200;
+        const targetProfit = parseFloat(document.getElementById('global-target').value) || 1500;
+        const firstUnits = parseFloat(document.getElementById('global-first').value) || 0.10;
+
+        const netProfitPerUnit = rewardPerCar - (costPerCar * balls);
+        if (netProfitPerUnit <= 0) return 0.05;
+        if (accLoss <= 0) return firstUnits;
+        let required = (accLoss + targetProfit) / netProfitPerUnit;
+        return Math.ceil(required * 100) / 100;
+    }
+
+    function updateBothTrackers() {
+        updateZoneTracker('A');
+        updateZoneTracker('B');
+    }
+
+    function updateZoneTracker(zone) {
+        const state = trackerState[zone];
+        const costPerCar = parseFloat(document.getElementById('global-cost').value) || 2755;
+        const rewardPerCar = parseFloat(document.getElementById('global-prize').value) || 21200;
+        const zoneLower = zone.toLowerCase();
+        
+        document.getElementById(`tracker-${zoneLower}-step`).innerText = `第 ${state.currentStep} 期`;
+        
+        let lossEl = document.getElementById(`tracker-${zoneLower}-loss`);
+        if (state.accLoss > 0) { lossEl.innerText = `-${Math.round(state.accLoss).toLocaleString()} 元`; lossEl.className = 'val highlight'; } 
+        else { lossEl.innerText = `🟢 已結算歸零`; lossEl.className = 'val win'; }
+
+        let nextUnit = calculateZoneNextUnit(state.balls, state.accLoss);
+        let nextCost = Math.round(nextUnit * state.balls * costPerCar);
+        let win1Reward = Math.round(nextUnit * rewardPerCar);
+        let netWin = win1Reward - nextCost - state.accLoss;
+
+        document.getElementById(`tracker-${zoneLower}-next-unit`).innerText = `${nextUnit.toFixed(2)} 車`;
+        document.getElementById(`tracker-${zoneLower}-next-cost`).innerText = `${nextCost.toLocaleString()} 元`;
+        document.getElementById(`tracker-${zoneLower}-net-win`).innerText = `+${netWin.toLocaleString()} 元`;
+
+        // 產生未來預覽表
+        let tempAccLoss = state.accLoss;
+        let tbodyHtml = '';
+        for (let i = 0; i < 6; i++) { // 只產生6期避免版面過長
+            let stepNum = state.currentStep + i;
+            let neededUnit = calculateZoneNextUnit(state.balls, tempAccLoss);
+            let cost = Math.round(neededUnit * state.balls * costPerCar);
+            let totalLossInc = tempAccLoss + cost;
+            tbodyHtml += `<tr><td>第 ${stepNum} 期</td><td class="text-gold">${neededUnit.toFixed(2)}</td><td>${cost.toLocaleString()}</td><td style="color:#b91c1c;">${totalLossInc.toLocaleString()}</td></tr>`;
+            tempAccLoss += cost; 
+        }
+        document.getElementById(`${zoneLower}-preview-tbody`).innerHTML = tbodyHtml;
+    }
+
+    function recordZoneResult(zone, hits) {
+        const state = trackerState[zone];
+        const costPerCar = parseFloat(document.getElementById('global-cost').value) || 2755;
+        const rewardPerCar = parseFloat(document.getElementById('global-prize').value) || 21200;
+        let unit = calculateZoneNextUnit(state.balls, state.accLoss);
+        let cost = Math.round(unit * state.balls * costPerCar);
+
+        if (hits === 0) { state.accLoss += cost; state.currentStep += 1; } 
+        else {
+            let reward = Math.round(unit * hits * rewardPerCar);
+            let net = reward - cost - state.accLoss;
+            alert(`🎉 ${zone}區 恭喜大收米！\n\n🎯 命中：${hits} 碼\n🚗 本期下注：${unit.toFixed(2)}車\n💰 總彩金：${reward.toLocaleString()} 元\n✨ 扣除歷史虧損與本期成本，實賺淨利：【 ${net.toLocaleString()} 元 】\n\n系統已自動重置！`);
+            state.accLoss = 0; state.currentStep = 1;
+        }
+        updateZoneTracker(zone);
+    }
+
+    function resetZoneTracker(zone) {
+        if(confirm(`確定要手動重置 ${zone}區 實戰追蹤嗎？\n(虧損紀錄將清零，並回歸第 1 期)`)) {
+            trackerState[zone] = { balls: zone === 'A' ? 2 : 3, currentStep: 1, accLoss: 0 };
+            updateZoneTracker(zone);
+        }
+    }
+
+    // Modal Control & Init
+    function openProfitModal(tabKey) {
+        document.getElementById('profit-modal').style.display = 'flex';
+        syncABSettings(); updateMatrixFixedSpec(); calculateMatrixPlan();
+        if (tabKey) switchModalTab(tabKey);
+    }
+    function closeProfitModal() { document.getElementById('profit-modal').style.display = 'none'; }
+    function closeModalOnOverlay(e) { if (e.target.id === 'profit-modal' || e.target.classList.contains('modal-overlay')) closeProfitModal(); }
+
+    function switchModalTab(tabKey) {
+        ['zone-a', 'zone-b', 'tier-track', 'matrix-calc'].forEach(t => {
+            const btn = document.getElementById(`tab-btn-${t}`); const content = document.getElementById(`tab-content-${t}`);
+            if (btn && content) {
+                const isActive = (t === tabKey);
+                btn.classList.toggle('active', isActive);
+                if (t === 'matrix-calc') btn.classList.toggle('matrix-active', isActive);
+                content.style.display = isActive ? 'block' : 'none';
+            }
+        });
+        const globalSettings = document.getElementById('ab-global-settings');
+        globalSettings.style.display = (tabKey === 'matrix-calc') ? 'none' : 'grid';
+    }
+
+    function updateMatrixFixedSpec() {
+        const mode = document.getElementById('matrix-mode').value;
+        if (mode === '1800') { document.getElementById('matrix-cost').value = 1134; document.getElementById('matrix-prize').value = 570; } 
+        else { document.getElementById('matrix-cost').value = 4545; document.getElementById('matrix-prize').value = 8000; }
+    }
+
+    function calculateMatrixPlan() {
+        const mode = document.getElementById('matrix-mode').value;
+        const firstBet = parseFloat(document.getElementById('matrix-first-bet').value) || 1;
+        const targetProfit = parseFloat(document.getElementById('matrix-target-profit').value) || 500;
+        const days = parseInt(document.getElementById('matrix-days').value, 10) || 6;
+        const netCostPerUnit = mode === '1800' ? 1134 : 4545;
+        const singlePrizePerUnit = mode === '1800' ? 570 : 8000;
+        const baseHits = mode === '1800' ? 3 : 2;
+        const basePrizePerUnit = singlePrizePerUnit * baseHits; 
+        const netWinPerUnit = basePrizePerUnit - netCostPerUnit;
+
+        const thead = document.getElementById('matrix-thead');
+        if (mode === '1800') { thead.innerHTML = `<tr><th>期數</th><th>下注金額</th><th>當期實繳</th><th>累計實繳</th><th style="color:#059669;">中3碰彩金</th><th style="color:#059669;">保底淨利</th><th style="color:#7c3aed;">中4碰彩金</th><th style="color:#7c3aed;">大爆發淨利</th></tr>`; } 
+        else { thead.innerHTML = `<tr><th>期數</th><th>下注金額</th><th>當期實繳</th><th>累計實繳</th><th style="color:#7c3aed;">中2碰滿貫彩金</th><th style="color:#16a34a;">結算保底淨利</th></tr>`; }
+
+        const tbody = document.getElementById('matrix-plan-tbody'); const mobileContainer = document.getElementById('matrix-plan-mobile-cards');
+        tbody.innerHTML = ''; mobileContainer.innerHTML = '';
+
+        let cumCost = 0, rowsHtml = '', mobileCardsHtml = '';
+        for (let d = 1; d <= days; d++) {
+            let bet = (d === 1) ? firstBet : Math.max(1, Math.ceil((cumCost + targetProfit) / netWinPerUnit));
+            let currentCost = bet * netCostPerUnit; cumCost += currentCost;
+            let basePrize = bet * basePrizePerUnit, baseProfit = basePrize - cumCost;
+
+            if (mode === '1800') {
+                let bonusPrize = bet * (singlePrizePerUnit * 4), bonusProfit = bonusPrize - cumCost;
+                rowsHtml += `<tr><td><strong>第 ${d} 期</strong></td><td class="text-gold" style="font-size:14px; font-weight:900;">${bet} 元</td><td>${currentCost.toLocaleString()}</td><td style="color:#b91c1c;">${cumCost.toLocaleString()}</td><td>${basePrize.toLocaleString()}</td><td class="text-green">+${baseProfit.toLocaleString()}</td><td>${bonusPrize.toLocaleString()}</td><td class="text-purple">+${bonusProfit.toLocaleString()}</td></tr>`;
+                mobileCardsHtml += `<div class="day-plan-card"><div class="day-plan-card-header"><span class="day-plan-tag">🎯 第 ${d} 期 (1800碰)</span><span class="day-plan-tier" style="color:#7c3aed; background:#faf5ff;">下注：${bet} 元</span></div><div class="day-plan-grid"><div class="day-plan-item"><span class="label">💵 當期實繳</span><span class="val">${currentCost.toLocaleString()}</span></div><div class="day-plan-item"><span class="label">📉 累計實繳</span><span class="val" style="color:#b91c1c;">${cumCost.toLocaleString()}</span></div><div class="day-plan-item"><span class="label">🏆 中3碰彩金</span><span class="val">${basePrize.toLocaleString()}</span></div><div class="day-plan-item"><span class="label">中3碰淨利</span><span class="val text-green">+${baseProfit.toLocaleString()}</span></div></div><div style="border-top:1px dashed #e2e8f0; padding-top:4px; display:flex; justify-content:space-between; align-items:center;"><span style="font-size:11px; color:#7c3aed; font-weight:bold;">⚡ 若開出4碰</span><span class="text-purple" style="font-size:12px; font-weight:900;">${bonusPrize.toLocaleString()} (+${bonusProfit.toLocaleString()})</span></div></div>`;
+            } else {
+                rowsHtml += `<tr><td><strong>第 ${d} 期</strong></td><td class="text-gold" style="font-size:14px; font-weight:900;">${bet} 元</td><td>${currentCost.toLocaleString()}</td><td style="color:#b91c1c;">${cumCost.toLocaleString()}</td><td style="color:#7c3aed; font-weight:900;">${basePrize.toLocaleString()}</td><td class="text-green" style="font-size:13px; font-weight:900;">+${baseProfit.toLocaleString()}</td></tr>`;
+                mobileCardsHtml += `<div class="day-plan-card"><div class="day-plan-card-header"><span class="day-plan-tag">🏆 第 ${d} 期 (9000碰)</span><span class="day-plan-tier" style="color:#7c3aed; background:#faf5ff;">下注：${bet} 元</span></div><div class="day-plan-grid"><div class="day-plan-item"><span class="label">💵 當期實繳</span><span class="val">${currentCost.toLocaleString()}</span></div><div class="day-plan-item"><span class="label">📉 累計實繳</span><span class="val" style="color:#b91c1c;">${cumCost.toLocaleString()}</span></div><div class="day-plan-item"><span class="label">🏆 2碰彩金</span><span class="val" style="color:#7c3aed;">${basePrize.toLocaleString()}</span></div><div class="day-plan-item"><span class="label">結算淨利</span><span class="val text-green">+${baseProfit.toLocaleString()}</span></div></div></div>`;
+            }
+        }
+        tbody.innerHTML = rowsHtml; mobileContainer.innerHTML = mobileCardsHtml;
+        document.getElementById('matrix-plan-summary').innerText = mode === '1800' 
+            ? `[${days}期 1800碰倍投 ｜ 起步：${firstBet}元 ｜ 總本金：${cumCost.toLocaleString()} 元 ｜ 保底淨賺：+${targetProfit.toLocaleString()} 元]`
+            : `[${days}期 9000碰倍投 ｜ 起步：${firstBet}元 ｜ 總本金：${cumCost.toLocaleString()} 元 ｜ 保底淨賺：+${targetProfit.toLocaleString()} 元]`;
+    }
+
+    function loadMoreHistory() { displayLimit += 30; renderAll(); }
+    function refreshRecommendations() { renderRecommendations(); }
+
     // 🎨 【新功能】產生同行(Inline) 預測色塊 HTML
     function buildInlinePredHtml(predArr, drawArr, zoneName, zoneCount) {
         if (!predArr || predArr.length === 0) return '';
@@ -829,6 +1031,39 @@
         html += `</div></div>`;
         return html;
     }
+
+    /* 💡 自動防呆輸入：限制位數、自動補零、自動排序 */
+    function applyStrictInputFormat(inputId, maxBalls) {
+        const el = document.getElementById(inputId);
+        if(!el) return;
+        el.addEventListener('blur', function() {
+            let nums = this.value.match(/\d+/g) || [];
+            nums = nums.map(n => parseInt(n, 10)).filter(n => n >= 1 && n <= 39);
+            nums = [...new Set(nums)].sort((a, b) => a - b);
+            if (nums.length > maxBalls) nums = nums.slice(0, maxBalls);
+            this.value = nums.map(n => n.toString().padStart(2, '0')).join(' ');
+        });
+    }
+
+    let m1; let finalNums1 = [];
+    window.onload = function() {
+        document.getElementById('input-date').value = new Date().toISOString().split('T')[0];
+        let mSize = 120; m1 = new PhysicsMachine('physics-container-1', mSize);
+
+        // 綁定防呆輸入
+        applyStrictInputFormat('ai-a', 2);
+        applyStrictInputFormat('ai-b', 3);
+        applyStrictInputFormat('my-a', 2);
+        applyStrictInputFormat('my-b', 3);
+        applyStrictInputFormat('draw-nums', 5);
+    };
+
+    window.openProfitModal = openProfitModal; window.closeProfitModal = closeProfitModal; window.closeModalOnOverlay = closeModalOnOverlay;
+    window.switchModalTab = switchModalTab; window.syncABSettings = syncABSettings;
+    window.recordZoneResult = recordZoneResult; window.resetZoneTracker = resetZoneTracker;
+    window.calculateZoneAPlan = calculateZoneAPlan; window.calculateZoneBPlan = calculateZoneBPlan;
+    window.updateMatrixFixedSpec = updateMatrixFixedSpec; window.calculateMatrixPlan = calculateMatrixPlan;
+    window.loadMoreHistory = loadMoreHistory; window.refreshRecommendations = refreshRecommendations;
 
     function renderAll() {
         const tbody = document.getElementById('history-tbody');
@@ -909,32 +1144,6 @@
 </script>
 
 <script>
-    /* 💡 自動防呆輸入：限制位數、自動補零、自動排序 */
-    function applyStrictInputFormat(inputId, maxBalls) {
-        const el = document.getElementById(inputId);
-        if(!el) return;
-        el.addEventListener('blur', function() {
-            let nums = this.value.match(/\d+/g) || [];
-            nums = nums.map(n => parseInt(n, 10)).filter(n => n >= 1 && n <= 39);
-            nums = [...new Set(nums)].sort((a, b) => a - b);
-            if (nums.length > maxBalls) nums = nums.slice(0, maxBalls);
-            this.value = nums.map(n => n.toString().padStart(2, '0')).join(' ');
-        });
-    }
-
-    let m1; let finalNums1 = [];
-    window.onload = function() {
-        document.getElementById('input-date').value = new Date().toISOString().split('T')[0];
-        let mSize = 120; m1 = new PhysicsMachine('physics-container-1', mSize);
-
-        // 綁定防呆輸入
-        applyStrictInputFormat('ai-a', 2);
-        applyStrictInputFormat('ai-b', 3);
-        applyStrictInputFormat('my-a', 2);
-        applyStrictInputFormat('my-b', 3);
-        applyStrictInputFormat('draw-nums', 5);
-    };
-
     class PhysicsMachine {
         constructor(containerId, sphereSize) {
             this.container = document.getElementById(containerId); this.size = sphereSize; this.center = sphereSize / 2;
