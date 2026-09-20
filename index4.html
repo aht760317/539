@@ -600,6 +600,7 @@
             font-weight: 600;
         }
         .form-group input:focus { border-color: var(--ai-color); }
+        .form-divider { width: 100%; height: 1px; background: #e2e8f0; margin: 8px 0; }
         
         .btn-submit { 
             width: 100%; 
@@ -629,7 +630,11 @@
         td { padding: 12px 6px; border-bottom: 1px solid #e2e8f0; vertical-align: middle; }
         tr:hover { background: rgba(241, 245, 249, 0.6); }
 
-        .num-container { display: flex; gap: 5px; justify-content: center; flex-wrap: wrap; align-items: center; }
+        /* A區B區 的小標籤樣式 */
+        .pred-box { background: #f8fafc; padding: 6px 8px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 4px; text-align: left; }
+        .pred-title { font-size: 11px; font-weight: bold; color: #475569; margin-bottom: 4px; display: flex; justify-content: space-between; }
+        
+        .num-container { display: flex; gap: 4px; flex-wrap: wrap; }
         .num-ball { 
             width: var(--ball-size); 
             height: var(--ball-size); 
@@ -645,6 +650,7 @@
             border: 1.5px solid #cbd5e1; 
             box-shadow: 0 2px 4px rgba(0,0,0,0.04);
         }
+        .num-ball.small { width: 26px; height: 26px; font-size: 12px; }
         .num-ball.hit { 
             background: linear-gradient(135deg, #ef4444, #dc2626); 
             color: #ffffff; 
@@ -722,17 +728,19 @@
                 border: none; 
                 padding: 5px 0; 
                 display: flex; 
-                align-items: center; 
-                justify-content: space-between; 
+                flex-direction: column;
+                align-items: flex-start;
+                justify-content: center; 
                 border-bottom: 1px dashed #f1f5f9;
             }
-            td:last-child { border-bottom: none; padding-top: 8px; justify-content: flex-end; gap: 4px; }
+            td:last-child { border-bottom: none; padding-top: 8px; flex-direction: row; justify-content: flex-end; gap: 4px; }
             td::before { 
                 content: attr(data-label); 
                 font-weight: 900; 
                 font-size: 11px; 
                 color: #64748b; 
                 text-align: left;
+                margin-bottom: 4px;
                 min-width: 65px;
             }
             .num-ball { 
@@ -749,7 +757,7 @@
 
 <div class="container">
     <header>
-        <h1>⚡ QUANTUM AI LOTTERY BATTLE ARENA (智能三星四星雙軌版) ⚡</h1>
+        <h1>⚡ QUANTUM AI LOTTERY BATTLE ARENA (智能雙軌版) ⚡</h1>
         <div class="cloud-badge">
             <div class="dot"></div>
             <span>Firebase 雲端量子網絡同步中</span>
@@ -977,6 +985,7 @@
         </div>
     </div>
 
+    <!-- ===== [狀態看板] ===== -->
     <div class="stats-board">
         <div class="stat-card">
             <div class="stat-title">已結算期數</div>
@@ -1000,6 +1009,7 @@
         </div>
     </div>
 
+    <!-- ===== [各種精算工具] ===== -->
     <div class="tools-panel">
         <!-- 區塊一：冷熱號區塊 -->
         <div class="tool-card">
@@ -1129,6 +1139,7 @@
         </div>
     </div>
 
+    <!-- ===== [預測輸入區] - 升級版 A/B 區 ===== -->
     <div class="input-panel">
         <h2>📝 新增預測 / 事後補填 (若日期已存在，在此填寫按存檔即自動補入)</h2>
         <div class="form-row">
@@ -1136,15 +1147,30 @@
                 <label>📅 開獎日期 (選擇要新增或補填的日期)</label>
                 <input type="date" id="input-date">
             </div>
+        </div>
+        <div class="form-divider"></div>
+        <div class="form-row">
             <div class="form-group">
-                <label style="color:var(--ai-color)">🤖 AI 預測 (4 或 5 碼，不補則留空)</label>
-                <input type="text" id="ai-nums" placeholder="例: 05, 12, 28, 33">
+                <label style="color:var(--ai-color)">🤖 AI A區 (2碼, 空格分隔)</label>
+                <input type="text" id="ai-a" placeholder="例: 18 28">
             </div>
             <div class="form-group">
-                <label style="color:var(--my-color)">🧑 我的預測 (4 或 5 碼，不補則留空)</label>
-                <input type="text" id="my-nums" placeholder="例: 01, 10, 20, 30">
+                <label style="color:var(--ai-color)">🤖 AI B區 (3碼, 空格分隔)</label>
+                <input type="text" id="ai-b" placeholder="例: 34 38 39">
             </div>
         </div>
+        <div class="form-divider"></div>
+        <div class="form-row">
+            <div class="form-group">
+                <label style="color:var(--my-color)">🧑 我的 A區 (2碼, 空格分隔)</label>
+                <input type="text" id="my-a" placeholder="例: 06 09">
+            </div>
+            <div class="form-group">
+                <label style="color:var(--my-color)">🧑 我的 B區 (3碼, 空格分隔)</label>
+                <input type="text" id="my-b" placeholder="例: 19 27 29">
+            </div>
+        </div>
+        <div class="form-divider"></div>
         <div class="form-row">
             <div class="form-group">
                 <label style="color:var(--draw-color)">📺 今日實際開獎 5 碼 (開獎後填入此處，或在最下方直接貼上多天開獎)</label>
@@ -1154,14 +1180,15 @@
         <button class="btn-submit" onclick="addRecord()">☁️ 儲存 / 補填對決紀錄至雲端 (即刻對獎)</button>
     </div>
 
+    <!-- ===== [戰績列表區] - 升級版 A/B 區 ===== -->
     <div class="history-panel">
         <h2 style="font-size: 15px; margin-bottom: 12px; letter-spacing: 1px;">📊 歷史戰績矩陣對照表 (AI vs 我)</h2>
         <table>
             <thead>
                 <tr>
                     <th>📅 日期</th>
-                    <th>🤖 AI 預測</th>
-                    <th>🧑 我的預測</th>
+                    <th>🤖 AI 預測 (A區/B區)</th>
+                    <th>🧑 我的預測 (A區/B區)</th>
                     <th>📺 今日開獎 5 碼</th>
                     <th>單期霸主</th>
                     <th>操作</th>
@@ -1177,6 +1204,7 @@
         </div>
     </div>
 
+    <!-- ===== [爬蟲貼上區] ===== -->
     <div class="input-panel crawl-panel">
         <h2>📋 多天歷史開獎號碼整頁貼上一鍵導入</h2>
         <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 8px;">
@@ -1258,17 +1286,33 @@
         return nums;
     }
 
-    function isValidPrediction(nums) {
-        return nums && (nums.length === 3 || nums.length === 4 || nums.length === 5);
+    // 處理新舊資料的相容性
+    function getZoneData(data) {
+        if (!data) return { a: [], b: [] };
+        if (Array.isArray(data)) {
+            // 如果是舊的單一陣列資料格式，自動轉換為 A/B 區顯示 (如果大於5碼)
+            if(data.length >= 5) return { a: data.slice(0,2), b: data.slice(2,5) };
+            if(data.length === 4) return { a: data.slice(0,2), b: data.slice(2,4) };
+            return { a: data, b: [] }; 
+        }
+        return { a: data.a || [], b: data.b || [] };
     }
 
-    function calculateResult(aiNums, myNums, drawNums) {
-        const d = drawNums || [];
-        let aiHits = (aiNums || []).filter(n => d.includes(n)).length;
-        let myHits = (myNums || []).filter(n => d.includes(n)).length;
+    function isValidPrediction(zoneData) {
+        return zoneData && zoneData.a && zoneData.a.length === 2 && zoneData.b && zoneData.b.length === 3;
+    }
 
-        const hasAi = isValidPrediction(aiNums);
-        const hasMy = isValidPrediction(myNums);
+    function calculateResult(aiObj, myObj, drawNums) {
+        const d = drawNums || [];
+        
+        let aiData = getZoneData(aiObj);
+        let myData = getZoneData(myObj);
+
+        let aiHits = aiData.a.filter(n => d.includes(n)).length + aiData.b.filter(n => d.includes(n)).length;
+        let myHits = myData.a.filter(n => d.includes(n)).length + myData.b.filter(n => d.includes(n)).length;
+
+        const hasAi = isValidPrediction(aiData);
+        const hasMy = isValidPrediction(myData);
 
         let winner = "等待開獎";
         if (d.length === 5) {
@@ -1354,7 +1398,7 @@
                     if (targetRecord) {
                         const isDrawChanged = !targetRecord.draw || targetRecord.draw.join(',') !== item.draw.join(',');
                         if (targetRecord.isPending || isDrawChanged) {
-                            const res = calculateResult(targetRecord.ai || [], targetRecord.my || [], item.draw);
+                            const res = calculateResult(targetRecord.ai, targetRecord.my, item.draw);
                             const docRef = doc(db, "battle_history", targetRecord.id.toString());
                             batch.update(docRef, {
                                 draw: item.draw,
@@ -1368,13 +1412,13 @@
                     } else {
                         const newId = (Date.now() + i + idx).toString();
                         const docRef = doc(db, "battle_history", newId);
-                        const res = calculateResult([], [], item.draw);
+                        const res = calculateResult({a:[], b:[]}, {a:[], b:[]}, item.draw);
 
                         batch.set(docRef, {
                             id: newId,
                             date: item.date,
-                            ai: [],
-                            my: [],
+                            ai: { a: [], b: [] },
+                            my: { a: [], b: [] },
                             draw: item.draw,
                             aiHits: 0,
                             myHits: 0,
@@ -1401,25 +1445,32 @@
         let date = document.getElementById('input-date').value;
         if (!date) return alert("請先選擇開獎日期！");
 
-        let aiInput = document.getElementById('ai-nums').value;
-        let myInput = document.getElementById('my-nums').value;
-        let drawInput = document.getElementById('draw-nums').value;
+        let aiA = parseNumbers(document.getElementById('ai-a').value);
+        let aiB = parseNumbers(document.getElementById('ai-b').value);
+        let myA = parseNumbers(document.getElementById('my-a').value);
+        let myB = parseNumbers(document.getElementById('my-b').value);
+        let drawNums = parseNumbers(document.getElementById('draw-nums').value);
 
-        let aiNums = parseNumbers(aiInput);
-        let myNums = parseNumbers(myInput);
-        let drawNums = parseNumbers(drawInput);
+        const hasAiInput = document.getElementById('ai-a').value.trim() !== "" || document.getElementById('ai-b').value.trim() !== "";
+        if (hasAiInput && (aiA.length !== 2 || aiB.length !== 3)) {
+            return alert("🤖 AI 若填寫，A區必須填 2 碼、B區必須填 3 碼！");
+        }
 
-        if (aiInput.trim() !== "" && !isValidPrediction(aiNums)) return alert("🤖 AI 號碼如果有填，必須是 3、4 或 5 碼！");
-        if (myInput.trim() !== "" && !isValidPrediction(myNums)) return alert("🧑 我的號碼如果有填，必須是 3、4 或 5 碼！");
-        if (drawInput.trim() !== "" && drawNums.length !== 5) return alert("📺 實際開獎號碼如果有填，必須剛好是 5 碼！");
+        const hasMyInput = document.getElementById('my-a').value.trim() !== "" || document.getElementById('my-b').value.trim() !== "";
+        if (hasMyInput && (myA.length !== 2 || myB.length !== 3)) {
+            return alert("🧑 我的預測若填寫，A區必須填 2 碼、B區必須填 3 碼！");
+        }
+
+        if (document.getElementById('draw-nums').value.trim() !== "" && drawNums.length !== 5) {
+            return alert("📺 實際開獎號碼如果有填，必須剛好是 5 碼！");
+        }
 
         let existingRecord = battleHistory.find(r => r.date === date);
+        let finalAi = hasAiInput ? { a: aiA, b: aiB } : (existingRecord ? getZoneData(existingRecord.ai) : { a: [], b: [] });
+        let finalMy = hasMyInput ? { a: myA, b: myB } : (existingRecord ? getZoneData(existingRecord.my) : { a: [], b: [] });
 
         if (existingRecord) {
-            let finalAi = aiInput.trim() !== "" ? aiNums : (existingRecord.ai || []);
-            let finalMy = myInput.trim() !== "" ? myNums : (existingRecord.my || []);
-            let finalDraw = drawInput.trim() !== "" ? drawNums : (existingRecord.draw || []);
-
+            let finalDraw = document.getElementById('draw-nums').value.trim() !== "" ? drawNums : (existingRecord.draw || []);
             let isPending = finalDraw.length !== 5;
             let res = calculateResult(finalAi, finalMy, finalDraw);
 
@@ -1440,14 +1491,14 @@
             }
         } else {
             let isPending = drawNums.length === 0;
-            let res = calculateResult(aiNums, myNums, drawNums);
+            let res = calculateResult(finalAi, finalMy, drawNums);
 
             let recordId = Date.now().toString();
             let record = { 
                 id: recordId, 
                 date: date, 
-                ai: aiNums, 
-                my: myNums, 
+                ai: finalAi, 
+                my: finalMy, 
                 draw: drawNums, 
                 aiHits: res.aiHits, 
                 myHits: res.myHits, 
@@ -1466,17 +1517,24 @@
     }
 
     function clearInputs() {
-        document.getElementById('ai-nums').value = "";
-        document.getElementById('my-nums').value = "";
+        document.getElementById('ai-a').value = "";
+        document.getElementById('ai-b').value = "";
+        document.getElementById('my-a').value = "";
+        document.getElementById('my-b').value = "";
         document.getElementById('draw-nums').value = "";
     }
 
     function loadRecordToForm(id) {
         let r = battleHistory.find(item => item.id == id);
         if (r) {
+            let aiData = getZoneData(r.ai);
+            let myData = getZoneData(r.my);
+            
             document.getElementById('input-date').value = r.date;
-            document.getElementById('ai-nums').value = (r.ai && r.ai.length > 0) ? r.ai.join(', ') : '';
-            document.getElementById('my-nums').value = (r.my && r.my.length > 0) ? r.my.join(', ') : '';
+            document.getElementById('ai-a').value = aiData.a.join(' ');
+            document.getElementById('ai-b').value = aiData.b.join(' ');
+            document.getElementById('my-a').value = myData.a.join(' ');
+            document.getElementById('my-b').value = myData.b.join(' ');
             document.getElementById('draw-nums').value = (r.draw && r.draw.length > 0) ? r.draw.join(', ') : '';
             window.scrollTo({ top: document.querySelector('.input-panel').offsetTop - 20, behavior: 'smooth' });
         }
@@ -2314,7 +2372,7 @@
     }
 
     function closeModalOnOverlay(e) {
-        if (e.target.id === 'profit-modal') closeProfitModal();
+        if (e.target.id === 'profit-modal' || e.target.classList.contains('modal-overlay')) closeProfitModal();
     }
 
     function switchModalTab(tabKey) {
@@ -2340,6 +2398,21 @@
 
     function refreshRecommendations() {
         renderRecommendations();
+    }
+
+    // 建立 A區/B區 專屬預測顯示 HTML
+    function buildPredHtml(predArr, drawArr, zoneName, zoneCount) {
+        if (!predArr || predArr.length === 0) return '';
+        let hits = predArr.filter(n => drawArr.includes(n)).length;
+        let html = `<div class="pred-box">`;
+        html += `<div class="pred-title"><span>[${zoneName}區] ${zoneCount}碼</span> <span style="color:${hits>0?'#ef4444':'#94a3b8'}">中 ${hits} 顆</span></div>`;
+        html += `<div class="num-container" style="justify-content: flex-start; margin-bottom: 4px;">`;
+        predArr.forEach(n => {
+            let isHit = drawArr.includes(n);
+            html += `<div class="num-ball small ${isHit ? 'hit' : ''}">${n.toString().padStart(2, '0')}</div>`;
+        });
+        html += `</div></div>`;
+        return html;
     }
 
     window.openProfitModal = openProfitModal;
@@ -2372,11 +2445,14 @@
             const hasDraw = item.draw && item.draw.length === 5;
             if (!item.isPending && hasDraw) {
                 totalRounds++;
-                if (isValidPrediction(item.ai)) {
+                let aiData = getZoneData(item.ai);
+                let myData = getZoneData(item.my);
+                
+                if (isValidPrediction(aiData)) {
                     aiRounds++;
                     totalAiHits += item.aiHits || 0;
                 }
-                if (isValidPrediction(item.my)) {
+                if (isValidPrediction(myData)) {
                     myRounds++;
                     totalMyHits += item.myHits || 0;
                 }
@@ -2387,21 +2463,19 @@
         
         visibleRecords.forEach(item => {
             const hasDraw = item.draw && item.draw.length === 5;
-            
             const tr = document.createElement('tr');
-            const genBalls = (nums) => `<div class="num-container">` + (nums || []).map(n => {
-                let isHit = (!item.isPending && hasDraw && item.draw.includes(n)) ? 'hit' : '';
-                return `<div class="num-ball ${isHit}">${n.toString().padStart(2,'0')}</div>`;
-            }).join('') + `</div>`;
+            
+            let aiData = getZoneData(item.ai);
+            let myData = getZoneData(item.my);
 
-            const genDrawBalls = (nums) => `<div class="num-container">` + (nums || []).map(n => `<div class="num-ball draw">${n.toString().padStart(2,'0')}</div>`).join('') + `</div>`;
+            const genDrawBalls = (nums) => `<div class="num-container" style="justify-content:center;">` + (nums || []).map(n => `<div class="num-ball draw">${n.toString().padStart(2,'0')}</div>`).join('') + `</div>`;
 
-            let aiColumnHtml = isValidPrediction(item.ai)
-                ? genBalls(item.ai) + (!item.isPending && hasDraw ? `<div style="font-size:11px; margin-top:3px; color:var(--ai-color); font-weight:bold;">中 ${item.aiHits} 顆 (${item.ai.length}碼)</div>` : '')
+            let aiColumnHtml = isValidPrediction(aiData)
+                ? buildPredHtml(aiData.a, item.draw || [], 'A', 2) + buildPredHtml(aiData.b, item.draw || [], 'B', 3)
                 : `<span class="empty-label">— 待補 —</span>`;
 
-            let myColumnHtml = isValidPrediction(item.my)
-                ? genBalls(item.my) + (!item.isPending && hasDraw ? `<div style="font-size:11px; margin-top:3px; color:var(--my-color); font-weight:bold;">中 ${item.myHits} 顆 (${item.my.length}碼)</div>` : '')
+            let myColumnHtml = isValidPrediction(myData)
+                ? buildPredHtml(myData.a, item.draw || [], 'A', 2) + buildPredHtml(myData.b, item.draw || [], 'B', 3)
                 : `<span class="empty-label">— 待補 —</span>`;
 
             let drawColumnHtml = hasDraw ? genDrawBalls(item.draw) : `<span style="color:#d97706; font-size:12px; font-family:monospace; font-weight:bold;">⏳ 待開獎</span>`;
