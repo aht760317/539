@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>天天樂 光量子 AI 倍投追蹤對決擂台</title>
+    <title>天天樂 光量子 AI 科技對決擂台 (智能雙軌矩陣版)</title>
     <style>
         :root {
             --bg-color: #f1f5f9; 
@@ -51,339 +51,122 @@
             -webkit-text-fill-color: transparent;
             font-weight: 900;
         }
-        .cloud-badge { 
-            display: inline-flex; 
-            align-items: center; 
-            gap: 6px; 
-            background: #ffffff; 
-            border: 1px solid rgba(16, 185, 129, 0.4);
-            padding: 3px 12px; 
-            border-radius: 20px; 
-            font-size: 11px; 
-            font-weight: bold; 
-            color: #065f46; 
-            margin-top: 6px; 
-        }
+        .cloud-badge { display: inline-flex; align-items: center; gap: 6px; background: #ffffff; border: 1px solid rgba(16, 185, 129, 0.4); padding: 3px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; color: #065f46; margin-top: 6px; }
         .dot { width: 7px; height: 7px; border-radius: 50%; background: #10b981; box-shadow: 0 0 6px #10b981; }
 
-        .top-action-bar {
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-            margin-bottom: 16px;
-            flex-wrap: wrap;
-        }
-        .btn-open-modal {
-            background: linear-gradient(135deg, #d97706, #b45309);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            font-size: 14px;
-            font-weight: 900;
-            border-radius: 10px;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 4px 15px rgba(217, 119, 6, 0.25);
-            transition: all 0.2s;
-        }
+        .top-action-bar { display: flex; justify-content: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+        .btn-open-modal { background: linear-gradient(135deg, #d97706, #b45309); color: white; border: none; padding: 12px 20px; font-size: 14px; font-weight: 900; border-radius: 10px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 15px rgba(217, 119, 6, 0.25); transition: all 0.2s; }
         .btn-open-modal:hover { filter: brightness(1.1); transform: translateY(-1px); }
 
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(15, 23, 42, 0.75);
-            backdrop-filter: blur(6px);
-            z-index: 999;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 12px;
-        }
-        .modal-content {
-            background: #ffffff;
-            border: 1.5px solid rgba(217, 119, 6, 0.4);
-            border-radius: 18px;
-            width: 100%;
-            max-width: 1100px;
-            height: 90vh;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
-            overflow: hidden;
-            animation: modalPop 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        @keyframes modalPop {
-            from { transform: scale(0.96); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-        .modal-header {
-            padding: 12px 18px;
-            border-bottom: 1px solid #e2e8f0;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: #fffbeb;
-            flex-shrink: 0;
-        }
-        .modal-header h2 {
-            font-size: 15px;
-            font-weight: 900;
-            color: #92400e;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .modal-close {
-            background: transparent;
-            border: none;
-            font-size: 26px;
-            color: #78350f;
-            cursor: pointer;
-            font-weight: bold;
-            padding: 0 4px;
-        }
+        /* Modal Styles */
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(6px); z-index: 999; display: none; align-items: center; justify-content: center; padding: 12px; }
+        .modal-content { background: #ffffff; border: 1.5px solid rgba(217, 119, 6, 0.4); border-radius: 18px; width: 100%; max-width: 1100px; height: 90vh; display: flex; flex-direction: column; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25); overflow: hidden; animation: modalPop 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        @keyframes modalPop { from { transform: scale(0.96); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .modal-header { padding: 12px 18px; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: space-between; background: #fffbeb; flex-shrink: 0; }
+        .modal-header h2 { font-size: 15px; font-weight: 900; color: #92400e; display: flex; align-items: center; gap: 6px; }
+        .modal-close { background: transparent; border: none; font-size: 26px; color: #78350f; cursor: pointer; font-weight: bold; padding: 0 4px; }
         
-        .modal-tabs {
-            display: flex;
-            background: #f8fafc;
-            border-bottom: 1.5px solid #e2e8f0;
-            padding: 6px 12px 0 12px;
-            gap: 6px;
-            overflow-x: auto;
-            white-space: nowrap;
-            flex-shrink: 0;
-            -webkit-overflow-scrolling: touch;
-        }
+        .modal-tabs { display: flex; background: #f8fafc; border-bottom: 1.5px solid #e2e8f0; padding: 6px 12px 0 12px; gap: 6px; overflow-x: auto; white-space: nowrap; flex-shrink: 0; }
         .modal-tabs::-webkit-scrollbar { display: none; }
-        .tab-btn {
-            background: transparent;
-            border: 1px solid transparent;
-            border-bottom: none;
-            padding: 8px 14px;
-            font-size: 12px;
-            font-weight: 900;
-            color: #64748b;
-            cursor: pointer;
-            border-radius: 8px 8px 0 0;
-            transition: 0.2s;
-        }
-        .tab-btn.active {
-            background: #ffffff;
-            border-color: #cbd5e1;
-            color: #d97706;
-            border-top: 3px solid #d97706;
-        }
+        .tab-btn { background: transparent; border: 1px solid transparent; border-bottom: none; padding: 8px 14px; font-size: 12px; font-weight: 900; color: #64748b; cursor: pointer; border-radius: 8px 8px 0 0; transition: 0.2s; }
+        .tab-btn.active { background: #ffffff; border-color: #cbd5e1; color: #d97706; border-top: 3px solid #d97706; }
         
-        .modal-body {
-            padding: 14px 16px;
-            overflow-y: auto;
-            flex: 1;
-            overscroll-behavior: contain;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .calc-form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-            gap: 8px;
-            margin-bottom: 12px;
-            background: #f8fafc;
-            padding: 10px;
-            border-radius: 10px;
-            border: 1px solid #e2e8f0;
-        }
+        .modal-body { padding: 14px 16px; overflow-y: auto; flex: 1; }
+        
+        /* 內部表單元件 */
+        .plan-config-bar { display: flex; align-items: center; gap: 10px; background: #ffffff; padding: 10px 14px; border-radius: 10px; border: 1.5px solid #cbd5e1; margin-bottom: 12px; flex-wrap: wrap; }
+        .plan-config-bar label { font-size: 12px; font-weight: 900; color: #334155; }
+        .plan-config-bar input { padding: 6px 10px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-family: monospace; font-weight: 900; width: 90px; text-align: center; outline: none; }
+        .plan-config-bar input:focus { border-color: var(--gold-color); }
+        .calc-form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; margin-bottom: 12px; background: #f8fafc; padding: 10px; border-radius: 10px; border: 1px solid #e2e8f0; }
         .calc-input-group { display: flex; flex-direction: column; gap: 3px; }
         .calc-input-group label { font-size: 11px; font-weight: 800; color: #475569; }
-        .calc-input-group input {
-            padding: 7px 9px;
-            background: #ffffff;
-            border: 1.5px solid #cbd5e1;
-            color: #0f172a;
-            border-radius: 6px;
-            font-size: 13px;
-            outline: none;
-            font-family: monospace;
-            font-weight: bold;
-        }
-        .calc-input-group input:focus { border-color: var(--gold-color); }
-        .btn-recalc {
-            background: linear-gradient(135deg, #d97706, #b45309);
-            color: white;
-            border: none;
-            padding: 8px 14px;
-            font-size: 13px;
-            font-weight: 900;
-            border-radius: 6px;
-            cursor: pointer;
-            align-self: flex-end;
-            height: 35px;
-        }
-        .btn-recalc:hover { filter: brightness(1.1); }
+        .calc-input-group input { padding: 7px 9px; background: #ffffff; border: 1.5px solid #cbd5e1; color: #0f172a; border-radius: 6px; font-size: 13px; outline: none; font-family: monospace; font-weight: bold; }
+        .btn-recalc { background: linear-gradient(135deg, #d97706, #b45309); color: white; border: none; padding: 8px 14px; font-size: 13px; font-weight: 900; border-radius: 6px; cursor: pointer; align-self: flex-end; height: 35px; }
 
-        .tracker-card {
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            padding: 14px;
-            margin-bottom: 16px;
-        }
-        .tracker-title {
-            font-size: 13px;
-            font-weight: 900;
-            color: #334155;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
-        .status-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-            gap: 8px;
-            margin-bottom: 12px;
-        }
-        .status-item {
-            background: #ffffff;
-            padding: 8px;
-            border-radius: 8px;
-            border: 1px solid #cbd5e1;
-            text-align: center;
-        }
+        /* 追蹤面板 */
+        .tracker-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px; margin-bottom: 16px; }
+        .tracker-title { font-size: 13px; font-weight: 900; color: #334155; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .day-plan-tier { font-size: 11px; font-weight: 800; color: #7c3aed; background: #f5f3ff; padding: 2px 6px; border-radius: 4px; }
+        .status-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; margin-bottom: 12px; }
+        .status-item { background: #ffffff; padding: 8px; border-radius: 8px; border: 1px solid #cbd5e1; text-align: center; }
         .status-item .label { font-size: 11px; color: #64748b; margin-bottom: 2px; font-weight: bold; }
         .status-item .val { font-size: 16px; font-weight: 900; color: #0f172a; font-family: monospace; }
         .status-item .val.highlight { color: #dc2626; }
         .status-item .val.win { color: #16a34a; }
-
         .action-btns { display: flex; gap: 8px; flex-wrap: wrap; }
-        .act-btn {
-            flex: 1;
-            min-width: 130px;
-            padding: 10px 14px;
-            border: none;
-            border-radius: 8px;
-            font-size: 13px;
-            font-weight: 900;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .act-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
-        .btn-win { background: #16a34a; color: #ffffff; box-shadow: 0 2px 8px rgba(22, 163, 74, 0.25); }
-        .btn-lose { background: #dc2626; color: #ffffff; box-shadow: 0 2px 8px rgba(220, 38, 38, 0.25); }
+        .act-btn { flex: 1; min-width: 130px; padding: 10px 14px; border: none; border-radius: 8px; font-size: 13px; font-weight: 900; cursor: pointer; transition: 0.2s; }
+        .btn-win { background: #16a34a; color: #ffffff; }
+        .btn-lose { background: #dc2626; color: #ffffff; }
         .btn-reset { background: #64748b; color: #ffffff; flex: 0.4; }
+        .tier-sub-tabs { display: flex; gap: 8px; margin-bottom: 12px; }
+        .sub-tab-btn { padding: 6px 14px; border-radius: 6px; border: 1.5px solid #cbd5e1; background: #ffffff; font-size: 12px; font-weight: 900; color: #475569; cursor: pointer; }
+        .sub-tab-btn.active { border-color: #7c3aed; background: #f5f3ff; color: #7c3aed; }
 
-        .tier-sub-tabs {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 12px;
-        }
-        .sub-tab-btn {
-            padding: 6px 14px;
-            border-radius: 6px;
-            border: 1.5px solid #cbd5e1;
-            background: #ffffff;
-            font-size: 12px;
-            font-weight: 900;
-            color: #475569;
-            cursor: pointer;
-        }
-        .sub-tab-btn.active {
-            border-color: #7c3aed;
-            background: #f5f3ff;
-            color: #7c3aed;
-        }
+        /* 主畫面 - 輸入區 & 歷史戰績 */
+        .input-panel { background: var(--panel-bg); padding: 18px; border-radius: 14px; border: 1px solid var(--panel-border); margin-bottom: 18px; backdrop-filter: blur(12px); }
+        .input-panel h2 { margin-bottom: 14px; font-size: 16px; color: var(--text-main); border-left: 4px solid var(--neon-purple); padding-left: 10px; font-weight: 900; }
+        .form-row { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 12px; }
+        .form-group { flex: 1; min-width: 170px; display: flex; flex-direction: column; gap: 4px; }
+        .form-group label { font-size: 11.5px; font-weight: 800; color: #334155; }
+        .form-group input { padding: 9px 10px; background: #ffffff; border: 1.5px solid #cbd5e1; color: #0f172a; border-radius: 6px; font-size: 14px; outline: none; font-family: monospace; font-weight: bold; }
+        .form-group input:focus { border-color: var(--ai-color); }
+        .form-divider { width: 100%; height: 1px; background: #e2e8f0; margin: 8px 0; }
+        .btn-submit { width: 100%; background: linear-gradient(135deg, #0284c7, #2563eb); color: white; border: none; padding: 12px; font-size: 14px; font-weight: 900; border-radius: 8px; cursor: pointer; margin-top: 4px; }
+        
+        .history-panel { background: var(--panel-bg); padding: 18px; border-radius: 14px; border: 1px solid var(--panel-border); margin-bottom: 18px; box-shadow: 0 4px 14px rgba(0,0,0,0.02); }
+        .history-panel h2 { margin-bottom: 14px; font-size: 16px; color: var(--text-main); border-left: 4px solid var(--draw-color); padding-left: 10px; font-weight: 900; }
+        
+        table { width: 100%; border-collapse: collapse; text-align: center; font-size: 13px; }
+        th { background: #f8fafc; padding: 12px 6px; border-bottom: 2px solid #e2e8f0; font-weight: 900; color: #475569; white-space: nowrap; }
+        td { padding: 10px 6px; border-bottom: 1px solid #e2e8f0; vertical-align: middle; }
+        tr:hover { background: rgba(241, 245, 249, 0.6); }
 
-        .plan-config-bar {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: #ffffff;
-            padding: 10px 14px;
-            border-radius: 10px;
-            border: 1.5px solid #cbd5e1;
-            margin-bottom: 12px;
-            flex-wrap: wrap;
-        }
-        .plan-config-bar label { font-size: 12px; font-weight: 900; color: #334155; }
-        .plan-config-bar input {
-            padding: 6px 10px;
-            border: 1.5px solid #cbd5e1;
-            border-radius: 6px;
-            font-family: monospace;
-            font-weight: 900;
-            width: 90px;
-            text-align: center;
-            outline: none;
-        }
-        .plan-config-bar input:focus { border-color: var(--gold-color); }
+        .pred-box { background: #f8fafc; padding: 6px 8px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 4px; text-align: left; }
+        .pred-title { font-size: 11px; font-weight: bold; color: #475569; margin-bottom: 4px; display: flex; justify-content: space-between; }
+        
+        .num-container { display: flex; gap: 4px; flex-wrap: wrap; }
+        .num-ball { width: var(--ball-size); height: var(--ball-size); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 900; background: #ffffff; color: #1e293b; font-family: monospace; border: 1.5px solid #cbd5e1; box-shadow: 0 2px 4px rgba(0,0,0,0.04); }
+        .num-ball.small { width: 24px; height: 24px; font-size: 11px; }
+        .num-ball.hit { background: linear-gradient(135deg, #ef4444, #dc2626); color: #ffffff; border-color: #991b1b; box-shadow: 0 3px 8px rgba(239, 68, 68, 0.35); }
+        .num-ball.draw { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #78350f; border-color: #b45309; }
 
-        .profit-table-wrapper {
-            border: 1px solid #e2e8f0;
-            border-radius: 10px;
-            overflow-x: auto;
-        }
-        .profit-table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: center;
-            font-size: 12px;
-            white-space: nowrap;
-        }
-        .profit-table th {
-            background: #f8fafc;
-            color: #475569;
-            padding: 10px 8px;
-            font-weight: 900;
-            border-bottom: 2px solid #e2e8f0;
-        }
-        .profit-table td {
-            padding: 9px 8px;
-            border-bottom: 1px solid #f1f5f9;
-            font-family: monospace;
-            font-weight: 600;
-        }
-        .profit-table tr:hover { background: #fffbeb; }
+        .winner-badge { padding: 4px 10px; border-radius: 16px; font-size: 12px; font-weight: 900; display: inline-block; }
+        .badge-ai { background: #e0f2fe; color: #0284c7; border: 1px solid #38bdf8; }
+        .badge-my { background: #dcfce7; color: #059669; border: 1px solid #34d399; }
+        .badge-tie { background: #f1f5f9; color: #64748b; border: 1px solid #cbd5e1; }
+        .badge-pending { background: #fef3c7; color: #d97706; border: 1px solid #f59e0b; }
+        
+        .action-btn { padding: 5px 10px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: bold; margin: 2px; border: 1px solid #cbd5e1; }
+        .delete-btn { background: #fee2e2; color: #dc2626; }
+        .edit-btn { background: #f1f5f9; color: #334155; }
+        
         .text-green { color: #059669; font-weight: 800; }
         .text-gold { color: #d97706; font-weight: 900; }
         .text-purple { color: #7c3aed; font-weight: 900; }
+        .highlight { color: #dc2626; }
 
+        /* Mobile RWD */
         @media (max-width: 768px) {
             body { padding: 10px 6px; }
-            .modal-overlay { padding: 8px; }
-            .modal-content { height: 96vh; border-radius: 14px; }
-            .calc-form-grid { grid-template-columns: 1fr 1fr; gap: 6px; padding: 8px; }
-            .btn-recalc { grid-column: span 2; width: 100%; height: 34px; }
-            .plan-config-bar { padding: 8px 10px; gap: 6px; }
-            .plan-config-bar input { width: 75px; }
+            header { padding: 12px 8px; margin-bottom: 12px; }
+            .btn-open-modal { width: 100%; justify-content: center; padding: 10px 14px; font-size: 13px; }
             
-            table, thead, tbody, th, td, tr { display: block; }
-            thead tr { position: absolute; top: -9999px; left: -9999px; }
-            tr { 
-                background: #ffffff; 
-                border: 1px solid #e2e8f0; 
-                border-radius: 10px; 
-                margin-bottom: 10px; 
-                padding: 10px; 
-            }
-            td { 
-                border: none; 
-                padding: 5px 0; 
-                display: flex; 
-                align-items: center; 
-                justify-content: space-between; 
-                border-bottom: 1px dashed #f1f5f9;
-            }
-            td::before { 
-                content: attr(data-label); 
-                font-weight: 900; 
-                font-size: 11px; 
-                color: #64748b; 
-                text-align: left;
-                min-width: 65px;
-            }
+            .modal-content { height: 96vh; border-radius: 14px; }
+            .calc-form-grid, .plan-config-bar, .form-row { flex-direction: column; }
+            .btn-recalc { grid-column: span 2; width: 100%; }
+            
+            /* Table Responsive */
+            .history-panel table, .profit-table { display: block; width: 100%; }
+            .history-panel thead, .profit-table thead { display: none; }
+            .history-panel tbody tr, .profit-table tbody tr { display: block; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; margin-bottom: 12px; padding: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+            .history-panel td, .profit-table td { display: flex; flex-direction: column; align-items: flex-start; border: none; padding: 6px 0; border-bottom: 1px dashed #f1f5f9; }
+            .history-panel td:last-child { border-bottom: none; flex-direction: row; justify-content: flex-end; gap: 8px; margin-top: 6px; }
+            .history-panel td::before, .profit-table td::before { content: attr(data-label); font-weight: 900; font-size: 11px; color: #64748b; margin-bottom: 4px; display: block; }
+            
+            .pred-box { width: 100%; }
+            .num-container { justify-content: flex-start; }
+            .winner-badge { align-self: flex-start; }
         }
     </style>
 </head>
@@ -391,7 +174,7 @@
 
 <div class="container">
     <header>
-        <h1>⚡ QUANTUM AI LOTTERY BATTLE ARENA (智能雙軌版) ⚡</h1>
+        <h1>⚡ QUANTUM AI LOTTERY BATTLE ARENA (智能雙軌矩陣版) ⚡</h1>
         <div class="cloud-badge">
             <div class="dot"></div>
             <span>Firebase 雲端量子網絡同步中</span>
@@ -399,13 +182,73 @@
     </header>
 
     <div class="top-action-bar">
-        <!-- 點擊此按鈕展開系統 -->
         <button class="btn-open-modal" onclick="openProfitModal()">
             📊 點擊開啟：天天樂全車 A區/B區 倍投與紀律追蹤表
         </button>
     </div>
 
-    <!-- 獲利與倍投規劃 Modal -->
+    <!-- ===== [主畫面] 輸入面板 ===== -->
+    <div class="input-panel">
+        <h2>⚔️ 新增賽局預測 (A區 2碼 / B區 3碼)</h2>
+        <div class="form-row">
+            <div class="form-group">
+                <label>📅 選擇日期</label>
+                <input type="date" id="match-date">
+            </div>
+        </div>
+        <div class="form-divider"></div>
+        <div class="form-row">
+            <div class="form-group">
+                <label>🤖 AI A區 (2碼, 空格分隔)</label>
+                <input type="text" id="ai-a" placeholder="例如: 18 28">
+            </div>
+            <div class="form-group">
+                <label>🤖 AI B區 (3碼, 空格分隔)</label>
+                <input type="text" id="ai-b" placeholder="例如: 34 38 39">
+            </div>
+        </div>
+        <div class="form-divider"></div>
+        <div class="form-row">
+            <div class="form-group">
+                <label>🧑 我的 A區 (2碼, 空格分隔)</label>
+                <input type="text" id="my-a" placeholder="例如: 06 09">
+            </div>
+            <div class="form-group">
+                <label>🧑 我的 B區 (3碼, 空格分隔)</label>
+                <input type="text" id="my-b" placeholder="例如: 19 27 29">
+            </div>
+        </div>
+        <div class="form-divider"></div>
+        <div class="form-row">
+            <div class="form-group" style="flex: 100%;">
+                <label>📺 今日開獎 (5碼, 若未開可留空)</label>
+                <input type="text" id="draw-balls" placeholder="例如: 01 13 19 27 37 (空格分隔)">
+            </div>
+        </div>
+        <button class="btn-submit" onclick="addMatch()">⚡ 寫入戰績矩陣</button>
+    </div>
+
+    <!-- ===== [主畫面] 歷史戰績矩陣 ===== -->
+    <div class="history-panel">
+        <h2>📊 歷史戰績矩陣對照表 (AI vs 我)</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>📅 日期</th>
+                    <th>🤖 AI 預測 (A區2碼 / B區3碼)</th>
+                    <th>🧑 我的預測 (A區2碼 / B區3碼)</th>
+                    <th>📺 今日開獎 5 碼</th>
+                    <th>🏆 單期霸主</th>
+                    <th>⚙️ 操作</th>
+                </tr>
+            </thead>
+            <tbody id="history-tbody">
+                <!-- 由 JavaScript 動態生成 -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ===== [浮動視窗] 倍投與追蹤 Modal ===== -->
     <div class="modal-overlay" id="profit-modal" onclick="closeModalOnOverlay(event)">
         <div class="modal-content">
             <div class="modal-header">
@@ -414,23 +257,20 @@
             </div>
             
             <div class="modal-tabs">
-                <button class="tab-btn active" id="tab-btn-area-a" onclick="switchModalTab('area-a')">🌟 A區 (2碼全車) 規劃表</button>
-                <button class="tab-btn" id="tab-btn-area-b" onclick="switchModalTab('area-b')">🎯 B區 (3碼全車) 規劃表</button>
-                <button class="tab-btn" id="tab-btn-tier-track" onclick="switchModalTab('tier-track')">⚖️ A/B區 紀律追蹤表 (實戰面板)</button>
+                <button class="tab-btn active" id="tab-btn-area-a" onclick="switchModalTab('area-a')">🌟 A區 (2碼) 倍投表</button>
+                <button class="tab-btn" id="tab-btn-area-b" onclick="switchModalTab('area-b')">🎯 B區 (3碼) 倍投表</button>
+                <button class="tab-btn" id="tab-btn-tier-track" onclick="switchModalTab('tier-track')">⚖️ A/B區 實戰紀律追蹤表</button>
             </div>
 
             <div class="modal-body">
-                <!-- 共用參數設定 (適用於 A/B 區) -->
+                <!-- 共用參數設定 -->
                 <div class="plan-config-bar">
-                    <label>💰 單車本金(預設74):</label>
-                    <input type="number" id="global-cost" value="74" step="0.5">
-                    <label>🏆 單車中獎(預設212):</label>
-                    <input type="number" id="global-reward" value="212">
-                    <label>🎯 每階目標淨利:</label>
-                    <input type="number" id="global-target" value="1000" step="100">
+                    <label>💰 單車本金:</label> <input type="number" id="global-cost" value="74" step="0.5">
+                    <label>🏆 單車中獎:</label> <input type="number" id="global-reward" value="212">
+                    <label>🎯 階梯目標:</label> <input type="number" id="global-target" value="1000" step="100">
                 </div>
 
-                <!-- Tab 1: A區 (2碼全車) 倍投規劃 -->
+                <!-- Tab 1: A區 倍投規劃 -->
                 <div id="tab-content-area-a" class="tab-content" style="display: block;">
                     <div class="calc-form-grid">
                         <div class="calc-input-group">
@@ -443,24 +283,17 @@
                         </div>
                         <button class="btn-recalc" onclick="generatePlan('A', 2)">⚡ 生成 A區 規劃表</button>
                     </div>
-                    <div class="profit-table-wrapper">
-                        <table class="profit-table" id="table-area-a">
+                    <div style="border: 1px solid #e2e8f0; border-radius: 10px; overflow-x: auto;">
+                        <table class="profit-table" id="table-area-a" style="margin-bottom: 0;">
                             <thead>
-                                <tr>
-                                    <th>期數</th>
-                                    <th>當期車數 (每碼)</th>
-                                    <th>當期總成本 (2碼)</th>
-                                    <th>累計總成本</th>
-                                    <th>中1碼獎金</th>
-                                    <th>中1碼淨利</th>
-                                </tr>
+                                <tr><th>期數</th><th>當期車數 (每碼)</th><th>當期總成本</th><th>累計總成本</th><th>中1碼獎金</th><th>中1碼淨利</th></tr>
                             </thead>
-                            <tbody><!-- JS 自動生成 --></tbody>
+                            <tbody></tbody>
                         </table>
                     </div>
                 </div>
 
-                <!-- Tab 2: B區 (3碼全車) 倍投規劃 -->
+                <!-- Tab 2: B區 倍投規劃 -->
                 <div id="tab-content-area-b" class="tab-content" style="display: none;">
                     <div class="calc-form-grid">
                         <div class="calc-input-group">
@@ -473,24 +306,17 @@
                         </div>
                         <button class="btn-recalc" onclick="generatePlan('B', 3)">⚡ 生成 B區 規劃表</button>
                     </div>
-                    <div class="profit-table-wrapper">
-                        <table class="profit-table" id="table-area-b">
+                    <div style="border: 1px solid #e2e8f0; border-radius: 10px; overflow-x: auto;">
+                        <table class="profit-table" id="table-area-b" style="margin-bottom: 0;">
                             <thead>
-                                <tr>
-                                    <th>期數</th>
-                                    <th>當期車數 (每碼)</th>
-                                    <th>當期總成本 (3碼)</th>
-                                    <th>累計總成本</th>
-                                    <th>中1碼獎金</th>
-                                    <th>中1碼淨利</th>
-                                </tr>
+                                <tr><th>期數</th><th>當期車數 (每碼)</th><th>當期總成本</th><th>累計總成本</th><th>中1碼獎金</th><th>中1碼淨利</th></tr>
                             </thead>
-                            <tbody><!-- JS 自動生成 --></tbody>
+                            <tbody></tbody>
                         </table>
                     </div>
                 </div>
 
-                <!-- Tab 3: 階梯均注紀律追蹤表 (回歸賺錢實戰面板) -->
+                <!-- Tab 3: 階梯紀律追蹤表 -->
                 <div id="tab-content-tier-track" class="tab-content" style="display: none;">
                     <div class="tier-sub-tabs">
                         <button class="sub-tab-btn active" id="track-btn-a" onclick="switchTracker('A')">🌟 A區 (2碼) 追蹤</button>
@@ -517,16 +343,15 @@
                             </div>
                         </div>
                         
-                        <!-- 實戰操作區 -->
                         <div class="action-btns">
                             <button class="act-btn btn-win" onclick="recordResult(1)">🎉 中 1 碼 (收米)</button>
                             <button class="act-btn btn-win" onclick="recordResult(2)" style="background:#059669;">🔥 中 2 碼 (大暴贏)</button>
                             <button class="act-btn btn-lose" onclick="recordResult(0)">❌ 全倒 (進入下一階)</button>
-                            <button class="act-btn btn-reset" onclick="resetTracker()">🔄 手動重置狀態 (回歸第1階)</button>
+                            <button class="act-btn btn-reset" onclick="resetTracker()">🔄 手動重置 (回歸第1階)</button>
                         </div>
                         <p style="font-size: 11px; color: #64748b; margin-top: 10px; font-weight: bold; line-height: 1.5;">
-                            * 系統演算法：當發生虧損時，下一期的建議車數會自動計算「歷史虧損 + 目標淨利」。<br>
-                            * 操作方式：中獎時，系統不再自動清零，會將您賺到的錢記錄在上方盈虧。請在準備好開始新一輪時，<b>自己手動點擊「重置狀態」</b>按鈕。
+                            * 虧損時，下期車數自動精算「歷史虧損+目標淨利」。<br>
+                            * 中獎時不再自動清零，會寫入盈虧欄位，請在準備好新一輪時自己點擊「手動重置」。
                         </p>
                     </div>
                 </div>
@@ -537,62 +362,189 @@
 </div>
 
 <script>
-    // --- 介面切換邏輯 ---
-    function openProfitModal() {
-        document.getElementById('profit-modal').style.display = 'flex';
-        generatePlan('A', 2); // 預設初始化 A 區
-        generatePlan('B', 3); // 預設初始化 B 區
-    }
+    // ==========================================
+    // 1. 歷史戰績矩陣邏輯 (AI vs My)
+    // ==========================================
     
-    function closeProfitModal() {
-        document.getElementById('profit-modal').style.display = 'none';
+    // 預設假資料 (符合您的範例)
+    let matchHistory = [
+        {
+            id: Date.now() + 1,
+            date: '2026-09-20',
+            ai: { a: ['18', '28'], b: ['34', '38', '39'] },
+            my: { a: ['06', '09'], b: ['19', '27', '29'] },
+            draw: ['01', '13', '19', '27', '37']
+        },
+        {
+            id: Date.now(),
+            date: '2026-09-19',
+            ai: { a: ['10', '17'], b: ['20', '37', '38'] },
+            my: { a: ['12', '14'], b: ['21', '33', '35'] },
+            draw: ['19', '29', '33', '37', '39']
+        }
+    ];
+
+    // 初始化頁面
+    document.addEventListener("DOMContentLoaded", () => {
+        // 設定今日日期
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('match-date').value = today;
+        renderHistoryTable();
+    });
+
+    function strToArray(str) {
+        if (!str) return [];
+        return str.trim().split(/[\s,]+/).filter(n => n.length > 0).map(n => n.padStart(2, '0'));
     }
 
-    function closeModalOnOverlay(e) {
-        if (e.target.classList.contains('modal-overlay')) closeProfitModal();
+    function addMatch() {
+        const date = document.getElementById('match-date').value;
+        const aiA = strToArray(document.getElementById('ai-a').value);
+        const aiB = strToArray(document.getElementById('ai-b').value);
+        const myA = strToArray(document.getElementById('my-a').value);
+        const myB = strToArray(document.getElementById('my-b').value);
+        const draw = strToArray(document.getElementById('draw-balls').value);
+
+        if (!date) { alert("請選擇日期！"); return; }
+        if (aiA.length !== 2 || myA.length !== 2) { alert("A區必須剛好填寫 2 顆號碼！"); return; }
+        if (aiB.length !== 3 || myB.length !== 3) { alert("B區必須剛好填寫 3 顆號碼！"); return; }
+
+        const newMatch = {
+            id: Date.now(),
+            date: date,
+            ai: { a: aiA, b: aiB },
+            my: { a: myA, b: myB },
+            draw: draw
+        };
+
+        matchHistory.unshift(newMatch); // 加入到最前面
+        renderHistoryTable();
+        
+        // 清空輸入框
+        document.getElementById('ai-a').value = '';
+        document.getElementById('ai-b').value = '';
+        document.getElementById('my-a').value = '';
+        document.getElementById('my-b').value = '';
+        document.getElementById('draw-balls').value = '';
     }
+
+    function deleteMatch(id) {
+        if (confirm("確定要刪除這筆紀錄嗎？")) {
+            matchHistory = matchHistory.filter(m => m.id !== id);
+            renderHistoryTable();
+        }
+    }
+
+    // 生成單個 A/B 區塊的 HTML
+    function buildPredHtml(predArr, drawArr, zoneName, zoneCount) {
+        let hits = predArr.filter(n => drawArr.includes(n)).length;
+        let html = `<div class="pred-box">`;
+        html += `<div class="pred-title"><span>[${zoneName}區] ${zoneCount}碼</span> <span style="color:${hits>0?'#ef4444':'#94a3b8'}">中 ${hits} 顆</span></div>`;
+        html += `<div class="num-container">`;
+        predArr.forEach(n => {
+            let isHit = drawArr.includes(n);
+            html += `<div class="num-ball small ${isHit ? 'hit' : ''}">${n}</div>`;
+        });
+        html += `</div></div>`;
+        return { html, hits };
+    }
+
+    function renderHistoryTable() {
+        const tbody = document.getElementById('history-tbody');
+        tbody.innerHTML = '';
+
+        matchHistory.forEach(match => {
+            const hasDraw = match.draw.length > 0;
+            
+            // AI 預測渲染與計算
+            let aiAResult = buildPredHtml(match.ai.a, match.draw, 'A', 2);
+            let aiBResult = buildPredHtml(match.ai.b, match.draw, 'B', 3);
+            let aiTotalHits = aiAResult.hits + aiBResult.hits;
+            
+            // My 預測渲染與計算
+            let myAResult = buildPredHtml(match.my.a, match.draw, 'A', 2);
+            let myBResult = buildPredHtml(match.my.b, match.draw, 'B', 3);
+            let myTotalHits = myAResult.hits + myBResult.hits;
+
+            // 開獎號碼渲染
+            let drawHtml = `<div class="num-container" style="justify-content: center;">`;
+            if (hasDraw) {
+                match.draw.forEach(n => { drawHtml += `<div class="num-ball small draw">${n}</div>`; });
+            } else {
+                drawHtml += `<span style="color:#94a3b8; font-size:12px; font-weight:bold;">尚未開獎</span>`;
+            }
+            drawHtml += `</div>`;
+
+            // 判斷霸主
+            let winnerHtml = `<span class="winner-badge badge-pending">待開獎</span>`;
+            if (hasDraw) {
+                if (aiTotalHits > myTotalHits) winnerHtml = `<span class="winner-badge badge-ai">🤖 AI 勝</span>`;
+                else if (myTotalHits > aiTotalHits) winnerHtml = `<span class="winner-badge badge-my">🧑 我 勝</span>`;
+                else winnerHtml = `<span class="winner-badge badge-tie">🤝 平手</span>`;
+            }
+
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td data-label="📅 日期" style="font-family: monospace; font-weight: bold; color: #475569;">${match.date}</td>
+                <td data-label="🤖 AI 預測">
+                    ${aiAResult.html}
+                    ${aiBResult.html}
+                </td>
+                <td data-label="🧑 我的預測">
+                    ${myAResult.html}
+                    ${myBResult.html}
+                </td>
+                <td data-label="📺 今日開獎">${drawHtml}</td>
+                <td data-label="🏆 單期霸主">${winnerHtml}</td>
+                <td data-label="⚙️ 操作">
+                    <button class="action-btn delete-btn" onclick="deleteMatch(${match.id})">刪除</button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    // ==========================================
+    // 2. Modal 與 階梯倍投追蹤邏輯 (A/B雙軌)
+    // ==========================================
+
+    function openProfitModal() {
+        document.getElementById('profit-modal').style.display = 'flex';
+        generatePlan('A', 2); 
+        generatePlan('B', 3); 
+    }
+    
+    function closeProfitModal() { document.getElementById('profit-modal').style.display = 'none'; }
+    function closeModalOnOverlay(e) { if (e.target.classList.contains('modal-overlay')) closeProfitModal(); }
 
     function switchModalTab(tabId) {
         document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
         document.querySelectorAll('.tab-content').forEach(content => content.style.display = 'none');
-        
         document.getElementById(`tab-btn-${tabId}`).classList.add('active');
         document.getElementById(`tab-content-${tabId}`).style.display = 'block';
-
         if (tabId === 'area-a') generatePlan('A', 2);
         if (tabId === 'area-b') generatePlan('B', 3);
         if (tabId === 'tier-track') updateTrackerUI();
     }
 
-    // --- 核心變數與倍投演算法 ---
-    // 儲存 A區與 B區 的實戰追蹤狀態 (accumulatedLoss 為正代表虧損，為負代表淨賺)
     let trackerState = {
         'A': { balls: 2, currentStep: 1, accumulatedLoss: 0 },
         'B': { balls: 3, currentStep: 1, accumulatedLoss: 0 }
     };
     let currentTrackArea = 'A';
 
-    // 計算回本並獲利所需的車數
     function calculateRequiredUnit(balls, accLoss) {
         const costPerCar = parseFloat(document.getElementById('global-cost').value);
         const rewardPerCar = parseFloat(document.getElementById('global-reward').value);
         const targetProfit = parseFloat(document.getElementById('global-target').value);
-
         const netProfitPerUnit = rewardPerCar - (costPerCar * balls);
         
-        if (netProfitPerUnit <= 0) {
-            alert(`警告：當前賠率設定下，${balls}碼全車中1碼的淨利為負或零，無法使用倍投回本！請檢查成本與獎金設定。`);
-            return 0;
-        }
-
+        if (netProfitPerUnit <= 0) return 0;
         let required = (accLoss + targetProfit) / netProfitPerUnit;
-        
-        // 台灣全車習慣進位到小數點後兩位，此處取小數後二位無條件進位
         required = Math.ceil(required * 100) / 100;
-        return required > 0 ? required : 0.01; // 最低起步 0.01 車
+        return required > 0 ? required : 0.01;
     }
 
-    // --- 靜態規劃表生成 ---
     function generatePlan(area, balls) {
         const days = parseInt(document.getElementById(`calc-${area.toLowerCase()}-days`).value);
         let currentUnit = parseFloat(document.getElementById(`calc-${area.toLowerCase()}-first`).value);
@@ -611,25 +563,21 @@
             let win1Net = win1Reward - accCost;
 
             let tr = document.createElement('tr');
-            
-            // 處理手機版的 data-label 顯示
-            let td1 = `<td data-label="期數">第 ${i} 期</td>`;
-            let td2 = `<td data-label="當期車數" class="text-purple">${currentUnit.toFixed(2)} 車</td>`;
-            let td3 = `<td data-label="當期成本">${stepCost.toFixed(0)}</td>`;
-            let td4 = `<td data-label="累計成本">${accCost.toFixed(0)}</td>`;
-            let td5 = `<td data-label="中1碼獎金" class="text-gold">${win1Reward.toFixed(0)}</td>`;
-            let td6 = `<td data-label="中1碼淨利" class="${win1Net >= 0 ? 'text-green' : 'highlight'}">${win1Net.toFixed(0)}</td>`;
-            
-            tr.innerHTML = td1 + td2 + td3 + td4 + td5 + td6;
+            tr.innerHTML = `
+                <td data-label="期數">第 ${i} 期</td>
+                <td data-label="當期車數" class="text-purple">${currentUnit.toFixed(2)} 車</td>
+                <td data-label="當期成本">${stepCost.toFixed(0)}</td>
+                <td data-label="累計成本">${accCost.toFixed(0)}</td>
+                <td data-label="中1碼獎金" class="text-gold">${win1Reward.toFixed(0)}</td>
+                <td data-label="中1碼淨利" class="${win1Net >= 0 ? 'text-green' : 'highlight'}">${win1Net.toFixed(0)}</td>
+            `;
             tbody.appendChild(tr);
 
-            // 計算下一期的車數以確保獲利
             currentUnit = calculateRequiredUnit(balls, accCost);
-            if (currentUnit === 0) break; // 避免負淨利無限迴圈
+            if (currentUnit === 0) break; 
         }
     }
 
-    // --- 實戰紀律追蹤表邏輯 ---
     function switchTracker(area) {
         document.querySelectorAll('.sub-tab-btn').forEach(btn => btn.classList.remove('active'));
         document.getElementById(`track-btn-${area.toLowerCase()}`).classList.add('active');
@@ -641,14 +589,10 @@
         const state = trackerState[currentTrackArea];
         const costPerCar = parseFloat(document.getElementById('global-cost').value);
         
-        document.getElementById('tracker-title-text').innerText = 
-            currentTrackArea === 'A' ? '🌟 A區 (2碼) 實戰紀律追蹤' : '🎯 B區 (3碼) 實戰紀律追蹤';
-        
+        document.getElementById('tracker-title-text').innerText = currentTrackArea === 'A' ? '🌟 A區 (2碼) 實戰紀律追蹤' : '🎯 B區 (3碼) 實戰紀律追蹤';
         document.getElementById('tracker-step-badge').innerText = `第 ${state.currentStep} 階`;
         
         let plElement = document.getElementById('tracker-pl');
-        
-        // 若 accumulatedLoss 為負數，代表淨賺 (Win)
         if (state.accumulatedLoss < 0) {
             plElement.innerText = "+" + Math.abs(state.accumulatedLoss).toFixed(0);
             plElement.className = 'val win';
@@ -660,11 +604,7 @@
             plElement.className = 'val';
         }
 
-        // 如果目前是賺錢或歸零狀態(accumulatedLoss <= 0)，建議車數就用初始設定值
-        let nextUnit = state.accumulatedLoss <= 0 ? 
-            parseFloat(document.getElementById(`calc-${currentTrackArea.toLowerCase()}-first`).value) : 
-            calculateRequiredUnit(state.balls, state.accumulatedLoss);
-            
+        let nextUnit = state.accumulatedLoss <= 0 ? parseFloat(document.getElementById(`calc-${currentTrackArea.toLowerCase()}-first`).value) : calculateRequiredUnit(state.balls, state.accumulatedLoss);
         let nextCost = nextUnit * state.balls * costPerCar;
 
         document.getElementById('tracker-next-unit').innerText = nextUnit.toFixed(2) + ' 車';
@@ -676,39 +616,26 @@
         const costPerCar = parseFloat(document.getElementById('global-cost').value);
         const rewardPerCar = parseFloat(document.getElementById('global-reward').value);
         
-        // 取得當前該下的車數
-        let currentUnit = state.accumulatedLoss <= 0 ? 
-            parseFloat(document.getElementById(`calc-${currentTrackArea.toLowerCase()}-first`).value) : 
-            calculateRequiredUnit(state.balls, state.accumulatedLoss);
-
+        let currentUnit = state.accumulatedLoss <= 0 ? parseFloat(document.getElementById(`calc-${currentTrackArea.toLowerCase()}-first`).value) : calculateRequiredUnit(state.balls, state.accumulatedLoss);
         let stepCost = currentUnit * state.balls * costPerCar;
 
         if (hitCount === 0) {
-            // 全倒：累加虧損，進入下一階
             state.accumulatedLoss += stepCost;
             state.currentStep += 1;
         } else {
-            // 中獎：計算獎金並扣除成本與歷史虧損
             let reward = currentUnit * hitCount * rewardPerCar;
-            let netProfit = reward - stepCost - state.accumulatedLoss; // 本輪淨賺(含救回的虧損)
-            
-            alert(`🎉 恭喜收米！\n本期中 ${hitCount} 碼\n本期總獎金：NT$ ${reward.toFixed(0)}\n扣除歷史虧損及成本後，實賺淨利：NT$ ${netProfit.toFixed(0)}\n\n(系統不再自動清零，您可隨時手動點擊「重置狀態」重新開始)`);
-            
-            // 將盈餘更新到 accumulatedLoss (虧損變小或變成負數即為獲利)
-            state.accumulatedLoss += stepCost; // 先扣掉本期支出的成本
-            state.accumulatedLoss -= reward;   // 再加上贏回來的獎金
-            state.currentStep += 1;            // 讓階梯照樣推進，直到使用者自己想重置
+            let netProfit = reward - stepCost - state.accumulatedLoss;
+            alert(`🎉 恭喜收米！\n本期總獎金：NT$ ${reward.toFixed(0)}\n實賺淨利：NT$ ${netProfit.toFixed(0)}\n(利潤已寫入累計，請手動重置進度)`);
+            state.accumulatedLoss += stepCost; 
+            state.accumulatedLoss -= reward;   
+            state.currentStep += 1;            
         }
         updateTrackerUI();
     }
 
     function resetTracker() {
-        if(confirm(`確定要手動重置 ${currentTrackArea}區 的實戰進度嗎？\n(盈虧紀錄與期數都會清零，回歸第 1 階)`)) {
-            trackerState[currentTrackArea] = { 
-                balls: currentTrackArea === 'A' ? 2 : 3, 
-                currentStep: 1, 
-                accumulatedLoss: 0 
-            };
+        if(confirm(`確定要手動重置 ${currentTrackArea}區 的實戰進度嗎？\n(盈虧紀錄將清零，回歸第 1 階)`)) {
+            trackerState[currentTrackArea] = { balls: currentTrackArea === 'A' ? 2 : 3, currentStep: 1, accumulatedLoss: 0 };
             updateTrackerUI();
         }
     }
