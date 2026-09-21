@@ -174,7 +174,8 @@
             </div>
             <div class="sop-step">
                 <h4>STEP 2：全盤雷達掃描</h4>
-                回到本系統，點擊下方對應的 <b>「展開全盤分級名冊」</b>，讓 18 宗師為 39 顆號碼打分。
+                回到本系統，點擊下方對應的 <b>「展開全盤分級名冊」</b>，讓 18 宗師為 39 顆號碼打分。<br>
+                <span style="color:#fca5a5; font-size:11px;">※已導入「AI 動能透支熔斷」，10期內頻繁開出號碼將被強制濾除。</span>
             </div>
             <div class="sop-step">
                 <h4>STEP 3：配合資金策略重押</h4>
@@ -321,6 +322,7 @@
     <div class="guide-box">
         <h3 onclick="toggleDoc()">📖 18 宗師量化矩陣運算白皮書 (點擊展開/收合) <span>▼</span></h3>
         <div class="guide-content" id="doc-content">
+            <!-- 說明書內容維持原樣... -->
             <div class="doc-section">
                 <h4>🏛️ 華爾街 8 大量化風控模型 (西方體系)</h4>
                 <div class="doc-grid">
@@ -406,9 +408,9 @@
                         <div class="desc">正偏態代表近期爆發力度遠超波段均值。</div>
                     </div>
                     <div class="doc-card">
-                        <div class="title">⑯ 馬可夫歷史動能 (過熱熔斷)</div>
-                        <div class="formula">HotState Prob Check / Circuit Breaker</div>
-                        <div class="desc">以歷史真實數據檢測「過熱連開」的延續率。若近5期開出3次以上則直接啟動強制冷卻熔斷機制。</div>
+                        <div class="title">⑯ 馬可夫歷史動能 (過熱與透支熔斷)</div>
+                        <div class="formula">Circuit Breaker (Hits10 >=4 or Hits5 >=3)</div>
+                        <div class="desc">導入 AI 強化透支防禦，10期內頻繁開出4次者直接打入 C 級冷宮。</div>
                     </div>
                     <div class="doc-card">
                         <div class="title">⑰ 深度神經擬合 (複合指標)</div>
@@ -634,10 +636,13 @@
             (m13 * 0.06) + (m14 * 0.04) + (m15 * 0.04) + (m16 * 0.04) + 
             (m17 * 0.05) + (m18 * 0.04);
 
-        if (hits5 >= 3) {
-            finalScore = Math.min(finalScore, 35); 
+        // 🛑 AI 強化版極端過熱與透支防禦機制 (解決19號連開4次還推薦的盲點)
+        if (hits10 >= 4) {
+            finalScore = Math.min(finalScore, 20); // 🚨 10期內開4次，動能絕對透支，強制壓低分數打入C級冷宮
+        } else if (hits5 >= 3) {
+            finalScore = Math.min(finalScore, 30); // 🚨 5期內開3次，短線極端過熱，強制冷卻
         } else if (hits5 === 2 && currentMiss === 0) {
-            finalScore = finalScore - 15; 
+            finalScore = finalScore - 20; // 剛連莊兩次，進入疲軟期，扣 20 分
         }
 
         return { 
@@ -749,7 +754,7 @@
             <div class="giant-card ${c13}"><div class="g-title">⑬卜瓦松反轉</div><div class="g-val">${st.m13.toFixed(0)} 分</div></div>
             <div class="giant-card ${c14}"><div class="g-title">⑭費波那契數列</div><div class="g-val">${st.m14.toFixed(0)} 分</div></div>
             <div class="giant-card ${c15}"><div class="g-title">⑮高斯回歸偏態</div><div class="g-val">${st.m15.toFixed(0)} 分</div></div>
-            <div class="giant-card ${c16}"><div class="g-title">⑯馬可夫歷史狀態</div><div class="g-val">${st.m16.toFixed(0)} 分</div></div>
+            <div class="giant-card ${c16}"><div class="g-title">⑯過熱熔斷機制</div><div class="g-val">${st.m16.toFixed(0)} 分</div></div>
             <div class="giant-card ${c17}"><div class="g-title">⑰深度神經擬合</div><div class="g-val">${st.m17.toFixed(0)} 分</div></div>
             <div class="giant-card ${c18}"><div class="g-title">⑱一目均衡突破</div><div class="g-val">${st.m18.toFixed(0)} 分</div></div>
         `;
