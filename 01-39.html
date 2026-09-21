@@ -57,7 +57,7 @@
         .form-row { display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; }
         @media (min-width: 768px) { .form-row { flex-direction: row; } }
         .form-group label { display: block; font-size: 12px; font-weight: 900; color: #334155; margin-bottom: 4px; }
-        .form-group input { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; font-weight: bold; outline: none; transition: 0.2s; background: #f8fafc; text-align: center; }
+        .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; font-weight: bold; outline: none; transition: 0.2s; background: #f8fafc; text-align: center; }
         
         .btn-main { border: none; padding: 12px; font-size: 14px; font-weight: 900; border-radius: 8px; cursor: pointer; width: 100%; transition: 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.1); color: white; }
         .btn-main:hover { opacity: 0.9; transform: translateY(-1px); }
@@ -99,12 +99,18 @@
         .roster-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 14px; }
         @media (min-width: 768px) { .roster-grid { grid-template-columns: repeat(2, 1fr); } }
         .roster-card { border-radius: 8px; padding: 12px; border: 1px solid #e2e8f0; background: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+        .roster-card h4 { font-size: 14px; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 2px solid #f1f5f9; font-weight:900; text-align:center;}
+        .roster-card.s-class h4 { color: #dc2626; border-color: #fecaca; }
+        .roster-card.a-class h4 { color: #059669; border-color: #a7f3d0; }
+        .roster-card.b-class h4 { color: #64748b; border-color: #cbd5e1; }
+        .roster-card.c-class h4 { color: #334155; border-color: #e2e8f0; }
         
         .ball-badge-wrap { display: flex; flex-wrap: wrap; gap: 6px; justify-content:center;}
-        .ball-badge { display: flex; flex-direction: column; align-items: center; background: #f8fafc; border: 1px solid #cbd5e1; padding: 4px 8px; border-radius: 6px; min-width: 48px; cursor:pointer; transition:0.2s;}
+        .ball-badge { display: flex; flex-direction: column; align-items: center; background: #f8fafc; border: 1px solid #cbd5e1; padding: 4px 8px; border-radius: 6px; min-width: 48px; cursor:pointer; transition:0.2s; position:relative;}
         .ball-badge:hover { transform:scale(1.1); background:#fff; border-color:var(--primary-color); box-shadow: 0 2px 6px rgba(0,0,0,0.1); z-index: 10;}
         .ball-badge .b-num { font-size: 14px; font-weight: 900; color: #0f172a; font-family: monospace;}
         .ball-badge .b-score { font-size: 9px; color: #64748b; font-weight:bold; margin-top:2px;}
+        .boost-icon { position:absolute; top:-6px; right:-6px; font-size:12px; }
 
         /* S 級與 A 級視覺強化 */
         .s-class .ball-badge { border-color: #f87171; background: #fef2f2; box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2); animation: pulse-soft 2s infinite;}
@@ -144,8 +150,6 @@
         .doc-card .formula { font-family: monospace; color: #a7f3d0; font-size: 11px; margin-bottom: 6px; background: rgba(0,0,0,0.3); padding: 4px; border-radius: 4px; border-left: 2px solid #10b981; }
         .doc-card .desc { font-size: 12px; color: #94a3b8; line-height: 1.5; }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
-
         #global-loader { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,23,42,0.95); z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center; transition: opacity 0.3s; }
         .loader-spinner { width: 50px; height: 50px; border: 4px solid #334155; border-top-color: #fbbf24; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom:16px;}
         @keyframes spin { to { transform: rotate(360deg); } }
@@ -170,12 +174,11 @@
         <div class="sop-step-container">
             <div class="sop-step">
                 <h4>STEP 1：確認大盤爆發區</h4>
-                去「同區極限戰情室」看今晚預測爆發率最高的是哪一區 (例如：第 1 區 01-09)。
+                先去「同區極限戰情室」看今晚預測爆發率最高的是哪一區 (例如：第 2 區 10-19)。
             </div>
             <div class="sop-step">
-                <h4>STEP 2：全盤雷達掃描</h4>
-                回到本系統，點擊下方對應的 <b>「展開全盤分級名冊」</b>，讓 18 宗師為 39 顆號碼打分。<br>
-                <span style="color:#fca5a5; font-size:11px;">※已導入「AI 動能透支熔斷」，10期內頻繁開出號碼將被強制濾除。</span>
+                <h4>STEP 2：鎖定戰區並雷達掃描</h4>
+                在下方下拉選單設定你的<b>「戰情室預測爆發區」</b>，再點擊「展開名冊」，系統會強制將該區精銳推上 S 級主將！
             </div>
             <div class="sop-step">
                 <h4>STEP 3：配合資金策略重押</h4>
@@ -192,6 +195,7 @@
             📊 539 專屬量化操盤區
         </h2>
 
+        <!-- 🔍 539 單號深度查詢面板 -->
         <div class="panel" style="border-color: var(--orange-color);">
             <div class="panel-title" style="color: var(--orange-color);">🎯 539 專屬單碼深度透視查詢</div>
             <div class="form-row">
@@ -203,12 +207,14 @@
             </div>
         </div>
 
+        <!-- 539 單碼查詢結果顯示區 (完整保留) -->
         <div id="sb-result-container-539" style="display:none;">
             <div class="panel">
                 <div class="sb-dash-header">
                     <div class="sb-ball-circle" id="sb-title-ball-539" style="background:var(--orange-color);">07</div>
                     <div>539 大數據動能與 18 宗師真實運算矩陣</div>
                 </div>
+
                 <div class="sb-prob-grid">
                     <div class="sb-prob-card"><h4>歷史總均線</h4><p id="sb-p-all-539">--%</p></div>
                     <div class="sb-prob-card"><h4>生存 PR 值</h4><p id="sb-p-pr-539">--%</p></div>
@@ -222,8 +228,10 @@
                         <h4 style="color:#0f172a; font-size:14px; margin:0; font-weight:900;">🤖 539 - 18 大宗師系統矩陣</h4>
                         <span style="font-size:11px; font-weight:bold; color:#64748b;">(🟢 綠色：優良 &nbsp; 🔴 紅色：危險)</span>
                     </div>
+                    
                     <div class="giant-grid" id="sb-giants-container-539"></div>
                     <div id="sb-final-verdict-539" style="margin-top:20px;"></div>
+
                     <div style="margin-top:20px; font-size:12px; color:#475569; font-weight:bold; display:flex; justify-content:space-between; border-top:1px dashed #cbd5e1; padding-top:12px;">
                         <span>📈 539 近 10 次遺漏值微型走勢</span>
                         <span id="sb-max-miss-info-539" style="font-size:10px; color:#dc2626;"></span>
@@ -233,11 +241,25 @@
             </div>
         </div>
 
+        <!-- 539 全盤分級控制面板 -->
         <div class="panel">
             <div class="panel-title">⚙️ 執行 539 全盤 18 宗師分級與近期走勢</div>
-            <button class="btn-main" onclick="executeSuperClassification('539-9000')" style="background:var(--orange-color);">🔮 展開 539 全盤分級名冊</button>
+            
+            <div class="form-group" style="margin-bottom: 16px;">
+                <label style="color:#b91c1c; font-size:14px;">🎯 戰略第一步：請鎖定今日「戰情室」預測的爆發區間</label>
+                <select id="zone-select-539" style="color:#0f172a;">
+                    <option value="0">🤖 自由搏擊 (不鎖定分區，讓18宗師自行挑選)</option>
+                    <option value="1">🔥 鎖定【第 1 區】(01~09) 強制加權重壓</option>
+                    <option value="2">🔥 鎖定【第 2 區】(10~19) 強制加權重壓</option>
+                    <option value="3">🔥 鎖定【第 3 區】(20~29) 強制加權重壓</option>
+                    <option value="4">🔥 鎖定【第 4 區】(30~39) 強制加權重壓</option>
+                </select>
+            </div>
+            
+            <button class="btn-main" onclick="executeSuperClassification('539-9000')" style="background:var(--orange-color);">🔮 鎖定區間並展開 539 全盤分級名冊</button>
         </div>
 
+        <!-- 539 全盤分級結果展示區 -->
         <div id="super-result-container-539" style="display:none;">
             <div class="panel">
                 <div class="panel-title"><span>📋 539 39碼全盤分級名冊</span><span style="font-size:12px; color:#059669; font-weight:bold;">🟢 實戰選號區</span></div>
@@ -259,6 +281,7 @@
             🚀 天天樂 專屬量化操盤區
         </h2>
 
+        <!-- 🔍 天天樂 單號深度查詢面板 -->
         <div class="panel" style="border-color: var(--tt-color);">
             <div class="panel-title" style="color: var(--tt-color);">🎯 天天樂 專屬單碼深度透視查詢</div>
             <div class="form-row">
@@ -270,12 +293,14 @@
             </div>
         </div>
 
+        <!-- 天天樂 單碼查詢結果顯示區 (完整保留) -->
         <div id="sb-result-container-tt" style="display:none;">
             <div class="panel">
                 <div class="sb-dash-header">
                     <div class="sb-ball-circle" id="sb-title-ball-tt" style="background:var(--tt-color);">15</div>
                     <div>天天樂 大數據動能與 18 宗師真實運算矩陣</div>
                 </div>
+
                 <div class="sb-prob-grid">
                     <div class="sb-prob-card"><h4>歷史總均線</h4><p id="sb-p-all-tt">--%</p></div>
                     <div class="sb-prob-card"><h4>生存 PR 值</h4><p id="sb-p-pr-tt">--%</p></div>
@@ -289,8 +314,10 @@
                         <h4 style="color:#0f172a; font-size:14px; margin:0; font-weight:900;">🤖 天天樂 - 18 大宗師系統矩陣</h4>
                         <span style="font-size:11px; font-weight:bold; color:#64748b;">(🟢 綠色：優良 &nbsp; 🔴 紅色：危險)</span>
                     </div>
+                    
                     <div class="giant-grid" id="sb-giants-container-tt"></div>
                     <div id="sb-final-verdict-tt" style="margin-top:20px;"></div>
+
                     <div style="margin-top:20px; font-size:12px; color:#475569; font-weight:bold; display:flex; justify-content:space-between; border-top:1px dashed #cbd5e1; padding-top:12px;">
                         <span>📈 天天樂 近 10 次遺漏值微型走勢</span>
                         <span id="sb-max-miss-info-tt" style="font-size:10px; color:#dc2626;"></span>
@@ -300,11 +327,25 @@
             </div>
         </div>
 
+        <!-- 天天樂 全盤分級控制面板 -->
         <div class="panel">
             <div class="panel-title">⚙️ 執行天天樂全盤 18 宗師分級與近期走勢</div>
-            <button class="btn-main" onclick="executeSuperClassification('tt-9000')" style="background:var(--tt-color);">🔮 展開天天樂全盤分級名冊</button>
+            
+            <div class="form-group" style="margin-bottom: 16px;">
+                <label style="color:#b91c1c; font-size:14px;">🎯 戰略第一步：請鎖定今日「戰情室」預測的爆發區間</label>
+                <select id="zone-select-tt" style="color:#0f172a;">
+                    <option value="0">🤖 自由搏擊 (不鎖定分區，讓18宗師自行挑選)</option>
+                    <option value="1">🔥 鎖定【第 1 區】(01~09) 強制加權重壓</option>
+                    <option value="2">🔥 鎖定【第 2 區】(10~19) 強制加權重壓</option>
+                    <option value="3">🔥 鎖定【第 3 區】(20~29) 強制加權重壓</option>
+                    <option value="4">🔥 鎖定【第 4 區】(30~39) 強制加權重壓</option>
+                </select>
+            </div>
+            
+            <button class="btn-main" onclick="executeSuperClassification('tt-9000')" style="background:var(--tt-color);">🔮 鎖定區間並展開天天樂全盤分級名冊</button>
         </div>
 
+        <!-- 天天樂 全盤分級結果展示區 -->
         <div id="super-result-container-tt" style="display:none;">
             <div class="panel">
                 <div class="panel-title"><span>📋 天天樂 39碼全盤分級名冊</span><span style="font-size:12px; color:#059669; font-weight:bold;">🟢 實戰選號區</span></div>
@@ -318,11 +359,10 @@
     </div>
 
 
-    <!-- 📖 18 宗師系統說明書 -->
+    <!-- 📖 18 宗師系統說明書 (完整保留) -->
     <div class="guide-box">
         <h3 onclick="toggleDoc()">📖 18 宗師量化矩陣運算白皮書 (點擊展開/收合) <span>▼</span></h3>
         <div class="guide-content" id="doc-content">
-            <!-- 說明書內容維持原樣... -->
             <div class="doc-section">
                 <h4>🏛️ 華爾街 8 大量化風控模型 (西方體系)</h4>
                 <div class="doc-grid">
@@ -479,7 +519,7 @@
         }
     });
 
-    // 核心 18 宗師演算法引擎
+    // 核心 18 宗師演算法引擎 (完整保留，包含新增的疲勞透支熔斷)
     function compute18Masters(target, data) {
         let N = data.length;
         if(N === 0) return null;
@@ -636,11 +676,11 @@
             (m13 * 0.06) + (m14 * 0.04) + (m15 * 0.04) + (m16 * 0.04) + 
             (m17 * 0.05) + (m18 * 0.04);
 
-        // 🛑 AI 強化版極端過熱與透支防禦機制 (解決19號連開4次還推薦的盲點)
+        // 🛑 AI 強化版極端過熱與透支防禦機制
         if (hits10 >= 4) {
-            finalScore = Math.min(finalScore, 20); // 🚨 10期內開4次，動能絕對透支，強制壓低分數打入C級冷宮
+            finalScore = Math.min(finalScore, 20); // 10期內開4次，動能絕對透支，強制壓低分數打入C級冷宮
         } else if (hits5 >= 3) {
-            finalScore = Math.min(finalScore, 30); // 🚨 5期內開3次，短線極端過熱，強制冷卻
+            finalScore = Math.min(finalScore, 30); // 5期內開3次，短線極端過熱，強制冷卻
         } else if (hits5 === 2 && currentMiss === 0) {
             finalScore = finalScore - 20; // 剛連莊兩次，進入疲軟期，扣 20 分
         }
@@ -652,29 +692,7 @@
         };
     }
 
-    // 更新注碼狀態全域函數
-    window.updateBetState = function(spaceKey, zone, isWin) {
-        let lossKey = `loss_${spaceKey}_${zone}`;
-        let lastCostKey = `lastCost_${spaceKey}_${zone}`;
-        
-        let currentLoss = parseInt(localStorage.getItem(lossKey) || '0');
-        let lastCost = parseInt(localStorage.getItem(lastCostKey) || '0');
-        
-        if (lastCost === 0) {
-            lastCost = (zone === 'S') ? (2755 * 2) : (2755 * 3);
-        }
-
-        if (isWin) {
-            localStorage.setItem(lossKey, '0');
-            alert(`✅ 恭喜！${zone} 區已過關，累積虧損歸零，系統已為您重置回 1 倍注碼。`);
-        } else {
-            localStorage.setItem(lossKey, currentLoss + lastCost);
-            alert(`❌ ${zone} 區昨日未中，已將昨日成本累加至總虧損，系統已自動為您推算出明日必勝平盤倍數！`);
-        }
-        
-        executeSuperClassification(spaceKey);
-    };
-
+    // 單碼掃描查詢 (完整保留，包含巨頭網格與微型圖)
     window.executeSingleBallScan = function(spaceKey) {
         let isTt = spaceKey === 'tt-9000';
         let inputId = isTt ? 'sb-input-ball-tt' : 'sb-input-ball-539';
@@ -814,6 +832,24 @@
         `;
     };
 
+    window.updateBetState = function(spaceKey, zone, isWin) {
+        let lossKey = `loss_${spaceKey}_${zone}`;
+        let lastCostKey = `lastCost_${spaceKey}_${zone}`;
+        let currentLoss = parseInt(localStorage.getItem(lossKey) || '0');
+        let lastCost = parseInt(localStorage.getItem(lastCostKey) || '0');
+        if (lastCost === 0) lastCost = (zone === 'S') ? (2755 * 2) : (2755 * 3);
+
+        if (isWin) {
+            localStorage.setItem(lossKey, '0');
+            alert(`✅ 恭喜！${zone} 區已過關，系統重置回 1 倍注碼。`);
+        } else {
+            localStorage.setItem(lossKey, currentLoss + lastCost);
+            alert(`❌ ${zone} 區昨日未中，成本累加完成，自動推算明日必勝倍數！`);
+        }
+        executeSuperClassification(spaceKey);
+    };
+
+    // 展開名冊 (包含大盤戰區鎖定加權)
     window.executeSuperClassification = function(spaceKey) {
         let isTt = spaceKey === 'tt-9000';
         let suffix = isTt ? 'tt' : '539';
@@ -821,19 +857,35 @@
         let data = [...(spaceData[spaceKey] || [])].sort((a, b) => new Date(b.date) - new Date(a.date));
         if (data.length < 100) return alert("⚠️ 該資料庫數據不足 100 期！");
 
+        // 🎯 獲取使用者在面板上選擇的「戰略鎖定區」
+        let selectedZone = parseInt(document.getElementById(`zone-select-${suffix}`).value);
+
         let allBallScores = [];
         for (let i = 1; i <= 39; i++) {
             let st = compute18Masters(i, data);
             if(!st) continue;
-            allBallScores.push({ ball: i, score: st.finalScore, st });
+            
+            let ballZone = (i <= 9) ? 1 : (i <= 19) ? 2 : (i <= 29) ? 3 : 4;
+            let finalScore = st.finalScore;
+            let isBoosted = false;
+
+            // 🎯 如果該號碼屬於使用者鎖定的戰略大盤區，給予「大盤共振絕對加權」(+35分)
+            if (selectedZone !== 0 && ballZone === selectedZone) {
+                finalScore += 35; 
+                isBoosted = true;
+            }
+
+            allBallScores.push({ ball: i, score: finalScore, isBoosted: isBoosted });
         }
+        
+        // 依照加權後的總分重新排序
         allBallScores.sort((a, b) => b.score - a.score);
 
         let sClass = [], aClass = [], bClass = [], cClass = [];
         
         allBallScores.forEach((item, index) => {
             let ballStr = String(item.ball).padStart(2, '0');
-            let obj = { ball: ballStr, score: item.score.toFixed(1) };
+            let obj = { ball: ballStr, score: item.score.toFixed(1), isBoosted: item.isBoosted };
             
             if (index < 2) sClass.push(obj); 
             else if (index >= 2 && index < 5) aClass.push(obj); 
@@ -841,23 +893,19 @@
             else cClass.push(obj);
         });
 
-        // ----------------------------------------
-        // 💰 資金控管與策略邏輯計算 (精準分區計算)
-        // ----------------------------------------
         let sLoss = parseInt(localStorage.getItem(`loss_${spaceKey}_S`) || '0');
         let aLoss = parseInt(localStorage.getItem(`loss_${spaceKey}_A`) || '0');
         
         let sMaxScore = Math.max(...sClass.map(x => parseFloat(x.score)));
         let aMaxScore = Math.max(...aClass.map(x => parseFloat(x.score)));
         
-        // S區(2顆)單注淨利 = 21200 - (2755 * 2) = 15690
-        // A區(3顆)單注淨利 = 21200 - (2755 * 3) = 12935
         let sNetProfitPerUnit = 21200 - (2755 * 2);
         let aNetProfitPerUnit = 21200 - (2755 * 3);
         
         let calculateMulti = (loss, netPerUnit, maxScore) => {
             let m = Math.floor(loss / netPerUnit) + 1;
-            if (maxScore >= 80) m += 1; 
+            // 如果原本沒有加大盤加權就已經破 80 分，視為極端漂亮牌加碼
+            if (maxScore >= 80 && selectedZone === 0) m += 1; 
             return m;
         };
 
@@ -873,22 +921,18 @@
         let sNet = sPrize - sLoss - sCost;
         let aNet = aPrize - aLoss - aCost;
 
-        // 紀錄本次成本，供明日沒中時累加
         localStorage.setItem(`lastCost_${spaceKey}_S`, sCost);
         localStorage.setItem(`lastCost_${spaceKey}_A`, aCost);
 
-        // ----------------------------------------
-        // 渲染球名單與控制台
-        // ----------------------------------------
         document.getElementById(`super-result-container-${suffix}`).style.display = 'block';
 
         let renderBadge = (item) => `
             <div class="ball-badge" onclick="document.getElementById('sb-input-ball-${suffix}').value='${item.ball}'; executeSingleBallScan('${spaceKey}');">
                 <span class="b-num">${item.ball}</span>
                 <span class="b-score">${item.score}分</span>
+                ${item.isBoosted ? '<span class="boost-icon">🎯</span>' : ''}
             </div>`;
 
-        // 將戰略控制台嵌入至 S 級與 A 級的名冊卡片最上方
         document.getElementById(`roster-grid-content-${suffix}`).innerHTML = `
             <div class="roster-card s-class" style="border-color:#fca5a5; border-width:2px;">
                 ${renderZoneControl('S', sMaxScore, sLoss, sCost, sMulti, sPrize, sNet, spaceKey)}
