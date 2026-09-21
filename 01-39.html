@@ -39,6 +39,18 @@
         .dot { width: 6px; height: 6px; border-radius: 50%; background: #10b981; box-shadow: 0 0 6px #10b981; animation: pulse 2s infinite; }
         @keyframes pulse { 0% { transform: scale(0.9); opacity: 0.7; } 50% { transform: scale(1.1); opacity: 1; } 100% { transform: scale(0.9); opacity: 0.7; } }
 
+        /* 👑 雙系統聯合作戰 SOP 專屬樣式 */
+        .sop-panel {
+            background: linear-gradient(135deg, #1e1b4b, #312e81); color: #f8fafc;
+            padding: 16px; border-radius: 12px; border: 2px solid #a5b4fc; margin-bottom: 20px;
+            box-shadow: 0 8px 20px rgba(49,46,129,0.3);
+        }
+        .sop-title { font-size: 16px; font-weight: 900; color: #a5b4fc; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid rgba(165,180,252,0.3); padding-bottom: 8px; }
+        .sop-step-container { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        @media (min-width: 768px) { .sop-step-container { grid-template-columns: repeat(3, 1fr); } }
+        .sop-step { background: rgba(255,255,255,0.1); padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); font-size: 13px; line-height: 1.6; }
+        .sop-step h4 { color: #fbbf24; font-size: 14px; margin-bottom: 6px; border-bottom: 1px dashed rgba(251,191,36,0.5); padding-bottom: 4px;}
+
         .panel { background: var(--panel-bg); padding: 16px; border-radius: 12px; border: 1px solid var(--panel-border); margin-bottom: 14px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
         .panel-title { font-size: 15px; font-weight: 900; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px; color: var(--text-main); }
 
@@ -96,15 +108,20 @@
         
         .ball-badge-wrap { display: flex; flex-wrap: wrap; gap: 6px; justify-content:center;}
         .ball-badge { display: flex; flex-direction: column; align-items: center; background: #f8fafc; border: 1px solid #cbd5e1; padding: 4px 8px; border-radius: 6px; min-width: 48px; cursor:pointer; transition:0.2s;}
-        .ball-badge:hover { transform:scale(1.1); background:#fff; border-color:var(--primary-color); box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+        .ball-badge:hover { transform:scale(1.1); background:#fff; border-color:var(--primary-color); box-shadow: 0 2px 6px rgba(0,0,0,0.1); z-index: 10;}
         .ball-badge .b-num { font-size: 14px; font-weight: 900; color: #0f172a; font-family: monospace;}
         .ball-badge .b-score { font-size: 9px; color: #64748b; font-weight:bold; margin-top:2px;}
 
-        .s-class .ball-badge { border-color: #fca5a5; background: #fef2f2; }
-        .s-class .ball-badge .b-num { color: #b91c1c; }
+        /* S 級與 C 級視覺強化 */
+        .s-class .ball-badge { border-color: #f87171; background: #fef2f2; box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2); animation: pulse-soft 2s infinite;}
+        .s-class .ball-badge .b-num { color: #b91c1c; font-size: 16px; }
+        @keyframes pulse-soft { 0% { transform: scale(1); } 50% { transform: scale(1.03); } 100% { transform: scale(1); } }
+        
         .a-class .ball-badge { border-color: #6ee7b7; background: #ecfdf5; }
         .a-class .ball-badge .b-num { color: #047857; }
-        .c-class .ball-badge { opacity: 0.6; background:#f1f5f9; border-color:#e2e8f0; }
+        
+        .c-class .ball-badge { opacity: 0.4; filter: grayscale(100%); background:#f1f5f9; border-color:#e2e8f0; }
+        .c-class .ball-badge:hover { opacity: 1; filter: grayscale(0%); }
 
         /* 最近 8 期開獎 */
         .history-grid-4rows { display: grid; grid-template-columns: 1fr; gap: 8px; }
@@ -150,8 +167,28 @@
 <div class="container">
     <header>
         <h1>⚡ 18 宗師東西方合璧 | 終極量化系統</h1>
-        <div class="cloud-badge"><div class="dot"></div> 五三九 & 天天樂 雙軌獨立操盤區</div>
+        <div class="cloud-badge"><div class="dot"></div> 五三九 & 天天樂 單碼透視引擎</div>
     </header>
+
+    <!-- 👑 單碼精準打擊 SOP -->
+    <div class="sop-panel">
+        <div class="sop-title">👑 單碼精準打擊指揮中心 (終極選號 SOP)</div>
+        <div class="sop-step-container">
+            <div class="sop-step">
+                <h4>STEP 1：確認大盤爆發區</h4>
+                去「同區極限戰情室」看今晚預測爆發率最高的是哪一區 (例如：第 1 區 01-09)。
+            </div>
+            <div class="sop-step">
+                <h4>STEP 2：全盤雷達掃描</h4>
+                回到本系統，點擊下方對應的 <b>「展開全盤分級名冊」</b>，讓 18 宗師為 39 顆號碼打分。
+            </div>
+            <div class="sop-step">
+                <h4>STEP 3：無情斬殺與重押</h4>
+                在你的目標區間內，<b style="color:#6ee7b7;">挑選 S 級、A 級的號碼重押</b>。<br>
+                若目標區內有 <b style="color:#fca5a5;">C 級號碼，直接刪除，絕不留情</b>，大幅降低包牌成本！
+            </div>
+        </div>
+    </div>
 
     <!-- ========================================== -->
     <!-- 📊 區塊一：五三九 (539-9000) 獨立操盤區 -->
@@ -216,7 +253,7 @@
         <!-- 539 全盤分級結果展示區 -->
         <div id="super-result-container-539" style="display:none;">
             <div class="panel">
-                <div class="panel-title"><span>📋 539 39碼全盤分級名冊</span><span style="font-size:12px; color:#059669; font-weight:bold;">🟢 實戰放行</span></div>
+                <div class="panel-title"><span>📋 539 39碼全盤分級名冊</span><span style="font-size:12px; color:#059669; font-weight:bold;">🟢 實戰選號區</span></div>
                 <div class="roster-grid" id="roster-grid-content-539"></div>
             </div>
             <div class="panel">
@@ -290,7 +327,7 @@
         <!-- 天天樂 全盤分級結果展示區 -->
         <div id="super-result-container-tt" style="display:none;">
             <div class="panel">
-                <div class="panel-title"><span>📋 天天樂 39碼全盤分級名冊</span><span style="font-size:12px; color:#059669; font-weight:bold;">🟢 實戰放行</span></div>
+                <div class="panel-title"><span>📋 天天樂 39碼全盤分級名冊</span><span style="font-size:12px; color:#059669; font-weight:bold;">🟢 實戰選號區</span></div>
                 <div class="roster-grid" id="roster-grid-content-tt"></div>
             </div>
             <div class="panel">
@@ -777,7 +814,7 @@
             <div class="roster-card s-class"><h4>🔥 S 級 (絕對主將)</h4><div class="ball-badge-wrap">${sClass.map(renderBadge).join('')}</div></div>
             <div class="roster-card a-class"><h4>🟢 A 級 (優質副牌)</h4><div class="ball-badge-wrap">${aClass.map(renderBadge).join('')}</div></div>
             <div class="roster-card b-class"><h4>⚪ B 級 (中性觀望)</h4><div class="ball-badge-wrap">${bClass.map(renderBadge).join('')}</div></div>
-            <div class="roster-card c-class"><h4>🔴 C 級 (強制冷卻)</h4><div class="ball-badge-wrap">${cClass.map(renderBadge).join('')}</div></div>
+            <div class="roster-card c-class"><h4>🔴 C 級 (刪除冷卻)</h4><div class="ball-badge-wrap">${cClass.map(renderBadge).join('')}</div></div>
         `;
 
         let recent8 = data.slice(0, 8);
