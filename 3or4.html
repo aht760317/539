@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>🎯 同區極限偏態戰情室 (量化升級版)</title>
+    <title>🎯 同區極限偏態戰情室 (雙系統聯合作戰版)</title>
     <style>
         :root {
             --bg-color: #f8fafc; 
@@ -28,7 +28,21 @@
             background: linear-gradient(90deg, #ea580c, #dc2626); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             font-weight: 900; margin-bottom: 8px;
         }
-        
+
+        /* 👑 雙系統聯合作戰 SOP 專屬樣式 */
+        .sop-panel {
+            background: linear-gradient(135deg, #0f172a, #1e293b); color: #f8fafc;
+            padding: 18px; border-radius: 12px; border: 2px solid #fbbf24; margin-bottom: 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+        .sop-title { font-size: 18px; font-weight: 900; color: #fbbf24; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid rgba(251,191,36,0.3); padding-bottom: 8px; }
+        .sop-step { background: rgba(255,255,255,0.05); border-left: 4px solid #38bdf8; padding: 12px; border-radius: 6px; margin-bottom: 10px; }
+        .sop-step h4 { color: #38bdf8; font-size: 15px; margin-bottom: 4px; }
+        .sop-step.attack { border-left-color: #fbbf24; }
+        .sop-step.attack h4 { color: #fbbf24; }
+        .sop-step.defend { border-left-color: #f87171; background: rgba(248,113,113,0.05);}
+        .sop-step.defend h4 { color: #fca5a5; }
+
         .panel { background: var(--panel-bg); padding: 16px; border-radius: 12px; border: 2px solid #e2e8f0; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
         .panel-title { font-size: 18px; font-weight: 900; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; border-bottom: 2px solid #f1f5f9; padding-bottom: 10px; }
         
@@ -53,7 +67,7 @@
         .sugg-box li span.del-num { color: #dc2626; font-size: 16px; font-weight: 900; font-family: monospace; }
         
         /* 華爾街量化預測面板樣式 */
-        .quant-panel { background: var(--quant-bg); border-radius: 12px; padding: 16px; color: white; border: 2px solid #334155; position: relative; overflow: hidden; }
+        .quant-panel { background: var(--quant-bg); border-radius: 12px; padding: 16px; color: white; border: 2px solid #334155; position: relative; overflow: hidden; margin-top:16px; }
         .quant-panel::before { content:''; position:absolute; top:0; left:-100%; width:50%; height:100%; background:linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent); animation: scan 3s infinite linear; }
         @keyframes scan { 100% { left: 200%; } }
         .quant-title { font-size: 15px; font-weight: 900; color: #38bdf8; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #334155; padding-bottom: 8px;}
@@ -89,8 +103,41 @@
 <div class="container">
     <header>
         <h1>🎯 同區極限偏態狙擊戰情室</h1>
-        <div style="font-size: 13px; color: #ea580c; font-weight: bold;">(搭載華爾街量化預測演算法)</div>
+        <div style="font-size: 13px; color: #ea580c; font-weight: bold;">(已掛載 6 大華爾街微觀量化模型)</div>
     </header>
+
+    <!-- 👑 雙系統聯合作戰 SOP -->
+    <div class="sop-panel">
+        <div class="sop-title">👑 雙系統聯合作戰指揮中心 (SOP)</div>
+        <p style="font-size:13px; color:#cbd5e1; margin-bottom:12px; font-weight:bold;">
+            要贏大錢的唯一鐵律：【舊系統管資金，新系統管號碼】。請依序執行以下 3 步驟：
+        </p>
+        
+        <div class="sop-step">
+            <h4>STEP 1：看【舊系統】決定「今晚下注量」(宏觀)</h4>
+            <ul style="font-size:13px; color:#94a3b8; padding-left:20px; line-height:1.6;">
+                <li>若亮紅燈 (0倍空手) 👉 <b>大盤太亂，今天嚴格休息不買。</b></li>
+                <li>若亮綠燈 (平推) 👉 <b>用一般注碼進場。</b></li>
+                <li>若亮黃金狙擊 (Z>1.2) 👉 <b>準備放大資金，2倍重擊！</b></li>
+            </ul>
+        </div>
+        
+        <div class="sop-step attack">
+            <h4>STEP 2：看【新系統】決定「今晚打擊區」(微觀)</h4>
+            <ul style="font-size:13px; color:#94a3b8; padding-left:20px; line-height:1.6;">
+                <li>舊系統允許進場後，看下方 <span style="color:#fbbf24;">AI 預測爆發率最高</span> 的那一區。</li>
+                <li>這代表今晚該區極有可能「一口氣開出 3~4 顆」。</li>
+            </ul>
+        </div>
+
+        <div class="sop-step defend">
+            <h4>STEP 3：終極刪牌 / 包牌執行</h4>
+            <ul style="font-size:13px; color:#94a3b8; padding-left:20px; line-height:1.6;">
+                <li><b>打法 A (穩健降成本)：</b> 如果你平常玩 1800 碰/9000 碰，在預測爆發的「目標區」<span style="color:#fca5a5;">一顆都不要刪</span>，去刪其他低機率區的冷號。</li>
+                <li><b>打法 B (暴力極限流)：</b> 針對最高機率的爆發區，直接做「單區互碰」或「拖牌包牌」，博取單區全壘打的超高賠率。</li>
+            </ul>
+        </div>
+    </div>
 
     <!-- ========================================== -->
     <!-- 🟢 今彩 539 面板 -->
@@ -101,16 +148,16 @@
         </div>
         
         <div class="monitor-box">
-            <span style="font-size:15px; font-weight:bold; color:#b45309;">大盤狀態監控</span>
+            <span style="font-size:15px; font-weight:bold; color:#b45309;">單區 >= 3顆 連槓大盤</span>
             <span style="font-size:15px; font-weight:900; color:#d97706; background:#fef9c3; padding:4px 12px; border-radius:20px; border:1px solid #fde047;">
-                連續未出 3顆以上： <span id="bias-consecutive-539" style="font-size:20px; color:#dc2626;">0</span> 期
+                目前連續未出： <span id="bias-consecutive-539" style="font-size:20px; color:#dc2626;">0</span> 期
             </span>
         </div>
 
         <div class="bias-grid">
             <div id="bias-card-a-539" class="bias-card">
-                <h3>策略 A (量化正收益) <span id="bias-badge-a-539" class="bias-badge">觀望中</span></h3>
-                <p style="font-size:13px; color:#64748b; margin-bottom:6px;">條件：連 5 期未出同區 3 顆。<br>打法：<strong style="color:#0f172a;">各區刪1冷號，壓至 756 碰。</strong></p>
+                <h3>防禦策略 (降成本) <span id="bias-badge-a-539" class="bias-badge">觀望中</span></h3>
+                <p style="font-size:13px; color:#64748b; margin-bottom:6px;">條件：連 5 期未出同區 3 顆。<br>建議：<strong style="color:#0f172a;">各區刪1極冷號，壓至 756 碰。</strong></p>
                 <div id="bias-sugg-a-539" class="sugg-box" style="display:none;">
                     <div style="color:#dc2626; font-weight:bold; font-size:14px; margin-bottom:10px;">🔥 達標！建議刪除極端死號：</div>
                     <ul id="bias-list-a-539"></ul>
@@ -118,11 +165,11 @@
             </div>
 
             <div id="bias-card-b-539" class="bias-card">
-                <h3>策略 B (防呆狙擊手) <span id="bias-badge-b-539" class="bias-badge">觀望中</span></h3>
-                <p style="font-size:13px; color:#64748b; margin-bottom:6px;">條件：連 7 期未出同區 3 顆。<br>打法：<strong style="color:#0f172a;">保本防呆，四區 1200 碰全包。</strong></p>
+                <h3>攻擊策略 (防呆包牌) <span id="bias-badge-b-539" class="bias-badge">觀望中</span></h3>
+                <p style="font-size:13px; color:#64748b; margin-bottom:6px;">條件：連 7 期未出同區 3 顆。<br>建議：<strong style="color:#0f172a;">防呆狙擊，四區 1200 碰全包。</strong></p>
                 <div id="bias-sugg-b-539" class="sugg-box" style="display:none; text-align:center;">
                     <div style="font-size:18px; font-weight:900; color:#9333ea; margin-bottom:8px; margin-top:6px;">🎯 狙擊時機已到！</div>
-                    <div style="font-size:13px; color:#475569; font-weight:bold; line-height: 1.5;">今晚不刪牌直接滿注進場，<br>等待爆發，睡覺免煩惱！</div>
+                    <div style="font-size:13px; color:#475569; font-weight:bold; line-height: 1.5;">大盤已達極限！今晚不刪牌直接滿注進場。</div>
                 </div>
             </div>
         </div>
@@ -130,7 +177,7 @@
         <!-- 華爾街量化模組 539 -->
         <div class="quant-panel">
             <div class="quant-title">
-                <span>🤖 AI 華爾街量化預測模型 (次期3~4顆爆發率)</span>
+                <span>🤖 微觀鎖定：次期單區 3~4 顆爆發率預測</span>
             </div>
             <div class="quant-models">
                 <span>均值回歸</span><span>SMA動能</span><span>EWMA衰減</span>
@@ -138,7 +185,7 @@
             </div>
             <div id="quant-bars-539"></div>
             <div class="quant-result">
-                <h4>次期最高機率爆發區域</h4>
+                <h4>🎯 今晚最佳打擊區 (請搭配舊系統資金指引)</h4>
                 <div id="quant-target-539" class="target-zone">計算中...</div>
             </div>
         </div>
@@ -153,16 +200,16 @@
         </div>
         
         <div class="monitor-box">
-            <span style="font-size:15px; font-weight:bold; color:#b45309;">大盤狀態監控</span>
+            <span style="font-size:15px; font-weight:bold; color:#b45309;">單區 >= 3顆 連槓大盤</span>
             <span style="font-size:15px; font-weight:900; color:#d97706; background:#fef9c3; padding:4px 12px; border-radius:20px; border:1px solid #fde047;">
-                連續未出 3顆以上： <span id="bias-consecutive-tt" style="font-size:20px; color:#dc2626;">0</span> 期
+                目前連續未出： <span id="bias-consecutive-tt" style="font-size:20px; color:#dc2626;">0</span> 期
             </span>
         </div>
 
         <div class="bias-grid">
             <div id="bias-card-a-tt" class="bias-card">
-                <h3>策略 A (量化正收益) <span id="bias-badge-a-tt" class="bias-badge">觀望中</span></h3>
-                <p style="font-size:13px; color:#64748b; margin-bottom:6px;">條件：連 5 期未出同區 3 顆。<br>打法：<strong style="color:#0f172a;">各區刪1冷號，壓至 756 碰。</strong></p>
+                <h3>防禦策略 (降成本) <span id="bias-badge-a-tt" class="bias-badge">觀望中</span></h3>
+                <p style="font-size:13px; color:#64748b; margin-bottom:6px;">條件：連 5 期未出同區 3 顆。<br>建議：<strong style="color:#0f172a;">各區刪1極冷號，壓至 756 碰。</strong></p>
                 <div id="bias-sugg-a-tt" class="sugg-box" style="display:none;">
                     <div style="color:#dc2626; font-weight:bold; font-size:14px; margin-bottom:10px;">🔥 達標！建議刪除極端死號：</div>
                     <ul id="bias-list-a-tt"></ul>
@@ -170,11 +217,11 @@
             </div>
 
             <div id="bias-card-b-tt" class="bias-card">
-                <h3>策略 B (防呆狙擊手) <span id="bias-badge-b-tt" class="bias-badge">觀望中</span></h3>
-                <p style="font-size:13px; color:#64748b; margin-bottom:6px;">條件：連 7 期未出同區 3 顆。<br>打法：<strong style="color:#0f172a;">保本防呆，四區 1200 碰全包。</strong></p>
+                <h3>攻擊策略 (防呆包牌) <span id="bias-badge-b-tt" class="bias-badge">觀望中</span></h3>
+                <p style="font-size:13px; color:#64748b; margin-bottom:6px;">條件：連 7 期未出同區 3 顆。<br>建議：<strong style="color:#0f172a;">防呆狙擊，四區 1200 碰全包。</strong></p>
                 <div id="bias-sugg-b-tt" class="sugg-box" style="display:none; text-align:center;">
                     <div style="font-size:18px; font-weight:900; color:#9333ea; margin-bottom:8px; margin-top:6px;">🎯 狙擊時機已到！</div>
-                    <div style="font-size:13px; color:#475569; font-weight:bold; line-height: 1.5;">今晚不刪牌直接滿注進場，<br>等待爆發，睡覺免煩惱！</div>
+                    <div style="font-size:13px; color:#475569; font-weight:bold; line-height: 1.5;">大盤已達極限！今晚不刪牌直接滿注進場。</div>
                 </div>
             </div>
         </div>
@@ -182,7 +229,7 @@
         <!-- 華爾街量化模組 天天樂 -->
         <div class="quant-panel">
             <div class="quant-title">
-                <span>🤖 AI 華爾街量化預測模型 (次期3~4顆爆發率)</span>
+                <span>🤖 微觀鎖定：次期單區 3~4 顆爆發率預測</span>
             </div>
             <div class="quant-models">
                 <span>均值回歸</span><span>SMA動能</span><span>EWMA衰減</span>
@@ -190,7 +237,7 @@
             </div>
             <div id="quant-bars-tt"></div>
             <div class="quant-result">
-                <h4>次期最高機率爆發區域</h4>
+                <h4>🎯 今晚最佳打擊區 (請搭配舊系統資金指引)</h4>
                 <div id="quant-target-tt" class="target-zone">計算中...</div>
             </div>
         </div>
@@ -258,7 +305,7 @@
         let lastSeen = {};
         for(let i=1; i<=39; i++) lastSeen[i] = -1;
 
-        let historicalZones = []; // 為了給量化模型使用，記錄每期各區顆數
+        let historicalZones = []; 
 
         sortedData.forEach((item, index) => {
             let balls = item.draw;
@@ -282,7 +329,6 @@
             }
         });
 
-        // 原本的刪牌邏輯
         const findColdest = (start, end) => {
             let minIdx = Number.MAX_SAFE_INTEGER;
             let target = start;
@@ -309,7 +355,7 @@
 
         if (consecutiveMiss >= 5) {
             cardA.className = "bias-card active-a";
-            badgeA.innerText = "進場時刻";
+            badgeA.innerText = "達標預警";
             suggA.style.display = "block";
             document.getElementById(`bias-list-a-${prefix}`).innerHTML = `
                 <li><span>第1柱 (01-09):</span> <span class="del-num">${String(c1).padStart(2,'0')}</span></li>
@@ -325,7 +371,7 @@
 
         if (consecutiveMiss >= 7) {
             cardB.className = "bias-card active-b";
-            badgeB.innerText = "重擊進場";
+            badgeB.innerText = "重擊時刻";
             suggB.style.display = "block";
         } else {
             cardB.className = "bias-card";
@@ -333,33 +379,27 @@
             suggB.style.display = "none";
         }
 
-        // 執行量化預測模組
         runQuantModel(historicalZones, prefix);
     }
 
-    /* 
-     * 🤖 華爾街 6 大量化模型計算核心 
-     */
     function runQuantModel(history, prefix) {
-        if(history.length < 30) return; // 樣本數過少不計算
+        if(history.length < 30) return;
 
-        let scores = [0, 0, 0, 0]; // 區間1,2,3,4 的綜合得分
-        let recent = history.slice(-50); // 取近50期作為基礎數據集
+        let scores = [0, 0, 0, 0];
+        let recent = history.slice(-50);
         
-        // 1. 均值回歸 (Mean Reversion) - 抓近期最冷，準備反彈
+        // 1. 均值回歸
         let totalCount = [0,0,0,0];
         recent.forEach(draw => { draw.forEach((val, i) => totalCount[i] += val); });
-        let expected = (50 * 5) / 4; // 預期每區均值
-        for(let i=0; i<4; i++) {
-            scores[i] += (expected - totalCount[i]) * 1.5; // 低於均值加分，高於扣分
-        }
+        let expected = (50 * 5) / 4; 
+        for(let i=0; i<4; i++) scores[i] += (expected - totalCount[i]) * 1.5; 
 
-        // 2. SMA 動能 (Simple Moving Average) - 抓近5期正在發熱的區間
+        // 2. SMA 動能
         let sma5 = [0,0,0,0];
         history.slice(-5).forEach(draw => { draw.forEach((val, i) => sma5[i] += val); });
         for(let i=0; i<4; i++) scores[i] += sma5[i] * 2.0;
 
-        // 3. EWMA 指數加權衰減 - 越近期的影響力越大
+        // 3. EWMA 指數加權
         let ewma = [0,0,0,0];
         let alpha = 0.2;
         recent.forEach((draw) => {
@@ -369,18 +409,17 @@
         });
         for(let i=0; i<4; i++) scores[i] += (ewma[i] * 10);
 
-        // 4. 布林通道擠壓 (Volatility Squeeze) - 抓沉寂已久準備爆發的區塊
+        // 4. 布林擠壓
         let variance = [0,0,0,0];
         for(let i=0; i<4; i++) {
             let mean = totalCount[i] / 50;
             let sumSq = 0;
             recent.forEach(draw => { sumSq += Math.pow(draw[i] - mean, 2); });
             variance[i] = sumSq / 50;
-            // 變異數越小(擠壓)，未來爆發機率越高 (反向加分)
             scores[i] += (2 - variance[i]) * 5; 
         }
 
-        // 5. 馬可夫轉移矩陣 (Markov Chain) - 依據最新一期狀態，推測下一期
+        // 5. 馬可夫轉移
         let lastDraw = history[history.length - 1];
         let hotZoneLast = lastDraw.indexOf(Math.max(...lastDraw)); 
         let transitionCount = [0,0,0,0];
@@ -393,30 +432,24 @@
         }
         for(let i=0; i<4; i++) scores[i] += (transitionCount[i] * 0.5);
 
-        // 6. 泊松分佈機率 (Poisson Probability proxy) - 發生 >=3 顆的頻率權重
+        // 6. 泊松機率加成
         let hit3Count = [0,0,0,0];
         recent.forEach(draw => {
             for(let i=0; i<4; i++) if(draw[i] >= 3) hit3Count[i]++;
         });
-        for(let i=0; i<4; i++) {
-            // 歷史容易出3顆的區，給予加成
-            scores[i] += (hit3Count[i] * 2);
-        }
+        for(let i=0; i<4; i++) scores[i] += (hit3Count[i] * 2);
 
-        // 綜合運算與正規化 (0~100%)
+        // 正規化
         let minScore = Math.min(...scores);
-        // 修正負數
         for(let i=0; i<4; i++) scores[i] = scores[i] - minScore + 10; 
         
         let sumScore = scores.reduce((a,b)=>a+b, 0);
         let finalPercentages = scores.map(s => ((s / sumScore) * 100).toFixed(1));
 
-        // 尋找最高分區域
         let maxIndex = finalPercentages.indexOf(Math.max(...finalPercentages).toFixed(1));
-        let zoneNames = ["第一區 (01-09)", "第二區 (10-19)", "第三區 (20-29)", "第四區 (30-39)"];
-        let targetText = `${zoneNames[maxIndex]} <br><span style="font-size:14px; color:#94a3b8;">預估爆發率: <span style="color:#fbbf24;">${finalPercentages[maxIndex]}%</span></span>`;
+        let zoneNames = ["第 1 區 (01-09)", "第 2 區 (10-19)", "第 3 區 (20-29)", "第 4 區 (30-39)"];
+        let targetText = `${zoneNames[maxIndex]} <br><span style="font-size:14px; color:#94a3b8;">預估強勢爆發率: <span style="color:#fbbf24;">${finalPercentages[maxIndex]}%</span></span>`;
 
-        // 渲染長條圖
         let barsHtml = '';
         for(let i=0; i<4; i++) {
             let isMax = (i === maxIndex);
