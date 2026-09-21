@@ -98,13 +98,7 @@
         /* 名冊列表樣式 */
         .roster-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 14px; }
         @media (min-width: 768px) { .roster-grid { grid-template-columns: repeat(2, 1fr); } }
-        @media (min-width: 1024px) { .roster-grid { grid-template-columns: repeat(4, 1fr); } }
         .roster-card { border-radius: 8px; padding: 12px; border: 1px solid #e2e8f0; background: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
-        .roster-card h4 { font-size: 14px; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 2px solid #f1f5f9; font-weight:900; text-align:center;}
-        .roster-card.s-class h4 { color: #dc2626; border-color: #fecaca; }
-        .roster-card.a-class h4 { color: #059669; border-color: #a7f3d0; }
-        .roster-card.b-class h4 { color: #64748b; border-color: #cbd5e1; }
-        .roster-card.c-class h4 { color: #334155; border-color: #e2e8f0; }
         
         .ball-badge-wrap { display: flex; flex-wrap: wrap; gap: 6px; justify-content:center;}
         .ball-badge { display: flex; flex-direction: column; align-items: center; background: #f8fafc; border: 1px solid #cbd5e1; padding: 4px 8px; border-radius: 6px; min-width: 48px; cursor:pointer; transition:0.2s;}
@@ -155,11 +149,6 @@
         #global-loader { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,23,42,0.95); z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center; transition: opacity 0.3s; }
         .loader-spinner { width: 50px; height: 50px; border: 4px solid #334155; border-top-color: #fbbf24; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom:16px;}
         @keyframes spin { to { transform: rotate(360deg); } }
-
-        /* 資金控管與注碼策略面板 CSS */
-        .bet-panel { background: #fffbeb; border: 2px solid #f59e0b; }
-        .bet-title { color: #d97706; font-size: 16px; font-weight: 900; margin-bottom: 12px; display:flex; align-items:center; gap:8px;}
-        .bet-card { background: #fff; border: 1px solid #fcd34d; border-radius: 8px; padding: 14px; margin-bottom: 12px; box-shadow: 0 4px 6px rgba(245, 158, 11, 0.1); }
     </style>
 </head>
 <body>
@@ -189,7 +178,7 @@
             </div>
             <div class="sop-step">
                 <h4>STEP 3：配合資金策略重押</h4>
-                查看下方專屬的 <b>「S區 / A區 資金控管建議」</b>。依照系統精算後的倍數下注，保證過關即獲利！若昨日沒中，記得點擊【沒中累加】讓系統更新隔日必勝倍數。
+                直接在 S 區與 A 區查看<b>專屬倍數與營利估算</b>。點擊【沒中累加】系統會自動換算下次獲利倍數，確保過關必定倒賺！
             </div>
         </div>
     </div>
@@ -202,7 +191,6 @@
             📊 539 專屬量化操盤區
         </h2>
 
-        <!-- 🔍 539 單號深度查詢面板 -->
         <div class="panel" style="border-color: var(--orange-color);">
             <div class="panel-title" style="color: var(--orange-color);">🎯 539 專屬單碼深度透視查詢</div>
             <div class="form-row">
@@ -214,7 +202,6 @@
             </div>
         </div>
 
-        <!-- 539 單碼查詢結果顯示區 (省略內部架構同原碼) -->
         <div id="sb-result-container-539" style="display:none;">
             <div class="panel">
                 <div class="sb-dash-header">
@@ -245,20 +232,12 @@
             </div>
         </div>
 
-        <!-- 539 全盤分級控制面板 -->
         <div class="panel">
             <div class="panel-title">⚙️ 執行 539 全盤 18 宗師分級與近期走勢</div>
             <button class="btn-main" onclick="executeSuperClassification('539-9000')" style="background:var(--orange-color);">🔮 展開 539 全盤分級名冊</button>
         </div>
 
-        <!-- 539 全盤分級結果展示區 -->
         <div id="super-result-container-539" style="display:none;">
-            <!-- 💰 資金控管與注碼策略區塊 (動態生成) -->
-            <div class="panel bet-panel" id="bet-panel-539" style="display:none;">
-                <div class="bet-title">💰 539 智能資金控管與下注推薦 (獨立追蹤)</div>
-                <div id="bet-content-539"></div>
-            </div>
-
             <div class="panel">
                 <div class="panel-title"><span>📋 539 39碼全盤分級名冊</span><span style="font-size:12px; color:#059669; font-weight:bold;">🟢 實戰選號區</span></div>
                 <div class="roster-grid" id="roster-grid-content-539"></div>
@@ -279,7 +258,6 @@
             🚀 天天樂 專屬量化操盤區
         </h2>
 
-        <!-- 🔍 天天樂 單號深度查詢面板 -->
         <div class="panel" style="border-color: var(--tt-color);">
             <div class="panel-title" style="color: var(--tt-color);">🎯 天天樂 專屬單碼深度透視查詢</div>
             <div class="form-row">
@@ -291,7 +269,6 @@
             </div>
         </div>
 
-        <!-- 天天樂 單碼查詢結果顯示區 -->
         <div id="sb-result-container-tt" style="display:none;">
             <div class="panel">
                 <div class="sb-dash-header">
@@ -322,20 +299,12 @@
             </div>
         </div>
 
-        <!-- 天天樂 全盤分級控制面板 -->
         <div class="panel">
             <div class="panel-title">⚙️ 執行天天樂全盤 18 宗師分級與近期走勢</div>
             <button class="btn-main" onclick="executeSuperClassification('tt-9000')" style="background:var(--tt-color);">🔮 展開天天樂全盤分級名冊</button>
         </div>
 
-        <!-- 天天樂 全盤分級結果展示區 -->
         <div id="super-result-container-tt" style="display:none;">
-            <!-- 💰 資金控管與注碼策略區塊 (動態生成) -->
-            <div class="panel bet-panel" id="bet-panel-tt" style="display:none;">
-                <div class="bet-title">💰 天天樂 智能資金控管與下注推薦 (獨立追蹤)</div>
-                <div id="bet-content-tt"></div>
-            </div>
-
             <div class="panel">
                 <div class="panel-title"><span>📋 天天樂 39碼全盤分級名冊</span><span style="font-size:12px; color:#059669; font-weight:bold;">🟢 實戰選號區</span></div>
                 <div class="roster-grid" id="roster-grid-content-tt"></div>
@@ -687,7 +656,6 @@
         let lastCost = parseInt(localStorage.getItem(lastCostKey) || '0');
         
         if (lastCost === 0) {
-            // 防呆機制，若沒有紀錄則給予預設值
             lastCost = (zone === 'S') ? (2755 * 2) : (2755 * 3);
         }
 
@@ -699,7 +667,6 @@
             alert(`❌ ${zone} 區昨日未中，已將昨日成本累加至總虧損，系統已自動為您推算出明日必勝平盤倍數！`);
         }
         
-        // 重新執行分類與計算
         executeSuperClassification(spaceKey);
     };
 
@@ -805,6 +772,43 @@
         window.scrollTo({top: document.getElementById(`sb-result-container-${suffix}`).offsetTop - 50, behavior: 'smooth'});
     };
 
+    // 生成資金控管面板 HTML 的輔助函數
+    let renderZoneControl = (zone, maxScore, loss, cost, multi, prize, netProfit, spaceKey) => {
+        let isS = zone === 'S';
+        let bg = isS ? '#fef2f2' : '#ecfdf5';
+        let border = isS ? '#fca5a5' : '#6ee7b7';
+        let titleColor = isS ? '#b91c1c' : '#047857';
+        let titleName = isS ? '🔥 S 級 (嚴選 2 碼) 戰略控制台' : '🟢 A 級 (嚴選 3 碼) 戰略控制台';
+        
+        let prettyBadge = maxScore >= 80 ? `<span style="color:#ea580c; font-size:12px; font-weight:bold; margin-left:6px;">(⭐ 漂亮牌加碼!)</span>` : '';
+
+        return `
+        <div style="background:${bg}; border:1px solid ${border}; padding:12px; border-radius:8px; margin-bottom:12px; text-align:left;">
+            <div style="font-size:14px; font-weight:900; color:${titleColor}; margin-bottom:8px; border-bottom:1px dashed ${border}; padding-bottom:6px; display:flex; align-items:center;">
+                ${titleName} ${prettyBadge}
+            </div>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; font-size:12px; color:#475569; margin-bottom:10px;">
+                <div style="background:#fff; padding:6px; border-radius:4px; border:1px solid #e2e8f0;">
+                    累積虧損：<br><b style="color:#dc2626; font-size:14px;">$${loss.toLocaleString()}</b>
+                </div>
+                <div style="background:#fff; padding:6px; border-radius:4px; border:1px solid #e2e8f0;">
+                    本次成本：<br><b style="color:#0f172a; font-size:14px;">$${cost.toLocaleString()}</b> (注碼: <b style="color:#0284c7;">${multi} 倍</b>)
+                </div>
+                <div style="background:#fff; padding:6px; border-radius:4px; border:1px solid #e2e8f0;">
+                    若中 1 顆總收：<br><b style="color:#059669; font-size:14px;">$${prize.toLocaleString()}</b>
+                </div>
+                <div style="background:#fff; padding:6px; border-radius:4px; border:1px solid #e2e8f0;">
+                    扣除成本後淨利：<br><b style="color:#ea580c; font-size:14px;">+$${netProfit.toLocaleString()}</b>
+                </div>
+            </div>
+            <div style="display:flex; gap:6px; margin-top:10px;">
+                <button class="btn-main" style="background:#059669; flex:1; font-size:12px; padding:10px;" onclick="updateBetState('${spaceKey}', '${zone}', true)">✅ 昨日有中 (歸零回歸)</button>
+                <button class="btn-main" style="background:#dc2626; flex:1; font-size:12px; padding:10px;" onclick="updateBetState('${spaceKey}', '${zone}', false)">❌ 昨日未中 (累加成本)</button>
+            </div>
+        </div>
+        `;
+    };
+
     window.executeSuperClassification = function(spaceKey) {
         let isTt = spaceKey === 'tt-9000';
         let suffix = isTt ? 'tt' : '539';
@@ -822,19 +826,18 @@
 
         let sClass = [], aClass = [], bClass = [], cClass = [];
         
-        // 分級：S嚴格取前2，A嚴格取前3(即第3~5名)
         allBallScores.forEach((item, index) => {
             let ballStr = String(item.ball).padStart(2, '0');
             let obj = { ball: ballStr, score: item.score.toFixed(1) };
             
-            if (index < 2) sClass.push(obj); // 前 2 顆 S 級
-            else if (index >= 2 && index < 5) aClass.push(obj); // 接下 3 顆 A 級
+            if (index < 2) sClass.push(obj); 
+            else if (index >= 2 && index < 5) aClass.push(obj); 
             else if (index >= 5 && index < 25) bClass.push(obj);
             else cClass.push(obj);
         });
 
         // ----------------------------------------
-        // 💰 資金控管與策略邏輯計算 (獨立區塊)
+        // 💰 資金控管與策略邏輯計算 (精準分區計算)
         // ----------------------------------------
         let sLoss = parseInt(localStorage.getItem(`loss_${spaceKey}_S`) || '0');
         let aLoss = parseInt(localStorage.getItem(`loss_${spaceKey}_A`) || '0');
@@ -842,52 +845,35 @@
         let sMaxScore = Math.max(...sClass.map(x => parseFloat(x.score)));
         let aMaxScore = Math.max(...aClass.map(x => parseFloat(x.score)));
         
-        // 核心精算公式: (總虧損 / 單注純利) + 1，確保贏的時候倒賺
-        const netProfitPerUnit = 21200 - 2755; // = 18445
+        // S區(2顆)單注淨利 = 21200 - (2755 * 2) = 15690
+        // A區(3顆)單注淨利 = 21200 - (2755 * 3) = 12935
+        let sNetProfitPerUnit = 21200 - (2755 * 2);
+        let aNetProfitPerUnit = 21200 - (2755 * 3);
         
-        let calculateMultiplier = (accumulatedLoss, maxScore) => {
-            let m = Math.floor(accumulatedLoss / netProfitPerUnit) + 1;
-            if (maxScore >= 80) m += 1; // ⭐ 最漂亮牌 (評分大於等於 80) 自動增加 1 倍
+        let calculateMulti = (loss, netPerUnit, maxScore) => {
+            let m = Math.floor(loss / netPerUnit) + 1;
+            if (maxScore >= 80) m += 1; 
             return m;
         };
 
-        let sMulti = calculateMultiplier(sLoss, sMaxScore);
-        let aMulti = calculateMultiplier(aLoss, aMaxScore);
+        let sMulti = calculateMulti(sLoss, sNetProfitPerUnit, sMaxScore);
+        let aMulti = calculateMulti(aLoss, aNetProfitPerUnit, aMaxScore);
         
-        let sCost = sMulti * 2755 * 2; // S區有 2 顆
-        let aCost = aMulti * 2755 * 3; // A區有 3 顆
+        let sCost = sMulti * 2755 * 2;
+        let aCost = aMulti * 2755 * 3;
         
-        // 將今日應下注成本儲存，以便明日若沒中時可以準確累加
+        let sPrize = sMulti * 21200;
+        let aPrize = aMulti * 21200;
+
+        let sNet = sPrize - sLoss - sCost;
+        let aNet = aPrize - aLoss - aCost;
+
+        // 紀錄本次成本，供明日沒中時累加
         localStorage.setItem(`lastCost_${spaceKey}_S`, sCost);
         localStorage.setItem(`lastCost_${spaceKey}_A`, aCost);
 
-        let renderBetCard = (zone, limit, loss, maxScore, multi, cost) => `
-            <div class="bet-card">
-                <h4 style="color:#b91c1c; font-weight:900; font-size:15px; margin-bottom:6px;">
-                    ${zone === 'S' ? '🔥 S 級 (嚴選 2 顆)' : '🟢 A 級 (嚴選 3 顆)'} 下注策略
-                </h4>
-                <div style="font-size:13px; color:#475569; margin-bottom:8px; line-height:1.6;">
-                    累積虧損水位: <b style="color:#dc2626;">$${loss.toLocaleString()}</b><br>
-                    本日最高評分: <b>${maxScore}</b> ${maxScore >= 80 ? '<span style="color:#ea580c; font-weight:bold;">(⭐ 最漂亮牌自動加碼 1 倍!)</span>' : ''}
-                </div>
-                <div style="background:#f8fafc; border:1px solid #cbd5e1; padding:10px; border-radius:6px; margin-bottom:10px; text-align:center;">
-                    <span style="font-size:16px; font-weight:900; color:#0f172a;">本日建議每顆注碼：<span style="color:#0284c7; font-size:22px;">${multi} 倍</span></span><br>
-                    <span style="font-size:11px; color:#64748b;">(下注成本: $${cost.toLocaleString()} | 若中 1 顆總收: $${(multi * 21200).toLocaleString()})</span>
-                </div>
-                <div style="display:flex; gap:8px;">
-                    <button class="btn-main" style="background:#059669; flex:1; font-size:12px; padding:10px;" onclick="updateBetState('${spaceKey}', '${zone}', true)">✅ 昨日有中 (回歸1倍)</button>
-                    <button class="btn-main" style="background:#dc2626; flex:1; font-size:12px; padding:10px;" onclick="updateBetState('${spaceKey}', '${zone}', false)">❌ 昨日未中 (累加成本)</button>
-                </div>
-            </div>
-        `;
-
-        document.getElementById(`bet-panel-${suffix}`).style.display = 'block';
-        document.getElementById(`bet-content-${suffix}`).innerHTML = 
-            renderBetCard('S', 2, sLoss, sMaxScore, sMulti, sCost) +
-            renderBetCard('A', 3, aLoss, aMaxScore, aMulti, aCost);
-
         // ----------------------------------------
-        // 渲染球名單
+        // 渲染球名單與控制台
         // ----------------------------------------
         document.getElementById(`super-result-container-${suffix}`).style.display = 'block';
 
@@ -897,9 +883,18 @@
                 <span class="b-score">${item.score}分</span>
             </div>`;
 
+        // 將戰略控制台嵌入至 S 級與 A 級的名冊卡片最上方
         document.getElementById(`roster-grid-content-${suffix}`).innerHTML = `
-            <div class="roster-card s-class"><h4>🔥 S 級 (嚴選 2 碼)</h4><div class="ball-badge-wrap">${sClass.map(renderBadge).join('')}</div></div>
-            <div class="roster-card a-class"><h4>🟢 A 級 (嚴選 3 碼)</h4><div class="ball-badge-wrap">${aClass.map(renderBadge).join('')}</div></div>
+            <div class="roster-card s-class" style="border-color:#fca5a5; border-width:2px;">
+                ${renderZoneControl('S', sMaxScore, sLoss, sCost, sMulti, sPrize, sNet, spaceKey)}
+                <h4 style="margin-top:10px;">🔥 S 級選號 (實戰區)</h4>
+                <div class="ball-badge-wrap">${sClass.map(renderBadge).join('')}</div>
+            </div>
+            <div class="roster-card a-class" style="border-color:#6ee7b7; border-width:2px;">
+                ${renderZoneControl('A', aMaxScore, aLoss, aCost, aMulti, aPrize, aNet, spaceKey)}
+                <h4 style="margin-top:10px;">🟢 A 級選號 (實戰區)</h4>
+                <div class="ball-badge-wrap">${aClass.map(renderBadge).join('')}</div>
+            </div>
             <div class="roster-card b-class"><h4>⚪ B 級 (中性觀望)</h4><div class="ball-badge-wrap">${bClass.map(renderBadge).join('')}</div></div>
             <div class="roster-card c-class"><h4>🔴 C 級 (刪除冷卻)</h4><div class="ball-badge-wrap">${cClass.map(renderBadge).join('')}</div></div>
         `;
