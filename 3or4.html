@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>🎯 同區極限偏態戰情室 (雙引擎版)</title>
+    <title>🎯 同區極限偏態戰情室 (量化升級版)</title>
     <style>
         :root {
             --bg-color: #f8fafc; 
@@ -13,6 +13,7 @@
             --purple-color: #7c3aed;
             --orange-color: #ea580c;
             --blue-color: #0284c7;
+            --quant-bg: #1e293b;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Microsoft JhengHei", sans-serif; }
         body { background-color: var(--bg-color); color: var(--text-main); padding: 12px; line-height: 1.5; }
@@ -33,7 +34,7 @@
         
         .monitor-box { background: #fffbeb; padding: 16px; border-radius: 10px; border: 2px solid #fde047; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
         
-        .bias-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+        .bias-grid { display: grid; grid-template-columns: 1fr; gap: 16px; margin-bottom: 16px; }
         @media (min-width: 768px) { .bias-grid { grid-template-columns: repeat(2, 1fr); } }
         .bias-card { padding: 16px; border-radius: 12px; border: 2px solid #e2e8f0; background: #f8fafc; transition: all 0.3s ease; }
         .bias-card h3 { font-size: 16px; font-weight: 900; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; color:#334155; }
@@ -51,11 +52,29 @@
         .sugg-box li { display: flex; justify-content: space-between; font-size: 13px; font-weight: bold; margin-bottom: 6px; color: #475569; }
         .sugg-box li span.del-num { color: #dc2626; font-size: 16px; font-weight: 900; font-family: monospace; }
         
+        /* 華爾街量化預測面板樣式 */
+        .quant-panel { background: var(--quant-bg); border-radius: 12px; padding: 16px; color: white; border: 2px solid #334155; position: relative; overflow: hidden; }
+        .quant-panel::before { content:''; position:absolute; top:0; left:-100%; width:50%; height:100%; background:linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent); animation: scan 3s infinite linear; }
+        @keyframes scan { 100% { left: 200%; } }
+        .quant-title { font-size: 15px; font-weight: 900; color: #38bdf8; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #334155; padding-bottom: 8px;}
+        .quant-models { font-size: 11px; color: #94a3b8; display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 12px; }
+        .quant-models span { background: #334155; padding: 2px 6px; border-radius: 4px; }
+        
+        .zone-bar-container { margin-bottom: 10px; }
+        .zone-bar-header { display: flex; justify-content: space-between; font-size: 13px; font-weight: bold; margin-bottom: 4px; }
+        .zone-bar-track { background: #334155; height: 10px; border-radius: 5px; overflow: hidden; position: relative; }
+        .zone-bar-fill { height: 100%; border-radius: 5px; transition: width 1s ease-out; }
+        .bar-gold { background: linear-gradient(90deg, #fbbf24, #d97706); box-shadow: 0 0 8px rgba(251,191,36,0.5);}
+        .bar-normal { background: #475569; }
+        
+        .quant-result { background: rgba(0,0,0,0.3); border: 1px solid #fbbf24; padding: 12px; border-radius: 8px; text-align: center; margin-top: 12px; }
+        .quant-result h4 { color: #fef3c7; font-size: 14px; margin-bottom: 4px; }
+        .quant-result .target-zone { font-size: 22px; font-weight: 900; color: #fbbf24; text-shadow: 0 0 10px rgba(251,191,36,0.3); }
+
         #global-loader { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.95); z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center; transition: opacity 0.3s; }
         .loader-spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top-color: var(--orange-color); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom:12px;}
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* 讓 539 跟 天天樂 的標題顏色區分 */
         .title-539 { color: var(--blue-color); }
         .title-tt { color: var(--purple-color); }
     </style>
@@ -64,13 +83,13 @@
 
 <div id="global-loader">
     <div class="loader-spinner"></div>
-    <h2 style="color:var(--text-main); font-weight:900; font-size:18px;">☁️ 雙引擎數據庫連線同步中...</h2>
+    <h2 style="color:var(--text-main); font-weight:900; font-size:18px;">☁️ 雙引擎大數據演算中...</h2>
 </div>
 
 <div class="container">
     <header>
         <h1>🎯 同區極限偏態狙擊戰情室</h1>
-        <div style="font-size: 13px; color: #ea580c; font-weight: bold;">(已與主系統開獎號碼資料庫 100% 雲端同步)</div>
+        <div style="font-size: 13px; color: #ea580c; font-weight: bold;">(搭載華爾街量化預測演算法)</div>
     </header>
 
     <!-- ========================================== -->
@@ -78,7 +97,7 @@
     <!-- ========================================== -->
     <div class="panel" style="border-top: 4px solid var(--blue-color);">
         <div class="panel-title title-539">
-            <span>📊 今彩 539 - 偏態監控</span>
+            <span>📊 今彩 539 - 偏態監控與預測</span>
         </div>
         
         <div class="monitor-box">
@@ -107,6 +126,22 @@
                 </div>
             </div>
         </div>
+
+        <!-- 華爾街量化模組 539 -->
+        <div class="quant-panel">
+            <div class="quant-title">
+                <span>🤖 AI 華爾街量化預測模型 (次期3~4顆爆發率)</span>
+            </div>
+            <div class="quant-models">
+                <span>均值回歸</span><span>SMA動能</span><span>EWMA衰減</span>
+                <span>泊松機率</span><span>布林擠壓</span><span>馬可夫轉移</span>
+            </div>
+            <div id="quant-bars-539"></div>
+            <div class="quant-result">
+                <h4>次期最高機率爆發區域</h4>
+                <div id="quant-target-539" class="target-zone">計算中...</div>
+            </div>
+        </div>
     </div>
 
     <!-- ========================================== -->
@@ -114,7 +149,7 @@
     <!-- ========================================== -->
     <div class="panel" style="border-top: 4px solid var(--purple-color);">
         <div class="panel-title title-tt">
-            <span>🚀 天天樂 - 偏態監控</span>
+            <span>🚀 天天樂 - 偏態監控與預測</span>
         </div>
         
         <div class="monitor-box">
@@ -143,6 +178,22 @@
                 </div>
             </div>
         </div>
+
+        <!-- 華爾街量化模組 天天樂 -->
+        <div class="quant-panel">
+            <div class="quant-title">
+                <span>🤖 AI 華爾街量化預測模型 (次期3~4顆爆發率)</span>
+            </div>
+            <div class="quant-models">
+                <span>均值回歸</span><span>SMA動能</span><span>EWMA衰減</span>
+                <span>泊松機率</span><span>布林擠壓</span><span>馬可夫轉移</span>
+            </div>
+            <div id="quant-bars-tt"></div>
+            <div class="quant-result">
+                <h4>次期最高機率爆發區域</h4>
+                <div id="quant-target-tt" class="target-zone">計算中...</div>
+            </div>
+        </div>
     </div>
 
 </div>
@@ -151,7 +202,6 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    // Firebase 雲端設定
     const firebaseConfig = {
         apiKey: "AIzaSyC9A3HggBSJg2RJJpHEb10Fkf4S6cNqgmE",
         authDomain: "gogogo539.firebaseapp.com",
@@ -169,7 +219,6 @@
     let spaceData = { 'tt-9000': [], '539-9000': [] };
     let isDataLoaded = false; 
 
-    // 雙引擎同時監聽
     onSnapshot(collection(db, "matrix_systems"), (snapshot) => {
         snapshot.docChanges().forEach((change) => {
             let d = change.doc.data();
@@ -193,7 +242,6 @@
             setTimeout(() => document.getElementById('global-loader').style.display = 'none', 300);
         }
         
-        // 資料有變動時，同時渲染兩個面板
         window.renderAllPanels();
     });
 
@@ -202,15 +250,15 @@
         calculateAndRender('tt-9000', 'tt');
     };
 
-    // 核心運算邏輯 (透過前綴區分 DOM 節點，互不干擾)
     function calculateAndRender(spaceKey, prefix) {
         let data = spaceData[spaceKey] || [];
-        // 反轉陣列，由舊算到新
         let sortedData = [...data].sort((a,b) => a.date > b.date ? 1 : -1); 
         
         let consecutiveMiss = 0;
         let lastSeen = {};
         for(let i=1; i<=39; i++) lastSeen[i] = -1;
+
+        let historicalZones = []; // 為了給量化模型使用，記錄每期各區顆數
 
         sortedData.forEach((item, index) => {
             let balls = item.draw;
@@ -218,14 +266,15 @@
             
             balls.forEach(num => {
                 let n = Number(num);
-                lastSeen[n] = index; // 記錄最後出現的 index
+                lastSeen[n] = index;
                 if (n <= 9) zones[0]++;
                 else if (n <= 19) zones[1]++;
                 else if (n <= 29) zones[2]++;
-                else zones[3]++;
+                else if (n <= 39) zones[3]++;
             });
 
-            // 如果有任何一區 >= 3 顆，連槓次數歸零
+            historicalZones.push(zones);
+
             if (Math.max(...zones) >= 3) {
                 consecutiveMiss = 0;
             } else {
@@ -233,7 +282,7 @@
             }
         });
 
-        // 找各區遺漏最久的號碼
+        // 原本的刪牌邏輯
         const findColdest = (start, end) => {
             let minIdx = Number.MAX_SAFE_INTEGER;
             let target = start;
@@ -248,7 +297,6 @@
         let c3 = findColdest(20, 29);
         let c4 = findColdest(30, 39);
 
-        // 更新 UI (使用 prefix 定位專屬節點)
         document.getElementById(`bias-consecutive-${prefix}`).innerText = consecutiveMiss;
         
         let cardA = document.getElementById(`bias-card-a-${prefix}`);
@@ -259,7 +307,6 @@
         let badgeB = document.getElementById(`bias-badge-b-${prefix}`);
         let suggB = document.getElementById(`bias-sugg-b-${prefix}`);
 
-        // 策略 A (>= 5)
         if (consecutiveMiss >= 5) {
             cardA.className = "bias-card active-a";
             badgeA.innerText = "進場時刻";
@@ -276,7 +323,6 @@
             suggA.style.display = "none";
         }
 
-        // 策略 B (>= 7)
         if (consecutiveMiss >= 7) {
             cardB.className = "bias-card active-b";
             badgeB.innerText = "重擊進場";
@@ -286,6 +332,110 @@
             badgeB.innerText = "觀望中";
             suggB.style.display = "none";
         }
+
+        // 執行量化預測模組
+        runQuantModel(historicalZones, prefix);
+    }
+
+    /* 
+     * 🤖 華爾街 6 大量化模型計算核心 
+     */
+    function runQuantModel(history, prefix) {
+        if(history.length < 30) return; // 樣本數過少不計算
+
+        let scores = [0, 0, 0, 0]; // 區間1,2,3,4 的綜合得分
+        let recent = history.slice(-50); // 取近50期作為基礎數據集
+        
+        // 1. 均值回歸 (Mean Reversion) - 抓近期最冷，準備反彈
+        let totalCount = [0,0,0,0];
+        recent.forEach(draw => { draw.forEach((val, i) => totalCount[i] += val); });
+        let expected = (50 * 5) / 4; // 預期每區均值
+        for(let i=0; i<4; i++) {
+            scores[i] += (expected - totalCount[i]) * 1.5; // 低於均值加分，高於扣分
+        }
+
+        // 2. SMA 動能 (Simple Moving Average) - 抓近5期正在發熱的區間
+        let sma5 = [0,0,0,0];
+        history.slice(-5).forEach(draw => { draw.forEach((val, i) => sma5[i] += val); });
+        for(let i=0; i<4; i++) scores[i] += sma5[i] * 2.0;
+
+        // 3. EWMA 指數加權衰減 - 越近期的影響力越大
+        let ewma = [0,0,0,0];
+        let alpha = 0.2;
+        recent.forEach((draw) => {
+            for(let i=0; i<4; i++) {
+                ewma[i] = (draw[i] * alpha) + (ewma[i] * (1 - alpha));
+            }
+        });
+        for(let i=0; i<4; i++) scores[i] += (ewma[i] * 10);
+
+        // 4. 布林通道擠壓 (Volatility Squeeze) - 抓沉寂已久準備爆發的區塊
+        let variance = [0,0,0,0];
+        for(let i=0; i<4; i++) {
+            let mean = totalCount[i] / 50;
+            let sumSq = 0;
+            recent.forEach(draw => { sumSq += Math.pow(draw[i] - mean, 2); });
+            variance[i] = sumSq / 50;
+            // 變異數越小(擠壓)，未來爆發機率越高 (反向加分)
+            scores[i] += (2 - variance[i]) * 5; 
+        }
+
+        // 5. 馬可夫轉移矩陣 (Markov Chain) - 依據最新一期狀態，推測下一期
+        let lastDraw = history[history.length - 1];
+        let hotZoneLast = lastDraw.indexOf(Math.max(...lastDraw)); 
+        let transitionCount = [0,0,0,0];
+        for(let i=0; i<history.length - 1; i++) {
+            let maxIdx = history[i].indexOf(Math.max(...history[i]));
+            if(maxIdx === hotZoneLast) {
+                let nextMaxIdx = history[i+1].indexOf(Math.max(...history[i+1]));
+                transitionCount[nextMaxIdx]++;
+            }
+        }
+        for(let i=0; i<4; i++) scores[i] += (transitionCount[i] * 0.5);
+
+        // 6. 泊松分佈機率 (Poisson Probability proxy) - 發生 >=3 顆的頻率權重
+        let hit3Count = [0,0,0,0];
+        recent.forEach(draw => {
+            for(let i=0; i<4; i++) if(draw[i] >= 3) hit3Count[i]++;
+        });
+        for(let i=0; i<4; i++) {
+            // 歷史容易出3顆的區，給予加成
+            scores[i] += (hit3Count[i] * 2);
+        }
+
+        // 綜合運算與正規化 (0~100%)
+        let minScore = Math.min(...scores);
+        // 修正負數
+        for(let i=0; i<4; i++) scores[i] = scores[i] - minScore + 10; 
+        
+        let sumScore = scores.reduce((a,b)=>a+b, 0);
+        let finalPercentages = scores.map(s => ((s / sumScore) * 100).toFixed(1));
+
+        // 尋找最高分區域
+        let maxIndex = finalPercentages.indexOf(Math.max(...finalPercentages).toFixed(1));
+        let zoneNames = ["第一區 (01-09)", "第二區 (10-19)", "第三區 (20-29)", "第四區 (30-39)"];
+        let targetText = `${zoneNames[maxIndex]} <br><span style="font-size:14px; color:#94a3b8;">預估爆發率: <span style="color:#fbbf24;">${finalPercentages[maxIndex]}%</span></span>`;
+
+        // 渲染長條圖
+        let barsHtml = '';
+        for(let i=0; i<4; i++) {
+            let isMax = (i === maxIndex);
+            let barClass = isMax ? 'bar-gold' : 'bar-normal';
+            barsHtml += `
+                <div class="zone-bar-container">
+                    <div class="zone-bar-header">
+                        <span style="color: ${isMax ? '#fbbf24' : '#e2e8f0'};">第${i+1}區</span>
+                        <span style="color: ${isMax ? '#fbbf24' : '#94a3b8'};">${finalPercentages[i]}%</span>
+                    </div>
+                    <div class="zone-bar-track">
+                        <div class="zone-bar-fill ${barClass}" style="width: ${finalPercentages[i]}%"></div>
+                    </div>
+                </div>
+            `;
+        }
+
+        document.getElementById(`quant-bars-${prefix}`).innerHTML = barsHtml;
+        document.getElementById(`quant-target-${prefix}`).innerHTML = targetText;
     }
 </script>
 </body>
