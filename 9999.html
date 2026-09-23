@@ -3,65 +3,65 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>539 / 天天樂 中間人對帳系統 (坐車 & 二星)</title>
+  <title>539 / 天天樂 中間人對帳系統 (坐車 / 二三四星連碰)</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     .ball-btn.active {
-      background-color: #ef4444;
-      color: #ffffff;
-      border-color: #b91c1c;
+      background-color: #ef4444 !important;
+      color: #ffffff !important;
+      border-color: #b91c1c !important;
     }
   </style>
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen p-3 md:p-6">
   <div class="max-w-4xl mx-auto space-y-6">
 
-    <!-- 頂部標題與玩法切換 -->
+    <!-- 頂部導航 -->
     <header class="bg-white rounded-2xl shadow-sm p-5 border border-slate-200">
       <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h1 class="text-2xl font-black text-slate-900 tracking-tight">539 / 天天樂 中間人對帳助手</h1>
-          <p class="text-xs text-slate-500 mt-1">精確計算坐車退水利潤與二星連碰碰數、退水 27.5%、57 倍彩金</p>
+          <p class="text-xs text-slate-500 mt-1">坐車一車賺95水錢｜二星(退27.5%)｜三星(退37%)｜四星(退50%)</p>
         </div>
         <div class="flex rounded-xl bg-slate-100 p-1 border border-slate-200 text-sm font-semibold">
-          <button id="tabCarBtn" onclick="switchTab('car')" class="px-5 py-2 rounded-lg bg-blue-600 text-white shadow-sm transition">坐車 (全車)</button>
-          <button id="tab2StarBtn" onclick="switchTab('2star')" class="px-5 py-2 rounded-lg text-slate-600 hover:text-slate-900 transition">二星連碰 (對碰)</button>
+          <button id="tabCarBtn" onclick="switchTab('car')" class="px-5 py-2 rounded-lg bg-blue-600 text-white shadow-sm transition">單車 / 多號坐車</button>
+          <button id="tabStarBtn" onclick="switchTab('star')" class="px-5 py-2 rounded-lg text-slate-600 hover:text-slate-900 transition">二 / 三 / 四星連碰</button>
         </div>
       </div>
     </header>
 
-    <!-- 開盤號碼區塊 (全域共用) -->
-    <section class="bg-white rounded-2xl shadow-sm p-5 border border-slate-200">
-      <div class="flex items-center justify-between mb-3">
-        <h2 class="text-base font-bold text-slate-900 flex items-center gap-2">
+    <!-- 開獎號碼區塊 (全域共用 5 顆開獎球) -->
+    <section class="bg-white rounded-2xl shadow-sm p-4 border border-slate-200">
+      <div class="flex items-center justify-between mb-2">
+        <h2 class="text-sm font-bold text-slate-900 flex items-center gap-2">
           <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-          今日開獎號碼 (共 5 顆)
+          開獎號碼 (輸入 5 顆自動核對派彩)
         </h2>
-        <span class="text-xs text-slate-400">開盤後輸入自動對獎</span>
+        <span class="text-xs text-slate-400">填完立即對獎</span>
       </div>
-      <div class="grid grid-cols-5 gap-2 sm:gap-4 max-w-md mx-auto">
-        <input type="text" maxlength="2" class="draw-input text-center text-xl font-bold py-2 border-2 border-slate-200 rounded-xl focus:border-emerald-500 focus:outline-none" placeholder="01" oninput="formatBallInput(this); triggerRecalculate();">
-        <input type="text" maxlength="2" class="draw-input text-center text-xl font-bold py-2 border-2 border-slate-200 rounded-xl focus:border-emerald-500 focus:outline-none" placeholder="02" oninput="formatBallInput(this); triggerRecalculate();">
-        <input type="text" maxlength="2" class="draw-input text-center text-xl font-bold py-2 border-2 border-slate-200 rounded-xl focus:border-emerald-500 focus:outline-none" placeholder="03" oninput="formatBallInput(this); triggerRecalculate();">
-        <input type="text" maxlength="2" class="draw-input text-center text-xl font-bold py-2 border-2 border-slate-200 rounded-xl focus:border-emerald-500 focus:outline-none" placeholder="04" oninput="formatBallInput(this); triggerRecalculate();">
-        <input type="text" maxlength="2" class="draw-input text-center text-xl font-bold py-2 border-2 border-slate-200 rounded-xl focus:border-emerald-500 focus:outline-none" placeholder="05" oninput="formatBallInput(this); triggerRecalculate();">
+      <div class="grid grid-cols-5 gap-2 sm:gap-4 max-w-sm mx-auto">
+        <input type="text" maxlength="2" class="draw-input text-center text-xl font-black py-2 border-2 border-slate-200 rounded-xl focus:border-emerald-500 focus:outline-none" placeholder="01" oninput="formatBallInput(this); triggerRecalculate();">
+        <input type="text" maxlength="2" class="draw-input text-center text-xl font-black py-2 border-2 border-slate-200 rounded-xl focus:border-emerald-500 focus:outline-none" placeholder="02" oninput="formatBallInput(this); triggerRecalculate();">
+        <input type="text" maxlength="2" class="draw-input text-center text-xl font-black py-2 border-2 border-slate-200 rounded-xl focus:border-emerald-500 focus:outline-none" placeholder="03" oninput="formatBallInput(this); triggerRecalculate();">
+        <input type="text" maxlength="2" class="draw-input text-center text-xl font-black py-2 border-2 border-slate-200 rounded-xl focus:border-emerald-500 focus:outline-none" placeholder="04" oninput="formatBallInput(this); triggerRecalculate();">
+        <input type="text" maxlength="2" class="draw-input text-center text-xl font-black py-2 border-2 border-slate-200 rounded-xl focus:border-emerald-500 focus:outline-none" placeholder="05" oninput="formatBallInput(this); triggerRecalculate();">
       </div>
     </section>
 
-    <!-- 玩法一：坐車 (全車) -->
+    <!-- 玩法一：坐車 (全車 / 支援批次 3~6 號碼與自訂車數) -->
     <main id="carSection" class="space-y-6">
       <!-- 參數設定卡片 -->
       <div class="bg-white rounded-2xl shadow-sm p-4 border border-slate-200 grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
         <div>
-          <label class="text-slate-500 block mb-1">給客售價/車</label>
+          <label class="text-slate-500 block mb-1">跟客人收取/車</label>
           <input id="carCustPrice" type="number" value="2850" class="w-full font-bold p-2 bg-slate-50 border rounded-lg" onchange="renderCarBets()">
         </div>
         <div>
-          <label class="text-slate-500 block mb-1">我的成本/車</label>
+          <label class="text-slate-500 block mb-1">上家成本/車</label>
           <input id="carCostPrice" type="number" value="2755" class="w-full font-bold p-2 bg-slate-50 border rounded-lg" onchange="renderCarBets()">
         </div>
         <div>
-          <label class="text-slate-500 block mb-1">一車利潤(水錢)</label>
+          <label class="text-slate-500 block mb-1">每車利潤 (水錢)</label>
           <div id="carWaterDisplay" class="font-extrabold text-emerald-600 p-2 bg-emerald-50 border border-emerald-200 rounded-lg text-sm">95 元</div>
         </div>
         <div>
@@ -70,30 +70,36 @@
         </div>
       </div>
 
-      <!-- 下注輸入 -->
+      <!-- 快速點選 3~6 顆號碼下車 -->
       <div class="bg-white rounded-2xl shadow-sm p-5 border border-slate-200 space-y-4">
         <div class="flex items-center justify-between">
-          <h3 class="font-bold text-slate-800">新增坐車號碼</h3>
-          <span class="text-xs text-slate-400">支援小數點車數（如 0.2、0.5）</span>
-        </div>
-        <div class="flex gap-2">
-          <input id="newCarNumber" type="text" placeholder="號碼 (例: 08)" class="w-1/2 p-2.5 border rounded-xl font-bold">
-          <input id="newCarAmount" type="number" step="0.01" placeholder="車數 (例: 1 或 0.5)" class="w-1/2 p-2.5 border rounded-xl font-bold">
-          <button onclick="addCarBet()" class="px-5 py-2.5 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 whitespace-nowrap">加入</button>
+          <div>
+            <h3 class="font-bold text-slate-800">快速多選號碼坐車 (例如選 3~6 顆)</h3>
+            <p class="text-xs text-slate-400">點選號碼後設定每顆車數，自動彙整計算</p>
+          </div>
+          <button onclick="clearCarSelector()" class="text-xs text-rose-500 hover:underline">清空選號</button>
         </div>
 
-        <!-- 批次文字貼上解析 -->
-        <div class="pt-2">
-          <textarea id="carBatchText" rows="2" placeholder="或者直接貼上文字：08下1車 15下0.5車 23各0.2車" class="w-full text-xs p-3 border rounded-xl bg-slate-50 focus:bg-white"></textarea>
-          <button onclick="parseBatchCarText()" class="mt-2 text-xs bg-slate-200 hover:bg-slate-300 font-semibold px-3 py-1.5 rounded-lg text-slate-700">自動解析貼上內容</button>
+        <div id="carBallSelector" class="grid grid-cols-8 sm:grid-cols-10 gap-2"></div>
+
+        <div class="flex flex-wrap items-center justify-between gap-3 pt-2 bg-slate-50 p-3 rounded-xl border border-slate-200">
+          <div class="text-xs">
+            已選號碼：<span id="carSelectedNums" class="font-bold text-blue-600">無</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-semibold text-slate-600">每顆號碼下：</span>
+            <input id="carDefaultPerBall" type="number" step="0.05" value="0.3" class="w-20 p-1.5 border rounded-lg font-bold text-center text-sm" placeholder="0.3">
+            <span class="text-xs font-semibold text-slate-600">車</span>
+            <button onclick="addSelectedCarsBatch()" class="ml-2 px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-lg transition">加入清單</button>
+          </div>
         </div>
       </div>
 
-      <!-- 下注清單與對帳表 -->
+      <!-- 坐車下注清單與對帳 -->
       <div class="bg-white rounded-2xl shadow-sm p-5 border border-slate-200 space-y-4">
         <div class="flex items-center justify-between border-b pb-3">
-          <h3 class="font-bold text-slate-800">下注清單與對帳</h3>
-          <button onclick="clearCarBets()" class="text-xs text-rose-500 hover:underline">清空列表</button>
+          <h3 class="font-bold text-slate-800">坐車明細與水錢對帳</h3>
+          <button onclick="clearCarBets()" class="text-xs text-rose-500 hover:underline">清空所有注單</button>
         </div>
 
         <div class="overflow-x-auto">
@@ -102,29 +108,29 @@
               <tr class="text-xs text-slate-400 border-b">
                 <th class="pb-2">號碼</th>
                 <th class="pb-2">車數</th>
-                <th class="pb-2">客端應收</th>
-                <th class="pb-2">上繳成本</th>
-                <th class="pb-2 text-emerald-600">我賺水錢</th>
-                <th class="pb-2 text-center">開獎結果</th>
-                <th class="pb-2 text-right">操作</th>
+                <th class="pb-2">向客人收 (2850/車)</th>
+                <th class="pb-2">上繳成本 (2755/車)</th>
+                <th class="pb-2 text-emerald-600">你賺水錢 (95/車)</th>
+                <th class="pb-2 text-center">開獎派彩</th>
+                <th class="pb-2 text-right">刪除</th>
               </tr>
             </thead>
             <tbody id="carBetList" class="divide-y text-slate-700 font-medium"></tbody>
           </table>
         </div>
 
-        <!-- 結算總計卡片 -->
+        <!-- 總結算統計 -->
         <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
           <div>
-            <div class="text-xs text-slate-400">總車數</div>
+            <div class="text-xs text-slate-400">總下注車數</div>
             <div id="carTotalCars" class="text-lg font-black text-slate-800">0 車</div>
           </div>
           <div>
-            <div class="text-xs text-slate-400">向客人收取</div>
+            <div class="text-xs text-slate-400">應向客人實收</div>
             <div id="carTotalCollect" class="text-lg font-black text-blue-600">0 元</div>
           </div>
           <div>
-            <div class="text-xs text-slate-400">實賺水錢利潤</div>
+            <div class="text-xs text-slate-400">你實賺總水錢</div>
             <div id="carTotalWater" class="text-lg font-black text-emerald-600">0 元</div>
           </div>
           <div>
@@ -133,100 +139,138 @@
           </div>
         </div>
 
-        <!-- LINE 報帳複製按鈕 -->
         <div class="flex flex-col sm:flex-row gap-2 pt-2">
-          <button onclick="copyCarBetSummary()" class="flex-1 py-2.5 bg-slate-800 hover:bg-slate-900 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1">📋 複製 LINE 下注確認單</button>
-          <button onclick="copyCarPayoutSummary()" class="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1">💰 複製 LINE 派彩明細單</button>
+          <button onclick="copyCarBetSummary()" class="flex-1 py-2.5 bg-slate-800 hover:bg-slate-900 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1">📋 複製 LINE 坐車下注單</button>
+          <button onclick="copyCarPayoutSummary()" class="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1">💰 複製 LINE 坐車派彩單</button>
         </div>
       </div>
     </main>
 
-    <!-- 玩法二：二星連碰 (對碰) -->
-    <main id="twoStarSection" class="space-y-6 hidden">
-      <!-- 參數設定卡片 -->
-      <div class="bg-white rounded-2xl shadow-sm p-4 border border-slate-200 grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-        <div>
-          <label class="text-slate-500 block mb-1">每碰面額</label>
-          <input id="twoStarBasePrice" type="number" value="100" class="w-full font-bold p-2 bg-slate-50 border rounded-lg" onchange="calculateTwoStar()">
-        </div>
-        <div>
-          <label class="text-slate-500 block mb-1">退水比例 (%)</label>
-          <input id="twoStarDiscountRate" type="number" step="0.1" value="27.5" class="w-full font-bold p-2 bg-slate-50 border rounded-lg" onchange="calculateTwoStar()">
-        </div>
-        <div>
-          <label class="text-slate-500 block mb-1">每碰實付金額</label>
-          <div id="twoStarNetPrice" class="font-extrabold text-blue-600 p-2 bg-blue-50 border border-blue-200 rounded-lg text-sm">72.5 元</div>
-        </div>
-        <div>
-          <label class="text-slate-500 block mb-1">中獎倍數 (倍)</label>
-          <input id="twoStarOdds" type="number" value="57" class="w-full font-bold p-2 bg-slate-50 border rounded-lg" onchange="calculateTwoStar()">
+    <!-- 玩法二：二星 / 三星 / 四星連碰 -->
+    <main id="starSection" class="space-y-6 hidden">
+      <!-- 規則參數設定卡片 -->
+      <div class="bg-white rounded-2xl shadow-sm p-5 border border-slate-200 space-y-4">
+        <h3 class="font-bold text-slate-800 text-sm">連碰退水與倍數規則設定 (以每碰面額 100 元為基準)</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+          <!-- 二星 -->
+          <div class="p-3 rounded-xl border border-slate-200 bg-slate-50 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-slate-800 text-sm">二星 (中2顆)</span>
+              <label class="flex items-center gap-1 text-xs cursor-pointer font-bold text-blue-600">
+                <input id="enable2Star" type="checkbox" checked onchange="calculateStars()"> 啟用下注
+              </label>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-slate-500">退水比例：</span>
+              <input id="rate2Star" type="number" step="0.1" value="27.5" class="w-16 p-1 border rounded text-right font-bold" onchange="calculateStars()"> %
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-slate-500">每碰實收：</span>
+              <span id="net2StarDisplay" class="font-black text-blue-700">72.5 元</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-slate-500">中獎賠率：</span>
+              <input id="odds2Star" type="number" value="57" class="w-16 p-1 border rounded text-right font-bold" onchange="calculateStars()"> 倍 (5,700元)
+            </div>
+          </div>
+
+          <!-- 三星 -->
+          <div class="p-3 rounded-xl border border-slate-200 bg-slate-50 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-slate-800 text-sm">三星 (中3顆)</span>
+              <label class="flex items-center gap-1 text-xs cursor-pointer font-bold text-blue-600">
+                <input id="enable3Star" type="checkbox" checked onchange="calculateStars()"> 啟用下注
+              </label>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-slate-500">退水比例：</span>
+              <input id="rate3Star" type="number" step="0.1" value="37" class="w-16 p-1 border rounded text-right font-bold" onchange="calculateStars()"> %
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-slate-500">每碰實收：</span>
+              <span id="net3StarDisplay" class="font-black text-blue-700">63 元</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-slate-500">中獎賠率：</span>
+              <input id="odds3Star" type="number" value="570" class="w-16 p-1 border rounded text-right font-bold" onchange="calculateStars()"> 倍 (57,000元)
+            </div>
+          </div>
+
+          <!-- 四星 -->
+          <div class="p-3 rounded-xl border border-slate-200 bg-slate-50 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-slate-800 text-sm">四星 (中4顆)</span>
+              <label class="flex items-center gap-1 text-xs cursor-pointer font-bold text-blue-600">
+                <input id="enable4Star" type="checkbox" checked onchange="calculateStars()"> 啟用下注
+              </label>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-slate-500">退水比例：</span>
+              <input id="rate4Star" type="number" step="0.1" value="50" class="w-16 p-1 border rounded text-right font-bold" onchange="calculateStars()"> %
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-slate-500">每碰實收：</span>
+              <span id="net4StarDisplay" class="font-black text-blue-700">50 元</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-slate-500">中獎賠率：</span>
+              <input id="odds4Star" type="number" value="8000" class="w-16 p-1 border rounded text-right font-bold" onchange="calculateStars()"> 倍 (800,000元)
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- 快速號碼選盤 (01-39) -->
+      <!-- 選號盤 (01-39) -->
       <div class="bg-white rounded-2xl shadow-sm p-5 border border-slate-200 space-y-3">
         <div class="flex items-center justify-between">
-          <h3 class="font-bold text-slate-800">選擇號碼互相對碰</h3>
-          <button onclick="clearTwoStarBalls()" class="text-xs text-rose-500 hover:underline">全部清除</button>
+          <h3 class="font-bold text-slate-800">選擇連碰號碼 (可選 3~10 顆互碰)</h3>
+          <button onclick="clearStarBalls()" class="text-xs text-rose-500 hover:underline">全部清除</button>
         </div>
-        <div id="ballSelector" class="grid grid-cols-8 sm:grid-cols-10 gap-2"></div>
+        <div id="starBallSelector" class="grid grid-cols-8 sm:grid-cols-10 gap-2"></div>
       </div>
 
-      <!-- 二星對碰即時試算結果 -->
+      <!-- 連碰試算與開盤對獎對帳 -->
       <div class="bg-white rounded-2xl shadow-sm p-5 border border-slate-200 space-y-4">
-        <h3 class="font-bold text-slate-800 border-b pb-2">二星連碰計算明細</h3>
-        
-        <div class="space-y-2 text-sm">
-          <div class="flex items-center justify-between p-2.5 bg-slate-50 rounded-xl">
-            <span class="text-slate-500">已選號碼：</span>
-            <span id="tsSelectedDisplay" class="font-bold text-slate-900">尚未選擇</span>
+        <div class="flex items-center justify-between border-b pb-2">
+          <h3 class="font-bold text-slate-800">連碰碰數、收款與派彩總表</h3>
+          <span id="starSelectionSummary" class="text-xs text-slate-500 font-bold">尚未選擇號碼</span>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm">
+            <thead>
+              <tr class="text-xs text-slate-400 border-b">
+                <th class="pb-2">星別</th>
+                <th class="pb-2">碰數</th>
+                <th class="pb-2">面額金額</th>
+                <th class="pb-2">退水後實收</th>
+                <th class="pb-2">命中碰數</th>
+                <th class="pb-2 text-right">中獎派彩彩金</th>
+              </tr>
+            </thead>
+            <tbody id="starCalculationBody" class="divide-y text-slate-700 font-medium"></tbody>
+          </table>
+        </div>
+
+        <!-- 連碰總結算金額 -->
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+          <div>
+            <div class="text-xs text-slate-400">總下注碰數</div>
+            <div id="starTotalPairsAll" class="text-lg font-black text-slate-800">0 碰</div>
           </div>
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center pt-2">
-            <div class="p-3 bg-slate-50 rounded-xl">
-              <div class="text-xs text-slate-400">總碰數 C(N, 2)</div>
-              <div id="tsTotalPairs" class="text-xl font-black text-slate-800">0 碰</div>
-            </div>
-            <div class="p-3 bg-slate-50 rounded-xl">
-              <div class="text-xs text-slate-400">原始金額</div>
-              <div id="tsGrossAmount" class="text-xl font-black text-slate-500">0 元</div>
-            </div>
-            <div class="p-3 bg-slate-50 rounded-xl">
-              <div class="text-xs text-slate-400">退水金額 (27.5%)</div>
-              <div id="tsDiscountAmount" class="text-xl font-black text-emerald-600">0 元</div>
-            </div>
-            <div class="p-3 bg-blue-50 rounded-xl border border-blue-200">
-              <div class="text-xs text-blue-500 font-semibold">客人實付金額</div>
-              <div id="tsNetAmount" class="text-xl font-black text-blue-700">0 元</div>
-            </div>
+          <div>
+            <div class="text-xs text-slate-400">向客人實收總額 (退水後)</div>
+            <div id="starTotalNetCollect" class="text-lg font-black text-blue-600">0 元</div>
+          </div>
+          <div>
+            <div class="text-xs text-slate-400">開獎應派總彩金</div>
+            <div id="starTotalPayoutAll" class="text-lg font-black text-rose-600">0 元</div>
           </div>
         </div>
 
-        <!-- 二星開獎比對區塊 -->
-        <div class="mt-4 p-4 border border-dashed border-emerald-300 bg-emerald-50/50 rounded-2xl space-y-3">
-          <div class="flex items-center justify-between">
-            <h4 class="font-bold text-emerald-900 text-sm">二星中獎比對結果</h4>
-            <span id="tsHitCountBadge" class="text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-200 text-emerald-800">命中 0 顆</span>
-          </div>
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-center">
-            <div class="p-2 bg-white rounded-xl shadow-xs">
-              <div class="text-xs text-slate-400">中獎號碼</div>
-              <div id="tsHitNumbers" class="text-sm font-bold text-emerald-600">-</div>
-            </div>
-            <div class="p-2 bg-white rounded-xl shadow-xs">
-              <div class="text-xs text-slate-400">命中碰數 C(M, 2)</div>
-              <div id="tsHitPairs" class="text-sm font-bold text-emerald-600">0 碰</div>
-            </div>
-            <div class="p-2 bg-white rounded-xl shadow-xs">
-              <div class="text-xs text-slate-400">應派彩金 (每碰 5700)</div>
-              <div id="tsTotalPrize" class="text-base font-black text-rose-600">0 元</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- LINE 報帳複製按鈕 -->
         <div class="flex flex-col sm:flex-row gap-2 pt-2">
-          <button onclick="copyTwoStarBetSummary()" class="flex-1 py-2.5 bg-slate-800 hover:bg-slate-900 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1">📋 複製 LINE 二星下注單</button>
-          <button onclick="copyTwoStarPayoutSummary()" class="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1">💰 複製 LINE 二星派彩單</button>
+          <button onclick="copyStarBetSummary()" class="flex-1 py-2.5 bg-slate-800 hover:bg-slate-900 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1">📋 複製 LINE 連碰下注單</button>
+          <button onclick="copyStarPayoutSummary()" class="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1">💰 複製 LINE 連碰派彩單</button>
         </div>
       </div>
     </main>
@@ -234,55 +278,28 @@
   </div>
 
   <script>
-    // --- 狀態管理 ---
-    let carBets = []; // [{ num: '08', amount: 1 }]
-    let selectedTwoStarBalls = new Set();
-
-    // 初始化選號盤 (01-39)
-    function initBallSelector() {
-      const container = document.getElementById('ballSelector');
-      container.innerHTML = '';
-      for (let i = 1; i <= 39; i++) {
-        const num = String(i).padStart(2, '0');
-        const btn = document.createElement('button');
-        btn.textContent = num;
-        btn.id = `ball-${num}`;
-        btn.className = 'ball-btn font-bold py-2 border rounded-xl text-sm transition hover:border-red-400 bg-white';
-        btn.onclick = () => toggleTwoStarBall(num);
-        container.appendChild(btn);
+    // --- 組合公式 C(n, k) ---
+    function combinations(n, k) {
+      if (k < 0 || k > n) return 0;
+      if (k === 0 || k === n) return 1;
+      let c = 1;
+      for (let i = 1; i <= k; i++) {
+        c = (c * (n - (k - i))) / i;
       }
+      return Math.round(c);
     }
 
-    // 切換分頁
-    function switchTab(tab) {
-      const carSec = document.getElementById('carSection');
-      const tsSec = document.getElementById('twoStarSection');
-      const carBtn = document.getElementById('tabCarBtn');
-      const tsBtn = document.getElementById('tab2StarBtn');
+    // --- 全域狀態 ---
+    let carBets = []; // [{ num: '08', amount: 0.3 }]
+    let selectedCarBalls = new Set();
+    let selectedStarBalls = new Set();
 
-      if (tab === 'car') {
-        carSec.classList.remove('hidden');
-        tsSec.classList.add('hidden');
-        carBtn.className = 'px-5 py-2 rounded-lg bg-blue-600 text-white shadow-sm transition';
-        tsBtn.className = 'px-5 py-2 rounded-lg text-slate-600 hover:text-slate-900 transition';
-      } else {
-        carSec.classList.add('hidden');
-        tsSec.classList.remove('hidden');
-        tsBtn.className = 'px-5 py-2 rounded-lg bg-blue-600 text-white shadow-sm transition';
-        carBtn.className = 'px-5 py-2 rounded-lg text-slate-600 hover:text-slate-900 transition';
-      }
-    }
-
-    // 格式化開獎輸入
+    // 格式化開獎球輸入
     function formatBallInput(input) {
       let val = input.value.replace(/\D/g, '');
-      if (val.length === 1 && parseInt(val) > 3) {
-        val = '0' + val;
-      }
+      if (val.length === 1 && parseInt(val) > 3) val = '0' + val;
       input.value = val;
-      if (val.length === 2 && input.nextElementSibling) {
-        input.nextElementSibling.focus();
-      }
+      if (val.length === 2 && input.nextElementSibling) input.nextElementSibling.focus();
     }
 
     function getDrawnNumbers() {
@@ -297,25 +314,77 @@
 
     function triggerRecalculate() {
       renderCarBets();
-      calculateTwoStar();
+      calculateStars();
     }
 
-    // --- 坐車邏輯 ---
-    function addCarBet() {
-      const numInput = document.getElementById('newCarNumber');
-      const amtInput = document.getElementById('newCarAmount');
-      const num = numInput.value.trim().padStart(2, '0');
-      const amount = parseFloat(amtInput.value);
+    function switchTab(tab) {
+      const carSec = document.getElementById('carSection');
+      const starSec = document.getElementById('starSection');
+      const carBtn = document.getElementById('tabCarBtn');
+      const starBtn = document.getElementById('tabStarBtn');
 
-      if (!num || isNaN(amount) || amount <= 0) {
-        alert('請輸入正確號碼與車數！');
+      if (tab === 'car') {
+        carSec.classList.remove('hidden');
+        starSec.classList.add('hidden');
+        carBtn.className = 'px-5 py-2 rounded-lg bg-blue-600 text-white shadow-sm transition';
+        starBtn.className = 'px-5 py-2 rounded-lg text-slate-600 hover:text-slate-900 transition';
+      } else {
+        carSec.classList.add('hidden');
+        starSec.classList.remove('hidden');
+        starBtn.className = 'px-5 py-2 rounded-lg bg-blue-600 text-white shadow-sm transition';
+        carBtn.className = 'px-5 py-2 rounded-lg text-slate-600 hover:text-slate-900 transition';
+      }
+    }
+
+    // --- 坐車選號盤與批次邏輯 ---
+    function initCarBallSelector() {
+      const container = document.getElementById('carBallSelector');
+      container.innerHTML = '';
+      for (let i = 1; i <= 39; i++) {
+        const num = String(i).padStart(2, '0');
+        const btn = document.createElement('button');
+        btn.textContent = num;
+        btn.id = `car-ball-${num}`;
+        btn.className = 'ball-btn font-bold py-2 border rounded-xl text-xs transition bg-white hover:border-blue-400';
+        btn.onclick = () => toggleCarBall(num);
+        container.appendChild(btn);
+      }
+    }
+
+    function toggleCarBall(num) {
+      if (selectedCarBalls.has(num)) {
+        selectedCarBalls.delete(num);
+        document.getElementById(`car-ball-${num}`).classList.remove('active');
+      } else {
+        selectedCarBalls.add(num);
+        document.getElementById(`car-ball-${num}`).classList.add('active');
+      }
+      const arr = Array.from(selectedCarBalls).sort((a,b) => a-b);
+      document.getElementById('carSelectedNums').textContent = arr.length > 0 ? `${arr.join(', ')} (共 ${arr.length} 顆)` : '無';
+    }
+
+    function clearCarSelector() {
+      selectedCarBalls.clear();
+      document.querySelectorAll('#carBallSelector .ball-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('carSelectedNums').textContent = '無';
+    }
+
+    function addSelectedCarsBatch() {
+      const amount = parseFloat(document.getElementById('carDefaultPerBall').value);
+      if (selectedCarBalls.size === 0) {
+        alert('請先點選 1~6 顆號碼！');
+        return;
+      }
+      if (isNaN(amount) || amount <= 0) {
+        alert('請輸入有效車數 (例如 0.3)！');
         return;
       }
 
-      carBets.push({ num, amount });
-      numInput.value = '';
-      amtInput.value = '';
-      numInput.focus();
+      selectedCarBalls.forEach(num => {
+        carBets.push({ num, amount });
+      });
+
+      clearCarSelector();
       renderCarBets();
     }
 
@@ -329,32 +398,6 @@
       renderCarBets();
     }
 
-    function parseBatchCarText() {
-      const text = document.getElementById('carBatchText').value;
-      if (!text) return;
-      
-      // 比對如 "08下1車", "15, 23各0.5車", "08 1.5"
-      const regex = /(\d{1,2})[^\d\n]*?(\d+(?:\.\d+)?)\s*車?/g;
-      let match;
-      let count = 0;
-      while ((match = regex.exec(text)) !== null) {
-        const num = match[1].padStart(2, '0');
-        const amount = parseFloat(match[2]);
-        if (num && amount > 0) {
-          carBets.push({ num, amount });
-          count++;
-        }
-      }
-
-      if (count === 0) {
-        // 嘗試抓單純號碼 + 共用車數格式
-        alert('無法自動識別，請確認格式（例如：08下1車 29下0.5車）');
-      } else {
-        document.getElementById('carBatchText').value = '';
-        renderCarBets();
-      }
-    }
-
     function renderCarBets() {
       const custPrice = parseFloat(document.getElementById('carCustPrice').value) || 2850;
       const costPrice = parseFloat(document.getElementById('carCostPrice').value) || 2755;
@@ -362,7 +405,7 @@
       const waterPerCar = custPrice - costPrice;
       document.getElementById('carWaterDisplay').textContent = `${waterPerCar.toFixed(1)} 元`;
 
-      const drawnNumbers = getDrawnNumbers();
+      const drawn = getDrawnNumbers();
       const tbody = document.getElementById('carBetList');
       tbody.innerHTML = '';
 
@@ -372,7 +415,7 @@
       let totalPayout = 0;
 
       carBets.forEach((bet, idx) => {
-        const isHit = drawnNumbers.includes(bet.num);
+        const isHit = drawn.includes(bet.num);
         const collect = bet.amount * custPrice;
         const water = bet.amount * waterPerCar;
         const prize = isHit ? bet.amount * reward : 0;
@@ -383,111 +426,157 @@
         totalPayout += prize;
 
         const tr = document.createElement('tr');
-        tr.className = isHit ? 'bg-emerald-50/70 font-bold' : '';
+        tr.className = isHit ? 'bg-emerald-50 font-bold' : '';
         tr.innerHTML = `
-          <td class="py-2.5"><span class="px-2 py-0.5 rounded-md ${isHit ? 'bg-red-500 text-white' : 'bg-slate-200'}">${bet.num}</span></td>
+          <td class="py-2"><span class="px-2 py-0.5 rounded-md ${isHit ? 'bg-red-500 text-white' : 'bg-slate-200'}">${bet.num}</span></td>
           <td>${bet.amount} 車</td>
-          <td>${collect.toLocaleString()}</td>
-          <td>${(bet.amount * costPrice).toLocaleString()}</td>
-          <td class="text-emerald-600 font-bold">+${water.toLocaleString()}</td>
-          <td class="text-center">${isHit ? `<span class="text-rose-600 font-black">中獎 (${prize.toLocaleString()})</span>` : '<span class="text-slate-300">未開</span>'}</td>
+          <td>${Math.round(collect).toLocaleString()}</td>
+          <td>${Math.round(bet.amount * costPrice).toLocaleString()}</td>
+          <td class="text-emerald-600 font-bold">+${Math.round(water).toLocaleString()}</td>
+          <td class="text-center">${isHit ? `<span class="text-rose-600 font-black">中獎 (+${Math.round(prize).toLocaleString()})</span>` : '<span class="text-slate-300">未開</span>'}</td>
           <td class="text-right"><button onclick="removeCarBet(${idx})" class="text-rose-500 text-xs hover:underline">刪除</button></td>
         `;
         tbody.appendChild(tr);
       });
 
       document.getElementById('carTotalCars').textContent = `${totalCars.toFixed(2)} 車`;
-      document.getElementById('carTotalCollect').textContent = `${totalCollect.toLocaleString()} 元`;
-      document.getElementById('carTotalWater').textContent = `${totalWater.toLocaleString()} 元`;
-      document.getElementById('carTotalPayout').textContent = `${totalPayout.toLocaleString()} 元`;
+      document.getElementById('carTotalCollect').textContent = `${Math.round(totalCollect).toLocaleString()} 元`;
+      document.getElementById('carTotalWater').textContent = `${Math.round(totalWater).toLocaleString()} 元`;
+      document.getElementById('carTotalPayout').textContent = `${Math.round(totalPayout).toLocaleString()} 元`;
     }
 
-    // --- 二星連碰邏輯 ---
-    function toggleTwoStarBall(num) {
-      if (selectedTwoStarBalls.has(num)) {
-        selectedTwoStarBalls.delete(num);
-        document.getElementById(`ball-${num}`).classList.remove('active');
-      } else {
-        selectedTwoStarBalls.add(num);
-        document.getElementById(`ball-${num}`).classList.add('active');
+    // --- 連碰選號盤 (二、三、四星) ---
+    function initStarBallSelector() {
+      const container = document.getElementById('starBallSelector');
+      container.innerHTML = '';
+      for (let i = 1; i <= 39; i++) {
+        const num = String(i).padStart(2, '0');
+        const btn = document.createElement('button');
+        btn.textContent = num;
+        btn.id = `star-ball-${num}`;
+        btn.className = 'ball-btn font-bold py-2 border rounded-xl text-xs transition bg-white hover:border-red-400';
+        btn.onclick = () => toggleStarBall(num);
+        container.appendChild(btn);
       }
-      calculateTwoStar();
     }
 
-    function clearTwoStarBalls() {
-      selectedTwoStarBalls.clear();
-      document.querySelectorAll('.ball-btn').forEach(btn => btn.classList.remove('active'));
-      calculateTwoStar();
+    function toggleStarBall(num) {
+      if (selectedStarBalls.has(num)) {
+        selectedStarBalls.delete(num);
+        document.getElementById(`star-ball-${num}`).classList.remove('active');
+      } else {
+        selectedStarBalls.add(num);
+        document.getElementById(`star-ball-${num}`).classList.add('active');
+      }
+      calculateStars();
     }
 
-    function calculateTwoStar() {
-      const basePrice = parseFloat(document.getElementById('twoStarBasePrice').value) || 100;
-      const discountRate = parseFloat(document.getElementById('twoStarDiscountRate').value) || 27.5;
-      const odds = parseFloat(document.getElementById('twoStarOdds').value) || 57;
+    function clearStarBalls() {
+      selectedStarBalls.clear();
+      document.querySelectorAll('#starBallSelector .ball-btn').forEach(b => b.classList.remove('active'));
+      calculateStars();
+    }
 
-      const netPricePerPair = basePrice * (1 - discountRate / 100);
-      document.getElementById('twoStarNetPrice').textContent = `${netPricePerPair.toFixed(1)} 元`;
+    function calculateStars() {
+      const basePrice = 100;
+      const rate2 = parseFloat(document.getElementById('rate2Star').value) || 27.5;
+      const rate3 = parseFloat(document.getElementById('rate3Star').value) || 37;
+      const rate4 = parseFloat(document.getElementById('rate4Star').value) || 50;
 
-      const balls = Array.from(selectedTwoStarBalls).sort((a, b) => a - b);
+      const odds2 = parseFloat(document.getElementById('odds2Star').value) || 57;
+      const odds3 = parseFloat(document.getElementById('odds3Star').value) || 570;
+      const odds4 = parseFloat(document.getElementById('odds4Star').value) || 8000;
+
+      const en2 = document.getElementById('enable2Star').checked;
+      const en3 = document.getElementById('enable3Star').checked;
+      const en4 = document.getElementById('enable4Star').checked;
+
+      // 更新每碰實收顯示
+      document.getElementById('net2StarDisplay').textContent = `${(basePrice * (1 - rate2/100)).toFixed(1)} 元`;
+      document.getElementById('net3StarDisplay').textContent = `${(basePrice * (1 - rate3/100)).toFixed(1)} 元`;
+      document.getElementById('net4StarDisplay').textContent = `${(basePrice * (1 - rate4/100)).toFixed(1)} 元`;
+
+      const balls = Array.from(selectedStarBalls).sort((a,b) => a-b);
       const n = balls.length;
+      document.getElementById('starSelectionSummary').textContent = n > 0 ? `已選 ${balls.join(', ')} (共 ${n} 顆)` : '尚未選擇號碼';
 
-      document.getElementById('tsSelectedDisplay').textContent = n > 0 ? `${balls.join(', ')} (共 ${n} 顆)` : '尚未選擇';
-
-      // 組合公式 C(N, 2) = N * (N - 1) / 2
-      const pairs = n >= 2 ? (n * (n - 1)) / 2 : 0;
-      const grossAmount = pairs * basePrice;
-      const discountAmount = grossAmount * (discountRate / 100);
-      const netAmount = grossAmount - discountAmount;
-
-      document.getElementById('tsTotalPairs').textContent = `${pairs} 碰`;
-      document.getElementById('tsGrossAmount').textContent = `${grossAmount.toLocaleString()} 元`;
-      document.getElementById('tsDiscountAmount').textContent = `-${discountAmount.toLocaleString()} 元`;
-      document.getElementById('tsNetAmount').textContent = `${netAmount.toLocaleString()} 元`;
-
-      // 對獎比對
-      const drawnNumbers = getDrawnNumbers();
-      const hits = balls.filter(b => drawnNumbers.includes(b));
+      const drawn = getDrawnNumbers();
+      const hits = balls.filter(b => drawn.includes(b));
       const m = hits.length;
 
-      // 命中碰數 C(M, 2)
-      const hitPairs = m >= 2 ? (m * (m - 1)) / 2 : 0;
-      const prizePerPair = basePrice * odds; // 100 * 57 = 5700
-      const totalPrize = hitPairs * prizePerPair;
+      const starConfigs = [
+        { name: '二星', k: 2, enabled: en2, rate: rate2, odds: odds2 },
+        { name: '三星', k: 3, enabled: en3, rate: rate3, odds: odds3 },
+        { name: '四星', k: 4, enabled: en4, rate: rate4, odds: odds4 }
+      ];
 
-      document.getElementById('tsHitCountBadge').textContent = `命中 ${m} 顆`;
-      document.getElementById('tsHitNumbers').textContent = m > 0 ? hits.join(', ') : '無';
-      document.getElementById('tsHitPairs').textContent = `${hitPairs} 碰`;
-      document.getElementById('tsTotalPrize').textContent = `${totalPrize.toLocaleString()} 元`;
+      const tbody = document.getElementById('starCalculationBody');
+      tbody.innerHTML = '';
+
+      let totalPairsAll = 0;
+      let totalNetCollect = 0;
+      let totalPrizeAll = 0;
+
+      starConfigs.forEach(cfg => {
+        if (!cfg.enabled) return;
+
+        const pairs = combinations(n, cfg.k);
+        const gross = pairs * basePrice;
+        const net = pairs * (basePrice * (1 - cfg.rate / 100));
+
+        // 命中碰數 C(m, k)
+        const hitPairs = combinations(m, cfg.k);
+        const prize = hitPairs * (basePrice * cfg.odds);
+
+        totalPairsAll += pairs;
+        totalNetCollect += net;
+        totalPrizeAll += prize;
+
+        const tr = document.createElement('tr');
+        if (hitPairs > 0) tr.className = 'bg-rose-50/70 font-bold';
+        tr.innerHTML = `
+          <td class="py-2.5 font-bold">${cfg.name}</td>
+          <td>${pairs} 碰</td>
+          <td>${gross.toLocaleString()} 元</td>
+          <td class="text-blue-600 font-bold">${Math.round(net).toLocaleString()} 元 (退${cfg.rate}%)</td>
+          <td>${hitPairs > 0 ? `<span class="text-rose-600 font-bold">命中 ${hitPairs} 碰</span>` : '0 碰'}</td>
+          <td class="text-right ${hitPairs > 0 ? 'text-rose-600 font-black' : 'text-slate-400'}">${Math.round(prize).toLocaleString()} 元</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      document.getElementById('starTotalPairsAll').textContent = `${totalPairsAll} 碰`;
+      document.getElementById('starTotalNetCollect').textContent = `${Math.round(totalNetCollect).toLocaleString()} 元`;
+      document.getElementById('starTotalPayoutAll').textContent = `${Math.round(totalPrizeAll).toLocaleString()} 元`;
     }
 
-    // --- LINE 報帳格式複製 ---
+    // --- 複製到剪貼簿功能 ---
     function copyToClipboard(text) {
       navigator.clipboard.writeText(text).then(() => {
-        alert('已成功複製到剪貼簿，可直接貼到 LINE！');
+        alert('已複製到剪貼簿，可直接貼上 LINE！');
       }).catch(() => {
-        alert('複製失敗，請手動複製。');
+        alert('複製失敗，請手動選取複製');
       });
     }
 
     function copyCarBetSummary() {
-      const custPrice = document.getElementById('carCustPrice').value;
       let text = `【539 / 天天樂 坐車下注確認】\n`;
-      text += `單價：${custPrice} 元 / 車\n`;
+      text += `單價：2850 元 / 車\n`;
       text += `------------------------\n`;
       carBets.forEach(b => {
         text += `號碼：${b.num} ➔ ${b.amount} 車\n`;
       });
       text += `------------------------\n`;
-      text += `總下注車數：${document.getElementById('carTotalCars').textContent}\n`;
-      text += `應付總金額：${document.getElementById('carTotalCollect').textContent}\n`;
-      text += `下注已完成，祝您中獎！`;
+      text += `總計車數：${document.getElementById('carTotalCars').textContent}\n`;
+      text += `應收總額：${document.getElementById('carTotalCollect').textContent}\n`;
+      text += `下注已確認完成！`;
       copyToClipboard(text);
     }
 
     function copyCarPayoutSummary() {
       const drawn = getDrawnNumbers();
-      let text = `【539 / 天天樂 坐車開獎派彩】\n`;
-      text += `開獎號碼：${drawn.join(', ') || '未填寫'}\n`;
+      let text = `【539 / 天天樂 坐車派彩對帳】\n`;
+      text += `開獎號碼：${drawn.join(', ') || '未設定'}\n`;
       text += `------------------------\n`;
       carBets.forEach(b => {
         const isHit = drawn.includes(b.num);
@@ -498,34 +587,35 @@
       copyToClipboard(text);
     }
 
-    function copyTwoStarBetSummary() {
-      const balls = Array.from(selectedTwoStarBalls).sort((a, b) => a - b);
-      let text = `【二星連碰對碰 下注確認】\n`;
-      text += `選取號碼：${balls.join(', ')} (共 ${balls.length} 顆)\n`;
-      text += `換算碰數：${document.getElementById('tsTotalPairs').textContent}\n`;
-      text += `面額計費：每碰 100 元 (享退水 27.5%)\n`;
-      text += `實付金額：${document.getElementById('tsNetAmount').textContent}\n`;
+    function copyStarBetSummary() {
+      const balls = Array.from(selectedStarBalls).sort((a,b) => a-b);
+      let text = `【539 / 天天樂 二三四星連碰 下注單】\n`;
+      text += `選號：${balls.join(', ')} (共 ${balls.length} 顆)\n`;
       text += `------------------------\n`;
-      text += `單碰彩金：57 倍 (中碰派 5,700 元)\n`;
-      text += `已確認為您下注完成！`;
+      text += `總碰數：${document.getElementById('starTotalPairsAll').textContent}\n`;
+      text += `應付實收總額：${document.getElementById('starTotalNetCollect').textContent}\n`;
+      text += `(二星退27.5% / 三星退37% / 四星退50%)\n`;
+      text += `祝您中大獎！`;
       copyToClipboard(text);
     }
 
-    function copyTwoStarPayoutSummary() {
+    function copyStarPayoutSummary() {
       const drawn = getDrawnNumbers();
-      let text = `【二星連碰對碰 派彩對帳單】\n`;
+      const balls = Array.from(selectedStarBalls).sort((a,b) => a-b);
+      const hits = balls.filter(b => drawn.includes(b));
+      let text = `【539 / 天天樂 二三四星連碰 派彩單】\n`;
       text += `開獎號碼：${drawn.join(', ')}\n`;
-      text += `命中號碼：${document.getElementById('tsHitNumbers').textContent}\n`;
-      text += `命中碰數：${document.getElementById('tsHitPairs').textContent}\n`;
+      text += `命中號碼：${hits.join(', ') || '無'} (命中 ${hits.length} 顆)\n`;
       text += `------------------------\n`;
-      text += `總計派彩彩金：${document.getElementById('tsTotalPrize').textContent}\n`;
+      text += `應派總彩金：${document.getElementById('starTotalPayoutAll').textContent}\n`;
       copyToClipboard(text);
     }
 
-    // 初始化執行
-    initBallSelector();
+    // 初始化頁面
+    initCarBallSelector();
+    initStarBallSelector();
     renderCarBets();
-    calculateTwoStar();
+    calculateStars();
   </script>
 </body>
 </html>
