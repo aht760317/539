@@ -21,7 +21,7 @@
 </head>
 <body class="text-slate-800 font-sans pb-20 md:pb-10">
   
-  <!-- 頂部標題列 (手機固定，電腦圓角卡片) -->
+  <!-- 頂部標題列 -->
   <header class="bg-slate-900 text-white shadow-md sticky top-0 z-50 md:relative md:max-w-5xl md:mx-auto md:mt-4 md:rounded-2xl md:px-6 md:py-4">
     <div class="px-4 py-3 md:p-0 flex flex-col md:flex-row justify-between md:items-center gap-3">
       <div class="flex justify-between items-center md:block">
@@ -31,7 +31,6 @@
           </h1>
           <div class="text-[10px] md:text-xs text-slate-400 mt-1">2星賺7.5%｜3星賺7%｜4星賺20%｜車賺95</div>
         </div>
-        <!-- 雲端燈號 (手機版靠右，電腦版跟著標題) -->
         <div id="cloudStatus" class="md:hidden text-[10px] font-bold px-2.5 py-1 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-full flex items-center gap-1">
           <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></span>已同步
         </div>
@@ -154,11 +153,10 @@
           <span class="text-sm md:text-base font-bold text-slate-800">👇 點擊選擇號碼</span>
           <button onclick="window.clearStarBalls()" class="text-xs md:text-sm px-3 py-1.5 md:py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-lg transition">全部清空</button>
         </div>
-        <!-- RWD 號碼盤：手機 7 欄，電腦 10 欄 -->
         <div id="starBallSelector" class="grid grid-cols-7 md:grid-cols-10 gap-1.5 md:gap-2"></div>
       </div>
 
-      <!-- 📊 RWD 對帳結果 (電腦顯示 Table，手機顯示 Cards) -->
+      <!-- 📊 對帳結果 -->
       <div class="bg-white rounded-2xl shadow-sm p-4 md:p-6 border border-slate-200">
         <div class="flex items-center justify-between border-b pb-2 md:pb-4 mb-3 md:mb-4">
           <h3 class="font-black text-slate-800 text-sm md:text-lg">連碰對帳明細</h3>
@@ -187,17 +185,25 @@
           <!-- JS 注入卡片 -->
         </div>
 
-        <!-- 總計結算 -->
-        <div class="bg-slate-800 text-white p-3 md:p-5 rounded-xl flex justify-between items-center shadow-inner">
-          <div class="flex gap-4 md:gap-10">
-            <div>
-              <div class="text-[10px] md:text-xs text-slate-400">向客總收 (<span id="starTotalPairs" class="text-slate-300">0碰</span>)</div>
-              <div id="starTotalCollect" class="text-lg md:text-2xl font-black text-blue-300">0 元</div>
+        <!-- 總計結算 (新版 4 宮格) -->
+        <div class="bg-slate-800 text-white p-2.5 md:p-4 rounded-xl shadow-inner mb-2">
+          <div class="grid grid-cols-4 gap-1 md:gap-4 w-full text-center divide-x divide-slate-700/80">
+            <div class="px-1 flex flex-col justify-center">
+              <div class="text-[10px] md:text-xs text-slate-400 mb-0.5">總碰數</div>
+              <div id="starTotalPairs" class="text-xs md:text-xl font-bold text-slate-200">0 碰</div>
             </div>
-          </div>
-          <div class="text-right">
-            <div class="text-[10px] md:text-xs text-slate-400">淨賺水錢利潤</div>
-            <div id="starTotalWater" class="text-xl md:text-3xl font-black text-emerald-400">0 元</div>
+            <div class="px-1 flex flex-col justify-center">
+              <div class="text-[10px] md:text-xs text-slate-400 mb-0.5">向客收</div>
+              <div id="starTotalCollect" class="text-xs md:text-xl font-black text-blue-400">0</div>
+            </div>
+            <div class="px-1 flex flex-col justify-center">
+              <div class="text-[10px] md:text-xs text-slate-400 mb-0.5">繳組頭</div>
+              <div id="starTotalCost" class="text-xs md:text-xl font-black text-slate-300">0</div>
+            </div>
+            <div class="px-1 flex flex-col justify-center">
+              <div class="text-[10px] md:text-xs text-emerald-400/80 mb-0.5">淨賺水錢</div>
+              <div id="starTotalWater" class="text-sm md:text-2xl font-black text-emerald-400">0</div>
+            </div>
           </div>
         </div>
 
@@ -235,7 +241,6 @@
             <span class="text-sm md:text-base font-bold text-slate-800">👇 點擊選擇號碼</span>
             <button onclick="window.clearCarSelector()" class="text-xs md:text-sm px-3 py-1.5 md:py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-lg transition">清空</button>
           </div>
-          <!-- RWD 號碼盤 -->
           <div id="carBallSelector" class="grid grid-cols-7 md:grid-cols-10 gap-1.5 md:gap-2"></div>
         </div>
 
@@ -252,7 +257,7 @@
         </div>
       </div>
 
-      <!-- 坐車 RWD 清單對帳 -->
+      <!-- 坐車清單對帳 -->
       <div class="bg-white rounded-2xl shadow-sm p-4 md:p-6 border border-slate-200">
         <div class="flex items-center justify-between border-b pb-2 md:pb-4 mb-3 md:mb-4">
           <h3 class="font-black text-slate-800 text-sm md:text-lg">坐車清單試算</h3>
@@ -282,15 +287,25 @@
           <!-- JS 動態生成 -->
         </div>
 
-        <!-- 總計結算 -->
-        <div class="bg-slate-800 text-white p-3 md:p-5 rounded-xl flex justify-between items-center shadow-inner">
-          <div>
-            <div class="text-[10px] md:text-xs text-slate-400">向客總收 (<span id="carTotalCars" class="text-slate-300">0車</span>)</div>
-            <div id="carTotalCollect" class="text-lg md:text-2xl font-black text-blue-300">0 元</div>
-          </div>
-          <div class="text-right">
-            <div class="text-[10px] md:text-xs text-slate-400">淨賺水錢利潤</div>
-            <div id="carTotalWater" class="text-xl md:text-3xl font-black text-emerald-400">0 元</div>
+        <!-- 總計結算 (新版 4 宮格) -->
+        <div class="bg-slate-800 text-white p-2.5 md:p-4 rounded-xl shadow-inner mb-2">
+          <div class="grid grid-cols-4 gap-1 md:gap-4 w-full text-center divide-x divide-slate-700/80">
+            <div class="px-1 flex flex-col justify-center">
+              <div class="text-[10px] md:text-xs text-slate-400 mb-0.5">總車數</div>
+              <div id="carTotalCars" class="text-xs md:text-xl font-bold text-slate-200">0 車</div>
+            </div>
+            <div class="px-1 flex flex-col justify-center">
+              <div class="text-[10px] md:text-xs text-slate-400 mb-0.5">向客收</div>
+              <div id="carTotalCollect" class="text-xs md:text-xl font-black text-blue-400">0</div>
+            </div>
+            <div class="px-1 flex flex-col justify-center">
+              <div class="text-[10px] md:text-xs text-slate-400 mb-0.5">繳組頭</div>
+              <div id="carTotalCost" class="text-xs md:text-xl font-black text-slate-300">0</div>
+            </div>
+            <div class="px-1 flex flex-col justify-center">
+              <div class="text-[10px] md:text-xs text-emerald-400/80 mb-0.5">淨賺水錢</div>
+              <div id="carTotalWater" class="text-sm md:text-2xl font-black text-emerald-400">0</div>
+            </div>
           </div>
         </div>
 
@@ -309,7 +324,7 @@
     </main>
 
     <!-- ===================================== -->
-    <!-- 模組三：雲端流水帳本 (RWD 雙棲版) -->
+    <!-- 模組三：雲端流水帳本 -->
     <!-- ===================================== -->
     <section class="bg-white rounded-2xl shadow-sm p-4 md:p-6 border border-slate-200 mb-6">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b pb-3 md:pb-4 mb-3 md:mb-4">
@@ -324,17 +339,25 @@
         </div>
       </div>
 
-      <!-- 當日總計 -->
-      <div class="flex justify-between items-center bg-blue-50/50 p-3 md:p-5 rounded-xl border border-blue-100 mb-4 md:mb-6">
-        <div class="flex gap-6 md:gap-16">
-          <div>
-            <div class="text-[10px] md:text-xs text-slate-500">總實收 (<span id="ledgerCountDisplay" class="font-bold">0筆</span>)</div>
-            <div id="ledgerCollectDisplay" class="text-base md:text-2xl font-black text-blue-700">0 元</div>
+      <!-- 當日總計 (新版 4 宮格) -->
+      <div class="bg-blue-50/50 p-2.5 md:p-4 rounded-xl border border-blue-100 mb-4 md:mb-6">
+        <div class="grid grid-cols-4 gap-1 md:gap-4 w-full text-center divide-x divide-blue-200/60">
+          <div class="px-1 flex flex-col justify-center">
+            <div class="text-[10px] md:text-xs text-slate-500 mb-0.5">總單數</div>
+            <div id="ledgerCountDisplay" class="text-xs md:text-xl font-black text-slate-700">0 筆</div>
           </div>
-        </div>
-        <div class="text-right">
-          <div class="text-[10px] md:text-xs text-slate-500">總實賺水錢</div>
-          <div id="ledgerWaterDisplay" class="text-xl md:text-3xl font-black text-emerald-600">0 元</div>
+          <div class="px-1 flex flex-col justify-center">
+            <div class="text-[10px] md:text-xs text-slate-500 mb-0.5">向客收</div>
+            <div id="ledgerCollectDisplay" class="text-xs md:text-xl font-black text-blue-700">0</div>
+          </div>
+          <div class="px-1 flex flex-col justify-center">
+            <div class="text-[10px] md:text-xs text-slate-500 mb-0.5">上繳本</div>
+            <div id="ledgerCostDisplay" class="text-xs md:text-xl font-black text-slate-600">0</div>
+          </div>
+          <div class="px-1 flex flex-col justify-center">
+            <div class="text-[10px] md:text-xs text-emerald-600 mb-0.5">淨賺水錢</div>
+            <div id="ledgerWaterDisplay" class="text-sm md:text-2xl font-black text-emerald-600">0</div>
+          </div>
         </div>
       </div>
 
@@ -483,7 +506,6 @@
           const btn = document.createElement('button');
           btn.textContent = num;
           btn.id = `${prefix}-ball-${num}`;
-          // RWD: 手機板 py-2, 電腦板 py-3
           btn.className = 'ball-btn font-black py-2 md:py-3 border border-slate-200 rounded-lg md:rounded-xl text-sm md:text-base transition bg-white text-slate-700 hover:bg-slate-50 shadow-sm hover:border-slate-400';
           btn.onclick = () => window[toggleFn](num);
           container.appendChild(btn);
@@ -553,7 +575,6 @@
       const hits = balls.filter(b => drawn.includes(b));
       const m = hits.length;
 
-      // 取得 RWD 雙容器
       const tbody = document.getElementById('starTableBody');
       const cardContainer = document.getElementById('starCardContainer');
       tbody.innerHTML = '';
@@ -621,17 +642,15 @@
         cardContainer.innerHTML = `<div class="text-center text-slate-400 text-xs py-4">請在上方點擊號碼與玩法</div>`;
       }
 
+      // 新版 4宮格更新數值 (拿掉金額後面的'元'以節省空間，使用者從標題即可辨識)
       document.getElementById('starTotalPairs').textContent = tPairs + ' 碰';
-      document.getElementById('starTotalCollect').textContent = Math.round(tColl).toLocaleString() + ' 元';
-      document.getElementById('starTotalWater').textContent = '+' + Math.round(tWater).toLocaleString() + ' 元';
+      document.getElementById('starTotalCollect').textContent = Math.round(tColl).toLocaleString();
+      document.getElementById('starTotalCost').textContent = Math.round(tCost).toLocaleString();
+      document.getElementById('starTotalWater').textContent = '+' + Math.round(tWater).toLocaleString();
       document.getElementById('starTotalPayout').textContent = Math.round(tPayout).toLocaleString() + ' 元';
 
       const payoutWrap = document.getElementById('starTotalPayoutWrapper');
-      if (tPayout > 0) {
-        payoutWrap.classList.remove('hidden');
-      } else {
-        payoutWrap.classList.add('hidden');
-      }
+      if (tPayout > 0) { payoutWrap.classList.remove('hidden'); } else { payoutWrap.classList.add('hidden'); }
 
       window.currentStarCalc = { balls, n, tPairs, tColl: Math.round(tColl), tCost: Math.round(tCost), tWater: Math.round(tWater), tPayout: Math.round(tPayout), hits, hitCount: m, rulesInfo: rules.filter(r=>r.enabled).map(r=>`${r.key}(${r.unit}元)`).join('+') };
     };
@@ -752,9 +771,11 @@
         cardContainer.innerHTML = `<div class="text-center text-slate-400 text-xs py-4">目前無坐車清單</div>`;
       }
 
+      // 新版 4宮格更新數值 (拿掉金額後面的'元'以節省空間)
       document.getElementById('carTotalCars').textContent = tCars.toFixed(2) + ' 車';
-      document.getElementById('carTotalCollect').textContent = Math.round(tColl).toLocaleString() + ' 元';
-      document.getElementById('carTotalWater').textContent = '+' + Math.round(tWater).toLocaleString() + ' 元';
+      document.getElementById('carTotalCollect').textContent = Math.round(tColl).toLocaleString();
+      document.getElementById('carTotalCost').textContent = Math.round(tCost).toLocaleString();
+      document.getElementById('carTotalWater').textContent = '+' + Math.round(tWater).toLocaleString();
       document.getElementById('carTotalPayout').textContent = Math.round(tPayout).toLocaleString() + ' 元';
 
       const payoutWrap = document.getElementById('carTotalPayoutWrapper');
@@ -844,9 +865,11 @@
         cardList.innerHTML = '<div class="text-center text-slate-400 text-xs py-6">此日期無帳目資料</div>';
       }
 
+      // 新版 4宮格更新數值
       document.getElementById('ledgerCountDisplay').textContent = `${filtered.length} 筆`;
-      document.getElementById('ledgerCollectDisplay').textContent = sumColl.toLocaleString() + ' 元';
-      document.getElementById('ledgerWaterDisplay').textContent = '+' + sumWater.toLocaleString() + ' 元';
+      document.getElementById('ledgerCollectDisplay').textContent = sumColl.toLocaleString();
+      document.getElementById('ledgerCostDisplay').textContent = sumCost.toLocaleString();
+      document.getElementById('ledgerWaterDisplay').textContent = '+' + sumWater.toLocaleString();
     };
 
     window.resetLedgerFilter = function() {
