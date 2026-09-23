@@ -3,25 +3,29 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>539 / 天天樂 中間人水錢帳本系統</title>
+  <title>539 / 天天樂 中間人專業對帳系統</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     .ball-btn.active {
       background-color: #ef4444 !important;
       color: #ffffff !important;
       border-color: #b91c1c !important;
+      transform: scale(1.05);
     }
   </style>
 </head>
-<body class="bg-slate-100 text-slate-800 min-h-screen p-3 md:p-6">
+<body class="bg-slate-100 text-slate-800 min-h-screen p-3 md:p-6 font-sans">
   <div class="max-w-5xl mx-auto space-y-6">
 
     <!-- 頂部導航 -->
     <header class="bg-white rounded-2xl shadow-sm p-5 border border-slate-200">
       <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <h1 class="text-2xl font-black text-slate-900 tracking-tight">539 / 天天樂 中間人水錢對帳系統</h1>
-          <p class="text-xs text-slate-500 mt-1">二星賺 7.5元/碰 ｜ 三星賺 7元/碰 ｜ 四星賺 20元/碰 ｜ 單車賺 95元/車</p>
+          <h1 class="text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2">
+            <span>539 / 天天樂 中間人專業對帳系統</span>
+            <span class="text-xs font-bold px-2 py-0.5 bg-blue-100 text-blue-700 rounded-full">專業版</span>
+          </h1>
+          <p class="text-xs text-slate-500 mt-1">二星賺 7.5% ｜ 三星賺 7% ｜ 四星賺 20% ｜ 坐車賺 95元/車 ｜ 面額自由設定</p>
         </div>
         <div class="flex rounded-xl bg-slate-100 p-1 border border-slate-200 text-sm font-semibold">
           <button id="tabStarBtn" onclick="switchTab('star')" class="px-5 py-2 rounded-lg bg-blue-600 text-white shadow-sm transition">連碰 (2星/3星/4星)</button>
@@ -30,27 +34,27 @@
       </div>
     </header>
 
-    <!-- 開獎號碼區塊 (共 5 顆球) -->
+    <!-- 開盤號碼 (共 5 顆球) -->
     <section class="bg-white rounded-2xl shadow-sm p-4 border border-slate-200">
       <div class="flex items-center justify-between mb-2">
         <h2 class="text-sm font-bold text-slate-900 flex items-center gap-2">
           <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
           開獎號碼 (輸入 5 顆球自動比對命中與彩金)
         </h2>
-        <span class="text-xs text-slate-400">當日開獎後輸入</span>
+        <span class="text-xs text-slate-400">當日開獎後填寫</span>
       </div>
       <div class="grid grid-cols-5 gap-2 sm:gap-4 max-w-sm mx-auto">
-        <input type="text" maxlength="2" class="draw-input text-center text-xl font-black py-2 border-2 border-slate-200 rounded-xl focus:border-emerald-500 focus:outline-none" placeholder="01" oninput="formatBallInput(this); triggerRecalculate();">
-        <input type="text" maxlength="2" class="draw-input text-center text-xl font-black py-2 border-2 border-slate-200 rounded-xl focus:border-emerald-500 focus:outline-none" placeholder="02" oninput="formatBallInput(this); triggerRecalculate();">
-        <input type="text" maxlength="2" class="draw-input text-center text-xl font-black py-2 border-2 border-slate-200 rounded-xl focus:border-emerald-500 focus:outline-none" placeholder="03" oninput="formatBallInput(this); triggerRecalculate();">
-        <input type="text" maxlength="2" class="draw-input text-center text-xl font-black py-2 border-2 border-slate-200 rounded-xl focus:border-emerald-500 focus:outline-none" placeholder="04" oninput="formatBallInput(this); triggerRecalculate();">
-        <input type="text" maxlength="2" class="draw-input text-center text-xl font-black py-2 border-2 border-slate-200 rounded-xl focus:border-emerald-500 focus:outline-none" placeholder="05" oninput="formatBallInput(this); triggerRecalculate();">
+        <input type="text" maxlength="2" class="draw-input text-center text-xl font-black py-2 border-2 border-slate-200 rounded-xl focus:border-emerald-500 focus:outline-none transition" placeholder="01" oninput="formatBallInput(this); triggerRecalculate();">
+        <input type="text" maxlength="2" class="draw-input text-center text-xl font-black py-2 border-2 border-slate-200 rounded-xl focus:border-emerald-500 focus:outline-none transition" placeholder="02" oninput="formatBallInput(this); triggerRecalculate();">
+        <input type="text" maxlength="2" class="draw-input text-center text-xl font-black py-2 border-2 border-slate-200 rounded-xl focus:border-emerald-500 focus:outline-none transition" placeholder="03" oninput="formatBallInput(this); triggerRecalculate();">
+        <input type="text" maxlength="2" class="draw-input text-center text-xl font-black py-2 border-2 border-slate-200 rounded-xl focus:border-emerald-500 focus:outline-none transition" placeholder="04" oninput="formatBallInput(this); triggerRecalculate();">
+        <input type="text" maxlength="2" class="draw-input text-center text-xl font-black py-2 border-2 border-slate-200 rounded-xl focus:border-emerald-500 focus:outline-none transition" placeholder="05" oninput="formatBallInput(this); triggerRecalculate();">
       </div>
     </section>
 
-    <!-- 玩法一：二、三、四星連碰模組 -->
+    <!-- 模組一：連碰 (2星 / 3星 / 4星) -->
     <main id="starSection" class="space-y-6">
-      <!-- 顧客資訊與玩法勾選 -->
+      <!-- 顧客設定與快速統一面額工具 -->
       <div class="bg-white rounded-2xl shadow-sm p-5 border border-slate-200 space-y-4">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b pb-3">
           <div class="flex items-center gap-3">
@@ -58,17 +62,83 @@
             <input id="starBetDate" type="date" class="border rounded-lg p-1.5 text-xs font-bold bg-slate-50">
             <input id="starCustName" type="text" placeholder="客人名稱 (例如: 陳董)" class="border rounded-lg p-1.5 text-xs font-bold w-36">
           </div>
-          <div class="flex items-center gap-4 text-xs font-bold">
-            <span class="text-slate-500">下注項目：</span>
-            <label class="flex items-center gap-1 cursor-pointer text-blue-600">
-              <input id="chk2Star" type="checkbox" checked onchange="calculateStars()"> 2星 (收80/賺7.5)
-            </label>
-            <label class="flex items-center gap-1 cursor-pointer text-blue-600">
-              <input id="chk3Star" type="checkbox" checked onchange="calculateStars()"> 3星 (收70/賺7)
-            </label>
-            <label class="flex items-center gap-1 cursor-pointer text-blue-600">
-              <input id="chk4Star" type="checkbox" checked onchange="calculateStars()"> 4星 (收70/賺20)
-            </label>
+          <!-- 快速一鍵統一面額 -->
+          <div class="flex items-center gap-2 bg-slate-50 p-1.5 rounded-xl border border-slate-200 text-xs">
+            <span class="text-slate-600 font-bold">快速套用每碰面額：</span>
+            <input id="batchUnitPrice" type="number" value="100" class="w-16 p-1 border rounded-lg text-center font-bold">
+            <button onclick="applyBatchUnitPrice()" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-900 text-white rounded-lg font-bold transition">套用全部</button>
+          </div>
+        </div>
+
+        <!-- 獨立星別面額、勾選與退水規則卡片 -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <!-- 二星 -->
+          <div class="p-3.5 rounded-xl border border-slate-200 bg-slate-50/70 space-y-2">
+            <div class="flex items-center justify-between">
+              <label class="flex items-center gap-1.5 text-sm font-black text-slate-800 cursor-pointer">
+                <input id="chk2Star" type="checkbox" checked onchange="calculateStars()" class="w-4 h-4 rounded text-blue-600"> 2星連碰
+              </label>
+              <span class="text-[11px] font-bold px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded-full">賺 7.5%</span>
+            </div>
+            <div class="flex items-center justify-between text-xs">
+              <span class="text-slate-500 font-bold">每碰面額：</span>
+              <div class="flex items-center gap-1">
+                <input id="unit2Star" type="number" value="100" class="w-20 p-1 border rounded-lg font-black text-right bg-white" onchange="calculateStars()">
+                <span class="text-slate-400">元</span>
+              </div>
+            </div>
+            <div class="text-[11px] text-slate-500 space-y-0.5 pt-1 border-t border-slate-200/60">
+              <div class="flex justify-between"><span>跟客收 (退20%)：</span><span id="labelCust2" class="font-bold text-blue-600">80 元/碰</span></div>
+              <div class="flex justify-between"><span>繳組頭 (退27.5%)：</span><span id="labelCost2" class="font-medium text-slate-600">72.5 元/碰</span></div>
+              <div class="flex justify-between font-bold text-emerald-600"><span>每碰實賺水錢：</span><span id="labelWater2">+7.5 元/碰</span></div>
+              <div class="flex justify-between text-slate-400"><span>單碰彩金 (57倍)：</span><span id="labelOdds2">5,700 元</span></div>
+            </div>
+          </div>
+
+          <!-- 三星 -->
+          <div class="p-3.5 rounded-xl border border-slate-200 bg-slate-50/70 space-y-2">
+            <div class="flex items-center justify-between">
+              <label class="flex items-center gap-1.5 text-sm font-black text-slate-800 cursor-pointer">
+                <input id="chk3Star" type="checkbox" checked onchange="calculateStars()" class="w-4 h-4 rounded text-blue-600"> 3星連碰
+              </label>
+              <span class="text-[11px] font-bold px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded-full">賺 7.0%</span>
+            </div>
+            <div class="flex items-center justify-between text-xs">
+              <span class="text-slate-500 font-bold">每碰面額：</span>
+              <div class="flex items-center gap-1">
+                <input id="unit3Star" type="number" value="100" class="w-20 p-1 border rounded-lg font-black text-right bg-white" onchange="calculateStars()">
+                <span class="text-slate-400">元</span>
+              </div>
+            </div>
+            <div class="text-[11px] text-slate-500 space-y-0.5 pt-1 border-t border-slate-200/60">
+              <div class="flex justify-between"><span>跟客收 (退30%)：</span><span id="labelCust3" class="font-bold text-blue-600">70 元/碰</span></div>
+              <div class="flex justify-between"><span>繳組頭 (退37%)：</span><span id="labelCost3" class="font-medium text-slate-600">63 元/碰</span></div>
+              <div class="flex justify-between font-bold text-emerald-600"><span>每碰實賺水錢：</span><span id="labelWater3">+7.0 元/碰</span></div>
+              <div class="flex justify-between text-slate-400"><span>單碰彩金 (570倍)：</span><span id="labelOdds3">57,000 元</span></div>
+            </div>
+          </div>
+
+          <!-- 四星 -->
+          <div class="p-3.5 rounded-xl border border-slate-200 bg-slate-50/70 space-y-2">
+            <div class="flex items-center justify-between">
+              <label class="flex items-center gap-1.5 text-sm font-black text-slate-800 cursor-pointer">
+                <input id="chk4Star" type="checkbox" checked onchange="calculateStars()" class="w-4 h-4 rounded text-blue-600"> 4星連碰
+              </label>
+              <span class="text-[11px] font-bold px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded-full">賺 20.0%</span>
+            </div>
+            <div class="flex items-center justify-between text-xs">
+              <span class="text-slate-500 font-bold">每碰面額：</span>
+              <div class="flex items-center gap-1">
+                <input id="unit4Star" type="number" value="100" class="w-20 p-1 border rounded-lg font-black text-right bg-white" onchange="calculateStars()">
+                <span class="text-slate-400">元</span>
+              </div>
+            </div>
+            <div class="text-[11px] text-slate-500 space-y-0.5 pt-1 border-t border-slate-200/60">
+              <div class="flex justify-between"><span>跟客收 (退30%)：</span><span id="labelCust4" class="font-bold text-blue-600">70 元/碰</span></div>
+              <div class="flex justify-between"><span>繳組頭 (退50%)：</span><span id="labelCost4" class="font-medium text-slate-600">50 元/碰</span></div>
+              <div class="flex justify-between font-bold text-emerald-600"><span>每碰實賺水錢：</span><span id="labelWater4">+20.0 元/碰</span></div>
+              <div class="flex justify-between text-slate-400"><span>單碰彩金 (8000倍)：</span><span id="labelOdds4">800,000 元</span></div>
+            </div>
           </div>
         </div>
 
@@ -82,7 +152,7 @@
         </div>
       </div>
 
-      <!-- 連碰計算明細與即時對帳表 -->
+      <!-- 連碰試算與即時對帳表 -->
       <div class="bg-white rounded-2xl shadow-sm p-5 border border-slate-200 space-y-4">
         <div class="flex items-center justify-between border-b pb-2">
           <h3 class="font-bold text-slate-800 text-sm">連碰碰數、收款與水錢利潤表</h3>
@@ -94,6 +164,7 @@
             <thead>
               <tr class="text-xs text-slate-400 border-b">
                 <th class="pb-2">星別</th>
+                <th class="pb-2">每碰面額</th>
                 <th class="pb-2">總碰數</th>
                 <th class="pb-2">跟客人實收</th>
                 <th class="pb-2">給組頭成本</th>
@@ -127,16 +198,15 @@
         </div>
 
         <div class="flex flex-wrap gap-2 pt-2">
-          <button onclick="saveStarBetRecord()" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1 shadow-sm">💾 保存至今日帳本</button>
-          <button onclick="copyStarBetSummary()" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-900 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1">📋 複製 LINE 下注單</button>
-          <button onclick="copyStarPayoutSummary()" class="px-4 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1">💰 複製 LINE 派彩單</button>
+          <button onclick="saveStarBetRecord()" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1 shadow-sm transition">💾 保存至今日帳本</button>
+          <button onclick="copyStarBetSummary()" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-900 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1 transition">📋 複製 LINE 下注單</button>
+          <button onclick="copyStarPayoutSummary()" class="px-4 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1 transition">💰 複製 LINE 派彩單</button>
         </div>
       </div>
     </main>
 
-    <!-- 玩法二：坐車 (全車) 模組 -->
+    <!-- 模組二：坐車 (全車 2850/2755/95) -->
     <main id="carSection" class="space-y-6 hidden">
-      <!-- 坐車快速點選號碼 (例如選 3~6 顆各 0.3 車) -->
       <div class="bg-white rounded-2xl shadow-sm p-5 border border-slate-200 space-y-4">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b pb-3">
           <div class="flex items-center gap-3">
@@ -215,14 +285,14 @@
         </div>
 
         <div class="flex flex-wrap gap-2 pt-2">
-          <button onclick="saveCarBetRecord()" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1 shadow-sm">💾 保存至今日帳本</button>
-          <button onclick="copyCarBetSummary()" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-900 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1">📋 複製 LINE 坐車下注單</button>
-          <button onclick="copyCarPayoutSummary()" class="px-4 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1">💰 複製 LINE 坐車派彩單</button>
+          <button onclick="saveCarBetRecord()" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1 shadow-sm transition">💾 保存至今日帳本</button>
+          <button onclick="copyCarBetSummary()" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-900 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1 transition">📋 複製 LINE 坐車下注單</button>
+          <button onclick="copyCarPayoutSummary()" class="px-4 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1 transition">💰 複製 LINE 坐車派彩單</button>
         </div>
       </div>
     </main>
 
-    <!-- 底部：每日流水對帳本 (含日期、客人、向客人收、成本、賺水錢) -->
+    <!-- 模組三：每日流水對帳本 (本地保存 LocalStorage) -->
     <section class="bg-white rounded-2xl shadow-sm p-5 border border-slate-200 space-y-4">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b pb-3">
         <div>
@@ -234,7 +304,7 @@
         <div class="flex items-center gap-2 text-xs">
           <label class="text-slate-500 font-bold">篩選日期：</label>
           <input id="ledgerFilterDate" type="date" class="border rounded-lg p-1.5 font-bold" onchange="renderLedger()">
-          <button onclick="resetLedgerFilter()" class="bg-slate-100 hover:bg-slate-200 px-2 py-1.5 rounded-lg text-slate-600 font-bold">查看全部</button>
+          <button onclick="resetLedgerFilter()" class="bg-slate-100 hover:bg-slate-200 px-2.5 py-1.5 rounded-lg text-slate-600 font-bold transition">查看全部</button>
           <button onclick="clearAllLedger()" class="text-rose-500 hover:underline ml-2">清空帳本</button>
         </div>
       </div>
@@ -292,7 +362,7 @@
       return Math.round(c);
     }
 
-    // --- 預設當前日期 ---
+    // --- 取得今天日期 YYYY-MM-DD ---
     function getTodayString() {
       const d = new Date();
       const yr = d.getFullYear();
@@ -307,12 +377,11 @@
     let selectedStarBalls = new Set();
     let ledgerRecords = JSON.parse(localStorage.getItem('lottery_ledger_records') || '[]');
 
-    // 初始化日期輸入框
     document.getElementById('starBetDate').value = getTodayString();
     document.getElementById('carBetDate').value = getTodayString();
     document.getElementById('ledgerFilterDate').value = getTodayString();
 
-    // 格式化開獎球
+    // 格式化開獎球輸入
     function formatBallInput(input) {
       let val = input.value.replace(/\D/g, '');
       if (val.length === 1 && parseInt(val) > 3) val = '0' + val;
@@ -354,6 +423,16 @@
       }
     }
 
+    // 快速一鍵統一套用面額
+    function applyBatchUnitPrice() {
+      const val = parseFloat(document.getElementById('batchUnitPrice').value);
+      if (isNaN(val) || val <= 0) return alert('請輸入有效面額！');
+      document.getElementById('unit2Star').value = val;
+      document.getElementById('unit3Star').value = val;
+      document.getElementById('unit4Star').value = val;
+      calculateStars();
+    }
+
     // ==========================================
     // 模組一：連碰 (2星 / 3星 / 4星)
     // ==========================================
@@ -388,21 +467,49 @@
       calculateStars();
     }
 
-    // 核心連碰水錢計算
     function calculateStars() {
       const chk2 = document.getElementById('chk2Star').checked;
       const chk3 = document.getElementById('chk3Star').checked;
       const chk4 = document.getElementById('chk4Star').checked;
 
-      // 規則：面額 100
-      // 2星：客退20%(收80)，本退27.5%(繳72.5)，水錢7.5，倍數57(彩金5700)
-      // 3星：客退30%(收70)，本退37.0%(繳63.0)，水錢7.0，倍數570(彩金57000)
-      // 4星：客退30%(收70)，本退50.0%(繳50.0)，水錢20.0，倍數8000(彩金800000)
+      const unit2 = parseFloat(document.getElementById('unit2Star').value) || 0;
+      const unit3 = parseFloat(document.getElementById('unit3Star').value) || 0;
+      const unit4 = parseFloat(document.getElementById('unit4Star').value) || 0;
+
+      // 規則參數：
+      // 2星：客退20%(付80%)，本退27.5%(付72.5%)，水錢 7.5%，倍數 57
+      // 3星：客退30%(付70%)，本退37.0%(付63.0%)，水錢 7.0%，倍數 570
+      // 4星：客退30%(付70%)，本退50.0%(付50.0%)，水錢 20.0%，倍數 8000
       const rules = [
-        { key: '2星', k: 2, enabled: chk2, custRate: 20, costRate: 27.5, custPay: 80, costPay: 72.5, water: 7.5, prizeUnit: 5700 },
-        { key: '3星', k: 3, enabled: chk3, custRate: 30, costRate: 37.0, custPay: 70, costPay: 63.0, water: 7.0, prizeUnit: 57000 },
-        { key: '4星', k: 4, enabled: chk4, custRate: 30, costRate: 50.0, custPay: 70, costPay: 50.0, water: 20.0, prizeUnit: 800000 }
+        {
+          key: '2星', k: 2, enabled: chk2, unit: unit2,
+          custPct: 0.80, costPct: 0.725, waterPct: 0.075, odds: 57,
+          lblCust: 'labelCust2', lblCost: 'labelCost2', lblWater: 'labelWater2', lblOdds: 'labelOdds2'
+        },
+        {
+          key: '3星', k: 3, enabled: chk3, unit: unit3,
+          custPct: 0.70, costPct: 0.630, waterPct: 0.070, odds: 570,
+          lblCust: 'labelCust3', lblCost: 'labelCost3', lblWater: 'labelWater3', lblOdds: 'labelOdds3'
+        },
+        {
+          key: '4星', k: 4, enabled: chk4, unit: unit4,
+          custPct: 0.70, costPct: 0.500, waterPct: 0.200, odds: 8000,
+          lblCust: 'labelCust4', lblCost: 'labelCost4', lblWater: 'labelWater4', lblOdds: 'labelOdds4'
+        }
       ];
+
+      // 即時刷新卡片上的每碰單價與彩金說明
+      rules.forEach(r => {
+        const custPrice = (r.unit * r.custPct).toFixed(1);
+        const costPrice = (r.unit * r.costPct).toFixed(1);
+        const waterPrice = (r.unit * r.waterPct).toFixed(1);
+        const prizeUnit = Math.round(r.unit * r.odds);
+
+        document.getElementById(r.lblCust).textContent = `${custPrice} 元/碰`;
+        document.getElementById(r.lblCost).textContent = `${costPrice} 元/碰`;
+        document.getElementById(r.lblWater).textContent = `+${waterPrice} 元/碰`;
+        document.getElementById(r.lblOdds).textContent = `${prizeUnit.toLocaleString()} 元`;
+      });
 
       const balls = Array.from(selectedStarBalls).sort((a,b) => a-b);
       const n = balls.length;
@@ -425,12 +532,17 @@
         if (!rule.enabled) return;
 
         const pairs = combinations(n, rule.k);
-        const custTotal = pairs * rule.custPay;
-        const costTotal = pairs * rule.costPay;
-        const waterTotal = pairs * rule.water;
+        const custPayPerPair = rule.unit * rule.custPct;
+        const costPayPerPair = rule.unit * rule.costPct;
+        const waterPerPair = rule.unit * rule.waterPct;
+        const prizeUnit = rule.unit * rule.odds;
+
+        const custTotal = pairs * custPayPerPair;
+        const costTotal = pairs * costPayPerPair;
+        const waterTotal = pairs * waterPerPair;
 
         const hitPairs = combinations(m, rule.k);
-        const prizeTotal = hitPairs * rule.prizeUnit;
+        const prizeTotal = hitPairs * prizeUnit;
 
         totalPairs += pairs;
         totalCollect += custTotal;
@@ -442,32 +554,33 @@
         if (hitPairs > 0) tr.className = 'bg-rose-50/70 font-bold';
         tr.innerHTML = `
           <td class="py-2.5 font-bold">${rule.key}</td>
+          <td class="font-bold text-slate-800">${rule.unit} 元</td>
           <td>${pairs} 碰</td>
-          <td class="text-blue-700 font-bold">${custTotal.toLocaleString()} 元 <span class="text-[10px] text-slate-400">(${rule.custPay}/碰)</span></td>
-          <td>${costTotal.toLocaleString()} 元 <span class="text-[10px] text-slate-400">(${rule.costPay}/碰)</span></td>
-          <td class="text-emerald-600 font-black">+${waterTotal.toLocaleString()} 元 <span class="text-[10px] text-emerald-500">(${rule.water}/碰)</span></td>
+          <td class="text-blue-700 font-bold">${Math.round(custTotal).toLocaleString()} 元 <span class="text-[10px] text-slate-400">(${custPayPerPair.toFixed(1)}/碰)</span></td>
+          <td>${Math.round(costTotal).toLocaleString()} 元 <span class="text-[10px] text-slate-400">(${costPayPerPair.toFixed(1)}/碰)</span></td>
+          <td class="text-emerald-600 font-black">+${Math.round(waterTotal).toLocaleString()} 元 <span class="text-[10px] text-emerald-500">(${waterPerPair.toFixed(1)}/碰)</span></td>
           <td>${hitPairs > 0 ? `<span class="text-rose-600 font-bold">命中 ${hitPairs} 碰</span>` : '0 碰'}</td>
-          <td class="text-right ${hitPairs > 0 ? 'text-rose-600 font-black' : 'text-slate-400'}">${prizeTotal.toLocaleString()} 元</td>
+          <td class="text-right ${hitPairs > 0 ? 'text-rose-600 font-black' : 'text-slate-400'}">${Math.round(prizeTotal).toLocaleString()} 元</td>
         `;
         tbody.appendChild(tr);
       });
 
       document.getElementById('starTotalPairs').textContent = `${totalPairs} 碰`;
-      document.getElementById('starTotalCollect').textContent = `${totalCollect.toLocaleString()} 元`;
-      document.getElementById('starTotalWater').textContent = `${totalWater.toLocaleString()} 元`;
-      document.getElementById('starTotalPayout').textContent = `${totalPayout.toLocaleString()} 元`;
+      document.getElementById('starTotalCollect').textContent = `${Math.round(totalCollect).toLocaleString()} 元`;
+      document.getElementById('starTotalWater').textContent = `${Math.round(totalWater).toLocaleString()} 元`;
+      document.getElementById('starTotalPayout').textContent = `${Math.round(totalPayout).toLocaleString()} 元`;
 
-      // 暫存當前試算供存入帳本使用
       window.currentStarCalc = {
         balls: balls,
         n: n,
         totalPairs,
-        totalCollect,
-        totalCost,
-        totalWater,
-        totalPayout,
+        totalCollect: Math.round(totalCollect),
+        totalCost: Math.round(totalCost),
+        totalWater: Math.round(totalWater),
+        totalPayout: Math.round(totalPayout),
         hitCount: m,
-        hits: hits
+        hits: hits,
+        rulesInfo: rules.filter(r => r.enabled).map(r => `${r.key}(${r.unit}元)`).join('+')
       };
     }
 
@@ -480,17 +593,11 @@
       const date = document.getElementById('starBetDate').value || getTodayString();
       const cust = document.getElementById('starCustName').value.trim() || '未具名';
 
-      // 取得啟用的星別標籤
-      const types = [];
-      if (document.getElementById('chk2Star').checked) types.push('2星');
-      if (document.getElementById('chk3Star').checked) types.push('3星');
-      if (document.getElementById('chk4Star').checked) types.push('4星');
-
       const record = {
         id: Date.now(),
         date: date,
         cust: cust,
-        game: `連碰 [${types.join('+')}]`,
+        game: `連碰 [${calc.rulesInfo}]`,
         detail: calc.balls.join(','),
         amountLabel: `${calc.totalPairs} 碰`,
         collect: calc.totalCollect,
@@ -502,7 +609,7 @@
       ledgerRecords.unshift(record);
       saveLedgerToStorage();
       renderLedger();
-      alert(`已成功記錄！\n實收：${calc.totalCollect} 元\n實賺水錢：${calc.totalWater} 元`);
+      alert(`已成功記錄！\n實收：${calc.totalCollect.toLocaleString()} 元\n實賺水錢：+${calc.totalWater.toLocaleString()} 元`);
     }
 
     // ==========================================
@@ -652,7 +759,7 @@
       ledgerRecords.unshift(record);
       saveLedgerToStorage();
       renderLedger();
-      alert(`坐車下注已記錄！\n總車數：${calc.totalCars.toFixed(2)} 車\n向客人收：${calc.totalCollect} 元\n實賺水錢：${calc.totalWater} 元`);
+      alert(`坐車下注已記錄！\n總車數：${calc.totalCars.toFixed(2)} 車\n向客人收：${calc.totalCollect.toLocaleString()} 元\n實賺水錢：+${calc.totalWater.toLocaleString()} 元`);
     }
 
     // ==========================================
@@ -675,7 +782,7 @@
       let sumCost = 0;
       let sumWater = 0;
 
-      filtered.forEach((rec, idx) => {
+      filtered.forEach((rec) => {
         sumCollect += rec.collect;
         sumCost += rec.cost;
         sumWater += rec.water;
@@ -736,15 +843,11 @@
       if (!calc || calc.totalPairs === 0) return alert('無下注內容！');
       const cust = document.getElementById('starCustName').value.trim() || '老闆';
       const date = document.getElementById('starBetDate').value;
-      const types = [];
-      if (document.getElementById('chk2Star').checked) types.push('2星(退20%)');
-      if (document.getElementById('chk3Star').checked) types.push('3星(退30%)');
-      if (document.getElementById('chk4Star').checked) types.push('4星(退30%)');
 
       let text = `【539 / 天天樂 連碰下注確認單】\n`;
       text += `日期：${date}\n`;
       text += `客戶：${cust}\n`;
-      text += `玩法：${types.join(' + ')}\n`;
+      text += `玩法：${calc.rulesInfo}\n`;
       text += `號碼：${calc.balls.join(', ')} (共 ${calc.n} 顆)\n`;
       text += `總碰數：${calc.totalPairs} 碰\n`;
       text += `------------------------\n`;
