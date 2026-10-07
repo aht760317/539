@@ -327,14 +327,17 @@
     <!-- 模組三：雲端流水帳本 -->
     <!-- ===================================== -->
     <section class="bg-white rounded-2xl shadow-sm p-4 md:p-6 border border-slate-200 mb-6">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b pb-3 md:pb-4 mb-3 md:mb-4">
+      <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-3 border-b pb-3 md:pb-4 mb-3 md:mb-4">
         <div>
           <h2 class="text-sm md:text-lg font-black text-slate-900 flex items-center gap-1.5">
             ☁️ 雲端帳目明細
           </h2>
         </div>
-        <div class="flex items-center gap-2">
-          <input id="ledgerFilterDate" type="date" class="border border-slate-200 rounded-lg p-2 md:p-2.5 text-xs md:text-sm font-bold bg-slate-50 outline-none" onchange="window.renderLedger()">
+        <!-- 修改為：區間日期篩選器 -->
+        <div class="flex flex-wrap items-center gap-2">
+          <input id="ledgerStartDate" type="date" class="border border-slate-200 rounded-lg p-2 md:p-2.5 text-xs md:text-sm font-bold bg-slate-50 outline-none w-32 md:w-auto" onchange="window.renderLedger()">
+          <span class="text-slate-400 font-bold">~</span>
+          <input id="ledgerEndDate" type="date" class="border border-slate-200 rounded-lg p-2 md:p-2.5 text-xs md:text-sm font-bold bg-slate-50 outline-none w-32 md:w-auto" onchange="window.renderLedger()">
           <button onclick="window.resetLedgerFilter()" class="bg-slate-100 hover:bg-slate-200 px-3 md:px-4 py-2 md:py-2.5 rounded-lg text-slate-600 font-bold text-xs md:text-sm transition">查看全部</button>
         </div>
       </div>
@@ -373,7 +376,7 @@
               <th class="pb-2">成本</th>
               <th class="pb-2 text-emerald-600">水錢</th>
               <th class="pb-2 text-rose-600">中獎派彩</th>
-              <th class="pb-2 text-right"></th>
+              <th class="pb-2 text-right">操作</th>
             </tr>
           </thead>
           <tbody id="ledgerTableBody" class="divide-y text-slate-700 font-medium"></tbody>
@@ -388,12 +391,61 @@
 
   </div>
 
+  <!-- 新增：編輯帳目 Modal -->
+  <div id="editModal" class="hidden fixed inset-0 bg-black/60 z-[100] flex items-center justify-center p-4 transition-opacity">
+    <div class="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden transform transition-all">
+      <div class="bg-slate-800 text-white px-4 py-3 flex justify-between items-center">
+        <h3 class="font-bold">修改帳目明細</h3>
+        <button onclick="window.closeEditModal()" class="text-slate-300 hover:text-white font-black text-xl">&times;</button>
+      </div>
+      <div class="p-4 space-y-3 text-sm">
+        <input type="hidden" id="editRecordId">
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-500 text-xs mb-1">日期</label>
+            <input id="editDate" type="date" class="w-full border rounded-lg p-2 outline-none focus:border-blue-500">
+          </div>
+          <div>
+            <label class="block text-slate-500 text-xs mb-1">客人名稱</label>
+            <input id="editCust" type="text" class="w-full border rounded-lg p-2 outline-none focus:border-blue-500">
+          </div>
+        </div>
+        <div>
+          <label class="block text-slate-500 text-xs mb-1">下注內容 / 號碼 / 備註</label>
+          <input id="editDetail" type="text" class="w-full border rounded-lg p-2 outline-none focus:border-blue-500">
+        </div>
+        <div class="grid grid-cols-3 gap-3 pt-2 border-t">
+          <div>
+            <label class="block text-blue-600 text-xs mb-1 font-bold">向客收</label>
+            <input id="editCollect" type="number" class="w-full border rounded-lg p-2 outline-none focus:border-blue-500 font-bold" oninput="window.calcEditWater()">
+          </div>
+          <div>
+            <label class="block text-slate-600 text-xs mb-1 font-bold">上繳本</label>
+            <input id="editCost" type="number" class="w-full border rounded-lg p-2 outline-none focus:border-slate-500 font-bold" oninput="window.calcEditWater()">
+          </div>
+          <div>
+            <label class="block text-emerald-600 text-xs mb-1 font-bold">淨賺水錢</label>
+            <input id="editWater" type="number" class="w-full border rounded-lg p-2 outline-none focus:border-emerald-500 bg-emerald-50 font-bold text-emerald-600">
+          </div>
+        </div>
+        <div class="pt-2 border-t">
+          <label class="block text-rose-600 text-xs mb-1 font-bold">中獎派彩 (若無請填0)</label>
+          <input id="editPayout" type="number" class="w-full border rounded-lg p-2 outline-none focus:border-rose-500 font-bold text-rose-600">
+        </div>
+      </div>
+      <div class="px-4 py-3 bg-slate-50 border-t flex justify-end gap-2">
+        <button onclick="window.closeEditModal()" class="px-4 py-2 rounded-lg text-slate-600 bg-slate-200 font-bold hover:bg-slate-300 transition">取消</button>
+        <button onclick="window.saveEditRecord()" class="px-4 py-2 rounded-lg text-white bg-blue-600 font-bold hover:bg-blue-700 transition">儲存修改</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Firebase 雲端邏輯模組 -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { 
       initializeFirestore, persistentLocalCache, persistentMultipleTabManager,
-      collection, addDoc, onSnapshot, query, orderBy, deleteDoc, doc 
+      collection, addDoc, onSnapshot, query, orderBy, deleteDoc, doc, updateDoc
     } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -423,7 +475,9 @@
     
     document.getElementById('starBetDate').value = getTodayString();
     document.getElementById('carBetDate').value = getTodayString();
-    document.getElementById('ledgerFilterDate').value = getTodayString();
+    // 預設日期區間為今天
+    document.getElementById('ledgerStartDate').value = getTodayString();
+    document.getElementById('ledgerEndDate').value = getTodayString();
 
     const q = query(collection(db, "ledger_records"), orderBy("createdAt", "desc"));
     onSnapshot(q, (snapshot) => {
@@ -642,7 +696,6 @@
         cardContainer.innerHTML = `<div class="text-center text-slate-400 text-xs py-4">請在上方點擊號碼與玩法</div>`;
       }
 
-      // 新版 4宮格更新數值 (拿掉金額後面的'元'以節省空間，使用者從標題即可辨識)
       document.getElementById('starTotalPairs').textContent = tPairs + ' 碰';
       document.getElementById('starTotalCollect').textContent = Math.round(tColl).toLocaleString();
       document.getElementById('starTotalCost').textContent = Math.round(tCost).toLocaleString();
@@ -771,7 +824,6 @@
         cardContainer.innerHTML = `<div class="text-center text-slate-400 text-xs py-4">目前無坐車清單</div>`;
       }
 
-      // 新版 4宮格更新數值 (拿掉金額後面的'元'以節省空間)
       document.getElementById('carTotalCars').textContent = tCars.toFixed(2) + ' 車';
       document.getElementById('carTotalCollect').textContent = Math.round(tColl).toLocaleString();
       document.getElementById('carTotalCost').textContent = Math.round(tCost).toLocaleString();
@@ -799,15 +851,24 @@
       } catch(e) { alert('寫入失敗'); }
     };
 
-    // RWD 帳本雙棲渲染
+    // 🏆 RWD 帳本雙棲渲染與區間篩選邏輯
     window.renderLedger = function() {
-      const filterDate = document.getElementById('ledgerFilterDate').value;
+      const startDate = document.getElementById('ledgerStartDate').value;
+      const endDate = document.getElementById('ledgerEndDate').value;
+      
       const tbody = document.getElementById('ledgerTableBody');
       const cardList = document.getElementById('ledgerCardList');
       tbody.innerHTML = '';
       cardList.innerHTML = '';
       
-      const filtered = filterDate ? ledgerRecords.filter(r => r.date === filterDate) : ledgerRecords;
+      // 區間過濾邏輯
+      const filtered = ledgerRecords.filter(r => {
+        let pass = true;
+        if (startDate && r.date < startDate) pass = false;
+        if (endDate && r.date > endDate) pass = false;
+        return pass;
+      });
+
       let sumColl = 0, sumCost = 0, sumWater = 0;
 
       filtered.forEach(rec => {
@@ -823,7 +884,10 @@
           <td class="text-slate-500">$${rec.cost.toLocaleString()}</td>
           <td class="text-emerald-600 font-black">+$${rec.water.toLocaleString()}</td>
           <td class="${rec.payout > 0 ? 'text-rose-600 font-black' : 'text-slate-300'}">${rec.payout > 0 ? '🎯 $'+rec.payout.toLocaleString() : '0'}</td>
-          <td class="text-right"><button onclick="window.deleteRecord('${rec.id}')" class="text-rose-500 hover:text-rose-700 text-xs font-bold bg-rose-50 hover:bg-rose-100 px-3 py-1.5 rounded transition">刪除</button></td>
+          <td class="text-right flex justify-end gap-1 items-center h-full pt-3">
+            <button onclick="window.openEditModal('${rec.id}')" class="text-blue-600 hover:text-blue-700 text-xs font-bold bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded transition">編輯</button>
+            <button onclick="window.deleteRecord('${rec.id}')" class="text-rose-500 hover:text-rose-700 text-xs font-bold bg-rose-50 hover:bg-rose-100 px-3 py-1.5 rounded transition">刪除</button>
+          </td>
         `;
         tbody.appendChild(tr);
 
@@ -840,11 +904,14 @@
         const card = document.createElement('div');
         card.className = "bg-white p-3 rounded-xl border border-slate-200 shadow-sm relative";
         card.innerHTML = `
-          <div class="flex justify-between items-center mb-1.5 pr-8">
+          <div class="flex justify-between items-center mb-1.5 pr-20">
             <span class="text-[10px] text-slate-400 font-bold bg-slate-100 px-1.5 py-0.5 rounded">${rec.date.substring(5)}</span>
             <span class="font-black text-slate-800 text-sm truncate">${rec.cust}</span>
           </div>
-          <button onclick="window.deleteRecord('${rec.id}')" class="absolute top-2.5 right-2.5 text-[10px] bg-rose-50 text-rose-500 font-bold px-2 py-1 rounded shadow-sm active:bg-rose-100">刪除</button>
+          <div class="absolute top-2.5 right-2.5 flex gap-1">
+            <button onclick="window.openEditModal('${rec.id}')" class="text-[10px] bg-blue-50 text-blue-600 font-bold px-2.5 py-1 rounded shadow-sm active:bg-blue-100">編輯</button>
+            <button onclick="window.deleteRecord('${rec.id}')" class="text-[10px] bg-rose-50 text-rose-500 font-bold px-2.5 py-1 rounded shadow-sm active:bg-rose-100">刪除</button>
+          </div>
           
           <div class="mb-2">
             <div class="text-xs font-bold text-slate-700">${rec.game} <span class="text-slate-400 font-normal">(${rec.amountLabel})</span></div>
@@ -861,8 +928,8 @@
       });
 
       if(filtered.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="8" class="text-center text-slate-400 py-6">此日期無帳目資料</td></tr>';
-        cardList.innerHTML = '<div class="text-center text-slate-400 text-xs py-6">此日期無帳目資料</div>';
+        tbody.innerHTML = '<tr><td colspan="8" class="text-center text-slate-400 py-6">此區間無帳目資料</td></tr>';
+        cardList.innerHTML = '<div class="text-center text-slate-400 text-xs py-6">此區間無帳目資料</div>';
       }
 
       // 新版 4宮格更新數值
@@ -873,8 +940,57 @@
     };
 
     window.resetLedgerFilter = function() {
-      document.getElementById('ledgerFilterDate').value = '';
+      document.getElementById('ledgerStartDate').value = '';
+      document.getElementById('ledgerEndDate').value = '';
       window.renderLedger();
+    };
+
+    // ✏️ 新增：編輯功能
+    window.openEditModal = function(id) {
+      const rec = ledgerRecords.find(r => r.id === id);
+      if (!rec) return;
+      
+      document.getElementById('editRecordId').value = rec.id;
+      document.getElementById('editDate').value = rec.date;
+      document.getElementById('editCust').value = rec.cust;
+      document.getElementById('editDetail').value = rec.detail;
+      document.getElementById('editCollect').value = rec.collect;
+      document.getElementById('editCost').value = rec.cost;
+      document.getElementById('editWater').value = rec.water;
+      document.getElementById('editPayout').value = rec.payout || 0;
+      
+      document.getElementById('editModal').classList.remove('hidden');
+    };
+
+    window.closeEditModal = function() {
+      document.getElementById('editModal').classList.add('hidden');
+    };
+
+    window.calcEditWater = function() {
+      const coll = parseFloat(document.getElementById('editCollect').value) || 0;
+      const cost = parseFloat(document.getElementById('editCost').value) || 0;
+      document.getElementById('editWater').value = coll - cost;
+    };
+
+    window.saveEditRecord = async function() {
+      const id = document.getElementById('editRecordId').value;
+      const date = document.getElementById('editDate').value;
+      const cust = document.getElementById('editCust').value;
+      const detail = document.getElementById('editDetail').value;
+      const collect = parseFloat(document.getElementById('editCollect').value) || 0;
+      const cost = parseFloat(document.getElementById('editCost').value) || 0;
+      const water = parseFloat(document.getElementById('editWater').value) || 0;
+      const payout = parseFloat(document.getElementById('editPayout').value) || 0;
+
+      try {
+        await updateDoc(doc(db, "ledger_records", id), {
+          date, cust, detail, collect, cost, water, payout
+        });
+        alert('✅ 修改成功！');
+        window.closeEditModal();
+      } catch(e) {
+        alert('修改失敗: ' + e.message);
+      }
     };
 
     window.deleteRecord = async function(id) {
