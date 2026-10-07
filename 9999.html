@@ -333,14 +333,19 @@
             ☁️ 雲端帳目明細
           </h2>
         </div>
-        <!-- 區間日期篩選器 與 結算按鈕 -->
+        <!-- 區間日期 與 ✨客戶篩選器 -->
         <div class="flex flex-wrap items-center gap-2">
+          <!-- 新增：客戶過濾下拉選單 -->
+          <select id="ledgerCustFilter" class="border border-slate-200 rounded-lg p-2 md:p-2.5 text-xs md:text-sm font-bold bg-slate-50 outline-none w-24 md:w-auto text-blue-800" onchange="window.renderLedger()">
+            <option value="">全部客戶</option>
+          </select>
+          
           <input id="ledgerStartDate" type="date" class="border border-slate-200 rounded-lg p-2 md:p-2.5 text-xs md:text-sm font-bold bg-slate-50 outline-none w-32 md:w-auto" onchange="window.renderLedger()">
           <span class="text-slate-400 font-bold">~</span>
           <input id="ledgerEndDate" type="date" class="border border-slate-200 rounded-lg p-2 md:p-2.5 text-xs md:text-sm font-bold bg-slate-50 outline-none w-32 md:w-auto" onchange="window.renderLedger()">
-          <button onclick="window.resetLedgerFilter()" class="bg-slate-100 hover:bg-slate-200 px-3 md:px-4 py-2 md:py-2.5 rounded-lg text-slate-600 font-bold text-xs md:text-sm transition">查看全部</button>
+          <button onclick="window.resetLedgerFilter()" class="bg-slate-100 hover:bg-slate-200 px-3 md:px-4 py-2 md:py-2.5 rounded-lg text-slate-600 font-bold text-xs md:text-sm transition">清空</button>
           
-          <!-- ✨ 新增：客戶結算按鈕 -->
+          <!-- 客戶結算按鈕 -->
           <button onclick="window.openSettlementModal()" class="bg-indigo-600 hover:bg-indigo-700 px-3 md:px-4 py-2 md:py-2.5 rounded-lg text-white font-bold text-xs md:text-sm shadow-sm transition flex items-center gap-1">
             📊 客戶結算
           </button>
@@ -445,24 +450,37 @@
     </div>
   </div>
 
-  <!-- ✨ 新增：客戶結算 Modal -->
+  <!-- ✨ 新增：客戶單獨對帳明細 Modal -->
   <div id="settlementModal" class="hidden fixed inset-0 bg-black/60 z-[100] flex items-center justify-center p-4 transition-opacity">
-    <div class="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden transform transition-all flex flex-col max-h-[85vh]">
+    <div class="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden transform transition-all flex flex-col max-h-[90vh]">
+      <!-- Header -->
       <div class="bg-indigo-600 text-white px-4 py-3 flex justify-between items-center shrink-0">
-        <h3 class="font-bold flex items-center gap-2">📊 客戶區間對帳結算表</h3>
+        <h3 class="font-bold flex items-center gap-2">📊 客戶專屬對帳單</h3>
         <button onclick="window.closeSettlementModal()" class="text-indigo-200 hover:text-white font-black text-xl">&times;</button>
       </div>
-      <div class="p-3 bg-indigo-50 border-b border-indigo-100 text-xs font-bold text-indigo-800 shrink-0" id="settlementDateRange">
-        <!-- JS 帶入區間字串 -->
+      
+      <!-- 篩選列：區間 & 選擇客人 -->
+      <div class="p-3 bg-indigo-50 border-b border-indigo-100 flex justify-between items-center shrink-0">
+        <div id="settlementDateRange" class="text-xs font-bold text-indigo-800"></div>
+        <select id="settlementCustSelect" class="border border-indigo-200 rounded-lg p-1.5 text-xs font-bold text-indigo-800 bg-white outline-none cursor-pointer" onchange="window.renderSettlementDetails()">
+          <!-- JS 動態帶入客人 -->
+        </select>
       </div>
       
-      <div class="p-4 overflow-y-auto flex-1 bg-slate-50 space-y-3" id="settlementList">
-        <!-- JS 動態生成每位客戶的結算卡片 -->
+      <!-- 明細列表 -->
+      <div class="p-4 overflow-y-auto flex-1 bg-slate-100 space-y-3" id="settlementList">
+        <!-- JS 動態生成該客人的每筆帳目明細 -->
       </div>
       
-      <div class="px-4 py-3 bg-white border-t flex justify-between items-center shrink-0">
-        <button onclick="window.copySettlement()" class="px-4 py-2.5 rounded-lg text-indigo-700 bg-indigo-100 font-black text-sm hover:bg-indigo-200 transition shadow-sm">📋 複製報表傳 LINE</button>
-        <button onclick="window.closeSettlementModal()" class="px-4 py-2.5 rounded-lg text-slate-600 bg-slate-200 font-bold text-sm hover:bg-slate-300 transition">關閉</button>
+      <!-- 底部總結與複製 -->
+      <div class="px-4 py-3 bg-white border-t shrink-0">
+        <div id="settlementSummary" class="mb-3">
+            <!-- JS 動態生成總結 -->
+        </div>
+        <div class="flex justify-between items-center">
+          <button onclick="window.closeSettlementModal()" class="px-4 py-2 rounded-lg text-slate-600 bg-slate-200 font-bold text-sm hover:bg-slate-300 transition">關閉</button>
+          <button onclick="window.copySettlement()" class="px-4 py-2 rounded-lg text-white bg-indigo-600 font-bold text-sm hover:bg-indigo-700 transition shadow-sm flex items-center gap-1">📋 複製報表傳 LINE</button>
+        </div>
       </div>
     </div>
   </div>
@@ -493,8 +511,11 @@
     let carBets = [];
     let selectedCarBalls = new Set();
     let selectedStarBalls = new Set();
+    
     window.currentDrawnNumbers = [];
-    window.currentSettlement = null; // 用來暫存結算資料以供複製
+    window.currentSettlementDateRecords = []; // 暫存區間內的紀錄供結算用
+    window.currentSettlementDateStr = '';
+    window.currentSettlement = null; // 用來暫存單一客戶結算資料以供複製
 
     function getTodayString() {
       const d = new Date();
@@ -506,10 +527,26 @@
     document.getElementById('ledgerStartDate').value = getTodayString();
     document.getElementById('ledgerEndDate').value = getTodayString();
 
+    // 更新所有的客人下拉選單
+    window.updateCustDropdowns = function() {
+      const uniqueCusts = [...new Set(ledgerRecords.map(r => r.cust || '未具名'))].sort();
+      
+      const ledgerSelect = document.getElementById('ledgerCustFilter');
+      const currentLedgerVal = ledgerSelect.value;
+      
+      ledgerSelect.innerHTML = '<option value="">全部客戶</option>';
+      uniqueCusts.forEach(c => {
+        ledgerSelect.innerHTML += `<option value="${c}">${c}</option>`;
+      });
+      
+      if (uniqueCusts.includes(currentLedgerVal)) ledgerSelect.value = currentLedgerVal;
+    };
+
     const q = query(collection(db, "ledger_records"), orderBy("createdAt", "desc"));
     onSnapshot(q, (snapshot) => {
       ledgerRecords = [];
       snapshot.forEach((doc) => { ledgerRecords.push({ id: doc.id, ...doc.data() }); });
+      window.updateCustDropdowns(); // 資料更新時自動抓取最新名單
       window.renderLedger();
     });
 
@@ -675,7 +712,6 @@
         tPairs += pairs; tColl += coll; tCost += cost; tWater += water; tPayout += prize;
 
         if (pairs > 0 || hitPairs > 0) {
-          // 💻 Desktop Table Row
           const tr = document.createElement('tr');
           if (hitPairs > 0) tr.className = 'bg-rose-50 font-bold';
           tr.innerHTML = `
@@ -688,7 +724,6 @@
           `;
           tbody.appendChild(tr);
 
-          // 📱 Mobile Card
           let hitBadge = '';
           if (hitPairs > 0) {
             hitBadge = `
@@ -802,7 +837,6 @@
         const prize = hit ? bet.amount * 21200 : 0;
         tCars += bet.amount; tColl += coll; tCost += cost; tWater += water; tPayout += prize;
 
-        // 💻 Desktop Table
         const tr = document.createElement('tr');
         if (hit) tr.className = 'bg-emerald-50 font-bold';
         tr.innerHTML = `
@@ -816,7 +850,6 @@
         `;
         tbody.appendChild(tr);
 
-        // 📱 Mobile Card
         let hitBadge = '';
         if (hit) {
           hitBadge = `
@@ -878,21 +911,22 @@
       } catch(e) { alert('寫入失敗'); }
     };
 
-    // 🏆 區間篩選渲染
+    // 🏆 帳本渲染 (支援日期與客戶雙重過濾)
     window.renderLedger = function() {
       const startDate = document.getElementById('ledgerStartDate').value;
       const endDate = document.getElementById('ledgerEndDate').value;
+      const custFilter = document.getElementById('ledgerCustFilter').value; // 客戶過濾
       
       const tbody = document.getElementById('ledgerTableBody');
       const cardList = document.getElementById('ledgerCardList');
       tbody.innerHTML = '';
       cardList.innerHTML = '';
       
-      // 區間過濾邏輯
       const filtered = ledgerRecords.filter(r => {
         let pass = true;
         if (startDate && r.date < startDate) pass = false;
         if (endDate && r.date > endDate) pass = false;
+        if (custFilter && (r.cust || '未具名') !== custFilter) pass = false;
         return pass;
       });
 
@@ -955,8 +989,8 @@
       });
 
       if(filtered.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="8" class="text-center text-slate-400 py-6">此區間無帳目資料</td></tr>';
-        cardList.innerHTML = '<div class="text-center text-slate-400 text-xs py-6">此區間無帳目資料</div>';
+        tbody.innerHTML = '<tr><td colspan="8" class="text-center text-slate-400 py-6">此區間/客戶無帳目資料</td></tr>';
+        cardList.innerHTML = '<div class="text-center text-slate-400 text-xs py-6">此區間/客戶無帳目資料</div>';
       }
 
       document.getElementById('ledgerCountDisplay').textContent = `${filtered.length} 筆`;
@@ -968,10 +1002,11 @@
     window.resetLedgerFilter = function() {
       document.getElementById('ledgerStartDate').value = '';
       document.getElementById('ledgerEndDate').value = '';
+      document.getElementById('ledgerCustFilter').value = '';
       window.renderLedger();
     };
 
-    // ✨ 新增：客戶區間結算功能
+    // ✨ 專屬客戶結算明細
     window.openSettlementModal = function() {
       const startDate = document.getElementById('ledgerStartDate').value;
       const endDate = document.getElementById('ledgerEndDate').value;
@@ -981,102 +1016,145 @@
       else if (startDate) dateStr = `${startDate} 之後`;
       else if (endDate) dateStr = `${endDate} 之前`;
       
-      document.getElementById('settlementDateRange').textContent = `結算區間：${dateStr}`;
+      document.getElementById('settlementDateRange').textContent = `📅 區間：${dateStr}`;
 
-      // 取得過濾後的資料
-      const filtered = ledgerRecords.filter(r => {
+      // 只過濾日期，取得這段時間所有的資料
+      const filteredByDate = ledgerRecords.filter(r => {
         let pass = true;
         if (startDate && r.date < startDate) pass = false;
         if (endDate && r.date > endDate) pass = false;
         return pass;
       });
 
-      // 依照客戶名稱加總
-      const summary = {};
-      filtered.forEach(r => {
-        const c = r.cust || '未具名';
-        if (!summary[c]) summary[c] = { collect: 0, payout: 0, count: 0 };
-        summary[c].collect += r.collect;
-        summary[c].payout += (r.payout || 0);
-        summary[c].count += 1;
-      });
-
-      const listEl = document.getElementById('settlementList');
-      listEl.innerHTML = '';
+      // 抓取這個區間內有下注的獨立客人
+      const uniqueCusts = [...new Set(filteredByDate.map(r => r.cust || '未具名'))].sort();
+      const select = document.getElementById('settlementCustSelect');
+      select.innerHTML = '';
       
-      const sortedCusts = Object.keys(summary).sort();
-
-      if (sortedCusts.length === 0) {
-        listEl.innerHTML = '<div class="text-center text-slate-400 py-6 text-sm">此區間內無任何帳目記錄</div>';
+      if (uniqueCusts.length === 0) {
+        select.innerHTML = '<option value="">無客戶資料</option>';
       } else {
-        sortedCusts.forEach(c => {
-          const s = summary[c];
-          // 實際應收 = (向客收) - (客人中獎派彩)
-          const net = s.collect - s.payout; 
-          
-          const netClass = net >= 0 ? 'text-blue-700' : 'text-rose-600';
-          const netLabel = net >= 0 ? '老闆應收' : '老闆應付';
-          
-          const card = document.createElement('div');
-          card.className = 'bg-white border border-slate-200 rounded-xl p-4 shadow-sm';
-          card.innerHTML = `
-            <div class="flex justify-between items-end border-b border-slate-100 pb-2 mb-2">
-              <div>
-                <div class="font-black text-slate-800 text-lg flex items-center gap-1.5">
-                  <span class="text-lg">👤</span> ${c}
-                </div>
-                <div class="text-[10px] text-slate-400 mt-1">共 ${s.count} 筆下單</div>
-              </div>
-              <div class="text-right">
-                <div class="text-xs font-bold text-slate-400">${netLabel}</div>
-                <div class="font-black ${netClass} text-xl">$${Math.abs(net).toLocaleString()}</div>
-              </div>
-            </div>
-            <div class="flex justify-between text-xs text-slate-500 bg-slate-50 p-2 rounded-lg">
-              <div>下注總額：<span class="font-bold text-slate-700">$${s.collect.toLocaleString()}</span></div>
-              <div>中獎派彩：<span class="font-bold text-rose-600">$${s.payout.toLocaleString()}</span></div>
-            </div>
-          `;
-          listEl.appendChild(card);
-        });
+        uniqueCusts.forEach(c => { select.innerHTML += `<option value="${c}">${c}</option>`; });
+        
+        // 如果外面帳本有指定客戶，預設選中他
+        const ledgerCust = document.getElementById('ledgerCustFilter').value;
+        if (ledgerCust && uniqueCusts.includes(ledgerCust)) {
+            select.value = ledgerCust;
+        }
       }
 
+      window.currentSettlementDateRecords = filteredByDate;
+      window.currentSettlementDateStr = dateStr;
+      
       document.getElementById('settlementModal').classList.remove('hidden');
       
-      // 暫存資料，提供給複製按鈕使用
-      window.currentSettlement = { dateStr, summary, sortedCusts };
+      // 觸發渲染
+      window.renderSettlementDetails();
+    };
+
+    window.renderSettlementDetails = function() {
+      const cust = document.getElementById('settlementCustSelect').value;
+      const listEl = document.getElementById('settlementList');
+      const summaryEl = document.getElementById('settlementSummary');
+      
+      if (!cust) {
+          listEl.innerHTML = '<div class="text-center text-slate-400 py-6 text-sm">此區間內無任何帳目記錄</div>';
+          summaryEl.innerHTML = '';
+          window.currentSettlement = null;
+          return;
+      }
+
+      // 篩選出該客戶在選定日期區間的紀錄
+      const records = window.currentSettlementDateRecords.filter(r => (r.cust || '未具名') === cust);
+      
+      let html = '';
+      let tColl = 0, tPayout = 0;
+
+      // 依日期舊到新排序，印出明細
+      records.sort((a,b) => a.date.localeCompare(b.date)).forEach(r => {
+          tColl += r.collect;
+          tPayout += (r.payout || 0);
+          
+          let payoutBadge = r.payout > 0 ? `<span class="text-rose-600 font-bold ml-2">🎯 中獎 $${r.payout.toLocaleString()}</span>` : '';
+          
+          html += `
+          <div class="bg-white border border-slate-200 rounded-lg p-3 shadow-sm text-sm">
+              <div class="flex justify-between items-center border-b border-slate-100 pb-2 mb-2">
+                  <span class="font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded text-xs">${r.date}</span>
+                  <span class="font-black text-slate-700">${r.game}</span>
+              </div>
+              <div class="text-slate-600 text-xs mb-2 leading-relaxed">
+                  <span class="font-bold">內容：</span>${r.detail} <span class="text-slate-400">(${r.amountLabel})</span>
+              </div>
+              <div class="flex justify-between items-center bg-slate-50 p-2 rounded border border-slate-100 text-xs">
+                  <div class="font-bold text-slate-700">👉 應收: $${r.collect.toLocaleString()}</div>
+                  <div>${payoutBadge}</div>
+              </div>
+          </div>
+          `;
+      });
+      
+      listEl.innerHTML = html;
+
+      // 計算總額
+      const net = tColl - tPayout;
+      const netClass = net >= 0 ? 'text-blue-700' : 'text-rose-600';
+      const netLabel = net >= 0 ? '老闆應收' : '老闆應付';
+
+      summaryEl.innerHTML = `
+          <div class="flex justify-between text-xs text-slate-500 mb-2 px-1">
+            <div>下注總計：<span class="font-bold text-slate-700">$${tColl.toLocaleString()}</span></div>
+            <div>中獎總計：<span class="font-bold text-rose-600">$${tPayout.toLocaleString()}</span></div>
+          </div>
+          <div class="flex justify-between items-center bg-indigo-50 p-3 rounded-xl border border-indigo-100">
+              <div class="font-bold text-indigo-800 text-sm">結算結果</div>
+              <div class="text-right">
+                  <span class="text-xs font-bold text-slate-500 mr-1">${netLabel}</span>
+                  <span class="font-black ${netClass} text-xl">$${Math.abs(net).toLocaleString()}</span>
+              </div>
+          </div>
+      `;
+
+      // 暫存資料給 LINE 複製使用
+      window.currentSettlement = { cust, records, tColl, tPayout, net, dateStr: window.currentSettlementDateStr };
     };
 
     window.closeSettlementModal = function() {
       document.getElementById('settlementModal').classList.add('hidden');
     };
 
-    // ✨ 結算報表複製為文字格式
+    // ✨ 結算報表複製為文字格式給客人看
     window.copySettlement = function() {
       const data = window.currentSettlement;
-      if (!data || data.sortedCusts.length === 0) return alert('無結算資料可複製！');
+      if (!data) return alert('無結算資料可複製！');
       
-      let text = `【對帳結算單】\n📅區間：${data.dateStr}\n------------------\n`;
-      data.sortedCusts.forEach(c => {
-        const s = data.summary[c];
-        const net = s.collect - s.payout;
-        
-        text += `👤客戶：${c} (共${s.count}筆)\n`;
-        text += `   下注總額：$${s.collect.toLocaleString()}\n`;
-        if (s.payout > 0) text += `   中獎派彩：$${s.payout.toLocaleString()}\n`;
-        
-        if (net >= 0) {
-          text += `   👉 本期【應收】：$${Math.abs(net).toLocaleString()} 元\n`;
-        } else {
-          text += `   👉 本期【應退】：$${Math.abs(net).toLocaleString()} 元\n`;
-        }
-        text += `------------------\n`;
+      let text = `【對帳結算單】\n👤 客戶：${data.cust}\n📅 區間：${data.dateStr}\n------------------\n`;
+      
+      // 印出明細
+      data.records.forEach(r => {
+          text += `[${r.date.substring(5)}] ${r.game}\n`;
+          text += `內容: ${r.detail} (${r.amountLabel})\n`;
+          text += `👉應收: $${r.collect.toLocaleString()}`;
+          if (r.payout > 0) text += ` | 🎯派彩: $${r.payout.toLocaleString()}`;
+          text += `\n\n`;
       });
-      text += `對帳確認無誤後，祝您日日中大獎！`;
+      
+      text += `------------------\n`;
+      text += `總下注金額：$${data.tColl.toLocaleString()}\n`;
+      text += `總中獎派彩：$${data.tPayout.toLocaleString()}\n`;
+      text += `------------------\n`;
+      
+      if (data.net >= 0) {
+          text += `👉 結算本期【應收】：$${Math.abs(data.net).toLocaleString()} 元\n`;
+      } else {
+          text += `👉 結算本期【應退】：$${Math.abs(data.net).toLocaleString()} 元\n`;
+      }
+      
+      text += `------------------\n對帳確認無誤後，祝您日日中大獎！🎉`;
       
       navigator.clipboard.writeText(text)
-        .then(() => alert('✅ 結算報表已複製，可直接貼上至 LINE 群組！'))
-        .catch(() => alert('複製失敗，請重試'));
+          .then(() => alert('✅ 專屬報表已複製，可直接貼給客人對帳！'))
+          .catch(() => alert('複製失敗，請重試'));
     };
 
     // ✏️ 編輯功能
