@@ -17,6 +17,9 @@
     }
     input[type=number]::-webkit-inner-spin-button, 
     input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    
+    /* 開獎球輸入框樣式 */
+    .draw-ball-input:focus { transform: scale(1.1); box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); }
   </style>
 </head>
 <body class="text-slate-800 font-sans pb-20 md:pb-10">
@@ -51,21 +54,30 @@
 
   <div class="max-w-5xl mx-auto p-3 md:p-0 md:mt-5 space-y-4 md:space-y-6">
 
-    <!-- 🎯 智能開盤輸入區 -->
+    <!-- 🎯 智能開盤結算區 (全新改版) -->
     <section class="bg-white rounded-2xl shadow-sm p-4 md:p-6 border border-slate-200">
-      <div class="flex items-center justify-between mb-3">
+      <div class="flex flex-col md:flex-row md:items-center justify-between mb-4 gap-3">
         <h2 class="text-sm md:text-base font-black text-slate-800 flex items-center gap-1.5">
           <span class="text-emerald-500 text-lg">🎯</span> 開獎對獎區
         </h2>
-        <span class="text-[10px] md:text-xs text-slate-400 bg-slate-100 px-2 md:px-3 py-0.5 md:py-1 rounded">連打數字自動拆分</span>
+        <div class="flex items-center gap-2 bg-slate-50 p-1.5 rounded-lg border border-slate-200 w-full md:w-auto">
+          <span class="text-xs font-bold text-slate-500 ml-1 whitespace-nowrap">開獎日期</span>
+          <input type="date" id="drawDate" class="flex-1 border-none bg-transparent outline-none text-sm font-black text-slate-700 p-1">
+        </div>
       </div>
-      <input type="text" id="smartDrawInput" inputmode="numeric" 
-             class="w-full text-center text-xl md:text-3xl font-black tracking-[0.3em] md:tracking-[0.4em] py-2.5 md:py-4 border-2 border-emerald-100 md:border-emerald-200 rounded-xl md:rounded-2xl focus:border-emerald-500 focus:outline-none bg-emerald-50/30 text-emerald-900 placeholder:text-emerald-300 placeholder:text-xs md:placeholder:text-base placeholder:tracking-normal transition-all" 
-             placeholder="例: 0512182539" 
-             oninput="window.parseDrawNumbers()">
-      <div id="drawVisual" class="flex gap-2 md:gap-4 justify-center mt-3 md:mt-5 h-10 md:h-14">
-        <!-- JS 動態生成球 -->
+      
+      <!-- 5顆獨立開獎球 -->
+      <div class="flex justify-center gap-2 md:gap-4 mb-5">
+        <input type="tel" maxlength="2" class="draw-ball-input w-12 h-12 md:w-16 md:h-16 text-center text-xl md:text-3xl font-black rounded-full bg-emerald-50/50 border-2 border-emerald-200 text-emerald-700 focus:border-emerald-500 focus:bg-emerald-100 outline-none transition-all shadow-sm">
+        <input type="tel" maxlength="2" class="draw-ball-input w-12 h-12 md:w-16 md:h-16 text-center text-xl md:text-3xl font-black rounded-full bg-emerald-50/50 border-2 border-emerald-200 text-emerald-700 focus:border-emerald-500 focus:bg-emerald-100 outline-none transition-all shadow-sm">
+        <input type="tel" maxlength="2" class="draw-ball-input w-12 h-12 md:w-16 md:h-16 text-center text-xl md:text-3xl font-black rounded-full bg-emerald-50/50 border-2 border-emerald-200 text-emerald-700 focus:border-emerald-500 focus:bg-emerald-100 outline-none transition-all shadow-sm">
+        <input type="tel" maxlength="2" class="draw-ball-input w-12 h-12 md:w-16 md:h-16 text-center text-xl md:text-3xl font-black rounded-full bg-emerald-50/50 border-2 border-emerald-200 text-emerald-700 focus:border-emerald-500 focus:bg-emerald-100 outline-none transition-all shadow-sm">
+        <input type="tel" maxlength="2" class="draw-ball-input w-12 h-12 md:w-16 md:h-16 text-center text-xl md:text-3xl font-black rounded-full bg-emerald-50/50 border-2 border-emerald-200 text-emerald-700 focus:border-emerald-500 focus:bg-emerald-100 outline-none transition-all shadow-sm">
       </div>
+
+      <button onclick="window.saveDrawAndSettle()" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold rounded-xl text-sm md:text-base flex items-center justify-center gap-2 shadow-md transition transform active:scale-95">
+        💾 儲存開獎號碼，並自動結算當日帳目輸贏
+      </button>
     </section>
 
     <!-- ===================================== -->
@@ -347,7 +359,7 @@
           
           <!-- 客戶結算按鈕 -->
           <button onclick="window.openSettlementModal()" class="bg-indigo-600 hover:bg-indigo-700 px-3 md:px-4 py-2 md:py-2.5 rounded-lg text-white font-bold text-xs md:text-sm shadow-sm transition flex items-center gap-1">
-            📊 客戶結算
+            📊 客戶對帳
           </button>
         </div>
       </div>
@@ -450,7 +462,7 @@
     </div>
   </div>
 
-  <!-- ✨ 新增：客戶單獨對帳明細 Modal -->
+  <!-- ✨ 客戶單獨對帳明細 Modal -->
   <div id="settlementModal" class="hidden fixed inset-0 bg-black/60 z-[100] flex items-center justify-center p-4 transition-opacity">
     <div class="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden transform transition-all flex flex-col max-h-[90vh]">
       <!-- Header -->
@@ -522,6 +534,7 @@
       return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
     }
     
+    document.getElementById('drawDate').value = getTodayString();
     document.getElementById('starBetDate').value = getTodayString();
     document.getElementById('carBetDate').value = getTodayString();
     document.getElementById('ledgerStartDate').value = getTodayString();
@@ -550,39 +563,124 @@
       window.renderLedger();
     });
 
-    window.parseDrawNumbers = function() {
-      let val = document.getElementById('smartDrawInput').value;
-      let matches = val.match(/\d+/g);
-      let drawn = [];
-      if (matches) {
-        matches.forEach(m => {
-          if (m.length > 2) {
-            for(let i=0; i<m.length; i+=2) {
-              if(drawn.length < 5) {
-                let chunk = m.substring(i, i+2);
-                if(chunk.length === 1) chunk = '0' + chunk;
-                drawn.push(chunk);
-              }
-            }
-          } else {
-            if(drawn.length < 5) drawn.push(m.padStart(2, '0'));
-          }
-        });
-      }
-      drawn = drawn.slice(0, 5);
-      window.currentDrawnNumbers = drawn;
-
-      let visualHTML = '';
-      for(let i=0; i<5; i++) {
-        if(drawn[i]) {
-          visualHTML += `<div class="w-8 h-8 md:w-12 md:h-12 rounded-full bg-emerald-500 text-white flex items-center justify-center font-black text-sm md:text-xl shadow transition-all transform scale-110">${drawn[i]}</div>`;
-        } else {
-          visualHTML += `<div class="w-8 h-8 md:w-12 md:h-12 rounded-full bg-slate-200 border-2 border-dashed border-slate-300 flex items-center justify-center text-slate-400 font-bold text-xs md:text-sm">?</div>`;
+    // 🏆 新版：監聽 5顆球輸入框自動跳下一格
+    const drawInputs = document.querySelectorAll('.draw-ball-input');
+    drawInputs.forEach((input, index) => {
+      input.addEventListener('input', function() {
+        let val = this.value;
+        if(val.length > 2) this.value = val.substring(0, 2); // 限制只能2碼
+        
+        // 滿2碼自動跳下一個
+        if (this.value.length === 2 && index < drawInputs.length - 1) {
+          drawInputs[index + 1].focus();
         }
-      }
-      document.getElementById('drawVisual').innerHTML = visualHTML;
+        window.updateLiveDraw();
+      });
+      
+      // 支援按 backspace 退回上一格
+      input.addEventListener('keydown', function(e) {
+        if (e.key === 'Backspace' && this.value === '' && index > 0) {
+          drawInputs[index - 1].focus();
+        }
+      });
+    });
+
+    window.updateLiveDraw = function() {
+      let drawn = [];
+      drawInputs.forEach(input => {
+        let val = input.value;
+        if (val.length === 1) val = '0' + val; // 自動補0
+        if (val.length === 2) drawn.push(val);
+      });
+      window.currentDrawnNumbers = drawn;
       window.triggerRecalculate();
     };
+
+    // ✨ 智能結算系統 (讀取五顆球 -> 結算當日雲端帳本)
+    window.saveDrawAndSettle = async function() {
+      const dDate = document.getElementById('drawDate').value;
+      if (!dDate) return alert('請選擇開獎日期！');
+      
+      let drawn = [];
+      drawInputs.forEach(input => {
+        let val = input.value.trim();
+        if (val.length === 1) val = '0' + val;
+        if (val.length === 2) drawn.push(val);
+      });
+
+      if (drawn.length < 5) {
+        return alert('請完整輸入 5 顆開獎號碼！');
+      }
+
+      // 找尋雲端當日帳目
+      const todayRecords = ledgerRecords.filter(r => r.date === dDate);
+      if (todayRecords.length === 0) {
+        return alert(`在 ${dDate} 沒有找到任何下注紀錄可以結算喔！`);
+      }
+
+      let winCount = 0;
+      let totalPayoutSum = 0;
+
+      // 批量準備更新資料
+      const updatePromises = todayRecords.map(async (record) => {
+        let payout = 0;
+
+        // 【全車】結算邏輯
+        if (record.game.includes('全車')) {
+          // record.detail 格式: "05(0.3) 12(0.5)"
+          const regex = /(\d{2})\(([\d.]+)\)/g;
+          let match;
+          while ((match = regex.exec(record.detail)) !== null) {
+            const num = match[1];
+            const amt = parseFloat(match[2]);
+            if (drawn.includes(num)) {
+              payout += amt * 21200; // 車賠率 21200
+            }
+          }
+        }
+
+        // 【連碰】結算邏輯
+        if (record.game.includes('連碰')) {
+          // record.detail 格式: "05,12,18,25"
+          const balls = record.detail.split(',').map(s => s.trim()).filter(s => s !== '');
+          const hits = balls.filter(b => drawn.includes(b)).length;
+          
+          const total4StarPairs = combinations(balls.length, 4);
+          const odds4 = total4StarPairs <= 2000 ? 7500 : 8000;
+
+          // record.game 格式: "連碰 [2星(100元)+3星(100元)]"
+          const regex = /(\d)星\(([\d.]+)元\)/g;
+          let match;
+          while ((match = regex.exec(record.game)) !== null) {
+            const k = parseInt(match[1]);
+            const unit = parseFloat(match[2]);
+            const hitPairs = combinations(hits, k);
+            
+            let odds = 0;
+            if (k === 2) odds = 57;
+            if (k === 3) odds = 570;
+            if (k === 4) odds = odds4;
+
+            payout += hitPairs * unit * odds;
+          }
+        }
+
+        // 若有改變才更新資料庫
+        if (record.payout !== payout) {
+           if (payout > 0) winCount++;
+           totalPayoutSum += payout;
+           return updateDoc(doc(db, "ledger_records", record.id), { payout: payout });
+        }
+      });
+
+      try {
+        await Promise.all(updatePromises);
+        alert(`✅ 結算完成！\n本次開獎號碼：${drawn.join(',')}\n共有 ${winCount} 筆中獎單，總發派彩 $${totalPayoutSum.toLocaleString()}！`);
+      } catch (error) {
+        alert('結算更新失敗，請檢查網路連線。');
+      }
+    };
+
 
     window.triggerRecalculate = function() {
       window.calculateStars();
