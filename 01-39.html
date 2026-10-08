@@ -181,8 +181,8 @@
                 在下方下拉選單設定你的<b>「戰情室預測爆發區」</b>，再點擊「展開名冊」，系統會強制將該區精銳推上 S 級主將！
             </div>
             <div class="sop-step">
-                <h4>STEP 3：配合資金策略重押</h4>
-                直接在 S 區與 A 區查看<b>專屬倍數與營利估算</b>。點擊【沒中累加】系統會自動換算下次獲利倍數，確保過關必定倒賺！
+                <h4>STEP 3：鎖定精銳重押</h4>
+                直接鎖定 S 區與 A 區的系統嚴選號碼進行佈局，並配合個人的資金策略控管風險，將獲利最大化！
             </div>
         </div>
     </div>
@@ -207,7 +207,7 @@
             </div>
         </div>
 
-        <!-- 539 單碼查詢結果顯示區 (完整保留) -->
+        <!-- 539 單碼查詢結果顯示區 -->
         <div id="sb-result-container-539" style="display:none;">
             <div class="panel">
                 <div class="sb-dash-header">
@@ -293,7 +293,7 @@
             </div>
         </div>
 
-        <!-- 天天樂 單碼查詢結果顯示區 (完整保留) -->
+        <!-- 天天樂 單碼查詢結果顯示區 -->
         <div id="sb-result-container-tt" style="display:none;">
             <div class="panel">
                 <div class="sb-dash-header">
@@ -359,7 +359,7 @@
     </div>
 
 
-    <!-- 📖 18 宗師系統說明書 (完整保留) -->
+    <!-- 📖 18 宗師系統說明書 -->
     <div class="guide-box">
         <h3 onclick="toggleDoc()">📖 18 宗師量化矩陣運算白皮書 (點擊展開/收合) <span>▼</span></h3>
         <div class="guide-content" id="doc-content">
@@ -519,7 +519,7 @@
         }
     });
 
-    // 核心 18 宗師演算法引擎 (完整保留，包含新增的疲勞透支熔斷)
+    // 核心 18 宗師演算法引擎
     function compute18Masters(target, data) {
         let N = data.length;
         if(N === 0) return null;
@@ -676,13 +676,12 @@
             (m13 * 0.06) + (m14 * 0.04) + (m15 * 0.04) + (m16 * 0.04) + 
             (m17 * 0.05) + (m18 * 0.04);
 
-        // 🛑 AI 強化版極端過熱與透支防禦機制
         if (hits10 >= 4) {
-            finalScore = Math.min(finalScore, 20); // 10期內開4次，動能絕對透支，強制壓低分數打入C級冷宮
+            finalScore = Math.min(finalScore, 20); 
         } else if (hits5 >= 3) {
-            finalScore = Math.min(finalScore, 30); // 5期內開3次，短線極端過熱，強制冷卻
+            finalScore = Math.min(finalScore, 30); 
         } else if (hits5 === 2 && currentMiss === 0) {
-            finalScore = finalScore - 20; // 剛連莊兩次，進入疲軟期，扣 20 分
+            finalScore = finalScore - 20; 
         }
 
         return { 
@@ -692,7 +691,7 @@
         };
     }
 
-    // 單碼掃描查詢 (完整保留，包含巨頭網格與微型圖)
+    // 單碼掃描查詢
     window.executeSingleBallScan = function(spaceKey) {
         let isTt = spaceKey === 'tt-9000';
         let inputId = isTt ? 'sb-input-ball-tt' : 'sb-input-ball-539';
@@ -795,60 +794,6 @@
         window.scrollTo({top: document.getElementById(`sb-result-container-${suffix}`).offsetTop - 50, behavior: 'smooth'});
     };
 
-    // 生成資金控管面板 HTML 的輔助函數
-    let renderZoneControl = (zone, maxScore, loss, cost, multi, prize, netProfit, spaceKey) => {
-        let isS = zone === 'S';
-        let bg = isS ? '#fef2f2' : '#ecfdf5';
-        let border = isS ? '#fca5a5' : '#6ee7b7';
-        let titleColor = isS ? '#b91c1c' : '#047857';
-        let titleName = isS ? '🔥 S 級 (嚴選 2 碼) 戰略控制台' : '🟢 A 級 (嚴選 3 碼) 戰略控制台';
-        
-        let prettyBadge = maxScore >= 80 ? `<span style="color:#ea580c; font-size:12px; font-weight:bold; margin-left:6px;">(⭐ 漂亮牌加碼!)</span>` : '';
-
-        return `
-        <div style="background:${bg}; border:1px solid ${border}; padding:12px; border-radius:8px; margin-bottom:12px; text-align:left;">
-            <div style="font-size:14px; font-weight:900; color:${titleColor}; margin-bottom:8px; border-bottom:1px dashed ${border}; padding-bottom:6px; display:flex; align-items:center;">
-                ${titleName} ${prettyBadge}
-            </div>
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; font-size:12px; color:#475569; margin-bottom:10px;">
-                <div style="background:#fff; padding:6px; border-radius:4px; border:1px solid #e2e8f0;">
-                    累積虧損：<br><b style="color:#dc2626; font-size:14px;">$${loss.toLocaleString()}</b>
-                </div>
-                <div style="background:#fff; padding:6px; border-radius:4px; border:1px solid #e2e8f0;">
-                    本次成本：<br><b style="color:#0f172a; font-size:14px;">$${cost.toLocaleString()}</b> (注碼: <b style="color:#0284c7;">${multi} 倍</b>)
-                </div>
-                <div style="background:#fff; padding:6px; border-radius:4px; border:1px solid #e2e8f0;">
-                    若中 1 顆總收：<br><b style="color:#059669; font-size:14px;">$${prize.toLocaleString()}</b>
-                </div>
-                <div style="background:#fff; padding:6px; border-radius:4px; border:1px solid #e2e8f0;">
-                    扣除成本後淨利：<br><b style="color:#ea580c; font-size:14px;">+$${netProfit.toLocaleString()}</b>
-                </div>
-            </div>
-            <div style="display:flex; gap:6px; margin-top:10px;">
-                <button class="btn-main" style="background:#059669; flex:1; font-size:12px; padding:10px;" onclick="updateBetState('${spaceKey}', '${zone}', true)">✅ 昨日有中 (歸零回歸)</button>
-                <button class="btn-main" style="background:#dc2626; flex:1; font-size:12px; padding:10px;" onclick="updateBetState('${spaceKey}', '${zone}', false)">❌ 昨日未中 (累加成本)</button>
-            </div>
-        </div>
-        `;
-    };
-
-    window.updateBetState = function(spaceKey, zone, isWin) {
-        let lossKey = `loss_${spaceKey}_${zone}`;
-        let lastCostKey = `lastCost_${spaceKey}_${zone}`;
-        let currentLoss = parseInt(localStorage.getItem(lossKey) || '0');
-        let lastCost = parseInt(localStorage.getItem(lastCostKey) || '0');
-        if (lastCost === 0) lastCost = (zone === 'S') ? (2755 * 2) : (2755 * 3);
-
-        if (isWin) {
-            localStorage.setItem(lossKey, '0');
-            alert(`✅ 恭喜！${zone} 區已過關，系統重置回 1 倍注碼。`);
-        } else {
-            localStorage.setItem(lossKey, currentLoss + lastCost);
-            alert(`❌ ${zone} 區昨日未中，成本累加完成，自動推算明日必勝倍數！`);
-        }
-        executeSuperClassification(spaceKey);
-    };
-
     // 展開名冊 (包含大盤戰區鎖定加權)
     window.executeSuperClassification = function(spaceKey) {
         let isTt = spaceKey === 'tt-9000';
@@ -893,37 +838,6 @@
             else cClass.push(obj);
         });
 
-        let sLoss = parseInt(localStorage.getItem(`loss_${spaceKey}_S`) || '0');
-        let aLoss = parseInt(localStorage.getItem(`loss_${spaceKey}_A`) || '0');
-        
-        let sMaxScore = Math.max(...sClass.map(x => parseFloat(x.score)));
-        let aMaxScore = Math.max(...aClass.map(x => parseFloat(x.score)));
-        
-        let sNetProfitPerUnit = 21200 - (2755 * 2);
-        let aNetProfitPerUnit = 21200 - (2755 * 3);
-        
-        let calculateMulti = (loss, netPerUnit, maxScore) => {
-            let m = Math.floor(loss / netPerUnit) + 1;
-            // 如果原本沒有加大盤加權就已經破 80 分，視為極端漂亮牌加碼
-            if (maxScore >= 80 && selectedZone === 0) m += 1; 
-            return m;
-        };
-
-        let sMulti = calculateMulti(sLoss, sNetProfitPerUnit, sMaxScore);
-        let aMulti = calculateMulti(aLoss, aNetProfitPerUnit, aMaxScore);
-        
-        let sCost = sMulti * 2755 * 2;
-        let aCost = aMulti * 2755 * 3;
-        
-        let sPrize = sMulti * 21200;
-        let aPrize = aMulti * 21200;
-
-        let sNet = sPrize - sLoss - sCost;
-        let aNet = aPrize - aLoss - aCost;
-
-        localStorage.setItem(`lastCost_${spaceKey}_S`, sCost);
-        localStorage.setItem(`lastCost_${spaceKey}_A`, aCost);
-
         document.getElementById(`super-result-container-${suffix}`).style.display = 'block';
 
         let renderBadge = (item) => `
@@ -935,13 +849,11 @@
 
         document.getElementById(`roster-grid-content-${suffix}`).innerHTML = `
             <div class="roster-card s-class" style="border-color:#fca5a5; border-width:2px;">
-                ${renderZoneControl('S', sMaxScore, sLoss, sCost, sMulti, sPrize, sNet, spaceKey)}
-                <h4 style="margin-top:10px;">🔥 S 級選號 (實戰區)</h4>
+                <h4 style="margin-top:0px;">🔥 S 級選號 (實戰區)</h4>
                 <div class="ball-badge-wrap">${sClass.map(renderBadge).join('')}</div>
             </div>
             <div class="roster-card a-class" style="border-color:#6ee7b7; border-width:2px;">
-                ${renderZoneControl('A', aMaxScore, aLoss, aCost, aMulti, aPrize, aNet, spaceKey)}
-                <h4 style="margin-top:10px;">🟢 A 級選號 (實戰區)</h4>
+                <h4 style="margin-top:0px;">🟢 A 級選號 (實戰區)</h4>
                 <div class="ball-badge-wrap">${aClass.map(renderBadge).join('')}</div>
             </div>
             <div class="roster-card b-class"><h4>⚪ B 級 (中性觀望)</h4><div class="ball-badge-wrap">${bClass.map(renderBadge).join('')}</div></div>
