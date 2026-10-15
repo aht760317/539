@@ -54,7 +54,7 @@
 
   <div class="max-w-5xl mx-auto p-3 md:p-0 md:mt-5 space-y-4 md:space-y-6">
 
-    <!-- 🎯 智能開盤結算區 (全新改版) -->
+    <!-- 🎯 智能開盤結算區 -->
     <section class="bg-white rounded-2xl shadow-sm p-4 md:p-6 border border-slate-200">
       <div class="flex flex-col md:flex-row md:items-center justify-between mb-4 gap-3">
         <h2 class="text-sm md:text-base font-black text-slate-800 flex items-center gap-1.5">
@@ -347,7 +347,7 @@
         </div>
         <!-- 區間日期 與 ✨客戶篩選器 -->
         <div class="flex flex-wrap items-center gap-2">
-          <!-- 新增：客戶過濾下拉選單 -->
+          <!-- 客戶過濾下拉選單 -->
           <select id="ledgerCustFilter" class="border border-slate-200 rounded-lg p-2 md:p-2.5 text-xs md:text-sm font-bold bg-slate-50 outline-none w-24 md:w-auto text-blue-800" onchange="window.renderLedger()">
             <option value="">全部客戶</option>
           </select>
@@ -364,26 +364,63 @@
         </div>
       </div>
 
-      <!-- 當日總計 (新版 4 宮格) -->
-      <div class="bg-blue-50/50 p-2.5 md:p-4 rounded-xl border border-blue-100 mb-4 md:mb-6">
-        <div class="grid grid-cols-4 gap-1 md:gap-4 w-full text-center divide-x divide-blue-200/60">
-          <div class="px-1 flex flex-col justify-center">
-            <div class="text-[10px] md:text-xs text-slate-500 mb-0.5">總單數</div>
-            <div id="ledgerCountDisplay" class="text-xs md:text-xl font-black text-slate-700">0 筆</div>
+      <!-- 🏆 三方專業結算儀表板 (客端 / 上線組頭端 / 淨水錢) -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4 md:mb-6">
+        
+        <!-- 卡片 1：對客結算 (客戶輸贏) -->
+        <div class="bg-blue-50/60 p-3.5 md:p-4 rounded-xl border border-blue-200/80 shadow-sm flex flex-col justify-between">
+          <div class="flex justify-between items-center mb-2">
+            <span class="text-xs font-black text-blue-900 flex items-center gap-1">
+              👤 客戶結算 <span id="ledgerCountDisplay" class="text-[10px] bg-blue-200/60 text-blue-800 px-1.5 py-0.5 rounded font-bold">0 筆</span>
+            </span>
+            <span class="text-[10px] text-slate-500 font-bold">收客 vs 中獎</span>
           </div>
-          <div class="px-1 flex flex-col justify-center">
-            <div class="text-[10px] md:text-xs text-slate-500 mb-0.5">向客收</div>
-            <div id="ledgerCollectDisplay" class="text-xs md:text-xl font-black text-blue-700">0</div>
+          <div class="space-y-1 text-xs text-slate-600 border-b border-blue-100 pb-2 mb-2">
+            <div class="flex justify-between"><span>向客總收注金：</span><b id="ledgerCollectDisplay" class="text-slate-800">$0</b></div>
+            <div class="flex justify-between"><span>中獎應發彩金：</span><b id="ledgerPayoutDisplay" class="text-rose-600">$0</b></div>
           </div>
-          <div class="px-1 flex flex-col justify-center">
-            <div class="text-[10px] md:text-xs text-slate-500 mb-0.5">上繳本</div>
-            <div id="ledgerCostDisplay" class="text-xs md:text-xl font-black text-slate-600">0</div>
-          </div>
-          <div class="px-1 flex flex-col justify-center">
-            <div class="text-[10px] md:text-xs text-emerald-600 mb-0.5">淨賺水錢</div>
-            <div id="ledgerWaterDisplay" class="text-sm md:text-2xl font-black text-emerald-600">0</div>
+          <div class="flex justify-between items-baseline pt-1">
+            <span id="ledgerClientNetLabel" class="text-xs font-black text-blue-900">👉 總計向客應收</span>
+            <span id="ledgerClientNetDisplay" class="text-base md:text-xl font-black text-blue-700">$0</span>
           </div>
         </div>
+
+        <!-- 卡片 2：對組頭結算 (上繳輸贏) -->
+        <div class="bg-slate-50 p-3.5 md:p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
+          <div class="flex justify-between items-center mb-2">
+            <span class="text-xs font-black text-slate-800 flex items-center gap-1">
+              🏢 組頭上繳結算
+            </span>
+            <span class="text-[10px] text-slate-500 font-bold">成本 vs 派彩</span>
+          </div>
+          <div class="space-y-1 text-xs text-slate-600 border-b border-slate-200 pb-2 mb-2">
+            <div class="flex justify-between"><span>應繳組頭成本：</span><b id="ledgerCostDisplay" class="text-slate-800">$0</b></div>
+            <div class="flex justify-between"><span>組頭應撥彩金：</span><b id="ledgerUpPayoutDisplay" class="text-rose-600">$0</b></div>
+          </div>
+          <div class="flex justify-between items-baseline pt-1">
+            <span id="ledgerBossNetLabel" class="text-xs font-black text-slate-700">👉 結算應繳組頭</span>
+            <span id="ledgerBossNetDisplay" class="text-base md:text-xl font-black text-slate-800">$0</span>
+          </div>
+        </div>
+
+        <!-- 卡片 3：實質利潤 (淨賺水錢) -->
+        <div class="bg-emerald-50/70 p-3.5 md:p-4 rounded-xl border border-emerald-200/80 shadow-sm flex flex-col justify-between">
+          <div class="flex justify-between items-center mb-2">
+            <span class="text-xs font-black text-emerald-900 flex items-center gap-1">
+              💰 本期實賺水錢
+            </span>
+            <span class="text-[10px] text-emerald-700 font-bold">零風險差價</span>
+          </div>
+          <div class="space-y-1 text-xs text-emerald-800 border-b border-emerald-100 pb-2 mb-2">
+            <div class="flex justify-between"><span>總客本 (毛收)：</span><b id="ledgerWaterIn" class="text-emerald-900">$0</b></div>
+            <div class="flex justify-between"><span>總成本 (上繳)：</span><b id="ledgerWaterOut" class="text-emerald-900">$0</b></div>
+          </div>
+          <div class="flex justify-between items-baseline pt-1">
+            <span class="text-xs font-black text-emerald-900">👉 實拿淨賺水錢</span>
+            <span id="ledgerWaterDisplay" class="text-lg md:text-2xl font-black text-emerald-600">+$0</span>
+          </div>
+        </div>
+
       </div>
 
       <!-- 💻 電腦版 Table UI -->
@@ -680,7 +717,6 @@
         alert('結算更新失敗，請檢查網路連線。');
       }
     };
-
 
     window.triggerRecalculate = function() {
       window.calculateStars();
@@ -1009,11 +1045,11 @@
       } catch(e) { alert('寫入失敗'); }
     };
 
-    // 🏆 帳本渲染 (支援日期與客戶雙重過濾)
+    // 🏆 帳本渲染 (支援日期、客戶篩選與三方結算)
     window.renderLedger = function() {
       const startDate = document.getElementById('ledgerStartDate').value;
       const endDate = document.getElementById('ledgerEndDate').value;
-      const custFilter = document.getElementById('ledgerCustFilter').value; // 客戶過濾
+      const custFilter = document.getElementById('ledgerCustFilter').value;
       
       const tbody = document.getElementById('ledgerTableBody');
       const cardList = document.getElementById('ledgerCardList');
@@ -1028,10 +1064,14 @@
         return pass;
       });
 
-      let sumColl = 0, sumCost = 0, sumWater = 0;
+      let sumColl = 0, sumCost = 0, sumWater = 0, sumPayout = 0;
 
       filtered.forEach(rec => {
-        sumColl += rec.collect; sumCost += rec.cost; sumWater += rec.water;
+        const payout = Number(rec.payout) || 0;
+        sumColl += rec.collect; 
+        sumCost += rec.cost; 
+        sumWater += rec.water;
+        sumPayout += payout;
         
         // 💻 Desktop Table
         const tr = document.createElement('tr');
@@ -1042,7 +1082,7 @@
           <td class="text-blue-700 font-bold">$${rec.collect.toLocaleString()}</td>
           <td class="text-slate-500">$${rec.cost.toLocaleString()}</td>
           <td class="text-emerald-600 font-black">+$${rec.water.toLocaleString()}</td>
-          <td class="${rec.payout > 0 ? 'text-rose-600 font-black' : 'text-slate-300'}">${rec.payout > 0 ? '🎯 $'+rec.payout.toLocaleString() : '0'}</td>
+          <td class="${payout > 0 ? 'text-rose-600 font-black' : 'text-slate-300'}">${payout > 0 ? '🎯 $'+payout.toLocaleString() : '0'}</td>
           <td class="text-right flex justify-end gap-1 items-center h-full pt-3">
             <button onclick="window.openEditModal('${rec.id}')" class="text-blue-600 hover:text-blue-700 text-xs font-bold bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded transition">編輯</button>
             <button onclick="window.deleteRecord('${rec.id}')" class="text-rose-500 hover:text-rose-700 text-xs font-bold bg-rose-50 hover:bg-rose-100 px-3 py-1.5 rounded transition">刪除</button>
@@ -1052,11 +1092,11 @@
 
         // 📱 Mobile Card
         let payoutHTML = '';
-        if (rec.payout > 0) {
+        if (payout > 0) {
           payoutHTML = `
             <div class="mt-2 bg-rose-50 border border-rose-100 p-2 rounded flex justify-between items-center">
               <span class="text-rose-600 font-bold text-xs">🎉 派彩</span>
-              <span class="text-rose-600 font-black text-sm">$${rec.payout.toLocaleString()}</span>
+              <span class="text-rose-600 font-black text-sm">$${payout.toLocaleString()}</span>
             </div>
           `;
         }
@@ -1091,10 +1131,51 @@
         cardList.innerHTML = '<div class="text-center text-slate-400 text-xs py-6">此區間/客戶無帳目資料</div>';
       }
 
+      // ===== 🎯 三方結算數學邏輯 =====
+      // 1. 客戶端：客戶總應收 = 向客收 - 中獎派彩
+      const clientNet = sumColl - sumPayout;
+      // 2. 組頭端：給組頭 = 上繳成本 - 組頭撥回的中獎彩金
+      const bossNet = sumCost - sumPayout;
+
+      // 渲染 卡片 1 (客端)
       document.getElementById('ledgerCountDisplay').textContent = `${filtered.length} 筆`;
-      document.getElementById('ledgerCollectDisplay').textContent = sumColl.toLocaleString();
-      document.getElementById('ledgerCostDisplay').textContent = sumCost.toLocaleString();
-      document.getElementById('ledgerWaterDisplay').textContent = '+' + sumWater.toLocaleString();
+      document.getElementById('ledgerCollectDisplay').textContent = '$' + sumColl.toLocaleString();
+      document.getElementById('ledgerPayoutDisplay').textContent = '$' + sumPayout.toLocaleString();
+      const clientLabel = document.getElementById('ledgerClientNetLabel');
+      const clientDisplay = document.getElementById('ledgerClientNetDisplay');
+      if (clientNet >= 0) {
+        clientLabel.textContent = '👉 總計向客【應收】';
+        clientLabel.className = 'text-xs font-black text-blue-900';
+        clientDisplay.textContent = '$' + clientNet.toLocaleString();
+        clientDisplay.className = 'text-base md:text-xl font-black text-blue-700';
+      } else {
+        clientLabel.textContent = '👉 客贏扣注【應退客】';
+        clientLabel.className = 'text-xs font-black text-rose-700';
+        clientDisplay.textContent = '$' + Math.abs(clientNet).toLocaleString();
+        clientDisplay.className = 'text-base md:text-xl font-black text-rose-600';
+      }
+
+      // 渲染 卡片 2 (組頭端)
+      document.getElementById('ledgerCostDisplay').textContent = '$' + sumCost.toLocaleString();
+      document.getElementById('ledgerUpPayoutDisplay').textContent = '$' + sumPayout.toLocaleString();
+      const bossLabel = document.getElementById('ledgerBossNetLabel');
+      const bossDisplay = document.getElementById('ledgerBossNetDisplay');
+      if (bossNet >= 0) {
+        bossLabel.textContent = '👉 結算【應繳組頭】';
+        bossLabel.className = 'text-xs font-black text-slate-700';
+        bossDisplay.textContent = '$' + bossNet.toLocaleString();
+        bossDisplay.className = 'text-base md:text-xl font-black text-slate-800';
+      } else {
+        bossLabel.textContent = '👉 組頭彩金【應退我】';
+        bossLabel.className = 'text-xs font-black text-emerald-800';
+        bossDisplay.textContent = '$' + Math.abs(bossNet).toLocaleString();
+        bossDisplay.className = 'text-base md:text-xl font-black text-emerald-700';
+      }
+
+      // 渲染 卡片 3 (淨賺水錢)
+      document.getElementById('ledgerWaterIn').textContent = '$' + sumColl.toLocaleString();
+      document.getElementById('ledgerWaterOut').textContent = '$' + sumCost.toLocaleString();
+      document.getElementById('ledgerWaterDisplay').textContent = '+$' + sumWater.toLocaleString();
     };
 
     window.resetLedgerFilter = function() {
