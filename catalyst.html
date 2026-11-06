@@ -17,7 +17,7 @@
     }
     .container {
         width: 100%;
-        max-width: 1000px;
+        max-width: 1100px;
         background-color: #ffffff;
         padding: 25px;
         border-radius: 10px;
@@ -61,61 +61,48 @@
         color: #333;
     }
 
-    /* 表單區塊 */
-    .form-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 15px;
-        background: #f8f9fa;
-        padding: 15px;
-        border-radius: 8px;
-        margin-bottom: 20px;
-    }
-    .form-group {
+    /* 頂部操作區 (新增按鈕 + 篩選) */
+    .toolbar {
         display: flex;
-        flex-direction: column;
-    }
-    label {
-        margin-bottom: 5px;
-        font-weight: bold;
-        color: #444;
-        font-size: 14px;
-    }
-    input, select {
-        padding: 8px 12px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        font-size: 15px;
-    }
-    input:focus, select:focus {
-        border-color: #1a73e8;
-        outline: none;
-    }
-    .btn-submit {
-        grid-column: span 3;
-        background-color: #1a73e8;
-        color: white;
-        border: none;
-        padding: 10px;
-        border-radius: 4px;
-        font-size: 16px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: 0.3s;
-    }
-    .btn-submit:hover { background-color: #1557b0; }
-
-    /* 篩選與列表區塊 */
-    .filter-section {
-        display: flex;
-        gap: 15px;
+        justify-content: space-between;
         align-items: center;
         background: #eef2f6;
         padding: 15px;
         border-radius: 8px;
         margin-bottom: 15px;
         flex-wrap: wrap;
+        gap: 15px;
     }
+    .btn-add {
+        background-color: #1a73e8;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 6px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+    .btn-add:hover { background-color: #1557b0; }
+    
+    .filter-group {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+    select, input {
+        padding: 8px 12px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 14px;
+    }
+    input:focus, select:focus { border-color: #1a73e8; outline: none; }
+
+    /* 表格設計 */
     table {
         width: 100%;
         border-collapse: collapse;
@@ -132,37 +119,105 @@
         font-weight: bold;
     }
     tr:hover { background-color: #f8f9fa; }
-    
     .profit-positive { color: #28a745; font-weight: bold; }
     .profit-negative { color: #dc3545; font-weight: bold; }
+    
+    /* 按鈕 */
+    .action-btns {
+        display: flex;
+        gap: 8px;
+    }
+    .edit-btn {
+        background-color: #f8f9fa;
+        color: #1a73e8;
+        border: 1px solid #1a73e8;
+        padding: 5px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 13px;
+    }
+    .edit-btn:hover { background-color: #1a73e8; color: white; }
     
     .delete-btn {
         background-color: #ffeaea;
         color: #dc3545;
         border: 1px solid #dc3545;
-        padding: 4px 8px;
+        padding: 5px 10px;
         border-radius: 4px;
         cursor: pointer;
         font-size: 13px;
     }
     .delete-btn:hover { background-color: #dc3545; color: white; }
+
+    /* 彈出視窗 (Modal) */
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.5);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+    }
+    .modal-content {
+        background: #fff;
+        padding: 25px;
+        border-radius: 10px;
+        width: 100%;
+        max-width: 600px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 10px;
+    }
+    .modal-header h3 { margin: 0; color: #1a73e8; }
+    .close-modal {
+        background: none; border: none; font-size: 24px; cursor: pointer; color: #888;
+    }
+    .close-modal:hover { color: #333; }
+    
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+    .form-group { display: flex; flex-direction: column; }
+    .form-group label { margin-bottom: 5px; font-weight: bold; color: #444; font-size: 14px; }
+    .modal-footer {
+        margin-top: 20px;
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+    }
+    .btn-save {
+        background-color: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 15px;
+    }
+    .btn-save:hover { background-color: #218838; }
+    .btn-cancel {
+        background-color: #6c757d; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 15px;
+    }
+    .btn-cancel:hover { background-color: #5a6268; }
+
 </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>觸媒收購管理系統 
-        <span style="font-size: 14px; color: #666; font-weight: normal;">管理者儀表板</span>
-    </h2>
+    <h2>觸媒收購總表 <span style="font-size: 14px; color: #666; font-weight: normal;">管理者儀表板</span></h2>
     
     <!-- 績效儀表板 -->
     <div class="dashboard">
         <div class="stat-card">
-            <div class="stat-title">篩選區間總收件數</div>
+            <div class="stat-title">區間總收件數</div>
             <div class="stat-value" id="dashCount">0 件</div>
         </div>
         <div class="stat-card cost">
-            <div class="stat-title">總發放現金 (成本)</div>
+            <div class="stat-title">總支出成本</div>
             <div class="stat-value" id="dashCost">$0</div>
         </div>
         <div class="stat-card profit">
@@ -171,52 +226,25 @@
         </div>
     </div>
 
-    <!-- 登記表單 -->
-    <form id="recyclingForm" onsubmit="submitForm(event)">
-        <div class="form-grid">
-            <div class="form-group">
-                <label>收購日期</label>
-                <input type="date" id="date" required>
-            </div>
-            <div class="form-group">
-                <label>收購人員 (員工姓名)</label>
-                <input type="text" id="employee" placeholder="例如: 王小明" required>
-            </div>
-            <div class="form-group">
-                <label>觸媒型號</label>
-                <input type="text" id="model" placeholder="例如: TWC-01" required>
-            </div>
-            <div class="form-group">
-                <label>員工實際回收價</label>
-                <input type="number" id="recyclePrice" placeholder="收購花費" oninput="autoCalculate()" required>
-            </div>
-            <div class="form-group">
-                <label>總計成本 (含車資/雜費等)</label>
-                <input type="number" id="totalCost" placeholder="預設帶入回收價" required>
-            </div>
-            <div class="form-group">
-                <label>官網公告價 (預期收入)</label>
-                <input type="number" id="officialPrice" placeholder="官方報價" required>
-            </div>
-            <button type="submit" class="btn-submit">+ 新增收購紀錄</button>
-        </div>
-    </form>
-
-    <!-- 條件篩選區 -->
-    <div class="filter-section">
-        <strong>快速篩選：</strong>
-        <select id="filterMode" onchange="changeFilterInput()">
-            <option value="all">顯示全部時間</option>
-            <option value="exact">指定日期</option>
-            <option value="month">指定月份</option>
-            <option value="week">指定週次</option>
-        </select>
-        <input type="date" id="filterExact" style="display:none;" onchange="renderTable()">
-        <input type="month" id="filterMonth" style="display:none;" onchange="renderTable()">
-        <input type="week" id="filterWeek" style="display:none;" onchange="renderTable()">
+    <!-- 工具列 (新增與篩選) -->
+    <div class="toolbar">
+        <button class="btn-add" onclick="openModal('add')">＋ 新增收購紀錄</button>
         
-        <strong style="margin-left: 10px;">員工查詢：</strong>
-        <input type="text" id="filterEmployee" placeholder="輸入員工姓名..." onkeyup="renderTable()">
+        <div class="filter-group">
+            <strong>時間：</strong>
+            <select id="filterMode" onchange="changeFilterInput()">
+                <option value="all">顯示全部</option>
+                <option value="exact">指定日期</option>
+                <option value="month">指定月份</option>
+                <option value="week">指定週次</option>
+            </select>
+            <input type="date" id="filterExact" style="display:none;" onchange="renderTable()">
+            <input type="month" id="filterMonth" style="display:none;" onchange="renderTable()">
+            <input type="week" id="filterWeek" style="display:none;" onchange="renderTable()">
+            
+            <strong style="margin-left: 10px;">人員：</strong>
+            <input type="text" id="filterEmployee" placeholder="輸入姓名查詢..." onkeyup="renderTable()">
+        </div>
     </div>
 
     <!-- 資料列表 -->
@@ -230,40 +258,121 @@
                 <th>總成本</th>
                 <th>官網價</th>
                 <th>預估毛利</th>
-                <th>操作</th>
+                <th style="width: 120px;">操作</th>
             </tr>
         </thead>
         <tbody id="recordTableBody">
-            <!-- JS 動態載入 -->
+            <!-- 列表由 JS 動態載入 -->
         </tbody>
     </table>
 </div>
 
+<!-- 彈出視窗 (新增/修改 表單) -->
+<div class="modal-overlay" id="formModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="modalTitle">新增收購紀錄</h3>
+            <button class="close-modal" onclick="closeModal()">×</button>
+        </div>
+        <form id="recyclingForm" onsubmit="submitForm(event)">
+            <!-- 隱藏欄位用來記錄是不是「修改模式」 -->
+            <input type="hidden" id="recordId"> 
+            
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>收購日期</label>
+                    <input type="date" id="date" required>
+                </div>
+                <div class="form-group">
+                    <label>收購人員</label>
+                    <input type="text" id="employee" placeholder="例如: 王小明" required>
+                </div>
+                <div class="form-group">
+                    <label>觸媒型號</label>
+                    <input type="text" id="model" placeholder="例如: TWC-01" required>
+                </div>
+                <div class="form-group">
+                    <label>官網公告價</label>
+                    <input type="number" id="officialPrice" placeholder="官方報價" required>
+                </div>
+                <div class="form-group">
+                    <label>實際回收花費</label>
+                    <input type="number" id="recyclePrice" placeholder="回收花費" oninput="autoCalculate()" required>
+                </div>
+                <div class="form-group">
+                    <label>總計成本 (含車資/雜費)</label>
+                    <input type="number" id="totalCost" placeholder="預設帶入回收價" required>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel" onclick="closeModal()">取消</button>
+                <button type="submit" class="btn-save">儲存紀錄</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const today = new Date().toISOString().split('T')[0];
-        document.getElementById('date').value = today;
         renderTable();
     });
 
+    // 取得資料
+    function getRecords() {
+        return JSON.parse(localStorage.getItem('adminCatalystRecords')) || [];
+    }
+    
+    // 儲存資料
+    function saveRecords(records) {
+        localStorage.setItem('adminCatalystRecords', JSON.stringify(records));
+    }
+
+    // 自動帶入成本
     function autoCalculate() {
         const recyclePrice = parseFloat(document.getElementById('recyclePrice').value) || 0;
         document.getElementById('totalCost').value = recyclePrice;
     }
 
-    function getRecords() {
-        return JSON.parse(localStorage.getItem('adminCatalystRecords')) || [];
-    }
-    
-    function saveRecords(records) {
-        localStorage.setItem('adminCatalystRecords', JSON.stringify(records));
+    // 打開表單視窗 (支援 新增 / 修改 雙模式)
+    function openModal(mode, id = null) {
+        const modal = document.getElementById('formModal');
+        const form = document.getElementById('recyclingForm');
+        
+        if (mode === 'add') {
+            document.getElementById('modalTitle').innerText = '新增收購紀錄';
+            form.reset();
+            document.getElementById('recordId').value = '';
+            document.getElementById('date').value = new Date().toISOString().split('T')[0];
+        } else if (mode === 'edit') {
+            document.getElementById('modalTitle').innerText = '修改收購紀錄';
+            const records = getRecords();
+            const record = records.find(r => r.id === id);
+            if (record) {
+                document.getElementById('recordId').value = record.id;
+                document.getElementById('date').value = record.date;
+                document.getElementById('employee').value = record.employee;
+                document.getElementById('model').value = record.model;
+                document.getElementById('recyclePrice').value = record.recyclePrice;
+                document.getElementById('officialPrice').value = record.officialPrice;
+                document.getElementById('totalCost').value = record.totalCost;
+            }
+        }
+        modal.style.display = 'flex';
     }
 
+    // 關閉表單視窗
+    function closeModal() {
+        document.getElementById('formModal').style.display = 'none';
+    }
+
+    // 送出表單 (判斷是新增還是修改)
     function submitForm(event) {
         event.preventDefault();
         
-        const newRecord = {
-            id: Date.now(),
+        const id = document.getElementById('recordId').value;
+        let records = getRecords();
+        
+        const recordData = {
             date: document.getElementById('date').value,
             employee: document.getElementById('employee').value.trim(),
             model: document.getElementById('model').value.trim(),
@@ -272,23 +381,29 @@
             totalCost: parseFloat(document.getElementById('totalCost').value)
         };
 
-        const records = getRecords();
-        records.push(newRecord);
+        if (id) {
+            // 修改模式
+            recordData.id = parseInt(id);
+            const index = records.findIndex(r => r.id === recordData.id);
+            records[index] = recordData;
+            alert('修改成功！');
+        } else {
+            // 新增模式
+            recordData.id = Date.now();
+            records.push(recordData);
+        }
+
+        // 依日期排序並儲存
         records.sort((a, b) => new Date(b.date) - new Date(a.date));
         saveRecords(records);
         
-        // 保留日期與人員，方便連續輸入
-        const keepDate = document.getElementById('date').value;
-        const keepEmployee = document.getElementById('employee').value;
-        document.getElementById('recyclingForm').reset();
-        document.getElementById('date').value = keepDate;
-        document.getElementById('employee').value = keepEmployee;
-        
+        closeModal();
         renderTable();
     }
 
+    // 刪除紀錄
     function deleteRecord(id) {
-        if(confirm('身為管理者，確定要刪除這筆紀錄嗎？此動作無法復原。')) {
+        if(confirm('確定要刪除這筆紀錄嗎？此動作無法復原。')) {
             let records = getRecords();
             records = records.filter(record => record.id !== id);
             saveRecords(records);
@@ -296,6 +411,7 @@
         }
     }
 
+    // 篩選欄位顯示切換
     function changeFilterInput() {
         const mode = document.getElementById('filterMode').value;
         document.getElementById('filterExact').style.display = mode === 'exact' ? 'block' : 'none';
@@ -312,6 +428,7 @@
         return d.getUTCFullYear() + "-W" + (weekNo < 10 ? '0' : '') + weekNo;
     }
 
+    // 渲染列表與儀表板
     function renderTable() {
         const records = getRecords();
         const mode = document.getElementById('filterMode').value;
@@ -325,7 +442,6 @@
         let dashProfit = 0;
 
         const filteredRecords = records.filter(record => {
-            // 1. 時間篩選
             let timeMatch = true;
             if (mode === 'exact') {
                 const exact = document.getElementById('filterExact').value;
@@ -338,7 +454,6 @@
                 timeMatch = week ? getWeekString(record.date) === week : true;
             }
 
-            // 2. 員工姓名篩選
             let empMatch = true;
             if(searchEmp) {
                 empMatch = record.employee.toLowerCase().includes(searchEmp);
@@ -348,14 +463,13 @@
         });
 
         if(filteredRecords.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding: 20px; color:#888;">目前沒有符合的記錄</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding: 30px; color:#888;">目前沒有符合的收購記錄</td></tr>';
         } else {
             filteredRecords.forEach(record => {
                 const profit = record.officialPrice - record.totalCost;
                 const profitClass = profit >= 0 ? 'profit-positive' : 'profit-negative';
                 const profitText = profit >= 0 ? `+$${profit.toLocaleString()}` : `-$${Math.abs(profit).toLocaleString()}`;
                 
-                // 累加儀表板數據
                 dashCount++;
                 dashCost += record.totalCost;
                 dashProfit += profit;
@@ -369,18 +483,20 @@
                     <td>$${record.totalCost.toLocaleString()}</td>
                     <td>$${record.officialPrice.toLocaleString()}</td>
                     <td class="${profitClass}">${profitText}</td>
-                    <td><button type="button" class="delete-btn" onclick="deleteRecord(${record.id})">刪除</button></td>
+                    <td class="action-btns">
+                        <button class="edit-btn" onclick="openModal('edit', ${record.id})">修改</button>
+                        <button class="delete-btn" onclick="deleteRecord(${record.id})">刪除</button>
+                    </td>
                 `;
                 tbody.appendChild(tr);
             });
         }
 
-        // 更新儀表板畫面
+        // 更新數據看板
         document.getElementById('dashCount').innerText = `${dashCount} 件`;
         document.getElementById('dashCost').innerText = `$${dashCost.toLocaleString()}`;
         document.getElementById('dashProfit').innerText = dashProfit >= 0 ? `+$${dashProfit.toLocaleString()}` : `-$${Math.abs(dashProfit).toLocaleString()}`;
         
-        // 儀表板利潤顏色動態切換
         const profitCard = document.querySelector('.stat-card.profit');
         if(dashProfit < 0) {
             profitCard.style.borderLeftColor = '#dc3545';
