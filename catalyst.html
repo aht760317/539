@@ -3,53 +3,61 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>觸媒回收登記表</title>
+<title>觸媒回收登記與查詢系統</title>
 <style>
     body {
         font-family: "Microsoft JhengHei", Arial, sans-serif;
         background-color: #f4f7f6;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
+        color: #333;
         margin: 0;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
-    .form-container {
+    .container {
+        width: 100%;
+        max-width: 800px;
         background-color: #ffffff;
-        padding: 30px;
+        padding: 25px;
         border-radius: 10px;
         box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        width: 100%;
-        max-width: 400px;
-    }
-    h2 {
-        text-align: center;
-        color: #333;
         margin-bottom: 20px;
     }
+    h2 {
+        margin-top: 0;
+        border-bottom: 2px solid #007bff;
+        padding-bottom: 10px;
+        color: #007bff;
+    }
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
     .form-group {
-        margin-bottom: 15px;
+        display: flex;
+        flex-direction: column;
+    }
+    .form-group.full-width {
+        grid-column: span 2;
     }
     label {
-        display: block;
-        margin-bottom: 8px;
-        color: #555;
+        margin-bottom: 5px;
         font-weight: bold;
+        color: #555;
     }
-    input[type="text"], input[type="number"] {
-        width: 100%;
+    input[type="text"], input[type="number"], input[type="date"], input[type="month"], input[type="week"], select {
         padding: 10px;
         border: 1px solid #ccc;
         border-radius: 6px;
-        box-sizing: border-box;
-        font-size: 16px;
+        font-size: 15px;
     }
-    input:focus {
+    input:focus, select:focus {
         border-color: #007bff;
         outline: none;
     }
     button {
-        width: 100%;
         padding: 12px;
         background-color: #007bff;
         color: white;
@@ -63,59 +71,230 @@
     button:hover {
         background-color: #0056b3;
     }
+    .filter-section {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+    }
+    th, td {
+        border: 1px solid #ddd;
+        padding: 12px;
+        text-align: left;
+    }
+    th {
+        background-color: #f8f9fa;
+        font-weight: bold;
+    }
+    tr:nth-child(even) {
+        background-color: #fdfdfd;
+    }
+    .delete-btn {
+        background-color: #dc3545;
+        padding: 6px 12px;
+        font-size: 14px;
+        margin: 0;
+    }
+    .delete-btn:hover {
+        background-color: #c82333;
+    }
 </style>
 </head>
 <body>
 
-<div class="form-container">
-    <h2>觸媒回收登記表</h2>
-    <form id="recyclingForm">
-        <div class="form-group">
-            <label for="model">觸媒型號</label>
-            <input type="text" id="model" name="model" placeholder="請輸入型號 (例如: TWC-01)" required>
+<!-- 登記區塊 -->
+<div class="container">
+    <h2>新增觸媒回收記錄</h2>
+    <form id="recyclingForm" onsubmit="submitForm(event)">
+        <div class="form-grid">
+            <div class="form-group full-width">
+                <label for="date">回收日期</label>
+                <input type="date" id="date" required>
+            </div>
+            <div class="form-group">
+                <label for="model">觸媒型號</label>
+                <input type="text" id="model" placeholder="例如: TWC-01" required>
+            </div>
+            <div class="form-group">
+                <label for="recyclePrice">回收價格 (元)</label>
+                <input type="number" id="recyclePrice" placeholder="實際回收金額" oninput="autoCalculate()" required>
+            </div>
+            <div class="form-group">
+                <label for="officialPrice">官網價格 (元)</label>
+                <input type="number" id="officialPrice" placeholder="官方報價" required>
+            </div>
+            <div class="form-group">
+                <label for="totalCost">總計成本 (元)</label>
+                <input type="number" id="totalCost" placeholder="自動帶入或手動輸入" required>
+            </div>
+            <div class="form-group full-width">
+                <button type="submit">儲存記錄</button>
+            </div>
         </div>
-        <div class="form-group">
-            <label for="recyclePrice">回收價格 (元)</label>
-            <input type="number" id="recyclePrice" name="recyclePrice" placeholder="請輸入實際回收金額" oninput="autoCalculate()" required>
-        </div>
-        <div class="form-group">
-            <label for="officialPrice">官網價格 (元)</label>
-            <input type="number" id="officialPrice" name="officialPrice" placeholder="請輸入官方報價" required>
-        </div>
-        <div class="form-group">
-            <label for="totalCost">總計成本 (元)</label>
-            <input type="number" id="totalCost" name="totalCost" placeholder="自動帶入或手動輸入" required>
-        </div>
-        <button type="button" onclick="submitForm()">送出登記</button>
     </form>
 </div>
 
+<!-- 查詢與列表區塊 -->
+<div class="container">
+    <h2>歷史記錄與查詢</h2>
+    <div class="filter-section">
+        <select id="filterMode" onchange="changeFilterInput()">
+            <option value="all">顯示全部</option>
+            <option value="exact">依特定日期 (幾月幾號)</option>
+            <option value="month">依特定月份</option>
+            <option value="week">依特定週次</option>
+        </select>
+        
+        <!-- 動態顯示的查詢輸入框 -->
+        <input type="date" id="filterExact" style="display:none;">
+        <input type="month" id="filterMonth" style="display:none;">
+        <input type="week" id="filterWeek" style="display:none;">
+        
+        <button onclick="renderTable()" style="margin: 0; padding: 10px 20px;">搜尋</button>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>日期</th>
+                <th>型號</th>
+                <th>回收價格</th>
+                <th>官網價格</th>
+                <th>總計成本</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody id="recordTableBody">
+            <!-- 資料會透過 JavaScript 動態載入這裡 -->
+        </tbody>
+    </table>
+</div>
+
 <script>
-    // 若總計成本需要自動計算，可在此修改邏輯 (目前預設等於回收價格)
+    // 初始化設定：預設日期為今天
+    document.addEventListener('DOMContentLoaded', () => {
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('date').value = today;
+        renderTable(); // 網頁載入時渲染表格
+    });
+
+    // 自動計算總計成本 (目前預設等於回收價)
     function autoCalculate() {
         const recyclePrice = parseFloat(document.getElementById('recyclePrice').value) || 0;
-        
-        // 假設「總計成本」初步等於「回收價格」，可根據需求加上其他手續費
         document.getElementById('totalCost').value = recyclePrice;
     }
 
-    function submitForm() {
-        const model = document.getElementById('model').value;
-        const recyclePrice = document.getElementById('recyclePrice').value;
-        const officialPrice = document.getElementById('officialPrice').value;
-        const totalCost = document.getElementById('totalCost').value;
+    // 取得/儲存 LocalStorage 資料
+    function getRecords() {
+        return JSON.parse(localStorage.getItem('catalystRecords')) || [];
+    }
+    function saveRecords(records) {
+        localStorage.setItem('catalystRecords', JSON.stringify(records));
+    }
 
-        // 簡單的欄位驗證
-        if(!model || !recyclePrice || !officialPrice || !totalCost) {
-            alert("請填寫所有欄位！");
+    // 送出表單
+    function submitForm(event) {
+        event.preventDefault(); // 防止網頁重新載入
+        
+        const newRecord = {
+            id: Date.now(), // 產生唯一識別碼
+            date: document.getElementById('date').value,
+            model: document.getElementById('model').value,
+            recyclePrice: document.getElementById('recyclePrice').value,
+            officialPrice: document.getElementById('officialPrice').value,
+            totalCost: document.getElementById('totalCost').value
+        };
+
+        const records = getRecords();
+        records.push(newRecord);
+        
+        // 依照日期降序排列 (最新的在最上面)
+        records.sort((a, b) => new Date(b.date) - new Date(a.date));
+        
+        saveRecords(records);
+        
+        // 重置表單，但保留今天的日期
+        document.getElementById('recyclingForm').reset();
+        document.getElementById('date').value = new Date().toISOString().split('T')[0];
+        
+        renderTable(); // 重新渲染表格
+    }
+
+    // 刪除單筆資料
+    function deleteRecord(id) {
+        if(confirm('確定要刪除這筆記錄嗎？')) {
+            let records = getRecords();
+            records = records.filter(record => record.id !== id);
+            saveRecords(records);
+            renderTable();
+        }
+    }
+
+    // 切換查詢輸入框
+    function changeFilterInput() {
+        const mode = document.getElementById('filterMode').value;
+        document.getElementById('filterExact').style.display = mode === 'exact' ? 'block' : 'none';
+        document.getElementById('filterMonth').style.display = mode === 'month' ? 'block' : 'none';
+        document.getElementById('filterWeek').style.display = mode === 'week' ? 'block' : 'none';
+    }
+
+    // 將日期轉換為 ISO 週數格式 (例如 "2026-W45") 以便比對
+    function getWeekString(dateString) {
+        const d = new Date(dateString);
+        d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay()||7));
+        const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+        const weekNo = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+        return d.getUTCFullYear() + "-W" + (weekNo < 10 ? '0' : '') + weekNo;
+    }
+
+    // 渲染表格資料 (包含搜尋過濾邏輯)
+    function renderTable() {
+        const records = getRecords();
+        const mode = document.getElementById('filterMode').value;
+        const tbody = document.getElementById('recordTableBody');
+        tbody.innerHTML = '';
+
+        // 過濾資料
+        const filteredRecords = records.filter(record => {
+            if (mode === 'all') return true;
+            if (mode === 'exact') {
+                const exactDate = document.getElementById('filterExact').value;
+                return exactDate ? record.date === exactDate : true;
+            }
+            if (mode === 'month') {
+                const month = document.getElementById('filterMonth').value; // 格式: YYYY-MM
+                return month ? record.date.startsWith(month) : true;
+            }
+            if (mode === 'week') {
+                const week = document.getElementById('filterWeek').value; // 格式: YYYY-Wxx
+                return week ? getWeekString(record.date) === week : true;
+            }
+            return true;
+        });
+
+        // 建立表格內容
+        if(filteredRecords.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#888;">目前沒有符合的記錄</td></tr>';
             return;
         }
 
-        // 顯示結果 (可替換為寫入資料庫或 Google Sheets 的 API)
-        alert(`登記成功！\n\n型號: ${model}\n回收價格: $${recyclePrice}\n官網價格: $${officialPrice}\n總計成本: $${totalCost}`);
-        
-        // 送出後清空表單
-        document.getElementById('recyclingForm').reset();
+        filteredRecords.forEach(record => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${record.date}</td>
+                <td>${record.model}</td>
+                <td>$${record.recyclePrice}</td>
+                <td>$${record.officialPrice}</td>
+                <td>$${record.totalCost}</td>
+                <td><button type="button" class="delete-btn" onclick="deleteRecord(${record.id})">刪除</button></td>
+            `;
+            tbody.appendChild(tr);
+        });
     }
 </script>
 </body>
