@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>觸媒回收登記表</title>
+<style>
+    body {
+        font-family: "Microsoft JhengHei", Arial, sans-serif;
+        background-color: #f4f7f6;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+    .form-container {
+        background-color: #ffffff;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        width: 100%;
+        max-width: 400px;
+    }
+    h2 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 20px;
+    }
+    .form-group {
+        margin-bottom: 15px;
+    }
+    label {
+        display: block;
+        margin-bottom: 8px;
+        color: #555;
+        font-weight: bold;
+    }
+    input[type="text"], input[type="number"] {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        box-sizing: border-box;
+        font-size: 16px;
+    }
+    input:focus {
+        border-color: #007bff;
+        outline: none;
+    }
+    button {
+        width: 100%;
+        padding: 12px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+    button:hover {
+        background-color: #0056b3;
+    }
+</style>
+</head>
+<body>
+
+<div class="form-container">
+    <h2>觸媒回收登記表</h2>
+    <form id="recyclingForm">
+        <div class="form-group">
+            <label for="model">觸媒型號</label>
+            <input type="text" id="model" name="model" placeholder="請輸入型號 (例如: TWC-01)" required>
+        </div>
+        <div class="form-group">
+            <label for="recyclePrice">回收價格 (元)</label>
+            <input type="number" id="recyclePrice" name="recyclePrice" placeholder="請輸入實際回收金額" oninput="autoCalculate()" required>
+        </div>
+        <div class="form-group">
+            <label for="officialPrice">官網價格 (元)</label>
+            <input type="number" id="officialPrice" name="officialPrice" placeholder="請輸入官方報價" required>
+        </div>
+        <div class="form-group">
+            <label for="totalCost">總計成本 (元)</label>
+            <input type="number" id="totalCost" name="totalCost" placeholder="自動帶入或手動輸入" required>
+        </div>
+        <button type="button" onclick="submitForm()">送出登記</button>
+    </form>
+</div>
+
+<script>
+    // 若總計成本需要自動計算，可在此修改邏輯 (目前預設等於回收價格)
+    function autoCalculate() {
+        const recyclePrice = parseFloat(document.getElementById('recyclePrice').value) || 0;
+        
+        // 假設「總計成本」初步等於「回收價格」，可根據需求加上其他手續費
+        document.getElementById('totalCost').value = recyclePrice;
+    }
+
+    function submitForm() {
+        const model = document.getElementById('model').value;
+        const recyclePrice = document.getElementById('recyclePrice').value;
+        const officialPrice = document.getElementById('officialPrice').value;
+        const totalCost = document.getElementById('totalCost').value;
+
+        // 簡單的欄位驗證
+        if(!model || !recyclePrice || !officialPrice || !totalCost) {
+            alert("請填寫所有欄位！");
+            return;
+        }
+
+        // 顯示結果 (可替換為寫入資料庫或 Google Sheets 的 API)
+        alert(`登記成功！\n\n型號: ${model}\n回收價格: $${recyclePrice}\n官網價格: $${officialPrice}\n總計成本: $${totalCost}`);
+        
+        // 送出後清空表單
+        document.getElementById('recyclingForm').reset();
+    }
+</script>
+</body>
+</html>
