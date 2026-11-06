@@ -2,7 +2,8 @@
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- 確保手機版正確縮放的關鍵 meta -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>觸媒收購管理系統</title>
 <style>
     body {
@@ -10,7 +11,7 @@
         background-color: #f0f2f5;
         color: #333;
         margin: 0;
-        padding: 20px;
+        padding: 10px;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -19,10 +20,11 @@
         width: 100%;
         max-width: 1100px;
         background-color: #ffffff;
-        padding: 25px;
+        padding: 20px;
         border-radius: 10px;
         box-shadow: 0 2px 10px rgba(0,0,0,0.08);
         margin-bottom: 20px;
+        box-sizing: border-box;
     }
     h2 {
         margin-top: 0;
@@ -32,36 +34,29 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+        font-size: 20px;
     }
     
     /* 儀表板卡片設計 */
     .dashboard {
         display: flex;
-        gap: 20px;
+        gap: 15px;
         margin-bottom: 20px;
     }
     .stat-card {
         flex: 1;
         background: #f8f9fa;
-        padding: 15px 20px;
+        padding: 15px;
         border-radius: 8px;
         border-left: 5px solid #1a73e8;
         box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     }
     .stat-card.cost { border-left-color: #dc3545; }
     .stat-card.profit { border-left-color: #28a745; }
-    .stat-title {
-        font-size: 14px;
-        color: #666;
-        margin-bottom: 5px;
-    }
-    .stat-value {
-        font-size: 24px;
-        font-weight: bold;
-        color: #333;
-    }
+    .stat-title { font-size: 13px; color: #666; margin-bottom: 5px; }
+    .stat-value { font-size: 22px; font-weight: bold; color: #333; }
 
-    /* 頂部操作區 (新增按鈕 + 篩選) */
+    /* 頂部操作區 */
     .toolbar {
         display: flex;
         justify-content: space-between;
@@ -71,144 +66,110 @@
         border-radius: 8px;
         margin-bottom: 15px;
         flex-wrap: wrap;
-        gap: 15px;
+        gap: 10px;
     }
     .btn-add {
-        background-color: #1a73e8;
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 6px;
-        font-size: 16px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: 0.3s;
-        display: flex;
-        align-items: center;
-        gap: 5px;
+        background-color: #1a73e8; color: white; border: none; padding: 12px 20px;
+        border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer;
+        width: auto;
     }
-    .btn-add:hover { background-color: #1557b0; }
     
     .filter-group {
-        display: flex;
-        gap: 10px;
-        align-items: center;
+        display: flex; gap: 10px; align-items: center; flex-wrap: wrap; flex: 1;
     }
     select, input {
-        padding: 8px 12px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        font-size: 14px;
+        padding: 10px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 15px; box-sizing: border-box;
     }
     input:focus, select:focus { border-color: #1a73e8; outline: none; }
 
-    /* 表格設計 */
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 15px;
-    }
-    th, td {
-        border-bottom: 1px solid #ddd;
-        padding: 12px 10px;
-        text-align: left;
-    }
-    th {
-        background-color: #f1f3f4;
-        color: #555;
-        font-weight: bold;
-    }
+    /* 表格設計 (電腦版) */
+    table { width: 100%; border-collapse: collapse; font-size: 15px; }
+    th, td { border-bottom: 1px solid #ddd; padding: 12px 10px; text-align: left; }
+    th { background-color: #f1f3f4; color: #555; font-weight: bold; }
     tr:hover { background-color: #f8f9fa; }
     .profit-positive { color: #28a745; font-weight: bold; }
     .profit-negative { color: #dc3545; font-weight: bold; }
     
     /* 按鈕 */
-    .action-btns {
-        display: flex;
-        gap: 8px;
-    }
-    .edit-btn {
-        background-color: #f8f9fa;
-        color: #1a73e8;
-        border: 1px solid #1a73e8;
-        padding: 5px 10px;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 13px;
-    }
-    .edit-btn:hover { background-color: #1a73e8; color: white; }
-    
-    .delete-btn {
-        background-color: #ffeaea;
-        color: #dc3545;
-        border: 1px solid #dc3545;
-        padding: 5px 10px;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 13px;
-    }
-    .delete-btn:hover { background-color: #dc3545; color: white; }
+    .action-btns { display: flex; gap: 8px; justify-content: flex-end; }
+    .edit-btn { background-color: #f8f9fa; color: #1a73e8; border: 1px solid #1a73e8; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 14px; }
+    .delete-btn { background-color: #ffeaea; color: #dc3545; border: 1px solid #dc3545; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 14px; }
 
     /* 彈出視窗 (Modal) */
     .modal-overlay {
-        display: none;
-        position: fixed;
-        top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(0,0,0,0.5);
-        z-index: 1000;
-        justify-content: center;
-        align-items: center;
+        display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;
+        padding: 15px; box-sizing: border-box;
     }
     .modal-content {
-        background: #fff;
-        padding: 25px;
-        border-radius: 10px;
-        width: 100%;
-        max-width: 600px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        background: #fff; padding: 20px; border-radius: 10px; width: 100%; max-width: 500px;
+        max-height: 90vh; overflow-y: auto;
     }
-    .modal-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 20px;
-        border-bottom: 1px solid #eee;
-        padding-bottom: 10px;
-    }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
     .modal-header h3 { margin: 0; color: #1a73e8; }
-    .close-modal {
-        background: none; border: none; font-size: 24px; cursor: pointer; color: #888;
-    }
-    .close-modal:hover { color: #333; }
+    .close-modal { background: none; border: none; font-size: 28px; cursor: pointer; color: #888; }
     
-    .form-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 15px;
-    }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
     .form-group { display: flex; flex-direction: column; }
     .form-group label { margin-bottom: 5px; font-weight: bold; color: #444; font-size: 14px; }
-    .modal-footer {
-        margin-top: 20px;
-        display: flex;
-        justify-content: flex-end;
-        gap: 10px;
-    }
-    .btn-save {
-        background-color: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 15px;
-    }
-    .btn-save:hover { background-color: #218838; }
-    .btn-cancel {
-        background-color: #6c757d; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 15px;
-    }
-    .btn-cancel:hover { background-color: #5a6268; }
+    .modal-footer { margin-top: 20px; display: flex; justify-content: flex-end; gap: 10px; }
+    .btn-save { background-color: #28a745; color: white; border: none; padding: 12px 20px; border-radius: 4px; font-weight: bold; font-size: 16px; width: 100%; cursor: pointer;}
+    .btn-cancel { background-color: #6c757d; color: white; border: none; padding: 12px 20px; border-radius: 4px; font-weight: bold; font-size: 16px; width: 100%; cursor: pointer;}
 
+    /* =========================================
+       手機版優化 (RWD - Max Width 768px)
+       ========================================= */
+    @media screen and (max-width: 768px) {
+        body { padding: 5px; }
+        .container { padding: 15px; border-radius: 8px; }
+        h2 { font-size: 18px; flex-direction: column; align-items: flex-start; gap: 5px; }
+        
+        .dashboard { flex-direction: column; gap: 10px; }
+        .stat-card { padding: 12px 15px; }
+        
+        .toolbar { flex-direction: column; align-items: stretch; padding: 10px; }
+        .btn-add { width: 100%; justify-content: center; margin-bottom: 10px; }
+        .filter-group { flex-direction: column; align-items: stretch; }
+        .filter-group strong { display: none; }
+        
+        .form-grid { grid-template-columns: 1fr; gap: 10px; }
+
+        /* 表格轉換為「卡片式」顯示 */
+        table, thead, tbody, th, td, tr { display: block; }
+        thead tr { display: none; }
+        
+        tr { 
+            margin-bottom: 15px; 
+            border: 1px solid #dee2e6; 
+            border-radius: 8px; 
+            padding: 12px; 
+            background: #fff; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        td { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border: none; 
+            padding: 6px 0; 
+            border-bottom: 1px dashed #eee; 
+            text-align: right;
+        }
+        td:last-child { border-bottom: none; margin-top: 8px; justify-content: flex-end; }
+        
+        td::before { 
+            content: attr(data-label); 
+            font-weight: bold; 
+            color: #666; 
+            text-align: left;
+        }
+    }
 </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>觸媒收購總表 <span style="font-size: 14px; color: #666; font-weight: normal;">管理者儀表板</span></h2>
+    <h2>觸媒收購總表 <span style="font-size: 13px; color: #666; font-weight: normal; background: #eef2f6; padding: 4px 8px; border-radius: 4px;">行動版管理員</span></h2>
     
     <!-- 績效儀表板 -->
     <div class="dashboard">
@@ -231,19 +192,16 @@
         <button class="btn-add" onclick="openModal('add')">＋ 新增收購紀錄</button>
         
         <div class="filter-group">
-            <strong>時間：</strong>
-            <select id="filterMode" onchange="changeFilterInput()">
-                <option value="all">顯示全部</option>
-                <option value="exact">指定日期</option>
-                <option value="month">指定月份</option>
-                <option value="week">指定週次</option>
+            <select id="filterMode" onchange="changeFilterInput()" style="width: 100%;">
+                <option value="all">顯示全部時間</option>
+                <option value="exact">指定日期查詢</option>
+                <option value="month">指定月份查詢</option>
+                <option value="week">指定週次查詢</option>
             </select>
-            <input type="date" id="filterExact" style="display:none;" onchange="renderTable()">
-            <input type="month" id="filterMonth" style="display:none;" onchange="renderTable()">
-            <input type="week" id="filterWeek" style="display:none;" onchange="renderTable()">
-            
-            <strong style="margin-left: 10px;">人員：</strong>
-            <input type="text" id="filterEmployee" placeholder="輸入姓名查詢..." onkeyup="renderTable()">
+            <input type="date" id="filterExact" style="display:none; width: 100%;" onchange="renderTable()">
+            <input type="month" id="filterMonth" style="display:none; width: 100%;" onchange="renderTable()">
+            <input type="week" id="filterWeek" style="display:none; width: 100%;" onchange="renderTable()">
+            <input type="text" id="filterEmployee" placeholder="🔍 搜尋員工姓名..." onkeyup="renderTable()" style="width: 100%;">
         </div>
     </div>
 
@@ -254,11 +212,11 @@
                 <th>日期</th>
                 <th>收購人員</th>
                 <th>型號</th>
-                <th>回收價</th>
+                <th>回收花費</th>
                 <th>總成本</th>
-                <th>官網價</th>
+                <th>官網報價</th>
                 <th>預估毛利</th>
-                <th style="width: 120px;">操作</th>
+                <th style="width: 120px; text-align: right;">操作</th>
             </tr>
         </thead>
         <tbody id="recordTableBody">
@@ -271,11 +229,10 @@
 <div class="modal-overlay" id="formModal">
     <div class="modal-content">
         <div class="modal-header">
-            <h3 id="modalTitle">新增收購紀錄</h3>
+            <h3 id="modalTitle">新增紀錄</h3>
             <button class="close-modal" onclick="closeModal()">×</button>
         </div>
         <form id="recyclingForm" onsubmit="submitForm(event)">
-            <!-- 隱藏欄位用來記錄是不是「修改模式」 -->
             <input type="hidden" id="recordId"> 
             
             <div class="form-grid">
@@ -293,11 +250,11 @@
                 </div>
                 <div class="form-group">
                     <label>官網公告價</label>
-                    <input type="number" id="officialPrice" placeholder="官方報價" required>
+                    <input type="number" id="officialPrice" placeholder="輸入官方報價" required>
                 </div>
                 <div class="form-group">
                     <label>實際回收花費</label>
-                    <input type="number" id="recyclePrice" placeholder="回收花費" oninput="autoCalculate()" required>
+                    <input type="number" id="recyclePrice" placeholder="輸入回收金額" oninput="autoCalculate()" required>
                 </div>
                 <div class="form-group">
                     <label>總計成本 (含車資/雜費)</label>
@@ -306,7 +263,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn-cancel" onclick="closeModal()">取消</button>
-                <button type="submit" class="btn-save">儲存紀錄</button>
+                <button type="submit" class="btn-save">確認儲存</button>
             </div>
         </form>
     </div>
@@ -317,23 +274,14 @@
         renderTable();
     });
 
-    // 取得資料
-    function getRecords() {
-        return JSON.parse(localStorage.getItem('adminCatalystRecords')) || [];
-    }
-    
-    // 儲存資料
-    function saveRecords(records) {
-        localStorage.setItem('adminCatalystRecords', JSON.stringify(records));
-    }
+    function getRecords() { return JSON.parse(localStorage.getItem('adminCatalystRecords')) || []; }
+    function saveRecords(records) { localStorage.setItem('adminCatalystRecords', JSON.stringify(records)); }
 
-    // 自動帶入成本
     function autoCalculate() {
         const recyclePrice = parseFloat(document.getElementById('recyclePrice').value) || 0;
         document.getElementById('totalCost').value = recyclePrice;
     }
 
-    // 打開表單視窗 (支援 新增 / 修改 雙模式)
     function openModal(mode, id = null) {
         const modal = document.getElementById('formModal');
         const form = document.getElementById('recyclingForm');
@@ -360,12 +308,8 @@
         modal.style.display = 'flex';
     }
 
-    // 關閉表單視窗
-    function closeModal() {
-        document.getElementById('formModal').style.display = 'none';
-    }
+    function closeModal() { document.getElementById('formModal').style.display = 'none'; }
 
-    // 送出表單 (判斷是新增還是修改)
     function submitForm(event) {
         event.preventDefault();
         
@@ -382,26 +326,20 @@
         };
 
         if (id) {
-            // 修改模式
             recordData.id = parseInt(id);
             const index = records.findIndex(r => r.id === recordData.id);
             records[index] = recordData;
-            alert('修改成功！');
         } else {
-            // 新增模式
             recordData.id = Date.now();
             records.push(recordData);
         }
 
-        // 依日期排序並儲存
         records.sort((a, b) => new Date(b.date) - new Date(a.date));
         saveRecords(records);
-        
         closeModal();
         renderTable();
     }
 
-    // 刪除紀錄
     function deleteRecord(id) {
         if(confirm('確定要刪除這筆紀錄嗎？此動作無法復原。')) {
             let records = getRecords();
@@ -411,7 +349,6 @@
         }
     }
 
-    // 篩選欄位顯示切換
     function changeFilterInput() {
         const mode = document.getElementById('filterMode').value;
         document.getElementById('filterExact').style.display = mode === 'exact' ? 'block' : 'none';
@@ -428,7 +365,6 @@
         return d.getUTCFullYear() + "-W" + (weekNo < 10 ? '0' : '') + weekNo;
     }
 
-    // 渲染列表與儀表板
     function renderTable() {
         const records = getRecords();
         const mode = document.getElementById('filterMode').value;
@@ -437,9 +373,7 @@
         const tbody = document.getElementById('recordTableBody');
         tbody.innerHTML = '';
 
-        let dashCount = 0;
-        let dashCost = 0;
-        let dashProfit = 0;
+        let dashCount = 0; let dashCost = 0; let dashProfit = 0;
 
         const filteredRecords = records.filter(record => {
             let timeMatch = true;
@@ -455,9 +389,7 @@
             }
 
             let empMatch = true;
-            if(searchEmp) {
-                empMatch = record.employee.toLowerCase().includes(searchEmp);
-            }
+            if(searchEmp) { empMatch = record.employee.toLowerCase().includes(searchEmp); }
 
             return timeMatch && empMatch;
         });
@@ -470,19 +402,17 @@
                 const profitClass = profit >= 0 ? 'profit-positive' : 'profit-negative';
                 const profitText = profit >= 0 ? `+$${profit.toLocaleString()}` : `-$${Math.abs(profit).toLocaleString()}`;
                 
-                dashCount++;
-                dashCost += record.totalCost;
-                dashProfit += profit;
+                dashCount++; dashCost += record.totalCost; dashProfit += profit;
 
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td>${record.date}</td>
-                    <td><strong>${record.employee}</strong></td>
-                    <td>${record.model}</td>
-                    <td>$${record.recyclePrice.toLocaleString()}</td>
-                    <td>$${record.totalCost.toLocaleString()}</td>
-                    <td>$${record.officialPrice.toLocaleString()}</td>
-                    <td class="${profitClass}">${profitText}</td>
+                    <td data-label="📅 日期">${record.date}</td>
+                    <td data-label="👤 收購人員"><strong>${record.employee}</strong></td>
+                    <td data-label="🏷️ 型號">${record.model}</td>
+                    <td data-label="💵 回收花費">$${record.recyclePrice.toLocaleString()}</td>
+                    <td data-label="🧾 總成本">$${record.totalCost.toLocaleString()}</td>
+                    <td data-label="🏢 官網報價">$${record.officialPrice.toLocaleString()}</td>
+                    <td data-label="📈 預估毛利" class="${profitClass}">${profitText}</td>
                     <td class="action-btns">
                         <button class="edit-btn" onclick="openModal('edit', ${record.id})">修改</button>
                         <button class="delete-btn" onclick="deleteRecord(${record.id})">刪除</button>
@@ -492,7 +422,6 @@
             });
         }
 
-        // 更新數據看板
         document.getElementById('dashCount').innerText = `${dashCount} 件`;
         document.getElementById('dashCost').innerText = `$${dashCost.toLocaleString()}`;
         document.getElementById('dashProfit').innerText = dashProfit >= 0 ? `+$${dashProfit.toLocaleString()}` : `-$${Math.abs(dashProfit).toLocaleString()}`;
